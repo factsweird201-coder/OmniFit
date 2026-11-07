@@ -32,11 +32,16 @@ Object.entries(STORY.m).forEach(([id, s]) => { addAll(s.pre || [], id); addAll(s
 CHAPTERS.forEach((c, ci) => add("title", `Chapter ${ci + 1}. ${c.name}.`)); add("title", "The end."); add("title", "End of part one.");
 ["Part one. The Great Ember.", "Part two. The Hollow King."].forEach(t => add("title", t));
 [...Object.values(HALF), ...Object.values(DANGER)].forEach(t => add("pip", t));
+// game announcer ("Set complete…", "Fight!", boss intros): the exact list comes from announcerLines() in index.html
+{ const RANKS = grab(/const RANKS = (\[[\s\S]*?\n\]);/, "RANKS"), BOSSES = grab(/const BOSSES = (\[[\s\S]*?\n\]);/, "BOSSES"), SPECIALS = grab(/const SPECIALS = (\{[\s\S]*?\n\});/, "SPECIALS");
+  const src = html.match(/function announcerLines\(\) \{[\s\S]*?\n\}/); if (!src) throw new Error("couldn't find announcerLines");
+  new Function("RANKS", "BOSSES", "SPECIALS", src[0] + "; return announcerLines();")(RANKS, BOSSES, SPECIALS).forEach(t => add("ann", t)); }
 
 // pitch shift by factor k while keeping (or nudging) the speed
 const P = (k, tempo = 1) => `asetrate=${Math.round(22050 * k)},aresample=44100,atempo=${(tempo / k).toFixed(4)}`;
 const EYE = { rate: 0.44, af: `${P(0.7)},chorus=0.6:0.9:45|60:0.35|0.3:0.25|0.4:2|1.3,aecho=0.8:0.8:260|520:0.35|0.2` };
 const CAST = {
+  ann:   { rate: 0.54, af: "aresample=44100,highpass=f=60,acompressor=threshold=-20dB:ratio=3:attack=5:release=80,aecho=0.8:0.4:30:0.06" },   // game announcer: clear and punchy
   narr:  { rate: 0.47, af: "aresample=44100,aecho=0.8:0.6:55:0.12" },
   title: { rate: 0.42, af: `${P(0.92)},aecho=0.8:0.7:120|240:0.3|0.18` },
   steel: { rate: 0.53, af: `${P(0.85, 1.03)},highpass=f=70,acompressor=threshold=-18dB:ratio=3,aecho=0.8:0.5:35:0.08` },

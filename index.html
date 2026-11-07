@@ -1536,16 +1536,50 @@ const sfx = {
 };
 // pick the most natural English voice the device has (premium / enhanced / Google ones beat the old robotic defaults)
 let bestVoice = null;
+// Apple's joke voices (Albert, Bubbles, Wobble…) and the old Eloquence ones must never be the announcer.
+const JOKE_VOICE = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Wobble|Deranged|Fred|Good News|Jester|Hysterical|Junior|Kathy|Organ|Superstar|Princess|Ralph|Trinoids|Whisper|Zarvox|Grandma|Grandpa|Eddy|Flo|Reed|Rocko|Sandy|Shelley)\b/i;
 function pickVoice() {
   try {
-    const score = v => (/premium/i.test(v.name) ? 60 : /enhanced|natural|neural/i.test(v.name) ? 50 : /^google/i.test(v.name) ? 40 : /daniel|samantha|karen|moira|serena|arthur/i.test(v.name) ? 20 : 0) + (/^en-(GB|US)/i.test(v.lang) ? 2 : 0);
-    bestVoice = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang) && !/compact/i.test(v.voiceURI || "")).sort((a, b) => score(b) - score(a))[0] || null;
+    const score = v => (/premium/i.test(v.name) ? 60 : /enhanced|natural|neural/i.test(v.name) ? 50 : /^google/i.test(v.name) ? 40 : /daniel|samantha|karen|moira|serena|arthur|jamie|zira|aria|jenny/i.test(v.name) ? 20 : 0)
+      + (/^en-(GB|US)/i.test(v.lang) ? 2 : 0) - (/super-compact/i.test(v.voiceURI || "") ? 15 : 0);
+    const ok = v => /^en/i.test(v.lang) && !JOKE_VOICE.test(v.name) && !/speech\.synthesis\.voice\.|eloquence/i.test(v.voiceURI || "");
+    bestVoice = speechSynthesis.getVoices().filter(ok).sort((a, b) => score(b) - score(a))[0] || null; window.__ttsVoice = bestVoice && bestVoice.name + " | " + bestVoice.voiceURI;
   } catch {}
 }
 if ("speechSynthesis" in window) { pickVoice(); speechSynthesis.addEventListener?.("voiceschanged", pickVoice); }
-function say(text, v = {}) {
+setTimeout(() => preloadVoices(["Fight!", "Go!", "Parry!", "Ouch!", "Incoming! Parry!", "Five combo!", ...Object.values(SPECIALS).map(sp => sp.say)].map(t => ["ann", t])), 4000);
+// The device's own voice: used for lines with no recording (names, numbers that change).
+function tts(text, v = {}) {
   if (store.muted || !("speechSynthesis" in window)) return;
   try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); if (bestVoice) u.voice = bestVoice; u.rate = v.rate ?? 1.12; u.pitch = v.pitch ?? 0.9; speechSynthesis.speak(u); } catch {}
+}
+// Announcer lines that are pre-recorded in voice/ (tools/voices.mjs records exactly this list as speaker "ann").
+function announcerLines() {
+  const L = ["Profile updated.", "Daily goal complete!", "Fight!", "Incoming! Parry!", "Last heart! Careful!", "Ouch!", "Parry!", "Five combo!", "Ten combo! Unstoppable!",
+    "It's enraged! Finish it!", "Go!", "Goal hit! Keep going!", "Mission failed. Try again!", "It's a draw!"];
+  RANKS.forEach(r => L.push(`Rank up! You are now ${r.name}`));
+  for (let n = 1; n <= 50; n++) for (const b of ["", " New best!"]) L.push(`Set complete. ${n} push-up${n === 1 ? "" : "s"}.${b}`);
+  BOSSES.forEach(b => L.push(b.intro + " Get into position.", b.win));
+  Object.values(SPECIALS).forEach(sp => L.push(sp.say));
+  [1, 2, 3].forEach(n => L.push(`Mission complete! ${n} star${n === 1 ? "" : "s"}.`));
+  [20, 25, 40, 50, 75, 100, 120, 150, 200].forEach(g => L.push(`Plan locked in. ${g} push-ups a day. Let's go!`));
+  return L;
+}
+let annSet = null, annCur = null;
+function say(text, v = {}) {
+  if (store.muted) return;
+  annSet ||= new Set(announcerLines());
+  if (!annSet.has(text)) return tts(text, v);
+  try { speechSynthesis.cancel(); } catch {}
+  if (annCur) try { annCur.pause(); } catch {}
+  const a = voiceEl("ann", text);
+  if (a.failed) return tts(text, v);
+  let fell = false;
+  const fallback = () => { if (fell || annCur !== a) return; fell = true; try { a.pause(); } catch {} tts(text, v); };
+  annCur = a; a.onerror = () => { a.failed = true; fallback(); };
+  try { a.currentTime = 0; } catch {}
+  a.play().catch(fallback);
+  setTimeout(() => { if (annCur === a && a.paused && !a.ended && !fell) fallback(); }, 1500);   // slow connection: don't go silent
 }
 const renderMute = () => $("muteBtn").textContent = store.muted ? "🔇" : "🔊";
 $("muteBtn").onclick = () => { store.muted = !store.muted; save(); renderMute(); if (store.muted) try { speechSynthesis.cancel(); } catch {} };
@@ -2961,7 +2995,7 @@ function speakLine(vk, text, fb = {}) {
   if (store.muted) return;
   const a = voiceEl(vk, text);
   let fell = false;
-  const fallback = () => { if (fell || curVoice !== a) return; fell = true; try { a.pause(); } catch {} curVoice = null; say(text, fb); };
+  const fallback = () => { if (fell || curVoice !== a) return; fell = true; try { a.pause(); } catch {} curVoice = null; tts(text, fb); };
   if (a.failed) { curVoice = a; return fallback(); }
   curVoice = a;
   a.onplaying = () => { if (curVoice === a) cineMusic.duck(true); };
