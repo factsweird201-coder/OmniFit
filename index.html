@@ -67,6 +67,9 @@
   button:hover:not(:disabled) { filter: brightness(1.08); }
   button:active:not(:disabled) { transform: scale(.97); }
   button:disabled { opacity: .45; cursor: default; }
+  .erase-btn { display: block; margin: 14px auto 0; background: none; border: 0; color: var(--muted); font-size: 12px; text-decoration: underline; opacity: .7; padding: 4px; }
+  .erase-btn:hover { color: var(--bad); opacity: 1; }
+  .sv-restore { margin-top: 16px; }
   button.ghost { background: rgba(255,255,255,.04); color: var(--text); border: 1px solid var(--line2); padding: 8px 14px; font-weight: 600; font-size: 13px; }
 
   .panel { position: relative; background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04); }
@@ -486,7 +489,6 @@
   <div style="display:flex;gap:8px">
     <button class="ghost" id="muteBtn" title="Sound & voice">🔊</button>
     <button class="ghost" id="endBtn" disabled>End set</button>
-    <button class="ghost" id="resetBtn">Reset</button>
   </div>
 </header>
 
@@ -633,6 +635,7 @@
       </div>
       <div class="wt-row"><input id="logWeight" type="number" inputmode="decimal" placeholder="Log today's weight (lb)"><button class="ghost" id="logWeightBtn">Log</button></div>
       <div class="sv-tip" id="profTip" style="font-size:13px"></div>
+      <button class="erase-btn" id="resetBtn">Erase all progress…</button>
     </div>
 
     <div class="panel">
@@ -701,6 +704,7 @@
       <p class="sv-sub">Four quick questions so we can set your daily goal, estimate the calories you burn, track your progress and tune the bosses to your level.</p>
       <input class="sv-name" id="svName" maxlength="16" placeholder="Your fighter name" aria-label="Fighter name">
       <div class="muted" style="margin-top:6px">Shown to opponents in 1v1 battles</div>
+      <button class="ghost sv-restore" id="svRestore" hidden>↩ Undo — bring back my old progress</button>
     </div>
 
     <div class="sv-step" data-step="1">
@@ -840,6 +844,7 @@ function figure(key) {
 
 const $ = id => document.getElementById(id);
 const KEY = "pushupRanks.v1";
+const BACKUP_KEY = KEY + ".erased";   // copy kept when you erase progress, so it can be undone
 
 let store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: false, profile: null, weights: [], kcal: 0 };
 try { store = { ...store, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch {}
@@ -1010,9 +1015,21 @@ function openSurvey(editing) {
   buildSurveyOptions();
   renderSurvey();
   $("svClose").hidden = !editing;
+  let backup = null; try { backup = JSON.parse(localStorage.getItem(BACKUP_KEY) || "null"); } catch {}
+  $("svRestore").hidden = editing || !backup?.profile;
   $("survey").classList.add("show");
 }
 $("svClose").onclick = () => $("survey").classList.remove("show");
+$("svRestore").onclick = () => {
+  let backup = null; try { backup = JSON.parse(localStorage.getItem(BACKUP_KEY) || "null"); } catch {}
+  if (!backup?.profile) return;
+  store = { ...store, ...backup, muted: store.muted }; save();
+  try { localStorage.removeItem(BACKUP_KEY); } catch {}
+  $("survey").classList.remove("show");
+  renderRank(); renderRoster(); renderProfile();
+  toast("↩ Progress restored");
+  maybeAutoJoin();
+};
 document.addEventListener("keydown", e => { if (e.key === "Escape" && sv.editing && $("survey").classList.contains("show")) $("survey").classList.remove("show"); });
 
 function optHtml(key, o, sel, inner) {
@@ -1291,8 +1308,13 @@ function showSetDone(n) {
   setDoneTimer = setTimeout(() => { el.classList.add("out"); setTimeout(() => el.hidden = true, 500); }, 4500);
 }
 $("endBtn").onclick = () => endSet(true);
+// Erasing is tucked away in the profile panel (it used to sit next to "End set" and got hit by accident),
+// asks twice, and keeps a backup so the survey can offer to undo it.
 $("resetBtn").onclick = () => {
   if (inMatch()) return;
+  if (!confirm(`Erase ALL your progress?\n\nYour rank, ${store.total.toLocaleString()} push-ups, streak, bosses beaten and profile will be deleted.`)) return;
+  if (!confirm("Are you sure? This starts you over from zero.")) return;
+  try { localStorage.setItem(BACKUP_KEY, JSON.stringify(store)); } catch {}
   store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: store.muted, profile: null, weights: [], kcal: 0, pvp: { w: 0, l: 0, d: 0 }, name: "" };
   setCount = 0; save(); $("setCount").textContent = 0; renderRank(); renderRoster(); openSurvey(false);
 };
