@@ -301,26 +301,51 @@
   .tips li { margin-bottom: 4px; }
   .tips b { color: var(--text); }
   /* ---------- boss select ---------- */
-  .cm-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
-  .cm-chip { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 8px 10px; border-radius: 12px; background: rgba(0,0,0,.35); border: 1px solid var(--line2); color: var(--text); text-align: left; min-width: 0; }
-  .cm-chip b { font: 700 11px var(--display); letter-spacing: 1.5px; color: var(--c); }
-  .cm-chip span { font: 700 13px var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-  .cm-chip i { font-style: normal; font-size: 11px; color: var(--muted); }
-  .cm-chip.on { border-color: var(--c); box-shadow: 0 0 18px color-mix(in srgb, var(--c) 30%, transparent); background: color-mix(in srgb, var(--c) 12%, rgba(0,0,0,.4)); }
-  .cm-chip:disabled { opacity: .45; cursor: default; }
-  .cm-story { font-size: 13.5px; color: var(--muted); margin-bottom: 14px; border-left: 3px solid var(--c); padding: 4px 0 4px 10px; }
-  .cm-story b { color: var(--text); }
-  .cm-path { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; position: relative; margin-bottom: 14px; }
-  .cm-path::before { content: ""; position: absolute; left: 6%; right: 6%; top: 50%; height: 3px; background: linear-gradient(90deg, var(--c), color-mix(in srgb, var(--c) 20%, transparent)); opacity: .5; }
-  .cm-node { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px 8px; border-radius: 16px; background: rgba(10,12,18,.9); border: 1px solid var(--line2); color: var(--text); min-width: 0; }
-  .cm-node .cm-num { position: absolute; left: 7px; top: 5px; }
-  .cm-node .cm-ic { font-size: 30px; line-height: 44px; height: 44px; }
-  .cm-node .cm-art { width: 44px; height: 44px; } .cm-node .cm-art svg { width: 100%; height: 100%; overflow: visible; }
-  .cm-node .cm-nm { font: 700 12px var(--display); line-height: 1.15; text-align: center; min-height: 28px; display: flex; align-items: center; }
-  .cm-node.boss { border-color: color-mix(in srgb, var(--c) 55%, transparent); }
-  .cm-node.next { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,194,26,.2); }
-  .cm-node.pick { border-color: var(--c); background: color-mix(in srgb, var(--c) 16%, rgba(10,12,18,.95)); transform: translateY(-3px); }
-  .cm-node:disabled { opacity: .5; cursor: default; }
+  .campmap { position: absolute; inset: 0; z-index: 9; background: #07090e; overflow: hidden; }
+  .cmap-scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; padding-bottom: 210px; }
+  .cmap { position: relative; width: 100%; aspect-ratio: 700 / 2800; }
+  .cmap-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .cmap-region { position: absolute; left: 0; right: 0; pointer-events: none; }
+  .cmap-banner { position: absolute; z-index: 1; left: 12px; bottom: 14px; display: flex; flex-direction: column; padding: 8px 14px 8px 12px; border-radius: 4px 14px 14px 4px;
+    background: rgba(5,6,10,.72); border-left: 4px solid var(--c); backdrop-filter: blur(4px); box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+  .cmap-banner b { font: 700 10px var(--display); letter-spacing: 2px; color: var(--c); }
+  .cmap-banner span { font: 700 17px var(--display); letter-spacing: .5px; }
+  .cmap-banner i { font-style: normal; font-size: 11px; color: var(--accent); }
+  .cmap-fog { position: absolute; inset: 0; background:
+      radial-gradient(circle at 15% 20%, rgba(200,205,220,.16) 0 70px, transparent 140px), radial-gradient(circle at 70% 45%, rgba(200,205,220,.14) 0 90px, transparent 170px),
+      radial-gradient(circle at 35% 80%, rgba(200,205,220,.12) 0 80px, transparent 160px), rgba(8,10,16,.78);
+    backdrop-filter: blur(3px) grayscale(.7); display: grid; place-items: end center; padding-bottom: 90px; }
+  .cmap-lock { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 34px; text-align: center; padding: 14px 20px; border-radius: 16px; background: rgba(0,0,0,.5); border: 1px solid var(--line2); }
+  .cmap-lock b { font: 700 18px var(--display); color: var(--c); } .cmap-lock span { font-size: 13px; color: var(--muted); }
+  .mnode { position: absolute; transform: translate(-50%, -50%); width: clamp(50px, 9vw, 72px); aspect-ratio: 1; padding: 0; border: 0; background: none; z-index: 2; filter: none; }
+  .mnode.boss { width: clamp(64px, 12vw, 96px); }
+  .mn-disc { position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center; overflow: visible;
+    background: radial-gradient(circle at 50% 35%, #2a2f3d, #12151d 70%); border: 4px solid #59606f; box-shadow: 0 6px 0 #000a, 0 10px 18px rgba(0,0,0,.5); transition: transform .15s; }
+  .mnode:hover:not(:disabled) .mn-disc { transform: translateY(-3px) scale(1.05); }
+  .mnode.done .mn-disc { border-color: var(--accent); background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--c) 45%, #2a2f3d), #12151d 75%); }
+  .mnode.boss .mn-disc { border-color: color-mix(in srgb, var(--c) 70%, #59606f); }
+  .mnode.next .mn-disc { border-color: #fff; box-shadow: 0 0 0 4px var(--accent), 0 0 28px var(--accent), 0 6px 0 #000a; animation: nodePulse 1.6s ease-in-out infinite; }
+  .mnode.pick .mn-disc { outline: 3px solid var(--c); outline-offset: 5px; }
+  .mnode:disabled { cursor: default; } .mnode:disabled .mn-disc { filter: grayscale(1) brightness(.6); }
+  .mn-ic { font-size: clamp(22px, 4vw, 32px); line-height: 1; }
+  .mn-art { width: 88%; height: 88%; } .mn-art svg { width: 100%; height: 100%; overflow: visible; }
+  .mn-num { position: absolute; left: 50%; top: -9px; transform: translateX(-50%); font: 700 10px var(--display); letter-spacing: 1px; color: var(--text); background: #0b0d12; border: 1px solid var(--line2); border-radius: 8px; padding: 1px 6px; white-space: nowrap; }
+  .mn-st { position: absolute; left: 50%; bottom: -15px; transform: translateX(-50%); display: flex; gap: 1px; font-size: 13px; text-shadow: 0 1px 2px #000; }
+  .mn-st i { font-style: normal; color: #3a3f4c; } .mn-st i.on { color: var(--accent); }
+  .mnode.boss .mn-st { bottom: -16px; font-size: 15px; }
+  @keyframes nodePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+  .cmap-you { position: absolute; transform: translate(-50%, calc(-100% - 58px)); z-index: 3; pointer-events: none; animation: youBob 1.4s ease-in-out infinite; }
+  .cmap-you span { display: block; font: 700 11px var(--display); letter-spacing: 1px; color: #1a1000; background: linear-gradient(135deg, var(--accent), var(--accent2)); padding: 4px 9px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,.5); white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+  .cmap-you::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); border: 7px solid transparent; border-bottom: 0; border-top-color: var(--accent2); }
+  @keyframes youBob { 0%, 100% { margin-top: 0; } 50% { margin-top: -8px; } }
+  .cmap-top { position: absolute; left: 12px; top: 12px; display: flex; gap: 10px; align-items: center; padding: 7px 14px; border-radius: 12px; background: rgba(5,6,10,.75); border: 1px solid var(--line2); backdrop-filter: blur(6px); z-index: 4; font-size: 13px; }
+  .cmap-top b { font: 700 13px var(--display); letter-spacing: 2px; } .cmap-top span { color: var(--accent); font-weight: 700; }
+  .campmap .cm-brief { position: absolute; left: auto; right: 12px; bottom: 12px; width: min(400px, calc(100% - 24px)); z-index: 4; margin: 0; background: rgba(6,8,13,.9); backdrop-filter: blur(8px); box-shadow: 0 -6px 30px rgba(0,0,0,.5); padding: 12px 16px; gap: 4px; }
+  .cm-story-line { font-size: 13px; } .cm-rules { font-size: 12px; }
+  @media (max-width: 600px) {
+    .campmap .cm-brief { padding: 10px 12px; left: 12px; width: auto; } .cm-bt { font-size: 17px; } .cm-story-line { display: none; }
+    .cmap-banner span { font-size: 14px; }
+  }
   .cm-num { font: 700 10px var(--display); letter-spacing: 1px; color: var(--muted); }
   .cm-st { font-size: 12px; color: var(--accent); letter-spacing: 1px; }
   .cm-brief { background: rgba(0,0,0,.45); border: 1px solid color-mix(in srgb, var(--c) 45%, var(--line2)); border-radius: 16px; padding: 14px 16px; display: grid; gap: 6px; text-align: center; max-width: 560px; margin: 0 auto; }
@@ -338,9 +363,7 @@
   .cp-bar { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; }
   .cp-bar i { display: block; height: 100%; background: var(--c); }
   @media (max-width: 600px) {
-    .cm-chips { grid-template-columns: repeat(2, 1fr); }
-    .cm-path { grid-template-columns: repeat(3, 1fr); } .cm-path::before { display: none; }
-  }
+      }
   .bossselect { position: absolute; inset: 0; z-index: 9; overflow: auto; padding: 22px;
     background: radial-gradient(ellipse at 50% 0%, rgba(255,77,94,.16), transparent 60%), radial-gradient(ellipse at 50% 120%, rgba(120,80,255,.14), transparent 60%), linear-gradient(180deg, #0c0e16, #05060a); }
   .bs-head { text-align: center; margin-bottom: 16px; }
@@ -595,7 +618,7 @@
         <div class="bs-grid" id="bsGrid"></div>
       </div>
 
-      <div class="bossselect campmap" id="campMap" hidden></div>
+      <div class="campmap" id="campMap" hidden></div>
       <div class="arena" id="mission" hidden>
         <div class="boss-top m-top">
           <div class="boss-row">
@@ -2132,48 +2155,140 @@ const campTotal = () => CAMP_LIST.reduce((t, m) => t + campStars(m.id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
 let campChapter = null, campPick = null, M = null;
 
+// ---------- campaign world map ----------
+// One tall map you climb from the bottom (Boot Camp) to the top (The Void). Map units: 700 wide × 2800 tall,
+// each chapter is a 700-unit band. Scenery is drawn once from a fixed seed so it never moves around.
+const MAP_W = 700, MAP_H = 2800, BAND = 700;
+const mapPt = k => {
+  const m = CAMP_LIST[k], bandBottom = MAP_H - m.ch * BAND;
+  return { x: MAP_W / 2 + 205 * Math.sin(k * 1.05 + 0.4), y: bandBottom - 105 - m.mi * 98 };
+};
+function seeded(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+let mapSvgCache = null;
+function mapSvg() {
+  if (mapSvgCache) return mapSvgCache;
+  const pts = CAMP_LIST.map((_, k) => mapPt(k));
+  // road through every mission, as gentle S-curves
+  let road = `M${pts[0].x},${pts[0].y + 120} C${pts[0].x},${pts[0].y + 60} ${pts[0].x},${pts[0].y + 40} ${pts[0].x},${pts[0].y}`;
+  const samples = [];
+  for (let k = 1; k < pts.length; k++) {
+    const a = pts[k - 1], b = pts[k], d = (a.y - b.y) / 2;
+    road += ` C${a.x},${a.y - d} ${b.x},${b.y + d} ${b.x},${b.y}`;
+    for (let t = 0; t <= 1; t += 0.1) {   // sample the curve so scenery stays off the road
+      const u = 1 - t, y = u * u * u * a.y + 3 * u * u * t * (a.y - d) + 3 * u * t * t * (b.y + d) + t * t * t * b.y;
+      const x = u * u * u * a.x + 3 * u * u * t * a.x + 3 * u * t * t * b.x + t * t * t * b.x;
+      samples.push({ x, y });
+    }
+  }
+  const clear = (x, y, r) => samples.every(p => Math.hypot(p.x - x, p.y - y) > r);
+  const rnd = seeded(20261107);
+  const place = (n, y0, y1, r, draw) => { let out = "", tries = 0; for (let i = 0; i < n && tries < n * 25; tries++) { const x = 20 + rnd() * (MAP_W - 40), y = y0 + rnd() * (y1 - y0); if (!clear(x, y, r)) continue; out += draw(x, y, rnd); i++; } return out; };
+  const band = ci => [MAP_H - (ci + 1) * BAND, MAP_H - ci * BAND];
+  let g = "";
+  // --- Chapter 1: Boot Camp (grass, tents, crates, flags) ---
+  { const [y0, y1] = band(0);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gCamp)"/>`;
+    g += place(26, y0, y1, 34, (x, y, r) => `<ellipse cx="${x}" cy="${y}" rx="${18 + r() * 30}" ry="${6 + r() * 8}" fill="#4f7d3a" opacity=".55"/>`);
+    g += place(7, y0 + 40, y1 - 20, 70, (x, y) => `<g transform="translate(${x},${y})"><ellipse cx="0" cy="22" rx="42" ry="9" fill="#000" opacity=".25"/><path d="M-38,22 L0,-28 L38,22Z" fill="#8a6e3c"/><path d="M0,-28 L38,22 L14,22Z" fill="#6c5428"/><path d="M-9,22 L0,2 L9,22Z" fill="#2b2112"/><line x1="0" y1="-28" x2="0" y2="-40" stroke="#5a4520" stroke-width="3"/></g>`);
+    g += place(9, y0, y1, 50, (x, y, r) => { const s = 14 + r() * 8; return `<g transform="translate(${x},${y})"><rect x="${-s}" y="${-s}" width="${2 * s}" height="${2 * s}" fill="#a07a3e" stroke="#6b4f22" stroke-width="3"/><path d="M${-s},${-s} L${s},${s} M${s},${-s} L${-s},${s}" stroke="#6b4f22" stroke-width="2.5"/></g>`; });
+    g += place(4, y0 + 60, y1 - 60, 60, (x, y) => `<g transform="translate(${x},${y})"><line x1="0" y1="20" x2="0" y2="-46" stroke="#ddd" stroke-width="3"/><path d="M0,-46 L30,-37 L0,-28Z" fill="#ffc21a"/></g>`);
+    g += place(5, y0, y1, 60, (x, y) => `<g transform="translate(${x},${y})" stroke="#7a5a2c" stroke-width="4" stroke-linecap="round"><line x1="-40" y1="0" x2="40" y2="0"/><line x1="-40" y1="10" x2="40" y2="10"/>${[-40, -13, 13, 40].map(px => `<line x1="${px}" y1="-10" x2="${px}" y2="18"/>`).join("")}</g>`);
+  }
+  // --- Chapter 2: The Dark Woods (pines, moon, fireflies) ---
+  { const [y0, y1] = band(1);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gWoods)"/>`;
+    g += `<circle cx="590" cy="${y0 + 90}" r="70" fill="#dfe6ff" opacity=".08"/><circle cx="590" cy="${y0 + 90}" r="34" fill="#e8edff" opacity=".85"/><circle cx="578" cy="${y0 + 82}" r="30" fill="#132a26" opacity=".9"/>`;
+    g += place(70, y0, y1, 42, (x, y, r) => { const s = 0.7 + r() * 0.8, c = r() < .5 ? "#1f4a37" : "#245640"; return `<g transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="34" rx="22" ry="6" fill="#000" opacity=".3"/><rect x="-4" y="22" width="8" height="12" fill="#3b2a1a"/><path d="M0,-40 L20,-10 L10,-10 L26,12 L14,12 L30,26 L-30,26 L-14,12 L-26,12 L-10,-10 L-20,-10Z" fill="${c}"/><path d="M0,-40 L20,-10 L10,-10 L26,12 L14,12 L30,26 L0,26Z" fill="#000" opacity=".22"/></g>`; });
+    g += place(30, y0, y1, 20, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${1.5 + r() * 2}" fill="#d9ff7a" opacity="${0.4 + r() * 0.5}"/>`);
+  }
+  // --- Chapter 3: Dragon Peaks (mountains, lava, volcano) ---
+  { const [y0, y1] = band(2);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gPeaks)"/>`;
+    g += `<path d="M-20,${y0 + 470} C120,${y0 + 420} 160,${y0 + 560} 300,${y0 + 520} S520,${y0 + 400} 720,${y0 + 470}" stroke="#ff7a1a" stroke-width="16" fill="none" opacity=".9"/><path d="M-20,${y0 + 470} C120,${y0 + 420} 160,${y0 + 560} 300,${y0 + 520} S520,${y0 + 400} 720,${y0 + 470}" stroke="#ffd36a" stroke-width="5" fill="none"/>`;
+    g += place(16, y0 + 20, y1, 70, (x, y, r) => { const w = 40 + r() * 40, h = 50 + r() * 60; return `<g transform="translate(${x},${y})"><path d="M${-w},20 L${-w * 0.15},${-h} L${w * 0.2},${-h + 14} L${w},20Z" fill="#4a2418"/><path d="M${-w * 0.15},${-h} L${w * 0.2},${-h + 14} L${w},20 L${w * 0.1},20Z" fill="#000" opacity=".25"/><path d="M${-w * 0.15},${-h} L${-w * 0.35},${-h + 24} L${-w * 0.05},${-h + 18} L${w * 0.2},${-h + 14}Z" fill="#ff8a3d" opacity=".65"/></g>`; });
+    g += `<g transform="translate(110,${y0 + 120})"><path d="M-80,60 L-22,-40 L22,-40 L80,60Z" fill="#3a1a12"/><ellipse cx="0" cy="-40" rx="22" ry="7" fill="#ff5a1a"/><circle cx="-6" cy="-70" r="16" fill="#555" opacity=".35"/><circle cx="8" cy="-95" r="22" fill="#555" opacity=".25"/></g>`;
+    g += place(40, y0, y1, 16, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${1.5 + r() * 2}" fill="#ffb347" opacity="${0.35 + r() * 0.5}"/>`);
+  }
+  // --- Chapter 4: The Void (stars, floating rocks, the eye) ---
+  { const [y0, y1] = band(3);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gVoid)"/>`;
+    g += place(160, y0, y1, 12, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${0.6 + r() * 1.8}" fill="#fff" opacity="${0.25 + r() * 0.7}"/>`);
+    g += place(9, y0 + 60, y1, 60, (x, y, r) => { const w = 26 + r() * 30; return `<g transform="translate(${x},${y})"><ellipse cx="0" cy="0" rx="${w}" ry="${w * 0.32}" fill="#5b3a8a"/><path d="M${-w},0 Q0,${w * 1.1} ${w},0Z" fill="#2c1846"/><ellipse cx="0" cy="-2" rx="${w * 0.8}" ry="${w * 0.18}" fill="#8a63c9" opacity=".6"/></g>`; });
+    g += `<g transform="translate(560,${y0 + 70})" opacity=".55"><ellipse rx="70" ry="34" fill="#c06bff" opacity=".25"/><ellipse rx="48" ry="22" fill="#1a0b2e" stroke="#c06bff" stroke-width="3"/><circle r="14" fill="#ff3a6a"/><circle r="5" fill="#000"/></g>`;
+  }
+  // soft seams between chapters
+  for (let ci = 1; ci < 4; ci++) { const y = MAP_H - ci * BAND; g += `<rect x="0" y="${y - 40}" width="${MAP_W}" height="80" fill="url(#gSeam)"/>`; }
+  const roadSvg = `<path d="${road}" stroke="#000" stroke-opacity=".45" stroke-width="40" fill="none" stroke-linecap="round"/>
+    <path d="${road}" stroke="#c9a56a" stroke-width="28" fill="none" stroke-linecap="round"/>
+    <path d="${road}" stroke="#e6c98f" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <path d="${road}" stroke="#8a6a38" stroke-width="3" fill="none" stroke-dasharray="10 14"/>`;
+  mapSvgCache = { road, svg: `<svg class="cmap-svg" viewBox="0 0 ${MAP_W} ${MAP_H}" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="gCamp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f5a2b"/><stop offset="1" stop-color="#3f6e2e"/></linearGradient>
+      <linearGradient id="gWoods" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1f22"/><stop offset="1" stop-color="#16372b"/></linearGradient>
+      <linearGradient id="gPeaks" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1210"/><stop offset="1" stop-color="#4f2216"/></linearGradient>
+      <linearGradient id="gVoid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07030f"/><stop offset="1" stop-color="#22103a"/></linearGradient>
+      <linearGradient id="gSeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+    </defs>${g}${roadSvg}<path id="cmapDone" d="" stroke="#ffc21a" stroke-width="8" fill="none" stroke-linecap="round" opacity=".85"/></svg>` };
+  return mapSvgCache;
+}
+// the gold "travelled" line from the start up to the furthest unlocked mission
+function doneRoad(upTo) {
+  const pts = CAMP_LIST.slice(0, upTo + 1).map((_, k) => mapPt(k));
+  if (!pts.length) return "";
+  let d = `M${pts[0].x},${pts[0].y + 120} C${pts[0].x},${pts[0].y + 60} ${pts[0].x},${pts[0].y + 40} ${pts[0].x},${pts[0].y}`;
+  for (let k = 1; k < pts.length; k++) { const a = pts[k - 1], b = pts[k], dd = (a.y - b.y) / 2; d += ` C${a.x},${a.y - dd} ${b.x},${b.y + dd} ${b.x},${b.y}`; }
+  return d;
+}
+
+let campScrollTo = true;
 function renderCampaign() {
   store.campaign ||= {};
   const nextK = CAMP_LIST.findIndex((m, k) => campUnlocked(k) && !campStars(m.id));
-  if (campChapter == null) campChapter = nextK >= 0 ? CAMP_LIST[nextK].ch : CHAPTERS.length - 1;
-  const ch = CHAPTERS[campChapter];
-  if (campPick == null || CAMP_LIST[campPick].ch !== campChapter) campPick = CAMP_LIST.findIndex((m, k) => m.ch === campChapter && campUnlocked(k) && !campStars(m.id));
-  if (campPick < 0) campPick = CAMP_LIST.findIndex(m => m.ch === campChapter);
-  const chipHtml = CHAPTERS.map((c, ci) => {
-    const open = chapterUnlocked(ci), got = CAMP_LIST.filter(m => m.ch === ci).reduce((t, m) => t + campStars(m.id), 0);
-    return `<button class="cm-chip ${ci === campChapter ? "on" : ""}" style="--c:${c.color}" data-ch="${ci}" ${open ? "" : "disabled"}>
-      <b>${open ? "" : "🔒 "}Ch ${ci + 1}</b><span>${open ? c.name : "Locked"}</span><i>${open ? `★ ${got}/18` : ""}</i></button>`;
+  const furthest = nextK >= 0 ? nextK : CAMP_LIST.length - 1;
+  if (campPick == null || !campUnlocked(campPick)) { campPick = furthest; campScrollTo = true; }
+  const pct = (v, of) => (v / of * 100).toFixed(3) + "%";
+  const nodes = CAMP_LIST.map((m, k) => {
+    const p = mapPt(k), open = campUnlocked(k), st = campStars(m.id), boss = m.type === "boss", c = CHAPTERS[m.ch].color;
+    const face = !open ? `<span class="mn-ic">🔒</span>` : boss ? `<span class="mn-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="mn-ic">${MTYPES[m.type].icon}</span>`;
+    return `<button class="mnode ${boss ? "boss" : ""} ${st ? "done" : ""} ${k === nextK ? "next" : ""} ${k === campPick ? "pick" : ""}" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)};--c:${c}" data-k="${k}" ${open ? "" : "disabled"} aria-label="${m.id} ${open ? m.name : "locked"}">
+      <span class="mn-disc">${face}</span><span class="mn-num">${m.id}</span>
+      ${open ? `<span class="mn-st">${[0, 1, 2].map(i => `<i class="${i < st ? "on" : ""}">★</i>`).join("")}</span>` : ""}</button>`;
   }).join("");
-  const nodes = CAMP_LIST.map((m, k) => ({ m, k })).filter(({ m }) => m.ch === campChapter).map(({ m, k }) => {
-    const open = campUnlocked(k), st = campStars(m.id), boss = m.type === "boss";
-    const face = boss ? `<span class="cm-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="cm-ic">${MTYPES[m.type].icon}</span>`;
-    return `<button class="cm-node ${boss ? "boss" : ""} ${k === campPick ? "pick" : ""} ${open && !st ? "next" : ""}" data-k="${k}" ${open ? "" : "disabled"}>
-      <span class="cm-num">${m.id}</span>${open ? face : `<span class="cm-ic">🔒</span>`}
-      <span class="cm-nm">${open ? m.name : "???"}</span>
-      <span class="cm-st">${"★".repeat(st)}<span style="opacity:.25">${"★".repeat(3 - st)}</span></span></button>`;
+  const you = (() => { const p = mapPt(furthest); return `<div class="cmap-you" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)}"><span>${esc(store.name || "YOU")}</span></div>`; })();
+  const regions = CHAPTERS.map((c, ci) => {
+    const top = pct(MAP_H - (ci + 1) * BAND, MAP_H), h = pct(BAND, MAP_H), open = chapterUnlocked(ci);
+    const prevBoss = ci > 0 ? BOSSES[CHAPTERS[ci - 1].missions.filter(m => m.type === "boss").pop().boss].name : "";
+    const got = CAMP_LIST.filter(m => m.ch === ci).reduce((t, m) => t + campStars(m.id), 0);
+    return `<div class="cmap-region ${open ? "" : "locked"}" style="top:${top};height:${h};--c:${c.color}">
+      <div class="cmap-banner"><b>CHAPTER ${ci + 1}</b><span>${c.name}</span>${open ? `<i>★ ${got}/18</i>` : ""}</div>
+      ${open ? "" : `<div class="cmap-fog"><div class="cmap-lock">🔒<b>${c.name}</b><span>Defeat ${prevBoss} to unlock</span></div></div>`}</div>`;
   }).join("");
-  const pm = CAMP_LIST[campPick], pg = missionGoal(pm), pOpen = campUnlocked(campPick), pst = campStars(pm.id);
+  const pm = CAMP_LIST[campPick], pg = missionGoal(pm), pst = campStars(pm.id), pc = CHAPTERS[pm.ch].color;
+  const scroller = $("cmapScroll"), keep = scroller ? scroller.scrollTop : null;
+  const { svg } = mapSvg();
   $("campMap").innerHTML = `
-    <div class="bs-head">
-      <div class="bs-title">THE <em style="color:${ch.color}">CAMPAIGN</em></div>
-      <div class="muted">★ ${campTotal()} / ${CAMP_LIST.length * 3} stars · finish a mission to unlock the next</div>
-    </div>
-    <div class="cm-chips">${chipHtml}</div>
-    <div class="cm-story" style="--c:${ch.color}"><b>Chapter ${campChapter + 1}: ${ch.name}</b> — ${ch.story}</div>
-    <div class="cm-path" style="--c:${ch.color}">${nodes}</div>
-    <div class="cm-brief" style="--c:${ch.color}">
-      <div class="cm-bt"><span class="cm-num">${pm.id}</span> ${pm.name} ${pst ? `<span class="cm-st">${"★".repeat(pst)}</span>` : ""}</div>
-      <div class="muted">${pm.story}</div>
+    <div class="cmap-scroll" id="cmapScroll"><div class="cmap">${svg}${regions}${nodes}${you}</div></div>
+    <div class="cmap-top"><b>THE CAMPAIGN</b><span>★ ${campTotal()} / ${CAMP_LIST.length * 3}</span></div>
+    <div class="cm-brief" style="--c:${pc}">
+      <div class="cm-bt"><span class="cm-num">${pm.id}</span> ${pm.name} ${pst ? `<span class="cm-st">${"★".repeat(pst)}<span style="opacity:.25">${"★".repeat(3 - pst)}</span></span>` : ""}</div>
+      <div class="muted cm-story-line">${pm.story}</div>
       <div class="cm-goal">${MTYPES[pm.type].icon} ${MTYPES[pm.type].goal(pg)}</div>
-      <div class="muted" style="font-size:12px">${MTYPES[pm.type].stars}</div>
-      <div class="muted" id="campStatus" style="font-size:13px;min-height:18px"></div>
-      <button id="campGo" ${pOpen ? "" : "disabled"}>${pst ? "Play again" : pm.type === "boss" ? "Fight ⚔" : "Start mission ▶"}</button>
+      <div class="muted cm-rules">${MTYPES[pm.type].stars}</div>
+      <div class="muted" id="campStatus" style="font-size:13px"></div>
+      <button id="campGo">${pst ? "Play again" : pm.type === "boss" ? "Fight ⚔" : "Start mission ▶"}</button>
     </div>`;
-  $("campMap").querySelectorAll(".cm-chip").forEach(el => el.onclick = () => { campChapter = +el.dataset.ch; campPick = null; renderCampaign(); });
-  $("campMap").querySelectorAll(".cm-node").forEach(el => el.onclick = () => { campPick = +el.dataset.k; renderCampaign(); });
+  $("cmapDone").setAttribute("d", doneRoad(furthest));
+  const sc = $("cmapScroll");
+  if (campScrollTo || keep == null) {
+    campScrollTo = false;
+    requestAnimationFrame(() => { const el = sc.querySelector(".mnode.pick"); if (el) sc.scrollTop = el.offsetTop - sc.clientHeight * 0.42; });
+  } else sc.scrollTop = keep;
+  sc.querySelectorAll(".mnode").forEach(el => el.onclick = () => { campPick = +el.dataset.k; renderCampaign(); });
   $("campGo").onclick = () => startMission(campPick);
   renderCampPanel();
 }
+
 function renderCampPanel() {
   $("campProg").innerHTML = CHAPTERS.map((c, ci) => {
     const ms = CAMP_LIST.filter(m => m.ch === ci), done = ms.filter(m => campStars(m.id)).length, got = ms.reduce((t, m) => t + campStars(m.id), 0);
