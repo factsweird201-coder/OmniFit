@@ -1600,13 +1600,13 @@ document.addEventListener("keydown", e => {
 // ================= POSE → REP DETECTION =================
 let phase = "up", smoothAngle = null, topRef = null, smoothDepth = null, notReadyFrames = 0, minRatio = 1;
 // armed: must be seen in the top (arms straight) position before a rep can start — stops "getting up off the floor" counting as a rep
-let topUpper = null;
+let topUpper = null, raisedFrames = 0;
 let armed = false, lowSince = 0, lastRepTime = 0;
 const LOW_END_MS = 2500, IDLE_END_MS = 20000;
 
 // ---- rep verification: every rep must look like a real push-up, not just arms moving ----
-const MIN_REP_MS = 300;          // time spent below the top position; faster than this is tracker noise
-const MIN_GAP_MS = 500;          // at most ~1.5 reps per second
+const MIN_REP_MS = 250;          // time spent below the top position; faster than this is tracker noise
+const MIN_GAP_MS = 400;          // at most ~1.5 reps per second
 const STABLE_FRAMES = 3;         // must hold a valid plank for this many frames before arming
 const MIN_DEPTH = 0.25;          // arm gap must shrink by at least a quarter
 let repsSinceArm = 0, downSince = 0, uprightFrames = 0, goodFrames = 0, topShY = null, topWrist = null, topLeftAt = 0, rep = null, rejectStreak = 0, lastCountedAt = 0;
@@ -1697,9 +1697,11 @@ function analyse(lm) {
     const mid = (L.s.x + R.s.x) / 2, sw = Math.max(Math.abs(L.s.x - R.s.x), 1);
     flare = avg(S => Math.abs(S.e.x - mid) - Math.max(Math.abs(S.s.x - mid), Math.abs(S.w.x - mid))) / sw;
   }
+  // elbows can flash above the shoulders at the bottom of a push-up — only an arms-up pose that lasts counts as one
+  raisedFrames = elbowBelowShoulder ? 0 : raisedFrames + 1;
   let why = "";
   if (upright) why = "Get down into a plank — sitting or standing doesn't count";
-  else if (!elbowBelowShoulder) why = "Hands on the floor — arms raised doesn't count";
+  else if (raisedFrames >= 8) why = "Hands on the floor — arms raised doesn't count";
   else if (!wristBelowElbow) why = "Hands on the floor, arms straight";
   // Upper-arm drop: how far the elbows sit below the shoulders on screen. At the bottom of a push-up the upper
   // arms swing up level with the shoulders; curls and lap movements keep the elbows hanging below.
@@ -1713,7 +1715,7 @@ function rejectRep(reason, info) {
   setFeedback("Not counted — " + reason, "bad");
   if ((F?.active && F.state !== "countdown") || B?.state === "fight") callout("NOT COUNTED", reason.toUpperCase(), "red");
   phase = "up"; rep = null;
-  if (++rejectStreak >= 2) { disarm(); setPhase("READY"); }
+
 }
 
 // If something keeps blocking reps for a while, write it to the log so we can see why nothing counted.
@@ -1761,7 +1763,7 @@ function step(res) {
   if (phase === "up") {
     setPhase("UP");
     if (ratio > 0.85) { topShY = res.shY; topUpper = res.upper; topWrist = { x: res.wX, y: res.wY }; topLeftAt = now; }
-    if (ratio < 0.62 || res.elbow < 95) {
+    if (ratio < 0.7) {
       phase = "down"; minRatio = ratio; setPhase("DOWN"); sfx.down(); downSince = now;
       rep = { start: topLeftAt || now, topGap: topRef, topShY: topShY ?? res.shY, wrist: topWrist || { x: res.wX, y: res.wY },
               maxShY: res.shY, drift: 0, minElbow: res.elbow, flare: res.flare, topUpper: topUpper ?? res.upper, minUpper: res.upper,
@@ -1805,8 +1807,8 @@ function step(res) {
                      shoulders: +((rep.maxShY - rep.topShY) / g).toFixed(2), hands: +(rep.drift / g).toFixed(2), elbow: Math.round(rep.minElbow),
                      flare: +rep.flare.toFixed(2), arms: +(rep.topUpper > 1 ? 1 - rep.minUpper / rep.topUpper : 0).toFixed(2) };
       rep = null;
-      if (info.ms < MIN_REP_MS) return rejectRep("too fast", info);
-      if (lastCountedAt && now - lastCountedAt < MIN_GAP_MS) return rejectRep("too fast", info);
+      // Under a quarter of a second is the tracker flickering, not you — ignore it without a fuss.
+      if (info.ms < MIN_REP_MS || (lastCountedAt && now - lastCountedAt < MIN_GAP_MS)) return;
       // Simple counting: down and back up, deep enough, not impossibly fast.
       if (info.depth < MIN_DEPTH) return rejectRep("go a bit lower", info);
       rejectStreak = 0; lastCountedAt = now; repsSinceArm++;
