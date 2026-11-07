@@ -1284,6 +1284,7 @@ function flushRankUps() { if (pendingRankUps.length) showRankUp(pendingRankUps.s
 
 let setDoneTimer = 0;
 function endSet(showSummary = true) {
+  const hadReps = setCount > 0;
   if (setCount > 0) {
     store.sets++; save(); renderRank();
     if (showSummary && !F && !B) showSetDone(setCount);
@@ -1291,6 +1292,7 @@ function endSet(showSummary = true) {
   setCount = 0; $("setCount").textContent = 0; bestToasted = false;
   $("endBtn").disabled = true;
   lastRepTime = 0; lowSince = 0;
+  if (showSummary && !F && !B) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
 }
 function showSetDone(n) {
   const isBest = n >= store.best && n > 1, today = store.days[dayKey()] || 0;
@@ -1900,14 +1902,16 @@ function ensureCamera() {
     try {
       const problem = cameraProblem();
       if (problem) throw new Error(problem);
-      $("loadMsg").textContent = "Loading pose model…";
-      const fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
-      const opts = delegate => ({
-        baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task", delegate },
-        runningMode: "VIDEO", numPoses: 1,
-      });
-      try { landmarker = await PoseLandmarker.createFromOptions(fileset, opts("GPU")); }
-      catch (err) { console.warn("GPU failed, using CPU", err); landmarker = await PoseLandmarker.createFromOptions(fileset, opts("CPU")); }
+      if (!landmarker) {   // the body tracker stays loaded between sets, so restarting the camera is quick
+        $("loadMsg").textContent = "Loading pose model…";
+        const fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+        const opts = delegate => ({
+          baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task", delegate },
+          runningMode: "VIDEO", numPoses: 1,
+        });
+        try { landmarker = await PoseLandmarker.createFromOptions(fileset, opts("GPU")); }
+        catch (err) { console.warn("GPU failed, using CPU", err); landmarker = await PoseLandmarker.createFromOptions(fileset, opts("CPU")); }
+      }
       $("loadMsg").textContent = "Requesting camera…";
       const stream = await getCamera();
       video.srcObject = stream;
@@ -1915,8 +1919,9 @@ function ensureCamera() {
       canvas.width = video.videoWidth; canvas.height = video.videoHeight;
       $("startOverlay").hidden = true;
       ["hud", "phase", "feedback"].forEach(id => $(id).hidden = false);
+      $("loadMsg").textContent = "";
       keepAwake();
-      loop();
+      if (!looping) { looping = true; loop(); }
       return true;
     } catch (e) {
       console.error(e);
@@ -1930,7 +1935,29 @@ function ensureCamera() {
 }
 $("startBtn").onclick = () => ensureCamera();
 
+// Turn the camera off (light goes out) and show the start button again for the next set.
+let overlayTimer = 0;
+function stopCamera(overlayDelay = 0) {
+  if (!camReady) return;
+  const st = video.srcObject;
+  video.srcObject = null;
+  st?.getTracks().forEach(t => t.stop());
+  camReady = null; lastT = -1;
+  try { wakeLock?.release(); } catch {}
+  wakeLock = null;
+  disarm(); topRef = null; gapHist.length = 0; smoothDepth = null; smoothAngle = null;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ["hud", "phase", "feedback"].forEach(id => $(id).hidden = true);
+  $("startBtn").textContent = "Start next set";
+  $("startBtn").disabled = false;
+  // let the "SET COMPLETE" card show on the dark stage first, then bring back the start button
+  clearTimeout(overlayTimer);
+  overlayTimer = setTimeout(() => { if (!camReady) $("startOverlay").hidden = false; }, overlayDelay);
+}
+
+let looping = false;
 function loop() {
+  if (!video.srcObject) { looping = false; return; }   // camera was turned off
   if (video.currentTime !== lastT) {
     lastT = video.currentTime;
     if (video.videoWidth && (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)) {
