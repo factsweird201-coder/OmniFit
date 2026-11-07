@@ -403,8 +403,13 @@
   .duel-side.them .reps { text-align: right; }
   .duel-clock { font-family: var(--display); font-weight: 700; font-size: 26px; min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
   .duel-clock.low { color: var(--bad); animation: pulseTag .8s infinite; }
-  .opp-cam { position: absolute; right: 16px; bottom: 60px; width: clamp(130px, 28%, 250px); aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: radial-gradient(ellipse at 50% 60%, rgba(255,77,94,.2), rgba(0,0,0,.85)); border: 1px solid rgba(255,77,94,.55); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
-  .opp-cam canvas { width: 100%; height: 100%; display: block; }
+  .opp-cam { position: absolute; right: 16px; bottom: 60px; width: clamp(150px, 34%, 320px); aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: radial-gradient(ellipse at 50% 60%, rgba(255,77,94,.2), rgba(0,0,0,.85)); border: 1px solid rgba(255,77,94,.55); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+  .opp-cam canvas { position: relative; width: 100%; height: 100%; display: block; }
+  .opp-cam video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); display: none; }
+  .opp-cam.has-video video { display: block; }
+  .opp-cam.has-video canvas { display: none; }
+  .vidopt { display: flex; gap: 10px; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; }
+  .pvp .vidopt input { width: 18px; height: 18px; accent-color: var(--blue); }
   .opp-cam .tag { position: absolute; left: 8px; top: 6px; right: 8px; font: 700 11px var(--display); letter-spacing: 1.5px; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; }
   .opp-cam .tag i { width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--bad); box-shadow: 0 0 8px var(--bad); animation: pulseTag 1.2s infinite; }
   .opp-cam.hit { animation: shake .35s; }
@@ -413,6 +418,9 @@
   .emote-pop { position: absolute; font-size: 54px; pointer-events: none; animation: float 1.6s ease-out forwards; z-index: 5; }
   .sv-name { display: block; margin: 18px auto 0; width: min(320px, 100%); background: rgba(0,0,0,.4); border: 1px solid var(--line2); color: var(--text); border-radius: 12px; padding: 12px; font: 600 18px var(--display); text-align: center; outline: none; user-select: text; }
   .sv-name:focus { border-color: var(--accent); }
+  .logbox { margin-top: 12px; font-size: 13px; color: var(--muted); }
+  .logbox summary { cursor: pointer; }
+  .logbox pre { max-height: 220px; overflow: auto; background: rgba(0,0,0,.4); border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-size: 11px; white-space: pre-wrap; user-select: text; }
 
   /* ---------- phones ---------- */
   @media (max-width: 600px) {
@@ -518,9 +526,9 @@
         </div>
         <div class="callout" id="dCallout"></div>
         <div class="combo" id="dCombo"></div>
-        <div class="opp-cam" id="oppCam"><canvas id="oppCanvas" width="320" height="240"></canvas><div class="tag"><i></i><span id="oppTag">OPPONENT</span></div></div>
+        <div class="opp-cam" id="oppCam"><video id="oppVideo" playsinline autoplay muted></video><canvas id="oppCanvas" width="320" height="240"></canvas><div class="tag"><i></i><span id="oppTag">OPPONENT</span></div></div>
         <div class="emotes" id="emotes"></div>
-        <div class="arena-ctrls"><button id="duelLeave">Leave battle</button></div>
+        <div class="arena-ctrls"><button id="duelVid"></button><button id="duelLeave">Leave battle</button></div>
       </div>
 
       <div class="overlay" id="startOverlay">
@@ -539,6 +547,8 @@
         <li>Go down until Depth hits ~40% and push back up. Hit <b>50%+</b> for a deep rep.</li>
         <li>Every push-up counts toward your lifetime total and your rank — in training and in boss fights.</li>
       </ul>
+      <details id="logDetails" class="logbox"><summary>Tracking log (for troubleshooting)</summary>
+        <pre id="logPre"></pre><button class="ghost" id="logCopy">Copy log</button></details>
     </div>
     <div class="panel" style="margin-top:18px" id="howBoss" hidden>
       <h3>How boss fights work</h3>
@@ -554,7 +564,7 @@
       <h3>How 1v1 battles work</h3>
       <ul class="tips">
         <li><b>Create a battle</b> and send the 5-letter code (or invite link) to a friend. They open 1v1, type the code and hit <b>Join</b>.</li>
-        <li>You each use your own camera. Video never leaves your device — only your reps and a stick-figure outline are shared.</li>
+        <li>You see each other live. Video goes straight between your two devices — never uploaded or recorded. Untick <b>Show my camera</b> to share only a stick figure.</li>
         <li><b>Every push-up hits your opponent</b> for 10. Deep reps (50%+) crit for 1.5×. Reps within 3 s of each other build a combo bonus.</li>
         <li><b>Knockout:</b> first to drain 200 HP wins (3 min cap). <b>60s Blitz:</b> most damage in a minute wins.</li>
         <li>Same push-up checks as training — sitting down or waving your arms doesn't score.</li>
@@ -1543,10 +1553,10 @@ const LOW_END_MS = 2500, IDLE_END_MS = 20000;
 const MIN_REP_MS = 380;          // time spent below the top position; faster than this is tracker noise
 const MIN_GAP_MS = 600;          // at most ~1.5 reps per second
 const STABLE_FRAMES = 8;         // must hold a valid plank for this many frames before arming
-const MAX_WRIST_DRIFT = 0.22;    // hands must stay planted: drift ≤ 22% of arm gap
-const MIN_SHOULDER_TRAVEL = 0.25;// shoulders must drop ≥ 25% of arm gap
-const MAX_ELBOW_AT_BOTTOM = 140; // elbows must actually bend
-let uprightFrames = 0, goodFrames = 0, topShY = null, topWrist = null, topLeftAt = 0, rep = null, rejectStreak = 0, lastCountedAt = 0;
+const MAX_WRIST_DRIFT = 0.32;    // hands must stay planted: drift ≤ 32% of arm gap (real trackers wobble)
+const MIN_SHOULDER_TRAVEL = 0.2; // shoulders must drop ≥ 20% of arm gap
+const MAX_ELBOW_AT_BOTTOM = 150; // elbows must actually bend
+let repsSinceArm = 0, downSince = 0, uprightFrames = 0, goodFrames = 0, topShY = null, topWrist = null, topLeftAt = 0, rep = null, rejectStreak = 0, lastCountedAt = 0;
 const sm = {}; // smoothed points
 const ema = (k, v, a = 0.5) => (sm[k] = sm[k] == null ? v : sm[k] * (1 - a) + v * a);
 
@@ -1560,6 +1570,9 @@ function logRep(entry) {
   try { localStorage.setItem(LOG_KEY, JSON.stringify(repLog)); } catch {}
 }
 window.__repLog = () => repLog;
+const fmtLog = () => repLog.slice(-80).reverse().map(e => `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
+$("logDetails").ontoggle = () => { if ($("logDetails").open) $("logPre").textContent = fmtLog(); };
+$("logCopy").onclick = async () => { try { await navigator.clipboard.writeText(fmtLog()); toast("📋 Log copied"); } catch { toast("Couldn't copy — select the text instead"); } };
 
 // Auto-end the set when you drop to the floor / leave position for a moment, or rest too long.
 function checkAutoEnd(isLow) {
@@ -1597,20 +1610,24 @@ function analyse(lm) {
   smoothAngle = smoothAngle == null ? elbow : smoothAngle * 0.6 + elbow * 0.4;
   smoothDepth = smoothDepth == null ? gap : smoothDepth * 0.6 + gap * 0.4;
 
-  // Upright torso (sitting / standing): hips clearly below the shoulders and the torso steeper than 45°.
-  // Only judged when the hips are confidently visible — front-on push-ups often hide them.
+  // Upright torso (sitting / standing): hips CLEARLY below the shoulders, torso near vertical AND head above
+  // the shoulders. All three are needed — with the camera on the floor in front of you, the tracker often
+  // guesses your hidden hips a little below your shoulders, which must not block real push-ups.
   let uprightNow = false;
   const hipSides = [L, R].filter(S => S.s.v > 0.5 && S.h.v > 0.6);
+  const nose = P(0);
   if (hipSides.length) {
     const dy = hipSides.reduce((t, S) => t + S.h.y - S.s.y, 0) / hipSides.length;
     const dx = Math.abs(hipSides.reduce((t, S) => t + S.h.x - S.s.x, 0) / hipSides.length);
     const sw = L.s.v > 0.5 && R.s.v > 0.5 ? Math.abs(L.s.x - R.s.x) : 0;
-    uprightNow = dy > 0.8 * sw && dy > dx && dy > 0.06 * H;
+    const shTop = Math.min(...hipSides.map(S => S.s.y));
+    const headAbove = nose.v > 0.5 && shTop - nose.y > 0.35 * Math.max(sw, dy * 0.5);
+    uprightNow = dy > Math.max(1.1 * sw, 0.1 * H) && dy > 1.5 * dx && headAbove;
   }
   uprightFrames = uprightNow ? uprightFrames + 1 : 0;
   const upright = uprightFrames >= 5;   // must persist a few frames so one bad hip guess can't break a set
   const shY = ema("shY", avg(S => S.s.y)), wX = ema("wX", avg(S => S.w.x)), wY = ema("wY", avg(S => S.w.y));
-  const armVertical = avg(S => Math.abs(S.w.x - S.s.x)) < 0.75 * Math.max(gap, 1);
+  const armVertical = avg(S => Math.abs(S.w.x - S.s.x)) < 1.0 * Math.max(gap, 1);
   let why = "";
   if (upright) why = "Get down into a plank — sitting or standing doesn't count";
   else if (!elbowBelowShoulder) why = "Hands on the floor — arms raised doesn't count";
@@ -1622,18 +1639,27 @@ function analyse(lm) {
 function rejectRep(reason, info) {
   logRep({ ok: false, reason, ...info });
   setFeedback("Not counted — " + reason, "bad");
+  if ((F?.active && F.state !== "countdown") || B?.state === "fight") callout("NOT COUNTED", reason.toUpperCase(), "red");
   phase = "up"; rep = null;
   if (++rejectStreak >= 2) { disarm(); setPhase("READY"); }
 }
 
+// If something keeps blocking reps for a while, write it to the log so we can see why nothing counted.
+let blockWhy = "", blockSince = 0, blockLogged = 0;
+function noteBlocked(why, info) {
+  const now = performance.now();
+  if (why !== blockWhy) { blockWhy = why; blockSince = now; return; }
+  if (why && now - blockSince > 4000 && now - blockLogged > 15000) { blockLogged = now; logRep({ ok: false, reason: "blocked: " + why, ...info }); }
+}
 function step(res) {
-  if (!res.ok) { setFeedback(res.msg, "bad"); checkAutoEnd(true); goodFrames = 0; return; }
+  if (!res.ok) { setFeedback(res.msg, "bad"); checkAutoEnd(true); goodFrames = 0; noteBlocked(res.msg, {}); return; }
   $("angleVal").textContent = Math.round(res.elbow);
   if (!res.ready) {
     checkAutoEnd(true);
     goodFrames = 0;
     // a sitting/standing/arms-up pose cancels any rep in progress straight away
-    if (res.why && res.why !== "Hands on the floor, arms straight") { if (armed || rep) disarm(); setPhase("READY"); setFeedback(res.why, "bad"); return; }
+    noteBlocked(res.why || "arms not in position", { elbow: Math.round(res.elbow) });
+    if (res.why && res.why !== "Hands on the floor, arms straight") { if (armed || rep) disarm(); topRef = null; setPhase("READY"); setFeedback(res.why, "bad"); return; }
     if (++notReadyFrames > 15) { disarm(); if (setCount === 0 || inMatch()) setPhase("READY"); setFeedback(res.why || "Hands on the floor, arms straight", "bad"); }
     return;
   }
@@ -1641,29 +1667,52 @@ function step(res) {
   goodFrames++;
   const now = performance.now();
   if (topRef == null) topRef = res.gap;
-  if (phase === "up") topRef = Math.max(res.gap, topRef * 0.997);
+  // learn your top position: adapt quickly until you're set, then slowly so reps can't drag it down
+  if (phase === "up") topRef = Math.max(res.gap, topRef * (armed ? 0.997 : 0.98));
   const ratio = res.gap / topRef, depth = Math.max(0, 1 - ratio);
   checkAutoEnd(ratio < 0.3);
   $("depthVal").textContent = Math.round(depth * 100) + "%";
   $("depthMeter").style.width = Math.min(100, depth / 0.6 * 100) + "%";
 
   if (phase === "up" && !armed) {
-    const atTop = ratio > 0.85 && res.gap > 0.08 * (canvas.height || 1) && res.elbow > 140 && res.armVertical;
-    if (atTop && goodFrames >= STABLE_FRAMES) { armed = true; rejectStreak = 0; topLeftAt = now; topShY = res.shY; topWrist = { x: res.wX, y: res.wY }; setPhase("UP"); }
-    else { setPhase("READY"); setFeedback(atTop ? "Hold the plank…" : "Hands under shoulders, arms straight to start", "warn"); return; }
+    const atTop = ratio > 0.85 && res.gap > 0.08 * (canvas.height || 1) && res.elbow > 135 && res.armVertical;
+    if (atTop && goodFrames >= STABLE_FRAMES) { armed = true; repsSinceArm = 0; rejectStreak = 0; topLeftAt = now; topShY = res.shY; topWrist = { x: res.wX, y: res.wY }; setPhase("UP"); noteBlocked("", {}); }
+    else {
+      const msg = atTop ? "Hold the plank…" : res.elbow <= 135 ? "Straighten your arms to start" : !res.armVertical ? "Hands under your shoulders to start" : "Push up to the top to start";
+      noteBlocked(msg, { elbow: Math.round(res.elbow), ratio: +ratio.toFixed(2), vertical: res.armVertical });
+      setPhase("READY"); setFeedback(msg, "warn"); return;
+    }
   }
   if (phase === "up") {
     setPhase("UP");
     if (ratio > 0.85) { topShY = res.shY; topWrist = { x: res.wX, y: res.wY }; topLeftAt = now; }
     if (ratio < 0.62 || res.elbow < 95) {
-      phase = "down"; minRatio = ratio; setPhase("DOWN"); sfx.down();
+      phase = "down"; minRatio = ratio; setPhase("DOWN"); sfx.down(); downSince = now;
       rep = { start: topLeftAt || now, topGap: topRef, topShY: topShY ?? res.shY, wrist: topWrist || { x: res.wX, y: res.wY },
-              maxShY: res.shY, drift: 0, minElbow: res.elbow };
+              maxShY: res.shY, drift: 0, minElbow: res.elbow, lo: ratio, hi: ratio, hiGap: res.gap };
     }
     else if (ratio < 0.85) setFeedback("Lower…", "warn");
     else setFeedback("Good — go down", "good");
   } else {
+    // Stuck "down" for ages usually means the top position was learned wrong (e.g. standing in front of
+    // the camera first). Start over and re-learn from the current position.
+    if (now - downSince > 4000) {
+      logRep({ ok: false, reason: "reset: stuck at bottom", ratio: +ratio.toFixed(2) });
+      disarm(); topRef = res.gap; setPhase("READY"); setFeedback("Push up to the top to start", "warn");
+      return;
+    }
     minRatio = Math.min(minRatio, ratio);
+    // Came most of the way up and went down again without reaching the "top"? Then the top was learned from
+    // something else (like standing first). Only trusted before the first counted rep, so it can't be farmed.
+    if (rep && repsSinceArm === 0) {
+      if (ratio <= rep.lo) { rep.lo = ratio; rep.hi = ratio; rep.hiGap = res.gap; }
+      else if (ratio > rep.hi) { rep.hi = ratio; rep.hiGap = res.gap; }
+      if (rep.hi - rep.lo > 0.2 && rep.hi - ratio > 0.2) {
+        logRep({ ok: false, reason: "reset: re-learned top position", ratio: +rep.hi.toFixed(2) });
+        topRef = rep.hiGap; phase = "up"; rep = null; topLeftAt = now; topShY = null; topWrist = null;
+        return;
+      }
+    }
     if (rep) {
       rep.maxShY = Math.max(rep.maxShY, res.shY);
       rep.drift = Math.max(rep.drift, Math.hypot(res.wX - rep.wrist.x, res.wY - rep.wrist.y));
@@ -1682,7 +1731,7 @@ function step(res) {
       if (info.hands > MAX_WRIST_DRIFT || info.hands > info.shoulders * 0.6) return rejectRep("keep your hands planted on the floor", info);
       if (info.shoulders < MIN_SHOULDER_TRAVEL) return rejectRep("lower your chest, not just your arms", info);
       if (info.elbow > MAX_ELBOW_AT_BOTTOM) return rejectRep("bend your elbows more", info);
-      rejectStreak = 0; lastCountedAt = now;
+      rejectStreak = 0; lastCountedAt = now; repsSinceArm++;
       logRep({ ok: true, ...info });
       onRep(1 - minRatio);
     }
@@ -1784,6 +1833,7 @@ const DUEL_MODES = {
 };
 const EMOTES = ["💪", "🔥", "😤", "😂"];
 store.pvp ||= { w: 0, l: 0, d: 0 };
+const shareVid = () => store.shareVideo !== false;
 let net = null, B = null, pendingJoin = null, lastPoseSent = 0, lastEmote = 0;
 let lobby = { view: "home", err: "", busy: "" };
 const inMatch = () => !!(F?.active || B?.active);
@@ -1812,7 +1862,7 @@ function inviteUrl(code) {
   return base ? `${base}?battle=${code}` : "";
 }
 function send(m) { try { if (net?.conn?.open) net.conn.send(m); } catch (e) { console.warn("send failed", e); } }
-const helloMsg = () => ({ t: "hello", v: 1, name: myName(), rank: rankIndex(store.total), total: store.total, w: store.pvp.w, l: store.pvp.l, d: store.pvp.d });
+const helloMsg = () => ({ t: "hello", v: 1, vid: shareVid(), name: myName(), rank: rankIndex(store.total), total: store.total, w: store.pvp.w, l: store.pvp.l, d: store.pvp.d });
 const netErr = e => ["network", "server-error", "socket-error", "socket-closed"].includes(e.type)
   ? "Couldn't reach the battle server — check your internet and try again."
   : e.type === "browser-incompatible" ? "This browser doesn't support online battles." : "Connection problem: " + (e.message || e.type);
@@ -1849,6 +1899,7 @@ async function joinBattle(raw) {
   try { await loadPeerLib(); } catch (e) { return lobbyError(e.message, code); }
   const myNet = net = { role: "guest", code, mode: "ko", them: null, meReady: false, themReady: false };
   const peer = myNet.peer = new Peer();
+  peer.on("call", call => { if (net !== myNet || myNet.call) return call.close(); call.answer(myOutStream()); attachCall(call); });
   const timer = setTimeout(() => { if (net === myNet && !myNet.connected) lobbyError("Couldn't reach that battle. Check the code and that your friend still has it open.", code); }, 15000);
   peer.on("open", () => { if (net === myNet) attachConn(peer.connect(PEER_PREFIX + code, { reliable: true })); });
   peer.on("error", e => {
@@ -1879,7 +1930,7 @@ function leaveNet() {
   const n = net; net = null;
   if (n) {
     try { n.conn?.open && n.conn.send({ t: "bye" }); } catch {}
-    setTimeout(() => { try { n.conn?.close(); n.peer?.destroy(); } catch {} }, 200);
+    setTimeout(() => { try { n.call?.close(); n.conn?.close(); n.peer?.destroy(); } catch {} }, 200);
   }
   if (B) exitDuelArena();
 }
@@ -1902,12 +1953,13 @@ function onNetMsg(m) {
     case "hello": {
       const first = !n.them;
       n.them = { name: cleanName(m.name), rank: clampInt(m.rank, 0, RANKS.length - 1), total: clampInt(m.total, 0, 1e7), w: clampInt(m.w, 0, 1e6), l: clampInt(m.l, 0, 1e6), d: clampInt(m.d, 0, 1e6) };
+      n.themVid = m.vid !== false;
       if (first) { toast(`⚔ ${n.them.name} joined the battle!`); sfx.go(); }
       renderLobby(); renderDuel(); break;
     }
     case "settings": if (n.role === "guest" && DUEL_MODES[m.mode]) { n.mode = m.mode; renderLobby(); } break;
     case "ready":
-      n.themReady = !!m.v; renderLobby(); renderDuel();
+      n.themReady = !!m.v; if (m.v) n.themInArena = true; renderLobby(); renderDuel(); maybeCall();
       if (n.themReady && B?.state === "waiting") toast(`✔ ${n.them?.name || "Opponent"} is ready`);
       maybeStart(); break;
     case "start": if (n.role === "guest" && B && DUEL_MODES[m.mode]) startDuelCountdown(m.mode); break;
@@ -1918,6 +1970,7 @@ function onNetMsg(m) {
       if (Array.isArray(m.p) && m.p.length === JOINTS.length * 3) { n.oppPose = m.p.map(v => +v || 0); n.oppAspect = Math.max(0.3, Math.min(3, +m.a || 4 / 3)); n.oppPoseAt = performance.now(); }
       break;
     case "emote": if (EMOTES.includes(m.e)) showEmote(m.e, false); break;
+    case "vid":   n.themVid = !!m.v; renderOppVideo(); break;
     case "full":  lobbyError("That battle already has two players."); break;
     case "bye":   onConnClose(); break;
   }
@@ -1941,7 +1994,7 @@ async function enterDuelArena() {
   $("stage").classList.add("fighting");
   $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" });
   net.meReady = true; send({ t: "ready", v: true });
-  renderDuel(); maybeStart();
+  renderDuel(); maybeStart(); maybeCall();
 }
 
 function maybeStart() {
@@ -2074,7 +2127,40 @@ function showDuelResult(res, reason, them, me) {
   if (res === "win") confetti(200);
 }
 
+// ---------- live video between the two players ----------
+let blackStream = null;
+function myOutStream() {
+  if (shareVid() && video.srcObject) return video.srcObject;
+  if (!blackStream) { const c = document.createElement("canvas"); c.width = c.height = 16; c.getContext("2d").fillRect(0, 0, 16, 16); blackStream = c.captureStream(1); }
+  return blackStream;   // placeholder so the link still works both ways
+}
+function maybeCall() {          // the host sets up the video link once both players have their camera on
+  if (net?.role !== "host" || net.call || !B || !net.themInArena || !net.conn?.peer || !net.peer) return;
+  try { attachCall(net.peer.call(net.conn.peer, myOutStream())); } catch (e) { console.warn("video call failed", e); }
+}
+function attachCall(call) {
+  if (!call) return;
+  const myNet = net; myNet.call = call;
+  call.on("stream", s => { if (net !== myNet) return; const v = $("oppVideo"); v.srcObject = s; v.play().catch(() => {}); renderOppVideo(); });
+  call.on("close", () => { if (net === myNet) { myNet.call = null; $("oppVideo").srcObject = null; renderOppVideo(); } });
+  call.on("error", e => console.warn("video", e));
+}
+function renderOppVideo() {
+  const on = !!(net?.themVid && $("oppVideo").srcObject);
+  $("oppCam").classList.toggle("has-video", on);
+  $("duelVid").textContent = shareVid() ? "📹 Camera on" : "📹 Camera off";
+}
+function setShareVid(v) {
+  store.shareVideo = v; save();
+  send({ t: "vid", v });
+  const track = myOutStream().getVideoTracks()[0];
+  try { net?.call?.peerConnection?.getSenders().find(s => s.track?.kind === "video")?.replaceTrack(track); } catch (e) { console.warn(e); }
+  renderOppVideo(); renderLobby();
+}
+$("duelVid").onclick = () => setShareVid(!shareVid());
+
 function exitDuelArena() {
+  $("oppVideo").srcObject = null; $("oppCam").classList.remove("has-video");
   $("dCallout").innerHTML = ""; $("dCallout").dataset.w = ""; $("dCombo").innerHTML = "";
   B = null;
   $("duel").hidden = true; $("stage").classList.remove("fighting");
@@ -2109,6 +2195,7 @@ function renderDuel() {
   $("dMeReps").textContent = `${B.reps[me]} push-up${B.reps[me] === 1 ? "" : "s"}`;
   $("dThemReps").textContent = `${B.reps[op]} push-up${B.reps[op] === 1 ? "" : "s"}`;
   $("oppTag").textContent = (t?.name || "Opponent").toUpperCase();
+  renderOppVideo();
   if (B.state === "waiting") {
     $("dClock").textContent = "VS"; $("dClock").classList.remove("low");
     const want = net.themReady ? "" : `WAITING<small>for ${esc(t?.name || "your opponent")} to get ready</small>`;
@@ -2248,11 +2335,13 @@ function renderLobby() {
         <div class="seg">${Object.entries(DUEL_MODES).map(([k, m]) => `<button data-mode="${k}" class="${net.mode === k ? "on" : ""}" ${host ? "" : "disabled"}>${m.name}</button>`).join("")}</div>
         <div class="muted">${DUEL_MODES[net.mode].ds}</div>
       </div>
+      <label class="vidopt"><input type="checkbox" id="pvVid" ${shareVid() ? "checked" : ""}> 📹 Show my camera to ${esc(t?.name || "my opponent")}</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button id="pvReady" ${lobby.busy ? "disabled" : ""}>I'm ready — start camera</button><button class="ghost" id="pvLeave">Leave</button></div>
       <div class="muted">${lobby.busy ? `<span class="spin"></span> ${esc(lobby.busy)}` : "Prop your device on the floor about 2 m away. The fight starts when you're both ready."}</div>
       <div class="pvp-err">${esc(lobby.err || "")}</div>`;
     if (host) el.querySelectorAll(".seg button").forEach(b => b.onclick = () => { net.mode = b.dataset.mode; send({ t: "settings", mode: net.mode }); renderLobby(); });
     $("pvReady").onclick = () => enterDuelArena();
+    $("pvVid").onchange = e => setShareVid(e.target.checked);
     $("pvLeave").onclick = cancel;
   }
 }

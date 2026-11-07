@@ -6,12 +6,12 @@ Camera push-up counter that ranks you up by lifetime push-ups, with boss fights 
 
 - Put your phone or laptop on the floor about 2 m away, facing you or side-on.
 - Your progress is saved in your browser.
-- Video never leaves your device. Pose tracking runs locally with MediaPipe.
+- Pose tracking runs locally with MediaPipe. In training your video never leaves your device.
 
 ## 1v1 battles
 Open the **1v1** tab, create a battle and send the 5-letter code or invite link to a friend.
 You each do push-ups on your own camera, and every rep damages your opponent.
-Players connect directly (WebRTC via PeerJS). Only rep counts and a stick-figure outline are shared.
+Players connect directly (WebRTC via PeerJS) and see each other live; video goes straight between the two devices and is never uploaded or recorded. Untick "Show my camera" to share only a stick figure.
 
 ## Mac app
 `mac/build.sh` builds a native Mac app wrapper (`mac/build/Push-Up Ranks.app` and a shareable zip).
