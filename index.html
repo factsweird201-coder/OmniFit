@@ -1600,6 +1600,7 @@ document.addEventListener("keydown", e => {
 // ================= POSE → REP DETECTION =================
 let phase = "up", smoothAngle = null, topRef = null, smoothDepth = null, notReadyFrames = 0, minRatio = 1;
 // armed: must be seen in the top (arms straight) position before a rep can start — stops "getting up off the floor" counting as a rep
+let topUpper = null;
 let armed = false, lowSince = 0, lastRepTime = 0;
 const LOW_END_MS = 2500, IDLE_END_MS = 20000;
 
@@ -1607,12 +1608,12 @@ const LOW_END_MS = 2500, IDLE_END_MS = 20000;
 const MIN_REP_MS = 380;          // time spent below the top position; faster than this is tracker noise
 const MIN_GAP_MS = 600;          // at most ~1.5 reps per second
 const STABLE_FRAMES = 8;         // must hold a valid plank for this many frames before arming
-const MAX_WRIST_DRIFT = 0.32;    // hands must stay planted: drift ≤ 32% of arm gap (real trackers wobble)
-const MIN_SHOULDER_TRAVEL = 0.2; // shoulders must drop ≥ 20% of arm gap
+const MIN_DEPTH = 0.25;          // arm gap must shrink by at least a quarter
+const MAX_WRIST_JUMP = 1.5;      // hands "moving" more than 1.5 arm-lengths = tracker lost you, not a rep
+const MIN_SHOULDER_TRAVEL = 0.12; // shoulders drop ≥ 12% of arm gap…
 const MAX_ELBOW_AT_BOTTOM = 150; // elbows must actually bend
-const DEEP_ELBOW = 115;          // elbows bent this far = clearly a real rep…
-const MAX_WRIST_DRIFT_DEEP = 0.75; // …so allow a lot more tracker wobble in the hands
-const MIN_FLARE = 0.25;          // …as long as the elbows flare out like a push-up (not a curl)
+const DEEP_ELBOW = 110;          // …or the elbows bend at least this far
+const MIN_UPPER_SWING = 0.3;     // …with the upper arms swinging up towards shoulder level (not a curl)
 let repsSinceArm = 0, downSince = 0, uprightFrames = 0, goodFrames = 0, topShY = null, topWrist = null, topLeftAt = 0, rep = null, rejectStreak = 0, lastCountedAt = 0;
 const sm = {}; // smoothed points
 const ema = (k, v, a = 0.5) => (sm[k] = sm[k] == null ? v : sm[k] * (1 - a) + v * a);
@@ -1627,7 +1628,7 @@ function logRep(entry) {
   try { localStorage.setItem(LOG_KEY, JSON.stringify(repLog)); } catch {}
 }
 window.__repLog = () => repLog;
-const fmtLog = () => repLog.slice(-80).reverse().map(e => `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}${e.flare != null ? ` flare ${e.flare}` : ""}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
+const fmtLog = () => repLog.slice(-80).reverse().map(e => `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}${e.flare != null ? ` flare ${e.flare}` : ""}${e.arms != null ? ` arms ${e.arms}` : ""}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
 $("logDetails").ontoggle = () => { if ($("logDetails").open) $("logPre").textContent = fmtLog(); };
 $("logCopy").onclick = async () => { try { await navigator.clipboard.writeText(fmtLog()); toast("📋 Log copied"); } catch { toast("Couldn't copy — select the text instead"); } };
 
@@ -1644,7 +1645,7 @@ function autoEndSet() {
   setPhase("REST");
   endSet(true);
 }
-function disarm() { phase = "up"; armed = false; lowSince = 0; goodFrames = 0; rep = null; topLeftAt = 0; topShY = null; topWrist = null; }
+function disarm() { phase = "up"; armed = false; lowSince = 0; goodFrames = 0; rep = null; topLeftAt = 0; topShY = null; topUpper = null; topWrist = null; }
 function angle(a, b, c) {
   const ab = Math.atan2(a.y - b.y, a.x - b.x), cb = Math.atan2(c.y - b.y, c.x - b.x);
   let deg = Math.abs((ab - cb) * 180 / Math.PI);
@@ -1656,13 +1657,19 @@ function analyse(lm) {
   const W = canvas.width || 1, H = canvas.height || 1;
   const P = i => ({ x: lm[i].x * W, y: lm[i].y * H, v: vis(lm[i]) });
   const L = { s: P(11), e: P(13), w: P(15), h: P(23) }, R = { s: P(12), e: P(14), w: P(16), h: P(24) };
-  const sides = [L, R].filter(S => S.s.v > 0.4 && S.e.v > 0.3 && S.w.v > 0.3);
-  if (!sides.length) return { ok: false, msg: "Can't see your arms — step back so your upper body is in frame" };
+  // MediaPipe gives low "visibility" to hands hidden under the body even when it places them well, so accept
+  // fairly unsure elbows/wrists as long as a shoulder is clear.
+  const sides = [L, R].filter(S => S.s.v > 0.35 && S.e.v > 0.15 && S.w.v > 0.15);
+  if (!sides.length) {
+    const shouldersSeen = L.s.v > 0.35 || R.s.v > 0.35;
+    return { ok: false, msg: shouldersSeen ? "Can't see your hands — lower the camera or move back so your hands are in the picture"
+                                           : "Can't see you — move back so your head, arms and hands are in the picture" };
+  }
   const avg = f => sides.reduce((t, S) => t + f(S), 0) / sides.length;
   const gap = avg(S => S.w.y - S.s.y);
   // Mid push-up the tracker often slides the wrist a bit above the elbow (elbows flared, hands hidden under
   // the body), so allow more slack once you're set — a curl or arm raise goes far past this.
-  const wristTol = (phase === "down" ? 0.07 : armed ? 0.04 : 0.02) * H;
+  const wristTol = (phase === "down" ? 0.05 : armed ? 0.04 : 0.02) * H;
   const wristBelowElbow = avg(S => S.w.y - S.e.y) > -wristTol;
   const elbowBelowShoulder = avg(S => S.e.y - S.s.y) > 0;
   const best = sides.reduce((a, b) => (a.e.v + a.w.v >= b.e.v + b.w.v ? a : b));
@@ -1699,7 +1706,10 @@ function analyse(lm) {
   if (upright) why = "Get down into a plank — sitting or standing doesn't count";
   else if (!elbowBelowShoulder) why = "Hands on the floor — arms raised doesn't count";
   else if (!wristBelowElbow) why = "Hands on the floor, arms straight";
-  return { ok: true, elbow: smoothAngle, gap: smoothDepth, shY, wX, wY, armVertical, flare, why,
+  // Upper-arm drop: how far the elbows sit below the shoulders on screen. At the bottom of a push-up the upper
+  // arms swing up level with the shoulders; curls and lap movements keep the elbows hanging below.
+  const upper = ema("upper", avg(S => S.e.y - S.s.y));
+  return { ok: true, elbow: smoothAngle, gap: smoothDepth, shY, wX, wY, armVertical, flare, upper, why,
            ready: smoothDepth > 0.04 * H && !why };
 }
 
@@ -1743,7 +1753,7 @@ function step(res) {
 
   if (phase === "up" && !armed) {
     const atTop = ratio > 0.85 && res.gap > 0.08 * (canvas.height || 1) && res.elbow > 135 && res.armVertical;
-    if (atTop && goodFrames >= STABLE_FRAMES) { armed = true; repsSinceArm = 0; rejectStreak = 0; topLeftAt = now; topShY = res.shY; topWrist = { x: res.wX, y: res.wY }; setPhase("UP"); noteBlocked("", {}); }
+    if (atTop && goodFrames >= STABLE_FRAMES) { armed = true; repsSinceArm = 0; rejectStreak = 0; topLeftAt = now; topShY = res.shY; topUpper = res.upper; topWrist = { x: res.wX, y: res.wY }; setPhase("UP"); noteBlocked("", {}); }
     else {
       const msg = atTop ? "Hold the plank…" : res.elbow <= 135 ? "Straighten your arms to start" : !res.armVertical ? "Hands under your shoulders to start" : "Push up to the top to start";
       noteBlocked(msg, { elbow: Math.round(res.elbow), ratio: +ratio.toFixed(2), vertical: res.armVertical });
@@ -1752,11 +1762,12 @@ function step(res) {
   }
   if (phase === "up") {
     setPhase("UP");
-    if (ratio > 0.85) { topShY = res.shY; topWrist = { x: res.wX, y: res.wY }; topLeftAt = now; }
+    if (ratio > 0.85) { topShY = res.shY; topUpper = res.upper; topWrist = { x: res.wX, y: res.wY }; topLeftAt = now; }
     if (ratio < 0.62 || res.elbow < 95) {
       phase = "down"; minRatio = ratio; setPhase("DOWN"); sfx.down(); downSince = now;
       rep = { start: topLeftAt || now, topGap: topRef, topShY: topShY ?? res.shY, wrist: topWrist || { x: res.wX, y: res.wY },
-              maxShY: res.shY, drift: 0, minElbow: res.elbow, flare: res.flare, lo: ratio, hi: ratio, hiGap: res.gap };
+              maxShY: res.shY, drift: 0, minElbow: res.elbow, flare: res.flare, topUpper: topUpper ?? res.upper, minUpper: res.upper,
+              lo: ratio, hi: ratio, hiGap: res.gap };
     }
     else if (ratio < 0.85) setFeedback("Lower…", "warn");
     else setFeedback("Good — go down", "good");
@@ -1785,6 +1796,7 @@ function step(res) {
       rep.drift = Math.max(rep.drift, Math.hypot(res.wX - rep.wrist.x, res.wY - rep.wrist.y));
       rep.minElbow = Math.min(rep.minElbow, res.elbow);
       rep.flare = Math.max(rep.flare, res.flare);
+      rep.minUpper = Math.min(rep.minUpper, res.upper);
     }
     setFeedback(1 - minRatio >= CRIT ? "Deep! Now push!" : "Push up!", "good");
     if (ratio > 0.88) {
@@ -1793,20 +1805,19 @@ function step(res) {
       const g = rep.topGap || 1;
       const info = { ms: Math.round(now - rep.start), depth: +(1 - minRatio).toFixed(2),
                      shoulders: +((rep.maxShY - rep.topShY) / g).toFixed(2), hands: +(rep.drift / g).toFixed(2), elbow: Math.round(rep.minElbow),
-                     flare: +rep.flare.toFixed(2) };
+                     flare: +rep.flare.toFixed(2), arms: +(rep.topUpper > 1 ? 1 - rep.minUpper / rep.topUpper : 0).toFixed(2) };
       rep = null;
       if (info.ms < MIN_REP_MS) return rejectRep("too fast", info);
       if (lastCountedAt && now - lastCountedAt < MIN_GAP_MS) return rejectRep("too fast", info);
-      // A deep elbow bend from a straight-arm plank is the strongest sign of a real push-up. With a laptop
-      // camera the tracker often credits that motion to the wrists instead of the shoulders, so only reject
-      // big hand movement then. Shallow reps still need the stricter checks.
-      if (info.elbow <= DEEP_ELBOW && info.depth >= 0.3 && info.flare >= MIN_FLARE) {
-        if (info.hands > MAX_WRIST_DRIFT_DEEP) return rejectRep("keep your hands planted on the floor", info);
-      } else {
-        if (info.hands > MAX_WRIST_DRIFT || info.hands > info.shoulders * 0.6) return rejectRep("keep your hands planted on the floor", info);
-        if (info.shoulders < MIN_SHOULDER_TRAVEL) return rejectRep("lower your chest, not just your arms", info);
-        if (info.elbow > MAX_ELBOW_AT_BOTTOM) return rejectRep("bend your elbows more", info);
-      }
+      // Forgiving on purpose: you already had to hold a straight-arm plank to start, and sitting/standing or
+      // arms-up poses cancel the rep. Here we only need proof you actually went down: the shoulders dropped,
+      // or the elbows bent deep. Hand tracking is too shaky on laptop cameras to judge, so only wild jumps
+      // (the tracker losing you) are rejected.
+      if (info.depth < MIN_DEPTH) return rejectRep("go a bit lower", info);
+      if (info.hands > MAX_WRIST_JUMP) return rejectRep("lost track of your hands — keep them in the picture", info);
+      const deepArms = info.elbow <= DEEP_ELBOW && info.arms >= MIN_UPPER_SWING;
+      if (info.shoulders < MIN_SHOULDER_TRAVEL && !deepArms) return rejectRep("lower your chest, not just your arms", info);
+      if (info.elbow > MAX_ELBOW_AT_BOTTOM) return rejectRep("bend your elbows more", info);
       rejectStreak = 0; lastCountedAt = now; repsSinceArm++;
       logRep({ ok: true, ...info });
       onRep(1 - minRatio);
