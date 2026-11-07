@@ -1600,7 +1600,8 @@ document.addEventListener("keydown", e => {
 // ================= POSE → REP DETECTION =================
 let phase = "up", smoothAngle = null, topRef = null, smoothDepth = null, notReadyFrames = 0, minRatio = 1;
 // armed: must be seen in the top (arms straight) position before a rep can start — stops "getting up off the floor" counting as a rep
-let topUpper = null, raisedFrames = 0;
+let topUpper = null, raisedFrames = 0, upFrames = 0, lastBlipLog = 0;
+const gapHist = [];
 let armed = false, lowSince = 0, lastRepTime = 0;
 const LOW_END_MS = 2500, IDLE_END_MS = 20000;
 
@@ -1666,11 +1667,14 @@ function analyse(lm) {
   // the body), so allow more slack once you're set — a curl or arm raise goes far past this.
   const wristTol = (phase === "down" ? 0.05 : armed ? 0.04 : 0.02) * H;
   const wristBelowElbow = avg(S => S.w.y - S.e.y) > -wristTol;
-  const elbowBelowShoulder = avg(S => S.e.y - S.s.y) > 0;
   const best = sides.reduce((a, b) => (a.e.v + a.w.v >= b.e.v + b.w.v ? a : b));
   const elbow = angle(best.s, best.e, best.w);
   smoothAngle = smoothAngle == null ? elbow : smoothAngle * 0.6 + elbow * 0.4;
-  smoothDepth = smoothDepth == null ? gap : smoothDepth * 0.6 + gap * 0.4;
+  // Wide elbows make the hand points jump for a frame or two at the bottom. Take the median of the last 5
+  // frames first so those jumps can't end a rep early, then smooth.
+  gapHist.push(gap); if (gapHist.length > 5) gapHist.shift();
+  const gapMed = [...gapHist].sort((a, b) => a - b)[gapHist.length >> 1];
+  smoothDepth = smoothDepth == null ? gapMed : smoothDepth * 0.6 + gapMed * 0.4;
 
   // Upright torso (sitting / standing): hips CLEARLY below the shoulders, torso near vertical AND head above
   // the shoulders. All three are needed — with the camera on the floor in front of you, the tracker often
@@ -1697,8 +1701,10 @@ function analyse(lm) {
     const mid = (L.s.x + R.s.x) / 2, sw = Math.max(Math.abs(L.s.x - R.s.x), 1);
     flare = avg(S => Math.abs(S.e.x - mid) - Math.max(Math.abs(S.s.x - mid), Math.abs(S.w.x - mid))) / sw;
   }
-  // elbows can flash above the shoulders at the bottom of a push-up — only an arms-up pose that lasts counts as one
-  raisedFrames = elbowBelowShoulder ? 0 : raisedFrames + 1;
+  // "Arms raised" = hands up above the shoulders (like holding up a phone) for a moment. Elbows don't count:
+  // with wide elbows they go above the shoulders at the bottom of every push-up.
+  const handsAboveShoulders = gap < -0.02 * H;
+  raisedFrames = handsAboveShoulders ? raisedFrames + 1 : 0;
   let why = "";
   if (upright) why = "Get down into a plank — sitting or standing doesn't count";
   else if (raisedFrames >= 8) why = "Hands on the floor — arms raised doesn't count";
@@ -1764,7 +1770,7 @@ function step(res) {
     setPhase("UP");
     if (ratio > 0.85) { topShY = res.shY; topUpper = res.upper; topWrist = { x: res.wX, y: res.wY }; topLeftAt = now; }
     if (ratio < 0.7) {
-      phase = "down"; minRatio = ratio; setPhase("DOWN"); sfx.down(); downSince = now;
+      phase = "down"; minRatio = ratio; setPhase("DOWN"); sfx.down(); downSince = now; upFrames = 0;
       rep = { start: topLeftAt || now, topGap: topRef, topShY: topShY ?? res.shY, wrist: topWrist || { x: res.wX, y: res.wY },
               maxShY: res.shY, drift: 0, minElbow: res.elbow, flare: res.flare, topUpper: topUpper ?? res.upper, minUpper: res.upper,
               lo: ratio, hi: ratio, hiGap: res.gap };
@@ -1799,7 +1805,8 @@ function step(res) {
       rep.minUpper = Math.min(rep.minUpper, res.upper);
     }
     setFeedback(1 - minRatio >= CRIT ? "Deep! Now push!" : "Push up!", "good");
-    if (ratio > 0.88) {
+    upFrames = ratio > 0.88 ? upFrames + 1 : 0;
+    if (upFrames >= 3) {   // must stay up for a few frames — a one-frame jump isn't the top
       phase = "up"; setPhase("UP");
       if (!rep) return;
       const g = rep.topGap || 1;
@@ -1808,7 +1815,10 @@ function step(res) {
                      flare: +rep.flare.toFixed(2), arms: +(rep.topUpper > 1 ? 1 - rep.minUpper / rep.topUpper : 0).toFixed(2) };
       rep = null;
       // Under a quarter of a second is the tracker flickering, not you — ignore it without a fuss.
-      if (info.ms < MIN_REP_MS || (lastCountedAt && now - lastCountedAt < MIN_GAP_MS)) return;
+      if (info.ms < MIN_REP_MS || (lastCountedAt && now - lastCountedAt < MIN_GAP_MS)) {
+        if (now - lastBlipLog > 3000) { lastBlipLog = now; logRep({ ok: false, reason: "ignored: camera flicker", ...info }); }
+        return;
+      }
       // Simple counting: down and back up, deep enough, not impossibly fast.
       if (info.depth < MIN_DEPTH) return rejectRep("go a bit lower", info);
       rejectStreak = 0; lastCountedAt = now; repsSinceArm++;
