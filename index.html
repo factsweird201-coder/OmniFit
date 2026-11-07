@@ -1750,7 +1750,9 @@ function step(res) {
   const now = performance.now();
   if (topRef == null) topRef = res.gap;
   // learn your top position: adapt quickly until you're set, then slowly so reps can't drag it down
-  if (phase === "up") topRef = Math.max(res.gap, topRef * (armed ? 0.997 : 0.98));
+  // Once you're set, a jumpy frame may only nudge the top up a little (2%), so tracking glitches can't
+  // inflate it until real reps no longer reach the "top".
+  if (phase === "up") topRef = armed ? Math.max(topRef * 0.997, Math.min(res.gap, topRef * 1.02)) : Math.max(res.gap, topRef * 0.98);
   const ratio = res.gap / topRef, depth = Math.max(0, 1 - ratio);
   checkAutoEnd(ratio < 0.3);
   $("depthVal").textContent = Math.round(depth * 100) + "%";
