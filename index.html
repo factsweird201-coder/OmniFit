@@ -2984,11 +2984,26 @@ function playCine(steps, ctx = {}) {
         <div class="cine-bar top"></div><div class="cine-bar bot"></div>
         <div class="cine-title"></div><div class="cine-narr"><p></p></div>
         <div class="cine-box"><div class="cine-face"></div><div class="cine-talk"><b class="cine-who"></b><p class="cine-text"></p></div><i class="cine-next">▼</i></div>
-        <button class="cine-skip">Skip ▸▸</button><div class="cine-hint">Tap or press Space</div>`;
+        <button class="cine-skip">Skip ▸▸</button><div class="cine-hint">Plays by itself · tap or press Space to skip ahead</div>`;
       document.body.appendChild(el);
     }
     const q = s => el.querySelector(s);
-    let i = -1, typing = null, timer = null, curBg = null, curActor = null, done = false, curNode = null, curText = "";
+    let i = -1, typing = null, timer = null, autoT = null, curBg = null, curActor = null, done = false, curNode = null, curText = "";
+    // Lines move on by themselves: once the text has typed out, the voice has finished, and there's been time to read it.
+    const autoNext = text => {
+      clearInterval(autoT);
+      const t0 = performance.now(), minMs = 1400 + text.length * 40;
+      let quietSince = null;
+      autoT = setInterval(() => {
+        if (done) return clearInterval(autoT);
+        if (typing) return;
+        let talking = !!(curVoice && !curVoice.paused && !curVoice.ended);
+        try { talking ||= speechSynthesis.speaking; } catch {}
+        if (talking) { quietSince = null; return; }
+        const now = performance.now(); quietSince ??= now;
+        if (now - t0 >= minMs && now - quietSince >= 650) { clearInterval(autoT); next(); }
+      }, 120);
+    };
     cineOn = true;
     q(".cine-bg").innerHTML = ""; q(".cine-actor").innerHTML = ""; q(".cine-pip").innerHTML = ""; q(".cine-fx").innerHTML = "";
     el.className = "cine show";
@@ -3011,14 +3026,14 @@ function playCine(steps, ctx = {}) {
     };
     const finish = () => {
       if (done) return; done = true;
-      clearInterval(typing); clearTimeout(timer); removeEventListener("keydown", onKey, true);
+      clearInterval(typing); clearInterval(autoT); clearTimeout(timer); removeEventListener("keydown", onKey, true);
       stopVoice(); cineMusic.stop(); el.classList.add("out");
       setTimeout(() => { el.className = "cine"; q(".cine-bg").innerHTML = ""; q(".cine-fx").innerHTML = ""; cineOn = false; resolve(); }, 650);
     };
     const next = () => {
       if (done) return;
       if (typing) { clearInterval(typing); typing = null; el.classList.remove("typing"); curNode.textContent = curText; return; }
-      clearTimeout(timer);
+      clearTimeout(timer); clearInterval(autoT);
       if (++i >= steps.length) return finish();
       const s = steps[i];
       setBg(s.bg);
@@ -3041,7 +3056,7 @@ function playCine(steps, ctx = {}) {
       if (s.who === "narr") {
         el.classList.add("narrating"); typeOut(q(".cine-narr p"), s.text);
         q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
-        speakLine("narr", s.text, { pitch: 0.95, rate: 1.02 });
+        speakLine("narr", s.text, { pitch: 0.95, rate: 1.02 }); autoNext(s.text);
         return;
       }
       const who = castOf(s.who, ctx);
@@ -3053,7 +3068,7 @@ function playCine(steps, ctx = {}) {
       if (who.pip) { if (!q(".cine-pip").innerHTML) q(".cine-pip").innerHTML = pipSvg("pa"); q(".cine-pip").style.setProperty("--k", 0.8 + Math.min(4, ctx.fin ? 4 : ctx.ch ?? 0) * 0.18); q(".cine-pip").classList.add("on"); }
       else q(".cine-pip").classList.remove("on");
       typeOut(q(".cine-text"), s.text);
-      speakLine(vkOf(s), s.text, who.voice);
+      speakLine(vkOf(s), s.text, who.voice); autoNext(s.text);
     };
     function onKey(e) {
       if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); finish(); }
