@@ -22,6 +22,18 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<script>
+  // Visitor stats: Cloudflare Web Analytics — anonymous page-view counts, no cookies, nothing about your
+  // workouts or camera. Only runs on the public site (not the Mac app or local testing).
+  (function () {
+    var CF_TOKEN = "304921931d414224b4339f52f8b667df";   // Cloudflare Web Analytics site token
+    if (!CF_TOKEN || location.hostname !== "factsweird201-coder.github.io") return;
+    var s = document.createElement("script");
+    s.defer = true; s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+    s.setAttribute("data-cf-beacon", JSON.stringify({ token: CF_TOKEN }));
+    document.head.appendChild(s);
+  })();
+</script>
 <!--/web-only-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -562,7 +574,7 @@
       <div class="overlay" id="startOverlay">
         <div class="cam">📷</div>
         <div class="t">READY TO TRAIN?</div>
-        <div class="muted" style="max-width:420px">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view. Your training video never leaves your device.</div>
+        <div class="muted" style="max-width:420px">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view. Your training video never leaves your device.<!--web-only--> The site only counts anonymous visits (no cookies).<!--/web-only--></div>
         <button id="startBtn">Start camera</button>
         <div class="muted" id="loadMsg"></div>
       </div>
