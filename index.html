@@ -197,6 +197,7 @@
   .boss-svg .scan { animation: scan 1.6s ease-in-out infinite alternate; }
   .boss-svg .spin { animation: spin 18s linear infinite; transform-origin: 100px 100px; }
   .boss-svg .blinkfast { animation: glowPulse .6s steps(2) infinite; }
+  .boss-svg .gearspin { animation: spin 7s linear infinite; } .boss-svg .gearspin.rev { animation-direction: reverse; }
   @keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.08); } }
   @keyframes look { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(-3px); } 65% { transform: translateX(3px); } }
   @keyframes glowPulse { 50% { opacity: .55; } }
@@ -327,6 +328,30 @@
   .cmap-clouds .cb-front { fill: color-mix(in srgb, var(--c) 18%, #474d5c); }
   .fog-2 .cmap-clouds .cb-back { fill: #3a2620; } .fog-2 .cmap-clouds .cb-front { fill: #5a3a2c; }
   .fog-3 .cmap-clouds .cb-back { fill: #2a1146; } .fog-3 .cmap-clouds .cb-front { fill: #3e1d63; }
+  .fog-4::before { background: repeating-linear-gradient(100deg, rgba(160,220,230,.0) 0 22px, rgba(160,220,230,.10) 22px 24px), radial-gradient(ellipse 70% 25% at 50% 70%, rgba(120,170,190,.25), transparent); animation: fogDrift 9s ease-in-out infinite alternate; }
+  .fog-5::before { background: radial-gradient(ellipse 40% 20% at 20% 40%, rgba(110,100,90,.5), transparent), radial-gradient(ellipse 45% 22% at 80% 30%, rgba(90,80,70,.45), transparent), radial-gradient(circle at 50% 100%, rgba(255,160,60,.25), transparent 55%); animation: fogDrift 12s ease-in-out infinite alternate; }
+  .fog-6::before { background: radial-gradient(ellipse 60% 20% at 30% 30%, rgba(230,240,255,.22), transparent), radial-gradient(ellipse 55% 18% at 70% 60%, rgba(230,240,255,.2), transparent), radial-gradient(ellipse 80% 25% at 50% 90%, rgba(230,240,255,.18), transparent); animation: fogDrift 16s ease-in-out infinite alternate; }
+  .fog-7::before { background: conic-gradient(from 90deg at 50% 45%, rgba(255,95,168,0), rgba(255,95,168,.18), rgba(120,40,160,0), rgba(255,95,168,.14), rgba(255,95,168,0)); animation: voidSpin 60s linear infinite; inset: -30%; }
+  .fog-4 .cmap-clouds .cb-back { fill: #22323a; } .fog-4 .cmap-clouds .cb-front { fill: #3a4c56; }
+  .fog-5 .cmap-clouds .cb-back { fill: #2c2620; } .fog-5 .cmap-clouds .cb-front { fill: #4a4036; }
+  .fog-6 .cmap-clouds .cb-back { fill: #b8c8dc; } .fog-6 .cmap-clouds .cb-front { fill: #e8f0fa; }
+  .fog-7 .cmap-clouds .cb-back { fill: #3a1446; } .fog-7 .cmap-clouds .cb-front { fill: #5a2266; }
+  .cmap-gear { animation: spin 14s linear infinite; transform-box: fill-box; transform-origin: center; } .cmap-gear.rev { animation-direction: reverse; }
+  .cmap-mill { animation: spin 6s linear infinite; transform-box: view-box; transform-origin: 0 -30px; }
+  .cmap-smoke { animation: mapSmoke 3s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes mapSmoke { from { transform: translateY(0) scale(.6); opacity: .5; } to { transform: translateY(-40px) scale(1.6); opacity: 0; } }
+  .cmap-parts { position: absolute; right: 12px; top: 12px; z-index: 4; display: flex; gap: 6px; padding: 5px; border-radius: 14px; background: rgba(5,6,10,.75); border: 1px solid var(--line2); backdrop-filter: blur(6px); }
+  .cmap-part { display: grid; justify-items: start; gap: 0; padding: 5px 12px; border-radius: 10px; border: 1px solid transparent; background: transparent; color: var(--muted); text-align: left; line-height: 1.15; box-shadow: none; filter: none; }
+  .cmap-part b { font: 700 9px var(--display); letter-spacing: 2px; color: var(--c); }
+  .cmap-part span { font: 700 13px var(--display); white-space: nowrap; }
+  .cmap-part i { font-style: normal; font-size: 10.5px; color: var(--accent); }
+  .cmap-part.on { background: color-mix(in srgb, var(--c) 18%, #10131b); border-color: color-mix(in srgb, var(--c) 60%, transparent); color: var(--text); box-shadow: 0 0 18px color-mix(in srgb, var(--c) 25%, transparent); }
+  .cmap-part.lk:not(.on) { opacity: .7; }
+  .cmap-part:hover:not(.on) { background: rgba(255,255,255,.05); }
+  .cm-plock .cm-bt { color: #ff9ad0; }
+  .cp-part { font: 700 10px var(--display); letter-spacing: 2px; color: var(--muted); margin: 12px 0 6px; } .cp-part:first-child { margin-top: 0; }
+  .cine.parting .cine-title b { font-size: clamp(50px, 10vw, 136px); }
+  .cine.parting .cine-title small { letter-spacing: 18px; color: #fff; }
   .cmap-lock { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; padding: 16px 22px 14px; border-radius: 20px; max-width: min(340px, 86%);
     background: linear-gradient(180deg, rgba(10,12,18,.88), rgba(10,12,18,.78)); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
     box-shadow: 0 0 40px color-mix(in srgb, var(--c) 25%, transparent), 0 14px 30px rgba(0,0,0,.5); }
@@ -376,6 +401,7 @@
   @media (max-width: 600px) {
     .campmap .cm-brief { padding: 10px 12px; left: 12px; width: auto; } .cm-bt { font-size: 17px; } .cm-story-line { display: none; }
     .cmap-banner span { font-size: 14px; }
+    .cmap-parts { left: 12px; right: 12px; top: 54px; } .cmap-part { flex: 1; padding: 4px 8px; } .cmap-part span { font-size: 11.5px; white-space: normal; }
   }
   .cm-num { font: 700 10px var(--display); letter-spacing: 1px; color: var(--muted); }
   .cm-st { font-size: 12px; color: var(--accent); letter-spacing: 1px; }
@@ -595,6 +621,16 @@
   .fx-ash { top: -10px; width: calc(5px * var(--s)); height: calc(5px * var(--s)); background: #9a9aa0; opacity: .6; animation-name: fall; }
   .fx-snow { top: -10px; width: calc(6px * var(--s)); height: calc(6px * var(--s)); background: #fff; opacity: .85; animation-name: fall; }
   .fx-firefly { top: calc(40% + var(--s) * 30%); width: 5px; height: 5px; background: #d8ff7a; box-shadow: 0 0 10px #c8ff4a; animation-name: firefly; animation-timing-function: ease-in-out; animation-direction: alternate; }
+  .fx-rain { top: -40px; width: 2px; height: calc(34px * var(--s)); border-radius: 2px; background: linear-gradient(transparent, #bfe4ff); opacity: .55; animation-name: rain; animation-duration: calc(var(--du) / 7) !important; }
+  .fx-zzz { bottom: -20px; width: auto; height: auto; border-radius: 0; animation-name: zzz; } .fx-zzz::after { content: "z"; font: 700 calc(22px * var(--s)) var(--display); color: #ffc8f0; text-shadow: 0 0 10px #ff5fa8; }
+  @keyframes rain { from { transform: translate(0, 0) rotate(12deg); } to { transform: translate(-200px, 110vh) rotate(12deg); } }
+  @keyframes zzz { from { transform: translate(0, 0) rotate(-10deg); opacity: 0; } 15% { opacity: .9; } 50% { transform: translate(30px, -50vh) rotate(10deg); } to { transform: translate(-10px, -105vh) rotate(-10deg); opacity: 0; } }
+  .cb-bolt { opacity: 0; animation: bolt 5s infinite; } .cb-flash { opacity: 0; animation: flash 5s infinite; animation-delay: .4s; }
+  @keyframes bolt { 0%, 7%, 100% { opacity: 0; } 2%, 5% { opacity: 1; } 3.5% { opacity: .2; } }
+  @keyframes flash { 0%, 7%, 100% { opacity: 0; } 2% { opacity: .18; } 5% { opacity: .1; } }
+  .cb-wave { animation: cbWave 6s ease-in-out infinite alternate; } .cb-wave.rev { animation-direction: alternate-reverse; animation-duration: 7s; } @keyframes cbWave { to { transform: translateX(-140px); } }
+  .cb-gear { animation: spin 24s linear infinite; transform-box: fill-box; transform-origin: center; } .cb-gear.rev { animation-direction: reverse; }
+  .cb-mill { animation: spin 7s linear infinite; transform-box: view-box; }
   @keyframes rise { from { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } to { transform: translate(40px, -105vh); opacity: 0; } }
   @keyframes fall { from { transform: translate(0, 0); } to { transform: translate(-60px, 105vh); } }
   @keyframes firefly { 0% { transform: translate(0, 0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(60px, -50px); opacity: .2; } }
@@ -656,6 +692,12 @@
   .mscene.hit .ms-pump { animation: pump .3s; } @keyframes pump { 50% { transform: rotate(-22deg); } }
   .ms-spray { opacity: 0; } .mscene.hit .ms-spray { animation: spray .5s; } @keyframes spray { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
   .ms-fogfront { opacity: 0; transition: opacity .8s; } .mscene.fail .ms-fogfront { opacity: .95; }
+  .ms-bob { animation: msBob 2.2s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; } @keyframes msBob { from { transform: translateY(-2px) rotate(-1.5deg); } to { transform: translateY(3px) rotate(1.5deg); } }
+  .ms-beam { animation: msBeam 3s ease-in-out infinite alternate; transform-box: view-box; transform-origin: 232px 34px; } @keyframes msBeam { from { transform: rotate(-16deg); } to { transform: rotate(12deg); } }
+  .ms-belt { animation: msBelt .6s linear infinite; } @keyframes msBelt { to { stroke-dashoffset: -22; } }
+  .ms-sway { animation: msSway 2.6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: bottom; } @keyframes msSway { from { transform: skewX(-6deg); } to { transform: skewX(6deg); } }
+  .ms-run { animation: msRun .3s ease-in-out infinite alternate; } @keyframes msRun { to { transform: translateX(3px); } }
+  .ms-pulse { animation: msPulse 1.2s ease-in-out infinite alternate; } @keyframes msPulse { from { opacity: .05; } to { opacity: .3; } }
   .ms-wave { animation: wave .5s ease-in-out infinite alternate; transform-box: view-box; transform-origin: 238px 196px; } @keyframes wave { to { transform: rotate(-25deg); } }
   .mscene.done .ms-art { animation: msDone .9s ease-out; border-color: var(--c); }
   @keyframes msDone { 0% { filter: brightness(2.2); transform: scale(1.06); } 100% { filter: none; transform: none; } }
@@ -828,7 +870,8 @@
       <h3>How the campaign works</h3>
       <ul class="tips">
         <li><b>The story:</b> the Great Ember went out and the grey Slump is creeping over the land. Every push-up throws off a spark of Ember, so in every mission your reps power something: light the brazier, drop the gate, push the cart, build the bridge.</li>
-        <li><b>4 chapters, 24 missions.</b> Finish a mission to unlock the next one; each chapter ends with a boss. Story scenes play the first time; tap 📜 Story on the map to watch one again.</li>
+        <li><b>Two parts, 8 chapters, 48 missions.</b> Part 1, <i>The Great Ember</i>, takes you from Boot Camp to the Void Eye. Beat it to unlock Part 2, <i>The Hollow King</i>: the coast, the Gearworks, Skyreach, the Dreamless Kingdom, and a rival named Vex. Switch parts with the tabs on the map.</li>
+        <li>Finish a mission to unlock the next one; each chapter has two bosses. Story scenes play the first time; tap 📜 Story on the map to watch one again.</li>
         <li><b>Mission types:</b> 💪 reach a count · ⏱️ beat the clock · 🎯 deep reps only (50%+) · 🔗 no resting over 4 s · 🔥 as many as you can before time runs out · ⚔️ boss fights.</li>
         <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
         <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
@@ -1016,7 +1059,7 @@
   <linearGradient id="figGold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="200"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#e08a00"/></linearGradient>
 </defs></svg>
 
-<script src="art.js"></script>
+<script src="art.js?v=2"></script>
 <script type="module">
 import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 const { bossArt, THEMES, rankBadge, SHARED_DEFS, HEART, SHIELD_BUBBLE } = window.ART;
@@ -1048,6 +1091,23 @@ const BOSSES = [
     intro: "Titan Mark Two online. Target acquired: you.", win: "Titan Mark Two... offline!" },
   { id: "void",   name: "The Void Eye",    hp: 450, every: 5.5, windup: 2.5, specials: ["armor", "heal", "rapid", "frenzy", "armor"],
     intro: "The Void Eye opens. This is the final fight.", win: "The Void Eye closes forever. You are a legend!" },
+  // ----- Part 2: The Hollow King -----
+  { id: "barnacle", name: "Captain Barnacle", hp: 500, every: 5.5, windup: 2.5, specials: ["armor", "rapid", "heal"],
+    intro: "Captain Barnacle raises his claw. Arr!", win: "Captain Barnacle scuttles back to sea!" },
+  { id: "eel",      name: "Tempest Eel",      hp: 540, every: 5.3, windup: 2.4, specials: ["rapid", "frenzy", "rapid", "heal"],
+    intro: "The Tempest Eel crackles with lightning.", win: "The Tempest Eel fizzles out!" },
+  { id: "gearjaw",  name: "Gearjaw",          hp: 580, every: 5.2, windup: 2.4, specials: ["armor", "armor", "frenzy", "rapid"],
+    intro: "Gearjaw winds up. Clank, clank, clank.", win: "Gearjaw's spring snaps!" },
+  { id: "vex",      name: "Vex",              hp: 620, every: 5.0, windup: 2.3, specials: ["rapid", "heal", "frenzy", "armor"],
+    intro: "Vex smirks. Let's see what you've really got.", win: "Vex drops to one knee!" },
+  { id: "roc",      name: "Thunder Roc",      hp: 660, every: 4.9, windup: 2.3, specials: ["rapid", "rapid", "frenzy", "heal"],
+    intro: "The Thunder Roc screeches across the sky.", win: "The Thunder Roc flies off into the clouds!" },
+  { id: "vex2",     name: "Vex Unleashed",    hp: 700, every: 4.8, windup: 2.2, specials: ["armor", "rapid", "heal", "frenzy", "armor"],
+    intro: "Vex Unleashed. The Hollow King's power is overflowing.", win: "The stolen power fades away!" },
+  { id: "hydra",    name: "Dream Hydra",      hp: 760, every: 4.7, windup: 2.2, specials: ["heal", "heal", "rapid", "frenzy", "armor"],
+    intro: "Three heads, three yawns. Don't you dare fall asleep.", win: "The Dream Hydra drifts off forever!" },
+  { id: "king",     name: "The Hollow King",  hp: 840, every: 4.5, windup: 2.2, specials: ["armor", "heal", "rapid", "frenzy", "armor", "rapid"],
+    intro: "The Hollow King rises from his throne of pillows. The final fight.", win: "The Hollow King's crown shatters! Everyone wakes up!" },
 ];
 
 const SPECIALS = {
@@ -1865,7 +1925,7 @@ function showResult(f, won, firstWin, time) {
   $("resBack").onclick = () => closeResult();
   if (f.camp) {   // boss fought as a campaign mission: continue the campaign instead
     const k = CAMP_LIST.findIndex(m => m.id === f.camp), next = CAMP_LIST[k + 1];
-    if (won && f.firstClear) $("resSub").textContent = next ? (next.ch !== CAMP_LIST[k].ch ? `🏁 Chapter ${CAMP_LIST[k].ch + 1} complete! 🔓 Chapter ${next.ch + 1}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`) : "🏆 You finished the whole campaign. Legend.";
+    if (won && f.firstClear) $("resSub").textContent = campNextText(CAMP_LIST[k], next);
     $("resMain").textContent = won ? (next ? "Next mission ▶" : "Fight again") : "Retry ⚔";
     $("resMain").onclick = () => { closeResult(); if (won && next) startMission(k + 1); else startFight(f.idx, f.camp); };
     $("resBack").textContent = "Back to map";
@@ -1879,7 +1939,7 @@ function leaveArena() {
   $("arena").hidden = true;
   callout(""); F = null; shownHearts = 3;
   if (mode === "boss") { $("bossSelect").hidden = false; $("bsStatus").textContent = "Beat a boss to unlock the next one."; renderRoster(); }
-  if (mode === "campaign") { campChapter = campPick = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
+  if (mode === "campaign") { campChapter = campPick = campPart = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
 }
 
 $("pauseBtn").onclick = () => togglePause();
@@ -2276,7 +2336,7 @@ function loop() {
 }
 
 // ================= CAMPAIGN =================
-// 4 chapters × 6 missions. Each chapter has push-up challenges and two boss fights (the regular boss engine).
+// 8 chapters × 6 missions, in two parts of 4 chapters. Each chapter has push-up challenges and two boss fights (the regular boss engine).
 // Missions unlock one after another; every mission earns 1–3 stars. Counts scale with your survey level.
 const MTYPES = {
   reps:    { icon: "💪", goal: m => `Do ${m.n} push-ups`,                                 stars: "⭐⭐⭐ under 2.2 s per push-up · ⭐⭐ under 3.2 s" },
@@ -2323,7 +2383,46 @@ const CHAPTERS = [
       { name: "Last Stand",    type: "endure",  n: 35, t: 90, story: "Ninety seconds. Everything you've got." },
       { name: "The Void Eye",  type: "boss",    boss: 7, story: "The Eye opens. This is it, legend." },
     ] },
+  // ----- Part 2: The Hollow King -----
+  { name: "Tidewreck Coast", color: "#2ad4c4", locked: "The sea has pulled back. A grey storm waits on the horizon.", story: "The tide went out and never came back. Something is stirring under the sea.",
+    missions: [
+      { name: "Bail Out",        type: "nobreak", n: 20, story: "The boat's leaking. Keep bailing!" },
+      { name: "Lighthouse",      type: "reps",    n: 26, story: "Ships are crashing on the rocks. Light the way." },
+      { name: "Pirate Crab",     type: "boss",    boss: 8, story: "A ship with grey sails drops anchor. Arr." },
+      { name: "Anchors Aweigh",  type: "deep",    n: 14, story: "The anchor's stuck in Slump mud. Pull deep." },
+      { name: "Storm Run",       type: "timed",   n: 26, t: 55, story: "Beat the storm to the cliffs!" },
+      { name: "Eye of the Storm",type: "boss",    boss: 9, story: "Lightning crackles under the waves." },
+    ] },
+  { name: "The Gearworks", color: "#e8913c", locked: "Smokestacks pump grey Slump into the sky. Something clanks inside.", story: "A factory in the cliffs that never sleeps, and someone is running it.",
+    missions: [
+      { name: "Spin Up",         type: "endure",  n: 24, t: 60, story: "Get the great gear turning." },
+      { name: "Conveyor Chase",  type: "timed",   n: 28, t: 60, story: "Vex is getting away on the belt!" },
+      { name: "Bad Dog",         type: "boss",    boss: 10, story: "Vex whistles. Something big and metal comes running." },
+      { name: "Vault Breaker",   type: "deep",    n: 16, story: "A steel vault door. Dent it open." },
+      { name: "Meltdown",        type: "nobreak", n: 24, story: "Keep the coolant pumping or the cliff goes up." },
+      { name: "The Rival",       type: "boss",    boss: 11, story: "Vex is done running." },
+    ] },
+  { name: "Skyreach", color: "#6fc8ff", locked: "Islands float in a storm far above the clouds.", story: "Floating islands, a storm cannon, and Vex, waiting at the top.",
+    missions: [
+      { name: "Lift Off",        type: "reps",    n: 34, story: "This old balloon runs on Ember." },
+      { name: "Windmill Lift",   type: "nobreak", n: 26, story: "Keep it spinning or the lift drops." },
+      { name: "Thunderwings",    type: "boss",    boss: 12, story: "Something huge is circling in the storm." },
+      { name: "Catch the Lightning", type: "deep", n: 18, story: "Only perfect reps hold a charge." },
+      { name: "Sky Bridge",      type: "timed",   n: 32, t: 65, story: "The bridge is crumbling. Build fast!" },
+      { name: "Unleashed",       type: "boss",    boss: 13, story: "The King's power is eating Vex alive." },
+    ] },
+  { name: "The Dreamless Kingdom", color: "#ff5fa8", locked: "A kingdom where everyone sleeps forever. A throne of pillows waits.", story: "The Hollow King's home. Nobody here has woken up in a hundred years.",
+    missions: [
+      { name: "Wake-Up Call",    type: "reps",    n: 40, story: "Every push-up lights a window." },
+      { name: "Nightmare Road",  type: "endure",  n: 38, t: 90, story: "Nightmares guard the road. Keep Pip bright." },
+      { name: "Three Heads",     type: "boss",    boss: 14, story: "Three heads. Three yawns. Zero mercy." },
+      { name: "Mirror of Rest",  type: "deep",    n: 22, story: "The mirror shows you resting forever. Smash it." },
+      { name: "Wide Awake",      type: "nobreak", n: 32, story: "The King whispers: just close your eyes…" },
+      { name: "The Hollow King", type: "boss",    boss: 15, story: "The throne of pillows. The final fight." },
+    ] },
 ];
+CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : 1);
+const PARTS = [{ name: "The Great Ember", chs: [0, 1, 2, 3] }, { name: "The Hollow King", chs: [4, 5, 6, 7] }];
 const CAMP_LIST = CHAPTERS.flatMap((c, ci) => c.missions.map((m, mi) => ({ ...m, ch: ci, mi, id: `${ci + 1}-${mi + 1}` })));
 const campScale = () => LEVELS[store.profile?.level]?.boss ?? 1;
 const missionGoal = m => m.type === "boss" ? m : { ...m, n: Math.max(3, Math.round(m.n * campScale())) };
@@ -2331,6 +2430,10 @@ const campStars = id => (store.campaign || {})[id] || 0;
 const campUnlocked = k => k === 0 || campStars(CAMP_LIST[k - 1].id) > 0;
 const campTotal = () => CAMP_LIST.reduce((t, m) => t + campStars(m.id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
+const partUnlocked = pi => chapterUnlocked(PARTS[pi].chs[0]);
+const campNextText = (cur, next) => !next ? "🏆 You beat the Hollow King and finished the whole campaign. Legend!"
+  : CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part ? `🏁 Part ${PART_WORDS[CHAPTERS[cur.ch].part][0] + PART_WORDS[CHAPTERS[cur.ch].part].slice(1).toLowerCase()} complete! 🔓 Part ${PART_WORDS[CHAPTERS[next.ch].part][0] + PART_WORDS[CHAPTERS[next.ch].part].slice(1).toLowerCase()}: ${PARTS[CHAPTERS[next.ch].part].name}`
+  : next.ch !== cur.ch ? `🏁 Chapter ${cur.ch + 1} complete! 🔓 Chapter ${next.ch + 1}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`;
 let campChapter = null, campPick = null, M = null;
 
 
@@ -2363,10 +2466,35 @@ const MISSION_STORY = {
   "4-4": { obj: "Shatter the Eye's crystal shields",       scene: { k: "crack", v: "crystal" } },
   "4-5": { obj: "Hold Pip's shield against the Slump",     scene: { k: "shield" } },
   "4-6": { obj: "Close the Void Eye forever" },
+  "5-1": { obj: "Bail out the leaking boat",               scene: { k: "boat" } },
+  "5-2": { obj: "Light the lighthouse lamp",               scene: { k: "lighthouse" } },
+  "5-3": { obj: "Send Captain Barnacle back to sea" },
+  "5-4": { obj: "Pull the anchor out of the Slump mud",    scene: { k: "anchor" } },
+  "5-5": { obj: "Fill the sail and beat the storm",        scene: { k: "sail" } },
+  "5-6": { obj: "Ground the Tempest Eel" },
+  "6-1": { obj: "Turn the great gear",                     scene: { k: "gears" } },
+  "6-2": { obj: "Catch Vex on the conveyor belt",          scene: { k: "conveyor" } },
+  "6-3": { obj: "Unwind Gearjaw" },
+  "6-4": { obj: "Dent open the steel vault",               scene: { k: "crack", v: "metal" } },
+  "6-5": { obj: "Pump coolant before the core blows",      scene: { k: "core" } },
+  "6-6": { obj: "Beat Vex" },
+  "7-1": { obj: "Fire up the hot-air balloon",             scene: { k: "balloon" } },
+  "7-2": { obj: "Keep the windmill lift spinning",         scene: { k: "windmill" } },
+  "7-3": { obj: "Chase off the Thunder Roc" },
+  "7-4": { obj: "Charge up a bolt of lightning",           scene: { k: "charge" } },
+  "7-5": { obj: "Rebuild the sky bridge",                  scene: { k: "bridge", v: "sky" } },
+  "7-6": { obj: "Free Vex from the King's power" },
+  "8-1": { obj: "Light the windows and wake the town",     scene: { k: "wake" } },
+  "8-2": { obj: "Keep Pip bright on Nightmare Road",       scene: { k: "flame", v: "dream" } },
+  "8-3": { obj: "Put the Dream Hydra to sleep for good" },
+  "8-4": { obj: "Smash the Mirror of Rest",                scene: { k: "crack", v: "mirror" } },
+  "8-5": { obj: "Fight off the King's sleep spell",        scene: { k: "pull", v: "sleep" } },
+  "8-6": { obj: "Shatter the Hollow King's crown" },
 };
 CAMP_LIST.forEach(m => Object.assign(m, MISSION_STORY[m.id]));
 
-// lines are [speaker, text, backdrop?]; speakers: narr, steel, pip, eye, boss (the mission's boss)
+// lines are [speaker, text, backdrop?]; speakers: narr, steel, pip, eye, boss (the mission's boss),
+// and in Part 2: vex (the rival), vexr (Vex after he comes back to our side), king (the Hollow King)
 const STORY = {
   prologue: [
     ["narr", "For a thousand years the Great Ember burned on top of Beacon Hill. As long as it burned, everyone in Ironvale stayed strong.", "beacon"],
@@ -2444,24 +2572,112 @@ const STORY = {
     ["steel", "Not bad, recruit. Not bad at all. …Same time tomorrow?"],
     ["pip", "The Slump might come back someday. But we'll be ready. Right? RIGHT?"],
   ],
+  // ----- Part 2: The Hollow King -----
+  prologue2: [
+    ["narr", "A year has passed since the Eye closed. The Great Ember burns bright, and Boot Camp is full of new recruits.", "dawn"],
+    ["narr", "But far out at sea, the tide went out one night… and never came back.", "coast"],
+    ["steel", "Recruit. Pip spotted grey clouds over the ocean. The Slump is back, and it's coming from somewhere new.", "camp"],
+    ["pip", "I'm a BIG spark now! Let's go find out who's doing it!"],
+  ],
+  chapter2: [
+    [ ["narr", "Tidewreck Coast. The sea has pulled back for miles, and old shipwrecks lie in the grey mud.", "coast"],
+      ["pip", "The Slump is coming off the water like steam. Something out there is making it."],
+      ["steel", "Then we go to sea. Boots on, recruit."] ],
+    [ ["narr", "Inside the cliffs hides the Gearworks: a giant factory that turns stolen sleep into Slump.", "gears"],
+      ["pip", "It's so loud! Clank, clank, clank! Who's running all this?"],
+      ["steel", "Stay sharp. Somebody built this place on purpose."] ],
+    [ ["narr", "High above the clouds float the islands of Skyreach, held up by old Ember engines.", "sky"],
+      ["pip", "Whoa, islands in the sky! And they're all going grey…"],
+      ["steel", "Vex is up there somewhere. So is the road to the Hollow King."] ],
+    [ ["narr", "Past the moon lies the Dreamless Kingdom. Nobody here has woken up in a hundred years.", "dream"],
+      ["king", "Welcome, little recruits. Why work so hard? Lie down. My pillows are so soft.", "throne"],
+      ["vexr", "Don't listen to him. That voice is how he got me."],
+      ["steel", "Then we stick together. Let's wake this kingdom up.", "dream"] ],
+  ],
+  epilogue2: [
+    ["narr", "The Hollow King's crown cracked, and a hundred years of stolen sleep flew home to everyone who had lost it.", "throne"],
+    ["narr", "The Dreamless Kingdom woke up. The Slump was gone, and this time it wasn't coming back.", "dawn"],
+    ["vexr", "I'm going to train for real now. From day one. Again."],
+    ["steel", "Good. First thing tomorrow, kid. Don't be late."],
+    ["pip", "The Ember has never been brighter! We did it, legend!"],
+  ],
 };
-const CH_WORDS = ["ONE", "TWO", "THREE", "FOUR"];
-const CH_BG = ["camp", "woods", "peaks", "void"];
+Object.assign(STORY.m, {
+  "5-1": { pre:  [["steel", "We borrowed a fishing boat, and it leaks. Every push-up bails out a bucket.", "coast"], ["pip", "Stop for too long and we sink! No pressure!"]],
+           post: [["pip", "We're floating! Barely! But floating!", "coast"]] },
+  "5-2": { pre:  [["narr", "Ships are crashing on the rocks in the grey fog. The old lighthouse has gone dark.", "storm"], ["pip", "Fill the lamp with sparks and the ships can find their way home!"]],
+           post: [["pip", "It's shining! Look, the ships are turning around!", "coast"], ["steel", "Good work. But one ship isn't turning. It's coming straight at us."]] },
+  "5-3": { pre:  [["boss", "Arr! The Hollow King pays me in treasure to keep this coast sleepy!", "coast"], ["pip", "Who's the Hollow King?"], ["boss", "Ye'll never find out, matey! Ha-harr!"]],
+           post: [["pip", "He dropped a map! There's a crown drawn on it… and a factory in the cliffs.", "coast"], ["steel", "The Hollow King. Never heard of him. I don't like it."]] },
+  "5-4": { pre:  [["steel", "The Slump mud swallowed our anchor. Only deep reps will pull it free.", "coast"]],
+           post: [["pip", "It's up! Full sail ahead!", "coast"]] },
+  "5-5": { pre:  [["narr", "A huge storm rolls in from the sea, crackling with grey lightning.", "storm"], ["steel", "Every push-up fills the sail. Beat that storm to the cliffs!"]],
+           post: [["pip", "We made it! …But the lightning followed us.", "storm"]] },
+  "5-6": { pre:  [["boss", "Ssss. The King says nobody leaves this coast awake.", "storm"], ["pip", "It's a giant electric noodle!"], ["steel", "Deep reps, recruit. Ground that thing!"]],
+           post: [["steel", "The storm's breaking. And look, up on the cliffs: smokestacks.", "coast"], ["pip", "That's where all the grey is coming from!"]] },
+  "6-1": { pre:  [["steel", "The doors only open when the great gear turns. Put your back into it.", "gears"]],
+           post: [["vex", "Not bad. For somebody who still sweats.", "gears"], ["pip", "Who said that?!"], ["vex", "Name's Vex. I used to train at North Camp. Now I don't have to train at all."],
+                  ["steel", "Vex… I remember you. You quit on day three."], ["vex", "And now I'm stronger than you'll ever be. The Hollow King gave me strength for free. Catch me if you can!"]] },
+  "6-2": { pre:  [["pip", "Vex jumped on the conveyor belt! Faster, faster!", "gears"]],
+           post: [["vex", "Ugh, you're annoying. Fine. Meet my dog.", "gears"]] },
+  "6-3": { pre:  [["boss", "CLANK. Wind-up dog. Bites anyone who won't sleep.", "gears"], ["pip", "Bad dog! BAD DOG!"], ["steel", "Hit it where the spring is!"]],
+           post: [["pip", "Its key popped out! It's just a big toy now.", "gears"], ["steel", "Vex ran deeper inside. Toward that vault."]] },
+  "6-4": { pre:  [["steel", "A steel vault door, and Vex is hiding behind it. Dent it open, recruit.", "gears"]],
+           post: [["pip", "It's full of jars! And every jar is full of… yawns?", "gears"], ["steel", "Stolen sleep. That's what powers this whole place."]] },
+  "6-5": { pre:  [["narr", "Alarms blare. Vex has pulled the safety lever.", "gears"], ["vex", "If I can't have the Gearworks, nobody can!"], ["pip", "The core's overheating! Keep the coolant pumping!"]],
+           post: [["pip", "It's cooling down! Phew!", "gears"], ["steel", "Vex is cornered. Time to finish this."]] },
+  "6-6": { pre:  [["vex", "You keep doing push-ups like they'll get you somewhere. I don't train. I don't sweat. I just win.", "gears"], ["steel", "Strength you didn't earn isn't strength, kid. Show him, recruit."]],
+           post: [["vex", "How?! I have the King's power!", "gears"], ["pip", "And we have push-ups!"], ["vex", "This isn't over. I'll be waiting at the top of Skyreach!"], ["steel", "He's off on a sky barge. Up into the clouds."]] },
+  "7-1": { pre:  [["steel", "There's an old hot-air balloon here. It runs on Ember. You know what to do.", "sky"], ["pip", "I'll be the fire! You be the push-ups!"]],
+           post: [["pip", "We're flying! Don't look down. Okay, look down. It's amazing!", "sky"]] },
+  "7-2": { pre:  [["pip", "This lift runs on a windmill, and the wind is gone. Keep it spinning or we drop!", "sky"]],
+           post: [["steel", "Top floor. Nice and steady, recruit.", "sky"]] },
+  "7-3": { pre:  [["narr", "A shadow crosses the sun. Something with enormous wings is circling.", "storm"], ["boss", "SKRAAA! The King's sky belongs to ME!"], ["pip", "Big bird! BIG BIRD!"]],
+           post: [["pip", "It flew off! I think it was just scared of the storm.", "sky"], ["steel", "Something is charging up on the top island. Move."]] },
+  "7-4": { pre:  [["steel", "Vex built a storm cannon. To stop it we need a charge of our own, and only perfect reps hold lightning.", "storm"]],
+           post: [["pip", "Fully charged! Zap!", "sky"]] },
+  "7-5": { pre:  [["pip", "The bridge to the top island is crumbling! Every push-up puts a plank back!", "sky"]],
+           post: [["vex", "You came all this way just to lose.", "sky"]] },
+  "7-6": { pre:  [["vex", "The King gave me more. Much more. I can't… I can't stop it!", "storm"], ["pip", "Vex, you're glowing purple! That's not good!"], ["steel", "The power is eating him alive. Knock it out of him, recruit!"]],
+           post: [["vexr", "It's gone. All of it. I feel… tired. Really tired.", "sky"], ["steel", "That's what real effort feels like, kid. Welcome back."],
+                  ["vexr", "The King promised I'd never have to try again. He lied. His castle is past the moon, in the Dreamless Kingdom."], ["pip", "Then that's where we're going. All of us!"]] },
+  "8-1": { pre:  [["pip", "Every push-up lights a window. Light enough of them and people will start waking up!", "dream"]],
+           post: [["narr", "One by one the lights come on. Yawning faces appear at the windows.", "dream"], ["vexr", "They're waking up! It's working!"]] },
+  "8-2": { pre:  [["steel", "Nightmares guard the road to the castle. They hate the light.", "dream"], ["pip", "Keep me bright and they can't come close!"]],
+           post: [["pip", "The castle gates! We're almost there!", "dream"]] },
+  "8-3": { pre:  [["boss", "Yawn. Yawn. YAWN. Three heads, all sleepy, all hungry.", "dream"], ["vexr", "Every yawn heals it! Hit it fast!"]],
+           post: [["pip", "All three heads are snoring! It's out cold.", "dream"]] },
+  "8-4": { pre:  [["king", "Look in my mirror. See yourself resting forever. Isn't it lovely?", "throne"], ["steel", "It's a trick. Smash it, recruit. Deep reps."]],
+           post: [["king", "My mirror! Do you know how long I spent on that?", "throne"]] },
+  "8-5": { pre:  [["king", "Your eyes are getting heavy… so heavy… just stop for one second…", "throne"], ["pip", "Don't stop! If you stop, you fall asleep! Keep going!"]],
+           post: [["vexr", "You did it! You stayed awake!", "throne"], ["king", "Fine. Then I'll put you to sleep myself."]] },
+  "8-6": { pre:  [["king", "I made the Eye, you know. I made the Slump. A whole world, resting. Wasn't it peaceful?", "throne"], ["steel", "Peaceful isn't the same as alive."],
+                  ["vexr", "Go get him, recruit. For everyone he put to sleep."], ["pip", "This is it! Everything we've got!"]],
+           post: [] },
+});
+const CH_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT"];
+const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream"];
+const PART_WORDS = ["ONE", "TWO"];
+const partOf = m => CHAPTERS[m.ch].part;
+const partFirst = pi => CAMP_LIST.find(m => partOf(m) === pi), partLast = pi => CAMP_LIST.findLast(m => partOf(m) === pi);
+const partLine = pi => `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
+const endLine = pi => pi < PARTS.length - 1 ? "End of part one." : "The end.";
 const storySeen = id => !!(store.storySeen || {})[id];
 const markSeen = id => { store.storySeen ||= {}; store.storySeen[id] = 1; save(); };
 function storySteps(m, when) {
   const s = [], L = l => ({ who: l[0], text: l[1], bg: l[2] });
+  const pi = partOf(m), P2 = pi ? "2" : "";
   if (when === "pre") {
-    if (m.id === "1-1") s.push(...STORY.prologue.map(L));
-    if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...STORY.chapter[m.ch].map(L));
+    if (m === partFirst(pi)) s.push({ part: pi, bg: pi ? "coast" : "beacon" }, ...STORY["prologue" + P2].map(L));
+    if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...(pi ? STORY.chapter2[m.ch - 4] : STORY.chapter[m.ch]).map(L));
     s.push(...(STORY.m[m.id]?.pre || []).map(L));
   } else {
     s.push(...(STORY.m[m.id]?.post || []).map(L));
-    if (m.id === CAMP_LIST[CAMP_LIST.length - 1].id) s.push(...STORY.epilogue.map(L), { end: true, bg: "dawn" });
+    if (m === partLast(pi)) s.push(...STORY["epilogue" + P2].map(L), { end: pi, bg: "dawn" });
   }
   return s;
 }
-const missionStory = (m, when) => playCine(storySteps(m, when), { ch: when === "post" && m.id === "4-6" ? 4 : m.ch, boss: m.boss });
+const missionStory = (m, when) => playCine(storySteps(m, when), { ch: m.ch, boss: m.boss, fin: when === "post" && m === partLast(partOf(m)) });
 
 // ---------- characters ----------
 function steelSvg() {
@@ -2487,6 +2703,9 @@ function pipSvg(uid) {
 }
 function castOf(who, ctx) {
   if (who === "boss" && ctx.boss != null) { const b = BOSSES[ctx.boss]; return { name: b.name, color: THEMES[b.id].aura, face: bossArt(b.id), actor: bossArt(b.id), voice: { pitch: 0.4, rate: 0.95 } }; }
+  if (who === "vex") { const id = ctx.boss === 13 ? "vex2" : "vex", a = bossArt(id); return { name: "Vex", color: THEMES[id].aura, face: a, actor: a, voice: { pitch: 0.75, rate: 1.08 } }; }
+  if (who === "vexr") return { name: "Vex", color: "#ffc861", face: bossArt("vexgood"), voice: { pitch: 0.75, rate: 1.05 } };
+  if (who === "king") { const a = bossArt("king"); return { name: "The Hollow King", color: THEMES.king.aura, face: a, actor: a, voice: { pitch: 0.3, rate: 0.85 } }; }
   if (who === "eye") return { name: "The Eye", color: "#c06bff", face: bossArt("void"), voice: { pitch: 0.1, rate: 0.82 } };
   if (who === "pip") return { name: "Pip", color: "#ff9a3d", face: pipSvg("pf"), pip: true, voice: { pitch: 1.8, rate: 1.15 } };
   return { name: "Sergeant Steel", color: "#ffc21a", face: steelSvg(), voice: { pitch: 0.55, rate: 1.02 } };
@@ -2608,9 +2827,80 @@ function cineBg(loc) {
        ${eye ? `<g class="cb-eye"><path d="M420 380 Q800 120 1180 380 Q800 640 420 380Z" fill="#1a0a24" stroke="#c06bff" stroke-width="6"/><circle cx="800" cy="380" r="150" fill="url(#iris${loc})"/><ellipse class="cb-pupil" cx="800" cy="380" rx="34" ry="120" fill="#05010a"/><circle cx="740" cy="320" r="22" fill="#fff" opacity=".7"/></g>` : ""}
        <path d="M-20 920 L-20 720 L180 700 L320 760 L460 740 L520 920Z" fill="#100818"/><path d="M1100 920 L1160 760 L1300 740 L1460 780 L1620 720 L1620 920Z" fill="#100818"/>`);
   }
+  // ----- Part 2 -----
+  const cloud = (x, y, k, fill, op = 1, cls = "") => `<g transform="translate(${x} ${y}) scale(${k})" fill="${fill}" opacity="${op}" ${cls ? `class="${cls}"` : ""}><circle cx="-90" cy="10" r="60"/><circle cx="0" cy="-20" r="85"/><circle cx="95" cy="8" r="62"/><rect x="-150" y="10" width="300" height="60" rx="30"/></g>`;
+  const wreck = (x, y, k, tilt) => `<g transform="translate(${x} ${y}) rotate(${tilt}) scale(${k})"><path d="M-160 0 Q-150 60 0 66 Q150 60 170 -10 L120 0Z" fill="#3a2a22"/><path d="M-160 0 H170" stroke="#22160f" stroke-width="8"/>${[-110, -50, 10, 70].map(px => `<path d="M${px} 4 V50" stroke="#22160f" stroke-width="5"/>`).join("")}<path d="M-20 0 L-40 -190" stroke="#2a1c14" stroke-width="12"/><path d="M-40 -190 L60 -150 L-30 -90Z" fill="#8a8a8a" opacity=".55"/></g>`;
+  if (loc === "coast") {
+    return wrap(sky("skco", [[0, "#1c3350"], [.5, "#6a6a80"], [.72, "#e0a07a"], [1, "#e0a07a"]]) + glow("sunco", "#ffd0a0"),
+      `<rect width="1600" height="900" fill="url(#skco)"/><circle cx="420" cy="520" r="260" fill="url(#sunco)"/><circle cx="420" cy="540" r="80" fill="#ffe0b8" opacity=".9"/>
+       ${cloud(1150, 160, 1.3, "#4a5068", .7, "cb-drift")}${cloud(300, 120, .9, "#5a5e78", .6, "cb-drift rev")}
+       <rect x="-20" y="560" width="1640" height="60" fill="#3a6a7a"/><path d="M-20 560 H1620" stroke="#bfe" stroke-opacity=".4" stroke-width="3"/>
+       ${cbFog(rnd, "#9aa4b0", .18, 470)}
+       <path d="M-20 600 Q400 590 800 610 Q1200 630 1620 600 L1620 920 L-20 920Z" fill="#5a5048"/><path d="M-20 680 Q500 660 900 690 T1620 680 L1620 920 L-20 920Z" fill="#4a4038"/>
+       ${Array.from({ length: 10 }, () => `<ellipse cx="${(rnd() * 1600) | 0}" cy="${640 + rnd() * 200}" rx="${30 + rnd() * 70}" ry="${4 + rnd() * 6}" fill="#7a8a90" opacity=".45"/>`).join("")}
+       ${wreck(300, 720, .9, 8)}${wreck(980, 650, .5, -12)}
+       <path d="M1280 920 L1300 520 Q1400 470 1500 500 L1620 520 L1620 920Z" fill="#2a2a30"/><g transform="translate(1420 300)"><path d="M-36 200 L-24 0 H24 L36 200Z" fill="#e8e8e0"/><path d="M-32 130 H32 L34 160 H-34Z M-28 50 H28 L30 80 H-30Z" fill="#c0392b"/><rect x="-30" y="-40" width="60" height="40" fill="#3a3a40"/><path d="M-38 -40 H38 L0 -80Z" fill="#8a2a22"/></g>
+       ${Array.from({ length: 5 }, (_, i) => `<path class="cb-float" style="animation-delay:${i}s" d="M${600 + i * 130} ${200 + (i % 2) * 60} q14 -14 28 0 q14 -14 28 0" stroke="#222" stroke-width="4" fill="none"/>`).join("")}`);
+  }
+  if (loc === "storm") {
+    const bolt = (x, d) => `<path class="cb-bolt" style="animation-delay:${d}s" d="M${x} 120 l-40 160 h40 l-60 190 l120 -230 h-46 l46 -120Z" fill="#e8f4ff" filter="drop-shadow(0 0 20px #9fd8ff)"/>`;
+    return wrap(sky("skst", [[0, "#05080f"], [.6, "#1a2636"], [1, "#2a3a48"]]),
+      `<rect width="1600" height="900" fill="url(#skst)"/><rect class="cb-flash" width="1600" height="900" fill="#bfe4ff"/>
+       ${cloud(250, 120, 1.6, "#2c3646", 1, "cb-drift")}${cloud(900, 80, 2, "#252e3c", 1, "cb-drift rev")}${cloud(1450, 150, 1.5, "#323c4c", 1, "cb-drift")}
+       ${bolt(560, 0.4)}${bolt(1180, 2.6)}
+       ${cloud(600, 260, 1.2, "#3a4556", .9, "cb-drift rev")}${cloud(1250, 300, 1, "#343e4e", .85, "cb-drift")}
+       ${[0, 1, 2, 3].map(i => `<path class="cb-wave${i % 2 ? " rev" : ""}" d="M-200 ${640 + i * 70} ${Array.from({ length: 12 }, (_, j) => `q 100 ${-40 - i * 6} 200 0`).join(" ")} V920 H-200Z" fill="${["#1a3040", "#14283a", "#0e2030", "#0a1824"][i]}"/>`).join("")}
+       ${Array.from({ length: 16 }, () => `<path d="M${(rnd() * 1600) | 0} ${650 + rnd() * 220} q10 -12 22 0" stroke="#cfe8f0" stroke-opacity=".5" stroke-width="3" fill="none"/>`).join("")}`);
+  }
+  if (loc === "gears") {
+    const G = (x, y, R, c, rev, dur) => { const n = Math.round(R / 14); let d = ""; for (let i = 0; i < n; i++) { const a = i / n * 6.283; d += `M${(R * Math.cos(a - .1)).toFixed(0)} ${(R * Math.sin(a - .1)).toFixed(0)} L${((R + 26) * Math.cos(a - .06)).toFixed(0)} ${((R + 26) * Math.sin(a - .06)).toFixed(0)} L${((R + 26) * Math.cos(a + .06)).toFixed(0)} ${((R + 26) * Math.sin(a + .06)).toFixed(0)} L${(R * Math.cos(a + .1)).toFixed(0)} ${(R * Math.sin(a + .1)).toFixed(0)}Z`; }
+      return `<g transform="translate(${x} ${y})"><g class="cb-gear${rev ? " rev" : ""}" style="animation-duration:${dur}s"><path d="${d}" fill="${c}"/><circle r="${R}" fill="${c}"/><circle r="${R * .62}" fill="#000" opacity=".3"/>${[0, 1, 2, 3, 4, 5].map(i => `<circle cx="${(R * .8 * Math.cos(i * 1.047)).toFixed(0)}" cy="${(R * .8 * Math.sin(i * 1.047)).toFixed(0)}" r="${R * .07}" fill="#000" opacity=".3"/>`).join("")}<circle r="${R * .18}" fill="#1a120c"/></g></g>`; };
+    return wrap(sky("skg", [[0, "#140c08"], [.6, "#2e1e12"], [1, "#5a2e10"]]) + glow("fgl", "#ff8a2a"),
+      `<rect width="1600" height="900" fill="url(#skg)"/>
+       ${G(260, 260, 220, "#3a2a1c", false, 30)}${G(640, 120, 130, "#33251a", true, 18)}${G(1340, 300, 260, "#3a2a1c", true, 36)}${G(1000, 600, 150, "#46321f", false, 20)}
+       <path d="M-20 420 H520 V200 H1620 M-20 470 H460 V250 H1620" stroke="#5a4028" stroke-width="22" fill="none"/>
+       ${[0, 1, 2, 3, 4, 5, 6, 7].map(i => `<g transform="translate(${110 + i * 60} 600)"><rect x="-20" y="-50" width="40" height="56" rx="8" fill="#6ad0ff" opacity=".22"/><rect x="-14" y="-38" width="28" height="40" rx="6" fill="#9fe8ff" opacity=".55" class="tw2" style="animation-delay:${i * .4}s"/><rect x="-22" y="-58" width="44" height="10" rx="3" fill="#7a5a3a"/></g>`).join("")}
+       <rect x="60" y="606" width="520" height="14" fill="#5a4028"/>
+       <ellipse cx="1150" cy="900" rx="520" ry="220" fill="url(#fgl)"/><path d="M980 920 V760 Q1150 680 1320 760 V920Z" fill="#2a1a10"/><path d="M1060 920 V800 Q1150 760 1240 800 V920Z" fill="#ff7a1a" class="cb-lava"/>
+       <path d="M-20 760 H1620" stroke="#4a3420" stroke-width="16"/>${Array.from({ length: 28 }, (_, i) => `<path d="M${i * 60} 768 L${i * 60 + 30} 830" stroke="#3a2818" stroke-width="5"/>`).join("")}<path d="M-20 830 H1620" stroke="#4a3420" stroke-width="10"/>
+       <rect x="-20" y="840" width="1640" height="80" fill="#140c08"/>`);
+  }
+  if (loc === "sky") {
+    const isle = (x, y, k, d) => `<g class="cb-float" style="animation-delay:${d}s"><g transform="translate(${x} ${y}) scale(${k})"><path d="M-200 0 Q-120 220 0 260 Q120 220 200 0Z" fill="#7a5a44"/><path d="M-130 30 Q0 220 130 30" fill="#5a4030"/><ellipse rx="200" ry="40" fill="#5fbf54"/><ellipse cy="-6" rx="170" ry="26" fill="#7ed86a"/>${[-120, -60, 90].map(px => `<g transform="translate(${px} -10)"><rect x="-6" y="-50" width="12" height="50" fill="#5a3a22"/><circle cy="-64" r="34" fill="#3a9a46"/></g>`).join("")}</g></g>`;
+    return wrap(sky("sksk", [[0, "#2a5aa8"], [.6, "#7ab8ea"], [1, "#d8eefc"]]) + glow("ssun", "#fff6c0"),
+      `<rect width="1600" height="900" fill="url(#sksk)"/><circle cx="1300" cy="160" r="260" fill="url(#ssun)"/><circle cx="1300" cy="160" r="70" fill="#fffbe0"/>
+       ${cloud(200, 640, 2.2, "#fff", .7)}${cloud(1000, 700, 2.6, "#fff", .75)}${cloud(1600, 600, 2, "#fff", .7)}
+       ${isle(330, 330, .8, 0)}${isle(1100, 450, 1.1, 2)}${isle(760, 200, .45, 4)}
+       <g transform="translate(1100 450) scale(1.1)"><g class="cb-float" style="animation-delay:2s"><path d="M60 -10 L66 -150 H82 L88 -10Z" fill="#e8dcc0"/><g class="cb-mill" style="transform-origin:74px -140px"><path d="M74 -140 L64 -250 H84Z M74 -140 L180 -100 L172 -84Z M74 -140 L-32 -100 L-24 -84Z M74 -140 L64 -30 H84Z" fill="#c8a878" stroke="#7a5a3a" stroke-width="3"/></g></g></g>
+       ${cloud(100, 900, 3, "#fff", .95)}${cloud(800, 940, 3.4, "#fff", .95)}${cloud(1500, 900, 3, "#fff", .95)}
+       ${Array.from({ length: 4 }, (_, i) => `<path class="cb-float" style="animation-delay:${i * 1.3}s" d="M${500 + i * 160} ${120 + (i % 2) * 50} q14 -14 28 0 q14 -14 28 0" stroke="#1a2a4a" stroke-width="4" fill="none"/>`).join("")}`);
+  }
+  if (loc === "dream") {
+    let houses = ""; for (let i = 0; i < 12; i++) { const x = i * 140 - 20 + rnd() * 40, w = 90 + rnd() * 40, h = 90 + rnd() * 80, y = 840 - h;
+      houses += `<rect x="${x}" y="${y}" width="${w}" height="${h + 80}" fill="#24102e"/><path d="M${x - 10} ${y}L${x + w / 2} ${y - 50}L${x + w + 10} ${y}Z" fill="#2e1238"/>`;
+      for (let j = 0; j < 2; j++) houses += `<rect x="${x + 18 + j * (w - 54)}" y="${y + 26}" width="18" height="22" rx="3" fill="${rnd() < .35 ? "#ffcf8a" : "#160818"}" ${rnd() < .3 ? 'class="tw2"' : ""}/>`; }
+    return wrap(sky("skdr", [[0, "#0e0418"], [.6, "#3a0c48"], [1, "#7a2a6a"]]) + glow("mdr", "#ffd6f0"),
+      `<rect width="1600" height="900" fill="url(#skdr)"/>${cbStars(rnd, 160, 600)}<circle cx="1220" cy="200" r="260" fill="url(#mdr)" opacity=".6"/><circle cx="1220" cy="200" r="90" fill="#ffe6f4"/><circle cx="1262" cy="176" r="82" fill="#1c0828"/>
+       <g transform="translate(800 330)"><rect x="-140" y="-40" width="280" height="200" fill="#3a1448"/>${[-140, -90, -40, 10, 60, 110].map(x => `<rect x="${x}" y="-66" width="30" height="30" fill="#3a1448"/>`).join("")}<rect x="-200" y="-140" width="70" height="300" fill="#4a1a58"/><rect x="130" y="-140" width="70" height="300" fill="#4a1a58"/><path d="M-210 -140 L-165 -240 L-120 -140Z M120 -140 L165 -240 L210 -140Z" fill="#ff5fa8"/><path d="M-36 160 V80 Q0 40 36 80 V160Z" fill="#14061c"/><rect x="-176" y="-90" width="22" height="30" fill="#ff8ad0" opacity=".7" class="tw2"/><rect x="154" y="-90" width="22" height="30" fill="#ff8ad0" opacity=".7" class="tw2"/></g>
+       ${cloud(250, 520, 1.1, "#f2c8e8", .25, "cb-drift")}${cloud(1350, 560, 1.2, "#f2c8e8", .22, "cb-drift rev")}
+       <path d="M-20 560 Q800 470 1620 560 L1620 920 L-20 920Z" fill="#1c0a26"/>${houses}`);
+  }
+  if (loc === "throne") {
+    return wrap(sky("skth", [[0, "#1a0620"], [.7, "#4a1050"], [1, "#2a0830"]]) + glow("thg", "#ff7ad9"),
+      `<rect width="1600" height="900" fill="url(#skth)"/>
+       ${[0, 1, 2, 3, 4].map(i => `<rect x="${120 + i * 320}" y="0" width="80" height="900" fill="#2a0a34"/><rect x="${110 + i * 320}" y="0" width="100" height="40" fill="#3a1046"/>`).join("")}
+       <path d="M-20 -20 H420 Q300 300 380 920 H-20Z" fill="#7a1a5a"/><path d="M1620 -20 H1180 Q1300 300 1220 920 H1620Z" fill="#7a1a5a"/><path d="M60 -20 Q200 300 120 920 M1540 -20 Q1400 300 1480 920" stroke="#5a0e44" stroke-width="30" fill="none"/>
+       <circle cx="800" cy="420" r="420" fill="url(#thg)" opacity=".55"/>
+       <path d="M520 800 Q520 260 800 220 Q1080 260 1080 800Z" fill="#c84aa0"/><path d="M580 800 Q580 320 800 290 Q1020 320 1020 800Z" fill="#e070c0"/>
+       ${[[620, 640, 120], [980, 640, 120], [800, 700, 200]].map(([x, y, w]) => `<path d="M${x - w} ${y} C${x - w} ${y - 90} ${x + w} ${y - 90} ${x + w} ${y} C${x + w} ${y + 70} ${x - w} ${y + 70} ${x - w} ${y}Z" fill="#f4b8e4"/><path d="M${x - w + 30} ${y - 20} C${x - w / 2} ${y - 60} ${x + w / 2} ${y - 60} ${x + w - 30} ${y - 20}" stroke="#fff" stroke-opacity=".5" stroke-width="6" fill="none"/>`).join("")}
+       <path d="M740 230 L760 170 L785 210 L800 150 L815 210 L840 170 L860 230Z" fill="#ffd24a"/>
+       ${Array.from({ length: 9 }, () => `<circle class="cb-float" style="animation-delay:${(rnd() * 6).toFixed(1)}s" cx="${(rnd() * 1600) | 0}" cy="${200 + rnd() * 500}" r="${14 + rnd() * 30}" fill="none" stroke="#ffc8f0" stroke-opacity=".4" stroke-width="3"/>`).join("")}
+       <rect x="-20" y="800" width="1640" height="120" fill="#1a0620"/><path d="M500 800 H1100 L1160 920 H440Z" fill="#8a1a5a"/>`);
+  }
   return wrap("", `<rect width="1600" height="900" fill="#05060a"/>`);
 }
-const BG_FX = { beacon: "spark", dawn: "spark", dark: "ash", camp: "", campLit: "spark", campFog: "", woods: "firefly", lake: "snow", peaks: "ember", lava: "ember", void: "", eye: "" };
+const BG_FX = { beacon: "spark", dawn: "spark", dark: "ash", camp: "", campLit: "spark", campFog: "", woods: "firefly", lake: "snow", peaks: "ember", lava: "ember", void: "", eye: "",
+  coast: "", storm: "rain", gears: "spark", sky: "", dream: "zzz", throne: "zzz" };
 function cineFx(type) {
   if (!type) return "";
   let s = "";
@@ -2619,7 +2909,9 @@ function cineFx(type) {
 }
 
 // ---------- cutscene music: a slow detuned pad per chapter ----------
-const CINE_CHORDS = [[130.8, 196, 329.6], [110, 164.8, 261.6], [73.4, 110, 174.6], [65.4, 92.5, 155.6], [130.8, 196, 246.9, 329.6]];
+const CINE_CHORDS = [[130.8, 196, 329.6], [110, 164.8, 261.6], [73.4, 110, 174.6], [65.4, 92.5, 155.6],
+  [146.8, 220, 349.2], [110, 146.8, 233.1], [98, 146.8, 246.9, 293.7], [77.8, 116.5, 185, 233.1]];
+const CINE_FINALE = [130.8, 196, 246.9, 329.6];
 const cineMusic = {
   nodes: null,
   start(ch = 0) {
@@ -2630,7 +2922,7 @@ const cineMusic = {
       lp.type = "lowpass"; lp.frequency.value = 650; lp.Q.value = 3; lfo.frequency.value = 0.07; lfoG.gain.value = 300; lfo.connect(lfoG).connect(lp.frequency);
       out.gain.setValueAtTime(0.0001, t); out.gain.exponentialRampToValueAtTime(0.03, t + 2.5);
       lp.connect(out).connect(ac.destination);
-      const oscs = (CINE_CHORDS[ch] || CINE_CHORDS[0]).flatMap(f => [-7, 7].map(dt => { const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = f; o.detune.value = dt; o.connect(lp); o.start(t); return o; }));
+      const oscs = (ch === "fin" ? CINE_FINALE : CINE_CHORDS[ch] || CINE_CHORDS[0]).flatMap(f => [-7, 7].map(dt => { const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = f; o.detune.value = dt; o.connect(lp); o.start(t); return o; }));
       lfo.start(t); this.nodes = { out, oscs: [...oscs, lfo] };
     } catch {}
   },
@@ -2701,9 +2993,10 @@ function playCine(steps, ctx = {}) {
     q(".cine-bg").innerHTML = ""; q(".cine-actor").innerHTML = ""; q(".cine-pip").innerHTML = ""; q(".cine-fx").innerHTML = "";
     el.className = "cine show";
     stopVoice();
-    cineMusic.start(ctx.ch ?? 0);
+    cineMusic.start(ctx.fin ? "fin" : ctx.ch ?? 0);
     const vkOf = s => s.who === "boss" ? "boss" + ctx.boss : s.who;
-    preloadVoices(steps.map(s => s.end ? ["title", "The end."] : s.title != null ? ["title", `Chapter ${s.title + 1}. ${CHAPTERS[s.title].name}.`] : [vkOf(s), s.text]));
+    const titleLine = s => s.end != null ? endLine(s.end) : s.part != null ? partLine(s.part) : `Chapter ${s.title + 1}. ${CHAPTERS[s.title].name}.`;
+    preloadVoices(steps.map(s => s.end != null || s.part != null || s.title != null ? ["title", titleLine(s)] : [vkOf(s), s.text]));
     const setBg = loc => {
       if (!loc || loc === curBg) return; curBg = loc;
       const L = document.createElement("div"); L.className = "cine-layer" + (Math.random() < .5 ? " kb2" : "");
@@ -2730,14 +3023,19 @@ function playCine(steps, ctx = {}) {
       const s = steps[i];
       setBg(s.bg);
       el.classList.remove("titling", "narrating", "talking");
-      if (s.title != null || s.end) {
-        const c = CHAPTERS[s.title] || {};
-        q(".cine-title").innerHTML = s.end
-          ? `<small>THANKS FOR PLAYING</small><b style="--c:#ffc21a">THE END</b><i></i><em>The Great Ember burns again. Keep doing your push-ups, legend.</em>`
+      if (s.title != null || s.end != null || s.part != null) {
+        const c = CHAPTERS[s.title] || {}, pc = s.part ? "#ff5fa8" : "#ffc21a";
+        q(".cine-title").innerHTML = s.end != null
+          ? (s.end < PARTS.length - 1
+            ? `<small>END OF PART ONE</small><b style="--c:#ffc21a">${PARTS[s.end].name}</b><i></i><em>But someone else wants the world asleep… 🔓 Part Two: ${PARTS[s.end + 1].name} is now open on the map.</em>`
+            : `<small>THANKS FOR PLAYING</small><b style="--c:#ff5fa8">THE END</b><i style="--c:#ff5fa8"></i><em>The Hollow King is beaten and the whole world is awake. Keep doing your push-ups, legend.</em>`)
+          : s.part != null
+          ? `<small>PART ${PART_WORDS[s.part]}</small><b style="--c:${pc}">${PARTS[s.part].name}</b><i style="--c:${pc}"></i>`
           : `<small>CHAPTER ${CH_WORDS[s.title]}</small><b style="--c:${c.color}">${c.name}</b><i style="--c:${c.color}"></i>`;
+        el.classList.toggle("parting", s.part != null);
         el.classList.add("titling"); q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
-        sfx.boom(); speakLine("title", s.end ? "The end." : `Chapter ${s.title + 1}. ${c.name}.`, { pitch: 0.8, rate: 0.95 });
-        timer = setTimeout(next, s.end ? 6000 : 3600);
+        sfx.boom(); speakLine("title", titleLine(s), { pitch: 0.8, rate: 0.95 });
+        timer = setTimeout(next, s.end != null ? 6500 : s.part != null ? 4200 : 3600);
         return;
       }
       if (s.who === "narr") {
@@ -2752,7 +3050,7 @@ function playCine(steps, ctx = {}) {
       q(".cine-box").classList.remove("pop"); void q(".cine-box").offsetWidth; q(".cine-box").classList.add("pop");
       if (who.actor && curActor !== who.name) { q(".cine-actor").innerHTML = who.actor; q(".cine-actor").classList.remove("on"); void q(".cine-actor").offsetWidth; q(".cine-actor").classList.add("on"); curActor = who.name; sfx.roar(); }
       else if (!who.actor) { q(".cine-actor").classList.remove("on"); curActor = null; }
-      if (who.pip) { if (!q(".cine-pip").innerHTML) q(".cine-pip").innerHTML = pipSvg("pa"); q(".cine-pip").style.setProperty("--k", 0.8 + (ctx.ch ?? 0) * 0.18); q(".cine-pip").classList.add("on"); }
+      if (who.pip) { if (!q(".cine-pip").innerHTML) q(".cine-pip").innerHTML = pipSvg("pa"); q(".cine-pip").style.setProperty("--k", 0.8 + Math.min(4, ctx.fin ? 4 : ctx.ch ?? 0) * 0.18); q(".cine-pip").classList.add("on"); }
       else q(".cine-pip").classList.remove("on");
       typeOut(q(".cine-text"), s.text);
       speakLine(vkOf(s), s.text, who.voice);
@@ -2780,12 +3078,13 @@ function sceneSvg(sc) {
   const rnd = seeded(sc.k.length * 97 + (sc.v || "").length);
   switch (sc.k) {
     case "flame": {
-      const pip = sc.v === "pip", camp = sc.v === "campfire";
-      const bg = pip ? `<rect width="300" height="220" fill="#050a1c"/>${cbPines(rnd, 7, 205, 90, 170, "#0b1430", 300)}`
+      const dream = sc.v === "dream", pip = sc.v === "pip" || dream, camp = sc.v === "campfire";
+      const bg = dream ? `<rect width="300" height="220" fill="#1a0626"/>${cbStars(rnd, 25, 120)}${[[20, 150, 40], [90, 175, 34], [210, 168, 38], [280, 150, 42]].map(([x, y, w]) => `<rect x="${x - w / 2}" y="${y}" width="${w}" height="80" fill="#2e1038"/><path d="M${x - w / 2 - 4} ${y}L${x} ${y - 22}L${x + w / 2 + 4} ${y}Z" fill="#3a1448"/>`).join("")}`
+        : pip ? `<rect width="300" height="220" fill="#050a1c"/>${cbPines(rnd, 7, 205, 90, 170, "#0b1430", 300)}`
         : camp ? `<rect width="300" height="220" fill="#3a0e08"/><path d="M0 150 L50 90 L90 130 L150 60 L210 120 L250 80 L300 140 V220 H0Z" fill="#1e0806"/>`
         : `<rect width="300" height="220" fill="#1a1428"/><path d="M0 190 Q150 175 300 190 V220 H0Z" fill="#26301c"/>`;
       const eyes = pip ? [[-1, 30, 120], [-1, 18, 160], [1, 270, 110], [1, 282, 150], [-1, 40, 75], [1, 258, 70]].map(([dir, x, y], i) =>
-        `<g ${tf(`translateX(calc(${dir * -1} * clamp(0, var(--d) - var(--p) + .35, 1) * 46px))`)}><g class="cb-blink" style="animation-delay:${i * .7}s"><ellipse cx="${x - 7}" cy="${y}" rx="4.5" ry="2.6" fill="#ffd23a"/><ellipse cx="${x + 7}" cy="${y}" rx="4.5" ry="2.6" fill="#ffd23a"/></g></g>`).join("") : "";
+        `<g ${tf(`translateX(calc(${dir * -1} * clamp(0, var(--d) - var(--p) + .35, 1) * 46px))`)}><g class="cb-blink" style="animation-delay:${i * .7}s">${dream ? `<path d="M${x - 16} ${y + 26} Q${x - 16} ${y - 12} ${x} ${y - 12} Q${x + 16} ${y - 12} ${x + 16} ${y + 26} l-6 -6 -5 6 -5 -6 -5 6 -5 -6Z" fill="#2a0a36" opacity=".9"/>` : ""}<ellipse cx="${x - 7}" cy="${y}" rx="4.5" ry="2.6" fill="${dream ? "#ff5fa8" : "#ffd23a"}"/><ellipse cx="${x + 7}" cy="${y}" rx="4.5" ry="2.6" fill="${dream ? "#ff5fa8" : "#ffd23a"}"/></g></g>`).join("") : "";
       const base = pip ? "" : camp
         ? `<path d="M105 196 L195 176 M105 176 L195 196" stroke="#5a3a20" stroke-width="12" stroke-linecap="round"/>${[95, 120, 180, 205].map(x => `<ellipse cx="${x}" cy="198" rx="12" ry="7" fill="#555"/>`).join("")}`
         : `<rect x="100" y="146" width="100" height="9" rx="4" fill="#7a6650"/><path d="M106 154 H194 L181 180 H119Z" fill="#5a4a3a"/><path d="M124 180 L112 202 M176 180 L188 202 M150 180 V202" stroke="#3a2e24" stroke-width="6"/>`;
@@ -2807,14 +3106,23 @@ function sceneSvg(sc) {
         <rect y="200" width="300" height="20" fill="#2a2620"/>
         <g class="ms-fogfront"><ellipse cx="150" cy="180" rx="200" ry="70" fill="#a8adb6"/></g>`);
     case "crack": {
-      const v = sc.v, cracks = { rock: "#1d1b18", scales: "#ffd23a", crystal: "#fff", roots: "" }[v];
+      const v = sc.v, cracks = { rock: "#1d1b18", scales: "#ffd23a", crystal: "#fff", roots: "", metal: "#0e0e10", mirror: "#fff" }[v];
       const P = ["M150 84 L142 112 L156 130 L146 160", "M150 120 L120 128 L104 146", "M156 130 L186 122 L206 132", "M146 160 L170 170", "M142 112 L118 100", "M120 128 L118 160"];
       let obj;
       if (v === "rock") obj = `<rect x="100" y="150" width="100" height="40" rx="6" fill="#6a6a70"/><path d="M84 182 C72 134 104 86 150 84 C204 82 234 128 222 182Z" fill="#7d7a74"/><path d="M150 84 C204 82 234 128 222 182 L170 182 C196 140 186 100 150 84Z" fill="#5e5b56"/><ellipse cx="124" cy="112" rx="14" ry="8" fill="#9a968e" opacity=".7"/>`;
       if (v === "scales") obj = `<path d="M70 200 V100 Q150 20 230 100 V200Z" fill="#5a1408"/>${Array.from({ length: 6 }, (_, r) => Array.from({ length: 7 }, (_, c) => { const x = 82 + c * 23 + (r % 2) * 11, y = 92 + r * 18; return x > 80 && x < 222 && (y > 92 || (x > 110 && x < 192)) ? `<path d="M${x - 12} ${y} A12 12 0 0 0 ${x + 12} ${y}Z" fill="#b8361a" stroke="#ff8a3d" stroke-width="1.5"/>` : ""; }).join("")).join("")}`;
+      if (v === "metal") obj = `<rect x="58" y="34" width="184" height="162" rx="8" fill="#4a4a52"/><circle cx="150" cy="115" r="70" fill="#8a8e98" stroke="#5a5e66" stroke-width="8"/>${Array.from({ length: 16 }, (_, i) => `<circle cx="${(150 + 60 * Math.cos(i * .3927)).toFixed(1)}" cy="${(115 + 60 * Math.sin(i * .3927)).toFixed(1)}" r="3" fill="#5a5e66"/>`).join("")}
+        <g ${tf("rotate(calc(var(--p) * 120deg))", "150px 115px")}><circle cx="150" cy="115" r="24" fill="none" stroke="#c8a050" stroke-width="6"/><path d="M126 115 H174 M150 91 V139" stroke="#c8a050" stroke-width="5"/></g>
+        ${[[118, 92], [182, 140], [128, 150], [176, 86], [150, 70], [104, 124]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="11" ry="9" fill="#5a5e66" stroke="#3a3c42" stroke-width="2" style="opacity:${stepIn(i, 6)}"/>`).join("")}`;
+      if (v === "mirror") obj = `<defs><linearGradient id="msMir" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4e0ff"/><stop offset=".5" stop-color="#b48ad8"/><stop offset="1" stop-color="#e8c8ff"/></linearGradient></defs>
+        <ellipse cx="150" cy="110" rx="70" ry="92" fill="#ffd24a"/><ellipse cx="150" cy="110" rx="60" ry="82" fill="url(#msMir)"/><path d="M110 60 L130 40 M168 172 L186 150" stroke="#fff" stroke-opacity=".6" stroke-width="5" stroke-linecap="round"/>
+        <g style="opacity:calc(.8 - var(--p) * .6)"><ellipse cx="150" cy="104" rx="22" ry="26" fill="#d9a47a"/><path d="M138 102 q5 4 10 0 M152 102 q5 4 10 0" stroke="#3a2010" stroke-width="2.5" fill="none"/><path d="M118 150 Q150 128 182 150 V180 H118Z" fill="#7a4a9a"/><text x="178" y="80" font-size="18" font-weight="700" fill="#7a3a9a">z</text><text x="190" y="64" font-size="13" font-weight="700" fill="#7a3a9a">z</text></g>
+        <circle cx="150" cy="18" r="9" fill="#ff5fa8"/><circle cx="150" cy="202" r="9" fill="#ff5fa8"/>`;
       if (v === "crystal") obj = `<path d="M150 50 L178 80 L172 180 L128 180 L122 80Z" fill="#9a4ae0" opacity=".9"/><path d="M150 50 L178 80 L172 180 L150 180Z" fill="#6a2aa0" opacity=".9"/><path d="M104 100 L122 116 L118 184 L94 184 L90 116Z" fill="#c06bff" opacity=".85"/><path d="M196 96 L212 112 L208 184 L184 184 L180 112Z" fill="#b057ff" opacity=".85"/><path d="M140 70 L134 150" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>`;
       const bg = { rock: `<rect width="300" height="220" fill="#1c2430"/><rect y="182" width="300" height="38" fill="#26301c"/>`, scales: `<rect width="300" height="220" fill="#1a0806"/><rect y="196" width="300" height="24" fill="#2a0c08"/>`,
-        crystal: `<rect width="300" height="220" fill="#0a0418"/>${cbStars(rnd, 30, 220)}<rect y="184" width="300" height="36" fill="#160a24"/>`, roots: `<rect width="300" height="220" fill="#0b1430"/><rect y="190" width="300" height="30" fill="#0a1020"/><path d="M110 200 Q150 60 190 200" fill="#1a2240"/>` }[v];
+        crystal: `<rect width="300" height="220" fill="#0a0418"/>${cbStars(rnd, 30, 220)}<rect y="184" width="300" height="36" fill="#160a24"/>`,
+        metal: `<rect width="300" height="220" fill="#2a1e16"/><path d="M0 40 H300 M0 196 H300" stroke="#4a3420" stroke-width="10"/><rect y="200" width="300" height="20" fill="#1a120c"/>`,
+        mirror: `<rect width="300" height="220" fill="#2a0830"/><path d="M0 0 H60 Q40 110 60 220 H0Z M300 0 H240 Q260 110 240 220 H300Z" fill="#7a1a5a"/><rect y="204" width="300" height="16" fill="#1a0620"/>`, roots: `<rect width="300" height="220" fill="#0b1430"/><rect y="190" width="300" height="30" fill="#0a1020"/><path d="M110 200 Q150 60 190 200" fill="#1a2240"/>` }[v];
       if (v === "roots") {
         const R = ["M10 60 C80 90 120 40 160 120 S260 150 295 100", "M0 150 C60 120 110 170 170 130 S250 60 300 80", "M30 200 C70 120 140 150 150 90 S220 30 280 20", "M290 200 C230 140 170 180 140 110 S70 40 20 30", "M0 100 C90 110 160 190 300 150", "M60 0 C80 80 200 90 240 220"];
         obj = R.map((d, i) => `<g ${tf(`translateY(calc(${stepIn(i, 6)} * ${i % 2 ? 60 : -60}px)) rotate(calc(${stepIn(i, 6)} * ${i % 2 ? 20 : -20}deg))`, "150px 110px", `opacity:calc(1 - ${stepIn(i, 6)})`)}><path d="${d}" stroke="#3a2a40" stroke-width="16" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#7a5a9a" stroke-opacity=".5" stroke-width="4" fill="none"/></g>`).join("");
@@ -2853,21 +3161,31 @@ function sceneSvg(sc) {
         <path d="M150 22 V220" stroke="#c8a060" stroke-width="2.5"/>
         <g ${tf("translateY(calc((1 - var(--p)) * 150px + var(--d) * 22px))")}><circle cx="140" cy="36" r="7" fill="#d9a47a"/><rect x="134" y="43" width="12" height="20" rx="4" fill="#4a5a8a"/><path d="M146 46 L151 38 M136 48 L150 44 M136 63 L130 76 M144 63 L148 76" stroke="#d9a47a" stroke-width="4" stroke-linecap="round"/></g>`);
     case "bridge": {
-      const light = sc.v === "light";
+      const light = sc.v === "light", skyB = sc.v === "sky";
       const stones = Array.from({ length: 8 }, (_, i) => { const x = 62 + i * 22, s = stepIn(i, 8);
-        return `<g ${tf(`translateY(calc((1 - ${s}) * -46px))`, "0 0", `opacity:${s}`)}><rect x="${x}" y="116" width="21" height="13" rx="3" fill="${light ? "#f0e0ff" : "#6a5a50"}" ${light ? 'style="filter:drop-shadow(0 0 5px #c06bff)"' : ""}/></g>`; }).join("");
+        return `<g ${tf(`translateY(calc((1 - ${s}) * -46px))`, "0 0", `opacity:${s}`)}><rect x="${x}" y="116" width="21" height="13" rx="3" fill="${light ? "#f0e0ff" : skyB ? "#a07a4a" : "#6a5a50"}" ${light ? 'style="filter:drop-shadow(0 0 5px #c06bff)"' : ""}/></g>`; }).join("");
+      if (skyB) return W(`<defs><linearGradient id="msSkyB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a6ab8"/><stop offset="1" stop-color="#bfe0f8"/></linearGradient></defs><rect width="300" height="220" fill="url(#msSkyB)"/>
+           <g fill="#fff" opacity=".85"><ellipse cx="60" cy="200" rx="90" ry="26"/><ellipse cx="220" cy="210" rx="110" ry="30"/></g>
+           <path d="M62 112 V118" stroke="#6a4a2a"/><path d="M50 116 L62 109 M238 109 L250 116" stroke="#6a4a2a" stroke-width="2"/><path d="M62 109 Q150 118 238 109" stroke="#6a4a2a" stroke-width="2" fill="none"/>
+           <path d="M-10 116 H62 Q50 170 20 190 Q0 180 -10 170Z" fill="#7a5a44"/><rect x="-10" y="110" width="72" height="9" rx="4" fill="#5fbf54"/>
+           <path d="M238 116 H310 V170 Q290 186 270 186 Q250 170 238 116Z" fill="#7a5a44"/><rect x="238" y="110" width="72" height="9" rx="4" fill="#5fbf54"/>
+           ${stones}<g style="opacity:calc(var(--d) * .7)"><ellipse cx="80" cy="20" rx="120" ry="40" fill="#3a4556"/><ellipse cx="230" cy="12" rx="110" ry="36" fill="#2c3646"/></g>
+           <g ${tf("translateX(calc(var(--p) * 190px))")}>${msPip(34, 100, .3)}</g>`);
       return W(light
         ? `<rect width="300" height="220" fill="#08021a"/>${cbStars(rnd, 40, 220)}<g class="cb-spin" style="transform-origin:150px 200px"><ellipse cx="150" cy="200" rx="120" ry="30" fill="none" stroke="#c06bff" stroke-opacity=".4" stroke-width="10"/></g>
            <path d="M0 116 H62 L52 220 H0Z" fill="#241634"/><path d="M238 116 H300 V220 H250Z" fill="#241634"/>${stones}<g ${tf("translateX(calc(var(--p) * 190px))")}>${msPip(34, 100, .3)}</g>`
         : `<rect width="300" height="220" fill="#2a0806"/><path d="M0 116 H62 L56 220 H0Z" fill="#2a1410"/><path d="M238 116 H300 V220 H244Z" fill="#2a1410"/>
            <g ${tf("translateY(calc((1 - var(--d)) * 46px))")}><rect x="0" y="148" width="300" height="80" fill="#ff7a1a" class="cb-lava"/><path d="M0 150 Q40 140 80 150 T160 150 T240 150 T320 150" stroke="#ffd23a" stroke-width="4" fill="none"/></g>${stones}`);
     }
-    case "pull":
-      return W(`<rect width="300" height="220" fill="#07021a"/>${cbStars(rnd, 40, 220)}
-        <g class="cb-spin" style="transform-origin:58px 110px">${[56, 42, 30].map((r, i) => `<ellipse cx="58" cy="110" rx="${r}" ry="${r * .55}" fill="none" stroke="${["#6a2aa0", "#c06bff", "#ff6ad5"][i]}" stroke-width="${7 - i * 2}" opacity=".8"/>`).join("")}</g><circle cx="58" cy="110" r="20" fill="#000"/>
-        <g style="opacity:var(--d)">${[80, 100, 120, 140].map(y => `<path d="M${200} ${y} L90 ${110 + (y - 110) * .3}" stroke="#c06bff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 8"/>`).join("")}</g>
+    case "pull": {
+      const sleep = sc.v === "sleep", RC = sleep ? ["#a02a7a", "#ff5fa8", "#ffc8f0"] : ["#6a2aa0", "#c06bff", "#ff6ad5"];
+      return W(`<rect width="300" height="220" fill="${sleep ? "#1e0626" : "#07021a"}"/>${cbStars(rnd, 40, 220)}
+        <g class="cb-spin" style="transform-origin:58px 110px">${[56, 42, 30].map((r, i) => `<ellipse cx="58" cy="110" rx="${r}" ry="${r * .55}" fill="none" stroke="${RC[i]}" stroke-width="${7 - i * 2}" opacity=".8"/>`).join("")}</g>
+        ${sleep ? `<circle cx="58" cy="110" r="20" fill="#3a0a40"/><path d="M44 108 Q58 120 72 108" stroke="#ffc8f0" stroke-width="3" fill="none"/><path d="M48 113 l-3 5 M58 116 v6 M68 113 l3 5" stroke="#ffc8f0" stroke-width="2"/><text x="78" y="78" font-size="16" font-weight="700" fill="#ffc8f0" style="opacity:calc(.3 + var(--d) * .7)">z</text>` : `<circle cx="58" cy="110" r="20" fill="#000"/>`}
+        <g style="opacity:var(--d)">${[80, 100, 120, 140].map(y => `<path d="M${200} ${y} L90 ${110 + (y - 110) * .3}" stroke="${RC[1]}" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 8"/>`).join("")}</g>
         <circle cx="272" cy="110" r="20" fill="none" stroke="#fff6c0" stroke-width="4" style="filter:drop-shadow(0 0 6px #ffc21a)"/>
         <g ${tf("translateX(calc(var(--p) * 150px - var(--d) * 50px)) scaleX(calc(1 + var(--d) * .5))", "100px 110px")}>${msPip(106, 112, .36)}</g>`);
+    }
     case "shield":
       return W(`<rect width="300" height="220" fill="#0a0418"/>${cbStars(rnd, 30, 220)}<rect y="196" width="300" height="24" fill="#160a24"/>
         <defs><radialGradient id="msSh" cy="1"><stop offset=".6" stop-color="#ffc21a" stop-opacity="0"/><stop offset="1" stop-color="#ffc21a" stop-opacity=".45"/></radialGradient></defs>
@@ -2876,10 +3194,117 @@ function sceneSvg(sc) {
         <path d="M130 196 L136 120 H164 L170 196Z" fill="#3a3248"/><rect x="128" y="112" width="44" height="10" fill="#4a4058"/>
         <g ${tf("translate(150px, 104px) scale(calc(.35 + var(--p) * .5))")}>${msFlame(msPipFace)}</g>
         <path class="ms-dome" d="M44 196 A106 106 0 0 1 256 196Z" fill="url(#msSh)" stroke="#ffd27a" stroke-width="3" style="opacity:calc(.2 + var(--p) * .8)"/>`);
+    // ----- Part 2 scenes -----
+    case "boat":
+      return W(`<defs><linearGradient id="msSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3a50"/><stop offset=".55" stop-color="#9a8a98"/><stop offset=".56" stop-color="#1f5a6a"/><stop offset="1" stop-color="#0e3a48"/></linearGradient></defs><rect width="300" height="220" fill="url(#msSea)"/>
+        <g ${tf("translateX(calc((1 - var(--p)) * 160px))")}><path d="M200 122 Q236 92 300 100 V122Z" fill="#3a4a3a"/><path d="M262 112 L266 76 H274 L278 112Z" fill="#eee"/><rect x="264" y="88" width="12" height="6" fill="#c0392b"/><rect x="264" y="70" width="12" height="7" fill="#ffd24a" opacity=".9"/></g>
+        <g ${tf("translateY(calc(var(--d) * 28px)) rotate(calc(var(--d) * -7deg))", "130px 160px")}><g class="ms-bob">
+          <path d="M128 142 V64" stroke="#4a2a14" stroke-width="4"/><path d="M131 68 L176 128 H131Z" fill="#e8e0d0"/>
+          <path d="M58 140 L202 140 L184 178 Q130 188 76 178Z" fill="#7a4a2a"/><clipPath id="msHull"><path d="M64 143 L196 143 L181 175 Q130 184 79 175Z"/></clipPath>
+          <g clip-path="url(#msHull)"><rect x="60" y="140" width="140" height="44" fill="#3a9ab8" ${tf("translateY(calc((1 - var(--d)) * 30px + 6px))")}/></g><path d="M58 140 H202" stroke="#4a2a14" stroke-width="5"/>
+          ${msPip(96, 126, .26)}<path class="ms-spray" d="M92 130 Q66 84 30 150" stroke="#9fe0ff" stroke-width="5" stroke-dasharray="7 6" fill="none" stroke-linecap="round"/></g></g>
+        <path class="cb-wave" d="M-60 180 ${Array(16).fill("q 20 -10 40 0").join(" ")} V220 H-60Z" fill="#14485a"/>`);
+    case "lighthouse":
+      return W(`<rect width="300" height="220" fill="#172034"/>${cbStars(rnd, 18, 110)}
+        <g style="opacity:calc(var(--p) * .85)"><g class="ms-beam"><path d="M232 34 L-20 -10 L-20 84Z" fill="#fff6b0" opacity=".35"/></g></g>
+        <rect y="158" width="300" height="62" fill="#0f2a3a"/>
+        <g ${tf("translateX(calc(var(--p) * -70px))", "0 0", "opacity:calc(1 - var(--p) * .6)")}><g class="ms-bob"><path d="M54 162 L118 162 L108 178 H64Z" fill="#4a3a30"/><path d="M84 162 V118" stroke="#4a3a30" stroke-width="3"/><path d="M86 120 L110 156 H86Z" fill="#c8c0b0"/></g></g>
+        <path d="M180 220 L192 128 Q232 108 300 118 V220Z" fill="#2a2a30"/>
+        <circle cx="232" cy="34" r="70" fill="url(#msGlow)" style="opacity:var(--p)"/>
+        <path d="M218 128 L224 46 H240 L246 128Z" fill="#e8e8e0"/><path d="M221 100 H243 L244 112 H220Z M223 70 H241 L242 82 H222Z" fill="#c0392b"/>
+        <rect x="222" y="26" width="20" height="20" fill="#ffd24a" style="opacity:calc(.15 + var(--p) * .85)"/><rect x="222" y="26" width="20" height="20" fill="none" stroke="#3a3a40" stroke-width="3"/><path d="M218 26 H246 L232 10Z" fill="#8a2a22"/>
+        <g class="ms-fogin" style="opacity:calc(.9 - var(--p) * .8)"><ellipse cx="80" cy="150" rx="110" ry="26" fill="#8a90a0" opacity=".55"/><ellipse cx="170" cy="168" rx="120" ry="22" fill="#9aa0aa" opacity=".45"/></g>`);
+    case "anchor":
+      return W(`<defs><linearGradient id="msDeep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a6a80"/><stop offset="1" stop-color="#0a2430"/></linearGradient></defs><rect width="300" height="220" fill="url(#msDeep)"/>
+        <rect width="300" height="40" fill="#3a4a60"/><path d="M0 40 H300" stroke="#bfe" stroke-opacity=".5" stroke-width="2"/>
+        ${[40, 90, 230, 270].map((x, i) => `<path d="M${x} 220 q-8 -30 0 -60 q8 -30 0 -50" stroke="#2a6a3a" stroke-width="5" fill="none" class="ms-sway" style="animation-delay:${i * .5}s"/>`).join("")}
+        <g ${tf("translateY(calc((1 - var(--p)) * 100px))")}><path d="M150 -60 V76" stroke="#8a8a8a" stroke-width="4" stroke-dasharray="7 3"/>
+          <circle cx="150" cy="80" r="7" fill="none" stroke="#5a5e66" stroke-width="4"/><rect x="146" y="86" width="8" height="46" fill="#5a5e66"/><rect x="132" y="94" width="36" height="7" rx="3" fill="#5a5e66"/>
+          <path d="M120 112 Q150 150 180 112" stroke="#5a5e66" stroke-width="8" fill="none"/><path d="M112 104 L120 118 L130 110Z M188 104 L180 118 L170 110Z" fill="#5a5e66"/></g>
+        <path d="M86 38 L214 38 L200 56 Q150 64 100 56Z" fill="#7a4a2a"/>
+        <path d="M-10 182 Q60 170 150 180 T310 176 V230 H-10Z" fill="#5a5048"/><path d="M-10 196 Q80 188 160 198 T310 194 V230 H-10Z" fill="#4a4038"/>
+        ${[110, 160, 196].map((x, i) => `<circle class="cb-bub" style="animation-delay:${i * .8}s" cx="${x}" cy="${176 + i * 4}" r="5" fill="#8aa0a8"/>`).join("")}`);
+    case "sail":
+      return W(`<defs><linearGradient id="msStorm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2232"/><stop offset="1" stop-color="#4a5a6a"/></linearGradient></defs><rect width="300" height="220" fill="url(#msStorm)"/>
+        <path d="M240 220 L250 110 Q270 90 300 96 V220Z" fill="#2a2a30"/><path d="M252 110 L262 112" stroke="#5fbf54" stroke-width="5"/>
+        <g ${tf("translateX(calc(var(--d) * 130px - 50px))")}><g fill="#141a26"><ellipse cx="40" cy="30" rx="80" ry="34"/><ellipse cx="90" cy="50" rx="60" ry="26"/></g>${[10, 40, 70, 100].map(x => `<path d="M${x} 66 l-12 40" stroke="#9fc8e0" stroke-width="2" opacity=".6"/>`).join("")}<path class="cb-bolt" d="M70 60 l-14 30 h12 l-16 30 l30 -40 h-12 l12 -20Z" fill="#e8f4ff"/></g>
+        <rect y="168" width="300" height="52" fill="#16384a"/>
+        <g ${tf("translateX(calc(var(--p) * 130px))")}><g class="ms-bob"><path d="M30 168 L110 168 L98 184 H42Z" fill="#6a4026"/><path d="M68 168 V92" stroke="#4a2a14" stroke-width="4"/>
+          <path d="M71 94 Q${"100"} 128 71 162Z" fill="#f0e8d8" ${tf("scaleX(calc(.3 + var(--p) * 1.1))", "71px 128px")}/>${msPip(52, 160, .22)}</g></g>
+        <path class="cb-wave" d="M-60 186 ${Array(16).fill("q 20 -12 40 0").join(" ")} V220 H-60Z" fill="#0e2a3a"/>`);
+    case "gears": {
+      const gear = (cx, cy, R, c, rot) => { const n = Math.round(R / 5.5); let d = ""; for (let i = 0; i < n; i++) { const a = i / n * 6.283; d += `M${(cx + R * Math.cos(a - .12)).toFixed(1)} ${(cy + R * Math.sin(a - .12)).toFixed(1)} L${(cx + (R + 9) * Math.cos(a - .07)).toFixed(1)} ${(cy + (R + 9) * Math.sin(a - .07)).toFixed(1)} L${(cx + (R + 9) * Math.cos(a + .07)).toFixed(1)} ${(cy + (R + 9) * Math.sin(a + .07)).toFixed(1)} L${(cx + R * Math.cos(a + .12)).toFixed(1)} ${(cy + R * Math.sin(a + .12)).toFixed(1)}Z`; }
+        return `<g ${tf(`rotate(${rot})`, `${cx}px ${cy}px`)}><path d="${d}" fill="${c}"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="${c}"/><circle cx="${cx}" cy="${cy}" r="${R * .6}" fill="#000" opacity=".25"/><path d="M${cx - R * .6} ${cy} H${cx + R * .6} M${cx} ${cy - R * .6} V${cy + R * .6}" stroke="${c}" stroke-width="${R * .18}"/><circle cx="${cx}" cy="${cy}" r="${R * .16}" fill="#2a1a10"/></g>`; };
+      return W(`<rect width="300" height="220" fill="#24180f"/><rect x="150" y="20" width="140" height="150" fill="#ffb347" opacity=".9"/><rect x="150" y="20" width="140" height="150" fill="url(#msGlow)"/>
+        <g ${tf("translateX(calc(var(--p) * -70px))")}><rect x="150" y="20" width="70" height="150" fill="#5a4632"/><path d="M160 30 H210 M160 160 H210" stroke="#3a2a1c" stroke-width="4"/></g>
+        <g ${tf("translateX(calc(var(--p) * 70px))")}><rect x="220" y="20" width="70" height="150" fill="#5a4632"/><path d="M230 30 H280 M230 160 H280" stroke="#3a2a1c" stroke-width="4"/></g>
+        <path d="M150 20 H290 V170 H150Z" fill="none" stroke="#3a2a1c" stroke-width="6"/>
+        ${gear(82, 140, 54, "#b07a3a", "calc(var(--p) * 540deg)")}${gear(150, 74, 30, "#8a6a44", "calc(var(--p) * -900deg)")}
+        <rect y="196" width="300" height="24" fill="#140c08"/>
+        <g class="ms-smoke" style="opacity:calc(var(--d) * .8)"><circle cx="40" cy="60" r="14" fill="#aaa"/><circle cx="52" cy="38" r="20" fill="#aaa" opacity=".6"/></g>`);
+    }
+    case "conveyor": {
+      const hood = (x, y, eye, body) => `<g transform="translate(${x} ${y})"><path d="M-12 30 L-9 4 Q0 -10 9 4 L12 30Z" fill="${body}"/><circle cy="0" r="10" fill="${body}"/><path d="M-7 0 Q0 -8 7 0 Q0 6 -7 0Z" fill="#0b0e14"/><path d="M-5 -1 l3 1 -3 1Z M5 -1 l-3 1 3 1Z" fill="${eye}"/><path d="M-10 30 l-4 10 M10 30 l4 10" stroke="${body}" stroke-width="5" stroke-linecap="round" class="ms-run"/></g>`;
+      return W(`<rect width="300" height="220" fill="#24180f"/>${[0, 1, 2].map(i => `<rect x="${20 + i * 100}" y="30" width="60" height="80" rx="4" fill="#3a2a1c"/><rect x="${30 + i * 100}" y="40" width="40" height="30" fill="#ffb347" opacity=".25"/>`).join("")}
+        <rect x="-10" y="150" width="320" height="22" rx="11" fill="#3a3a40"/><path class="ms-belt" d="M0 150 H300 M0 172 H300" stroke="#8a8a90" stroke-width="3" stroke-dasharray="12 10"/>
+        ${[20, 80, 140, 200, 260].map(x => `<g ${tf("rotate(calc(var(--p) * 1440deg))", `${x}px 161px`)}><circle cx="${x}" cy="161" r="9" fill="#5a5a62"/><path d="M${x - 9} 161 H${x + 9}" stroke="#2a2a30" stroke-width="2"/></g>`).join("")}
+        <rect x="0" y="172" width="300" height="48" fill="#1a120c"/>${[30, 120, 210, 290].map(x => `<rect x="${x - 4}" y="172" width="8" height="48" fill="#3a2a1c"/>`).join("")}
+        <g ${tf("translateX(calc(var(--d) * 46px))")}>${hood(228, 110, "#9ff3ff", "#3a4452")}</g>
+        <g ${tf("translateX(calc(var(--p) * 150px))")}>${hood(40, 110, "#fff2a8", "#d0782a")}${msPip(28, 96, .18)}</g>`);
+    }
+    case "core":
+      return W(`<rect width="300" height="220" fill="#14161c"/><path d="M0 196 H300" stroke="#2a2c34" stroke-width="40"/>
+        <circle cx="150" cy="22" r="10" fill="#ff3a3a" class="cb-blink" style="opacity:var(--d);filter:drop-shadow(0 0 8px #ff3a3a)"/>
+        <rect x="16" y="60" width="44" height="120" rx="8" fill="#2a2c34" stroke="#4a4c54" stroke-width="3"/><rect x="22" y="66" width="32" height="108" rx="5" fill="#3ad0ff" ${tf("scaleY(calc(.12 + var(--p) * .88))", "38px 174px")}/>
+        <path d="M60 120 H100" stroke="#3ad0ff" stroke-width="8" style="opacity:calc(.3 + var(--p) * .7)"/>
+        <g ${tf("scale(calc(1 + var(--d) * .06))", "150px 118px")}><rect x="102" y="40" width="96" height="156" rx="40" fill="#2a2c34" stroke="#5a5c64" stroke-width="4"/>
+          <rect x="114" y="54" width="72" height="128" rx="30" fill="#4ad0ff"/><rect x="114" y="54" width="72" height="128" rx="30" fill="#ff4a2a" style="opacity:calc(var(--d) * .95)"/>
+          <rect x="114" y="54" width="72" height="128" rx="30" fill="#fff" opacity=".25" class="ms-pulse"/>${[80, 110, 140, 170].map(y => `<path d="M102 ${y} H198" stroke="#2a2c34" stroke-width="4"/>`).join("")}</g>
+        <g transform="translate(250 120)"><path d="M-34 0 A34 34 0 0 1 34 0" fill="#2a2c34" stroke="#5a5c64" stroke-width="3"/><path d="M-26 -4 A26 26 0 0 1 -8 -25" stroke="#3ad0ff" stroke-width="5" fill="none"/><path d="M8 -25 A26 26 0 0 1 26 -4" stroke="#ff4a2a" stroke-width="5" fill="none"/>
+          <g ${tf("rotate(calc(-80deg + (var(--d) * .85 + (1 - var(--p)) * .15) * 160deg))")}><path d="M0 0 V-28" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g><circle r="4" fill="#fff"/></g>`);
+    case "balloon":
+      return W(`<defs><linearGradient id="msBal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a6ab8"/><stop offset="1" stop-color="#bfe0f8"/></linearGradient></defs><rect width="300" height="220" fill="url(#msBal)"/>
+        <g fill="#fff" opacity=".8" ${tf("translateY(calc(var(--p) * 60px))")}><ellipse cx="50" cy="50" rx="40" ry="12"/><ellipse cx="250" cy="80" rx="46" ry="13"/><ellipse cx="200" cy="20" rx="30" ry="9"/></g>
+        <g ${tf("translateY(calc(var(--p) * 90px))")}><path d="M-10 190 Q80 170 150 186 T310 180 V230 H-10Z" fill="#5fbf54"/><path d="M-10 204 Q100 194 170 204 T310 200 V230 H-10Z" fill="#7a5a44"/></g>
+        <g ${tf("translateY(calc((1 - var(--p)) * 64px))")}><g class="ms-bob">
+          <path d="M150 20 C110 20 96 56 104 82 C112 106 136 116 142 128 H158 C164 116 188 106 196 82 C204 56 190 20 150 20Z" fill="#e0453a"/>
+          <path d="M150 20 C134 22 128 60 134 90 C138 108 144 118 146 128 H154 C156 118 162 108 166 90 C172 60 166 22 150 20Z" fill="#ffd24a"/>
+          <path d="M142 128 L140 144 M158 128 L160 144" stroke="#5a3a22" stroke-width="2"/><rect x="136" y="144" width="28" height="18" rx="3" fill="#8a5a30"/>
+          <g ${tf("translate(150px, 136px) scale(calc(.06 + var(--p) * .12))")}>${msFlame()}</g>${msPip(150, 146, .14)}</g></g>`);
+    case "windmill":
+      return W(`<defs><linearGradient id="msWm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a6ab8"/><stop offset="1" stop-color="#bfe0f8"/></linearGradient></defs><rect width="300" height="220" fill="url(#msWm)"/>
+        <g fill="#fff" opacity=".7"><ellipse cx="60" cy="200" rx="90" ry="24"/><ellipse cx="230" cy="40" rx="50" ry="14"/></g>
+        <path d="M140 130 Q210 230 280 130Z" fill="#7a5a44"/><ellipse cx="210" cy="130" rx="70" ry="12" fill="#5fbf54"/>
+        <path d="M200 130 L204 50 H216 L220 130Z" fill="#e8dcc0"/>
+        <g ${tf("rotate(calc(var(--p) * 1080deg))", "210px 52px")}><path d="M210 52 L203 0 H217Z M210 52 L262 45 L262 59Z M210 52 L217 104 H203Z M210 52 L158 59 L158 45Z" fill="#c8a878" stroke="#7a5a3a" stroke-width="1.5"/></g><circle cx="210" cy="52" r="6" fill="#5a3a22"/>
+        <path d="M80 0 V220" stroke="#8a6a44" stroke-width="3"/><path d="M210 52 Q140 10 80 14" stroke="#5a3a22" stroke-width="2" fill="none"/>
+        <g ${tf("translateY(calc((1 - var(--p)) * 110px + var(--d) * 22px))")}><path d="M80 14 V60" stroke="#5a3a22" stroke-width="2"/><rect x="50" y="60" width="60" height="8" rx="2" fill="#8a5a30"/><path d="M50 60 L80 40 L110 60" stroke="#5a3a22" stroke-width="2" fill="none"/>${msPip(80, 46, .2)}</g>`);
+    case "charge":
+      return W(`<rect width="300" height="220" fill="#101826"/><g fill="#26303e"><ellipse cx="70" cy="20" rx="110" ry="36"/><ellipse cx="230" cy="14" rx="100" ry="32"/></g>
+        <path class="cb-bolt" d="M120 40 l-14 30 h12 l-16 30 l30 -40 h-12 l12 -20Z" fill="#e8f4ff" style="animation-delay:1.3s"/>
+        <rect y="190" width="300" height="30" fill="#5fbf54"/><rect y="200" width="300" height="20" fill="#7a5a44"/>
+        <path d="M96 190 L104 70 H116 L124 190Z" fill="#4a4c54"/><circle cx="110" cy="64" r="10" fill="#c8a050"/>
+        <g style="opacity:var(--p)">${[0, 1, 2].map(i => `<path class="cb-bolt" style="animation-duration:.${5 + i}s;animation-delay:${i * .1}s" d="M110 64 l${-20 + i * 20} -14 l${8 - i * 6} -8 l${-10 + i * 10} -14" stroke="#bfe8ff" stroke-width="3" fill="none"/>`).join("")}</g>
+        <rect x="190" y="70" width="66" height="116" rx="8" fill="#2a2c34" stroke="#5a5c64" stroke-width="4"/><rect x="212" y="60" width="22" height="10" rx="2" fill="#5a5c64"/>
+        ${Array.from({ length: 6 }, (_, i) => `<rect x="200" y="${168 - i * 18}" width="46" height="13" rx="3" fill="#ffd24a" style="opacity:calc(.12 + ${stepIn(i, 6)} * .88);filter:drop-shadow(0 0 4px #ffd24a)"/>`).join("")}
+        <path d="M124 150 Q160 160 190 140" stroke="#5a5c64" stroke-width="5" fill="none"/>
+        <rect width="300" height="220" fill="#e8f4ff" style="opacity:clamp(0, (var(--p) - .97) * 20, .3)"/>`);
+    case "wake": {
+      const H = [[10, 120, 56, 70], [70, 100, 50, 90], [124, 126, 54, 64], [182, 96, 56, 94], [242, 116, 60, 74]];
+      let wins = [], i = 0;
+      H.forEach(([x, y, w, h]) => { for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) wins.push([x + 10 + c * (w - 30), y + 14 + r * 26]); });
+      return W(`<rect width="300" height="220" fill="#1a0626"/>${cbStars(rnd, 30, 110)}<circle cx="250" cy="34" r="16" fill="#ffe6f4"/><circle cx="257" cy="29" r="14" fill="#1a0626"/>
+        <g style="opacity:calc(var(--p) * .7)"><rect width="300" height="220" fill="#ffb347" opacity=".18"/></g>
+        ${H.map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${220 - y}" fill="#2e1038"/><path d="M${x - 5} ${y}L${x + w / 2} ${y - 24}L${x + w + 5} ${y}Z" fill="#3a1448"/>`).join("")}
+        ${wins.map(([x, y], k) => `<rect x="${x}" y="${y}" width="10" height="14" rx="2" fill="#140618"/><rect x="${x}" y="${y}" width="10" height="14" rx="2" fill="#ffcf8a" style="opacity:${stepIn(k, wins.length)};filter:drop-shadow(0 0 4px #ffb347)"/>`).join("")}
+        <g style="opacity:calc(1 - var(--p))" fill="#ffc8f0" font-weight="700">${[[40, 90, 16], [100, 70, 20], [160, 96, 14], [214, 66, 22], [270, 92, 15]].map(([x, y, f]) => `<text x="${x}" y="${y}" font-size="${f}">z</text>`).join("")}</g>
+        <rect y="206" width="300" height="14" fill="#14061c"/>`);
+    }
   }
   return W("");
 }
-const HALF_QUIP = { flame: "It's catching! Keep going!", gate: "Halfway down!", crack: "It's cracking!", douse: "It's shrinking!", lift: "It's moving! Keep lifting!", cart: "Halfway there!", climb: "Halfway up!", bridge: "Keep the stones coming!", pull: "We're pulling away!", shield: "The shield's holding!" };
+const HALF_QUIP = { flame: "It's catching! Keep going!", gate: "Halfway down!", crack: "It's cracking!", douse: "It's shrinking!", lift: "It's moving! Keep lifting!", cart: "Halfway there!", climb: "Halfway up!", bridge: "Keep the stones coming!", pull: "We're pulling away!", shield: "The shield's holding!",
+  boat: "We're staying afloat! Keep bailing!", lighthouse: "The lamp's warming up!", anchor: "It's coming loose!", sail: "The sail's filling up!", gears: "It's turning! Keep pushing!", conveyor: "We're catching up!", core: "It's cooling down!", balloon: "We're lifting off!", windmill: "Keep it spinning!", charge: "Half charged!", wake: "People are waking up!" };
 const DANGER_QUIP = { timed: "Faster! We're running out of time!", nobreak: "Don't stop now!", endure: "Almost out of time. Push!" };
 let quipTimer = null;
 function sceneQuip(text) {
@@ -2918,21 +3343,23 @@ function sceneEnd(won) {
   const el = $("mScene"); el.classList.add(won ? "done" : "fail");
   if (won) { const [x, y] = centerOf($("mSceneArt")); burst(x, y, { n: 50, colors: [CHAPTERS[M.m.ch].color, "#fff2a8", "#fff"], speed: 9, size: 4, life: 1.1 }); ring(x, y, CHAPTERS[M.m.ch].color, 200, 8, 0.7); }
 }
-window.__story = { STORY, playCine, storySteps, sceneSvg, get on() { return cineOn; } };
+window.__story = { STORY, playCine, storySteps, sceneSvg, cineBg, get on() { return cineOn; } };
 
 // ---------- campaign world map ----------
 // One tall map you climb from the bottom (Boot Camp) to the top (The Void). Map units: 700 wide × 2800 tall,
 // each chapter is a 700-unit band. Scenery is drawn once from a fixed seed so it never moves around.
 const MAP_W = 700, MAP_H = 2800, BAND = 700;
+// Each part has its own map of 4 chapter bands; k is still the mission's index in CAMP_LIST.
 const mapPt = k => {
-  const m = CAMP_LIST[k], bandBottom = MAP_H - m.ch * BAND;
+  const m = CAMP_LIST[k], bandBottom = MAP_H - (m.ch % 4) * BAND;
   return { x: MAP_W / 2 + 205 * Math.sin(k * 1.05 + 0.4), y: bandBottom - 105 - m.mi * 98 };
 };
 function seeded(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-let mapSvgCache = null;
-function mapSvg() {
-  if (mapSvgCache) return mapSvgCache;
-  const pts = CAMP_LIST.map((_, k) => mapPt(k));
+const mapSvgCache = {};
+const partKs = pi => CAMP_LIST.flatMap((m, k) => partOf(m) === pi ? [k] : []);
+function mapSvg(pi = 0) {
+  if (mapSvgCache[pi]) return mapSvgCache[pi];
+  const pts = partKs(pi).map(k => mapPt(k));
   // road through every mission, as gentle S-curves
   let road = `M${pts[0].x},${pts[0].y + 120} C${pts[0].x},${pts[0].y + 60} ${pts[0].x},${pts[0].y + 40} ${pts[0].x},${pts[0].y}`;
   const samples = [];
@@ -2946,10 +3373,11 @@ function mapSvg() {
     }
   }
   const clear = (x, y, r) => samples.every(p => Math.hypot(p.x - x, p.y - y) > r);
-  const rnd = seeded(20261107);
+  const rnd = seeded(20261107 + pi * 7919);
   const place = (n, y0, y1, r, draw) => { let out = "", tries = 0; for (let i = 0; i < n && tries < n * 25; tries++) { const x = 20 + rnd() * (MAP_W - 40), y = y0 + rnd() * (y1 - y0); if (!clear(x, y, r)) continue; out += draw(x, y, rnd); i++; } return out; };
-  const band = ci => [MAP_H - (ci + 1) * BAND, MAP_H - ci * BAND];
+  const band = ci => [MAP_H - (ci % 4 + 1) * BAND, MAP_H - (ci % 4) * BAND];
   let g = "";
+  if (pi === 0) {
   // --- Chapter 1: Boot Camp (grass, tents, crates, flags) ---
   { const [y0, y1] = band(0);
     g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gCamp)"/>`;
@@ -2981,25 +3409,71 @@ function mapSvg() {
     g += place(9, y0 + 60, y1, 60, (x, y, r) => { const w = 26 + r() * 30; return `<g transform="translate(${x},${y})"><ellipse cx="0" cy="0" rx="${w}" ry="${w * 0.32}" fill="#5b3a8a"/><path d="M${-w},0 Q0,${w * 1.1} ${w},0Z" fill="#2c1846"/><ellipse cx="0" cy="-2" rx="${w * 0.8}" ry="${w * 0.18}" fill="#8a63c9" opacity=".6"/></g>`; });
     g += `<g transform="translate(560,${y0 + 70})" opacity=".55"><ellipse rx="70" ry="34" fill="#c06bff" opacity=".25"/><ellipse rx="48" ry="22" fill="#1a0b2e" stroke="#c06bff" stroke-width="3"/><circle r="14" fill="#ff3a6a"/><circle r="5" fill="#000"/></g>`;
   }
+  } else {
+  // --- Chapter 5: Tidewreck Coast (sea, sandbars, wrecks, lighthouse) ---
+  { const [y0, y1] = band(4);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gCoast)"/>`;
+    g += `<path d="M-20,${y1} L-20,${y0 + 80} C60,${y0 + 160} 30,${y0 + 320} 90,${y0 + 420} S50,${y0 + 620} 140,${y1}Z" fill="#d8c48a"/><path d="M-20,${y1} L-20,${y0 + 80} C60,${y0 + 160} 30,${y0 + 320} 90,${y0 + 420} S50,${y0 + 620} 140,${y1}" stroke="#fff" stroke-opacity=".5" stroke-width="5" fill="none"/>`;
+    g += `<path d="M720,${y1} L720,${y0 + 260} C650,${y0 + 330} 680,${y0 + 470} 610,${y0 + 560} S640,${y1 - 30} 580,${y1}Z" fill="#cdb67a"/>`;
+    g += place(34, y0, y1, 30, (x, y, r) => { const w = 14 + r() * 18; return `<path d="M${x - w},${y} q${w / 2},-7 ${w},0 t${w},0" stroke="#bff4ef" stroke-opacity="${0.25 + r() * 0.35}" stroke-width="3" fill="none" stroke-linecap="round"/>`; });
+    g += place(10, y0, y1, 44, (x, y, r) => { const s = 0.7 + r() * 0.7; return `<g transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="10" rx="26" ry="7" fill="#06323a" opacity=".5"/><path d="M-22,10 C-24,-6 -8,-14 2,-12 C16,-10 26,0 22,10Z" fill="#4a5560"/><path d="M2,-12 C16,-10 26,0 22,10 L8,10 C12,0 8,-8 2,-12Z" fill="#2f363e"/></g>`; });
+    g += place(4, y0 + 60, y1 - 60, 70, (x, y, r) => `<g transform="translate(${x},${y}) rotate(${(r() * 30 - 15).toFixed(0)})"><path d="M-40,0 Q-36,18 0,20 Q36,18 40,0Z" fill="#5a3a22"/><path d="M-40,0 H40" stroke="#3a2412" stroke-width="3"/><path d="M-26,4 V14 M-10,4 V18 M8,4 V18 M24,4 V14" stroke="#3a2412" stroke-width="2"/><line x1="-6" y1="2" x2="-14" y2="-40" stroke="#3a2412" stroke-width="4"/><path d="M-14,-40 L10,-30 L-10,-14Z" fill="#8a8f96" opacity=".8"/></g>`);
+    g += place(6, y0, y1, 34, (x, y, r) => `<g transform="translate(${x},${y})"><path d="M0,14 Q-4,-6 2,-26" stroke="#7a5a32" stroke-width="4" fill="none"/>${[0, 72, 144, 216, 288].map(a => `<path d="M2,-26 q${(14 * Math.cos(a * Math.PI / 180)).toFixed(1)},${(-6 + 8 * Math.sin(a * Math.PI / 180)).toFixed(1)} ${(26 * Math.cos(a * Math.PI / 180)).toFixed(1)},${(6 + 10 * Math.sin(a * Math.PI / 180)).toFixed(1)}" stroke="#2f8a4a" stroke-width="6" fill="none" stroke-linecap="round"/>`).join("")}</g>`);
+    g += `<g transform="translate(610,${y0 + 130})"><ellipse cx="0" cy="62" rx="56" ry="14" fill="#4a5560"/><path d="M-18,60 L-12,-30 H12 L18,60Z" fill="#f2f2ee"/><path d="M-16,30 H16 L17,44 H-17Z M-14,-2 H14 L15,12 H-15Z" fill="#e0453a"/><rect x="-14" y="-46" width="28" height="18" fill="#ffd24a"/><path d="M-18,-46 H18 L0,-62Z" fill="#c03a30"/><path d="M14,-37 L120,-70 L120,-4Z" fill="#fff6b0" opacity=".18"/></g>`;
+  }
+  // --- Chapter 6: The Gearworks (metal plates, pipes, gears, smokestacks) ---
+  { const [y0, y1] = band(5);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gGears)"/>`;
+    for (let yy = y0; yy < y1; yy += 70) for (let xx = 0; xx < MAP_W; xx += 100) g += `<rect x="${xx + 2}" y="${yy + 2}" width="96" height="66" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="2"/><circle cx="${xx + 8}" cy="${yy + 8}" r="2" fill="#8a7050" opacity=".5"/><circle cx="${xx + 92}" cy="${yy + 62}" r="2" fill="#8a7050" opacity=".5"/>`;
+    g += `<path d="M-10,${y0 + 220} H230 V${y0 + 420} H720" stroke="#5a4632" stroke-width="18" fill="none"/><path d="M-10,${y0 + 220} H230 V${y0 + 420} H720" stroke="#8a6c48" stroke-width="5" fill="none" opacity=".6"/>`;
+    g += `<path d="M720,${y0 + 560} H480 V${y1 + 10}" stroke="#5a4632" stroke-width="14" fill="none"/>`;
+    const gear = (x, y, R, c, spin) => { const n = Math.max(8, Math.round(R / 4)); let d = ""; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, b = (i + .5) / n * Math.PI * 2; d += `M${(R * Math.cos(a - .12)).toFixed(1)},${(R * Math.sin(a - .12)).toFixed(1)} L${((R + 7) * Math.cos(a - .08)).toFixed(1)},${((R + 7) * Math.sin(a - .08)).toFixed(1)} L${((R + 7) * Math.cos(a + .08)).toFixed(1)},${((R + 7) * Math.sin(a + .08)).toFixed(1)} L${(R * Math.cos(a + .12)).toFixed(1)},${(R * Math.sin(a + .12)).toFixed(1)}Z `; }
+      return `<g transform="translate(${x},${y})"><g class="cmap-gear${spin ? " rev" : ""}"><path d="${d}" fill="${c}"/><circle r="${R}" fill="${c}"/><circle r="${R * .55}" fill="#000" opacity=".25"/><circle r="${R * .22}" fill="#2a2018"/></g></g>`; };
+    g += place(9, y0 + 20, y1 - 20, 54, (x, y, r) => gear(x, y, 16 + r() * 22, r() < .5 ? "#b07a3a" : "#8a6a44", r() < .5));
+    g += place(5, y0, y1, 44, (x, y) => `<g transform="translate(${x},${y})"><rect x="-26" y="-8" width="52" height="16" fill="#ffc21a"/><path d="M-22,-8 L-14,8 M-6,-8 L2,8 M10,-8 L18,8" stroke="#1a1a1a" stroke-width="5"/></g>`);
+    g += `<g transform="translate(100,${y0 + 120})">${[-34, 0, 34].map((dx, i) => `<rect x="${dx - 12}" y="${-60 - i * 12}" width="24" height="${120 + i * 12}" fill="#4a3a2c"/><rect x="${dx - 14}" y="${-66 - i * 12}" width="28" height="8" fill="#6a5440"/><circle class="cmap-smoke" style="animation-delay:${i * .9}s" cx="${dx}" cy="${-80 - i * 12}" r="14" fill="#8a8a8a" opacity=".45"/>`).join("")}</g>`;
+  }
+  // --- Chapter 7: Skyreach (clouds, floating islands, windmill) ---
+  { const [y0, y1] = band(6);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gSky)"/>`;
+    g += place(16, y0, y1, 20, (x, y, r) => { const s = 0.8 + r() * 1.2; return `<g transform="translate(${x},${y}) scale(${s})" fill="#fff" opacity="${0.45 + r() * 0.35}"><circle cx="-20" cy="4" r="14"/><circle cx="0" cy="-4" r="20"/><circle cx="22" cy="4" r="14"/><rect x="-32" y="4" width="66" height="14" rx="7"/></g>`; });
+    g += place(8, y0 + 40, y1 - 30, 64, (x, y, r) => { const w = 34 + r() * 26; return `<g transform="translate(${x},${y})"><path d="M${-w},0 Q0,${w * 1.3} ${w},0Z" fill="#7a5a44"/><path d="M${-w * .6},${w * .2} Q0,${w * 1.1} ${w * .6},${w * .2}" fill="#5a4030"/><ellipse cx="0" cy="0" rx="${w}" ry="${w * .22}" fill="#5fbf54"/><ellipse cx="0" cy="-2" rx="${w * .8}" ry="${w * .14}" fill="#7ed86a"/>${r() < .6 ? `<g transform="translate(${(r() * w - w / 2).toFixed(0)},-4)"><rect x="-2" y="-14" width="4" height="14" fill="#5a3a22"/><circle cy="-18" r="9" fill="#3a9a46"/></g>` : ""}</g>`; });
+    g += place(10, y0, y1, 16, (x, y) => `<path d="M${x - 8},${y} q4,-5 8,0 q4,-5 8,0" stroke="#1a2a4a" stroke-width="2" fill="none" opacity=".6"/>`);
+    g += `<g transform="translate(600,${y0 + 140})"><path d="M-40,40 Q0,100 40,40Z" fill="#7a5a44"/><ellipse cy="40" rx="40" ry="9" fill="#5fbf54"/><path d="M-10,40 L-6,-30 H6 L10,40Z" fill="#e8dcc0"/><g class="cmap-mill"><path d="M0,-30 L-6,-80 L6,-80Z M0,-30 L44,-6 L38,4Z M0,-30 L-44,-6 L-38,4Z M0,-30 L-6,20 L6,20Z" fill="#c8a878" stroke="#7a5a3a" stroke-width="1.5"/></g><circle cy="-30" r="5" fill="#5a3a22"/></g>`;
+  }
+  // --- Chapter 8: The Dreamless Kingdom (sleepy houses, pillow clouds, the castle) ---
+  { const [y0, y1] = band(7);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gDream)"/>`;
+    g += place(130, y0, y1, 12, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${0.6 + r() * 1.6}" fill="#ffe0f4" opacity="${0.25 + r() * 0.6}"/>`);
+    g += place(12, y0 + 60, y1, 40, (x, y, r) => { const w = 18 + r() * 14, h = 20 + r() * 18; return `<g transform="translate(${x},${y})"><rect x="${-w}" y="${-h}" width="${2 * w}" height="${h + 8}" fill="#3a1a4a"/><path d="M${-w - 5},${-h} L0,${-h - w * .9} L${w + 5},${-h}Z" fill="#5a2a6a"/><rect x="-5" y="${-h + 8}" width="10" height="10" fill="#1a0a24"/><text x="${w * .4}" y="${-h - 6}" font-size="13" font-weight="700" fill="#ffb8e8" opacity=".6">z</text></g>`; });
+    g += place(9, y0, y1, 40, (x, y, r) => { const w = 22 + r() * 18; return `<g transform="translate(${x},${y})"><path d="M${-w},4 C${-w},-12 ${w},-12 ${w},4 C${w},14 ${-w},14 ${-w},4Z" fill="#f2c8e8" opacity=".55"/><path d="M${-w + 6},2 C${-w * .4},-6 ${w * .4},-6 ${w - 6},2" stroke="#fff" stroke-opacity=".5" stroke-width="2" fill="none"/></g>`; });
+    g += `<circle cx="120" cy="${y0 + 80}" r="40" fill="#ffe6c8" opacity=".9"/><circle cx="136" cy="${y0 + 70}" r="36" fill="#2a0a3a"/>`;
+    g += `<g transform="translate(590,${y0 + 120})"><rect x="-50" y="-20" width="100" height="80" fill="#4a1a5a"/>${[-50, -16, 18].map(x => `<rect x="${x}" y="-32" width="12" height="14" fill="#4a1a5a"/>`).join("")}<rect x="-62" y="-60" width="26" height="120" fill="#5a2268"/><rect x="36" y="-60" width="26" height="120" fill="#5a2268"/><path d="M-66,-60 L-49,-98 L-32,-60Z M32,-60 L49,-98 L66,-60Z" fill="#ff5fa8"/><path d="M-14,60 V24 Q0,10 14,24 V60Z" fill="#1a0824"/><rect x="-54" y="-40" width="10" height="14" fill="#ff8ad0" opacity=".5"/><rect x="44" y="-40" width="10" height="14" fill="#ff8ad0" opacity=".5"/></g>`;
+  }
+  }
   // soft seams between chapters
   for (let ci = 1; ci < 4; ci++) { const y = MAP_H - ci * BAND; g += `<rect x="0" y="${y - 40}" width="${MAP_W}" height="80" fill="url(#gSeam)"/>`; }
   const roadSvg = `<path d="${road}" stroke="#000" stroke-opacity=".45" stroke-width="40" fill="none" stroke-linecap="round"/>
     <path d="${road}" stroke="#c9a56a" stroke-width="28" fill="none" stroke-linecap="round"/>
     <path d="${road}" stroke="#e6c98f" stroke-width="18" fill="none" stroke-linecap="round"/>
     <path d="${road}" stroke="#8a6a38" stroke-width="3" fill="none" stroke-dasharray="10 14"/>`;
-  mapSvgCache = { road, svg: `<svg class="cmap-svg" viewBox="0 0 ${MAP_W} ${MAP_H}" preserveAspectRatio="none" aria-hidden="true">
+  mapSvgCache[pi] = { road, svg: `<svg class="cmap-svg" viewBox="0 0 ${MAP_W} ${MAP_H}" preserveAspectRatio="none" aria-hidden="true">
     <defs>
       <linearGradient id="gCamp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f5a2b"/><stop offset="1" stop-color="#3f6e2e"/></linearGradient>
       <linearGradient id="gWoods" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1f22"/><stop offset="1" stop-color="#16372b"/></linearGradient>
       <linearGradient id="gPeaks" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1210"/><stop offset="1" stop-color="#4f2216"/></linearGradient>
       <linearGradient id="gVoid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07030f"/><stop offset="1" stop-color="#22103a"/></linearGradient>
+      <linearGradient id="gCoast" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b3f52"/><stop offset="1" stop-color="#17707a"/></linearGradient>
+      <linearGradient id="gGears" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1e16"/><stop offset="1" stop-color="#46321f"/></linearGradient>
+      <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c5fae"/><stop offset="1" stop-color="#7fbde8"/></linearGradient>
+      <linearGradient id="gDream" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14051f"/><stop offset="1" stop-color="#3a1046"/></linearGradient>
       <linearGradient id="gSeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
     </defs>${g}${roadSvg}<path id="cmapDone" d="" stroke="#ffc21a" stroke-width="8" fill="none" stroke-linecap="round" opacity=".85"/></svg>` };
-  return mapSvgCache;
+  return mapSvgCache[pi];
 }
-// the gold "travelled" line from the start up to the furthest unlocked mission
-function doneRoad(upTo) {
-  const pts = CAMP_LIST.slice(0, upTo + 1).map((_, k) => mapPt(k));
+// the gold "travelled" line from the start of the part up to the furthest unlocked mission
+function doneRoad(pi, upTo) {
+  const pts = partKs(pi).filter(k => k <= upTo).map(k => mapPt(k));
   if (!pts.length) return "";
   let d = `M${pts[0].x},${pts[0].y + 120} C${pts[0].x},${pts[0].y + 60} ${pts[0].x},${pts[0].y + 40} ${pts[0].x},${pts[0].y}`;
   for (let k = 1; k < pts.length; k++) { const a = pts[k - 1], b = pts[k], dd = (a.y - b.y) / 2; d += ` C${a.x},${a.y - dd} ${b.x},${b.y + dd} ${b.x},${b.y}`; }
@@ -3012,23 +3486,29 @@ const LOCK_SVG = `<svg viewBox="0 0 64 72" aria-hidden="true"><defs><linearGradi
   <circle cx="32" cy="47" r="6" fill="#3a2706"/><rect x="29.5" y="49" width="5" height="11" rx="2" fill="#3a2706"/></svg>`;
 // a bank of puffy clouds along the bottom edge of a locked chapter ("fog of war")
 const CLOUD_BANK = (() => { let g = ""; for (let i = 0; i < 16; i++) { const x = i * 46 + (i % 2 ? 18 : 0), r = 34 + (i * 37 % 22); g += `<circle cx="${x}" cy="${110 - (i % 3) * 10}" r="${r}"/>`; } return `<g class="cb-back">${g}</g><g class="cb-front" transform="translate(23,18)">${g}</g>`; })();
-let campScrollTo = true;
+let campScrollTo = true, campPart = null;
 function renderCampaign() {
   store.campaign ||= {};
   const nextK = CAMP_LIST.findIndex((m, k) => campUnlocked(k) && !campStars(m.id));
   const furthest = nextK >= 0 ? nextK : CAMP_LIST.length - 1;
   if (campPick == null || !campUnlocked(campPick)) { campPick = furthest; campScrollTo = true; }
+  if (campPart == null) campPart = partOf(CAMP_LIST[campPick]);
+  const pi = campPart, ks = partKs(pi), pOpen = partUnlocked(pi);
+  if (pOpen && partOf(CAMP_LIST[campPick]) !== pi) {   // switched parts: pick the furthest open mission in this part
+    const nk = ks.find(k => campUnlocked(k) && !campStars(CAMP_LIST[k].id));
+    campPick = nk ?? ks.filter(k => campUnlocked(k)).pop(); campScrollTo = true;
+  }
   const pct = (v, of) => (v / of * 100).toFixed(3) + "%";
-  const nodes = CAMP_LIST.map((m, k) => {
+  const nodes = ks.map(k => { const m = CAMP_LIST[k];
     const p = mapPt(k), open = campUnlocked(k), st = campStars(m.id), boss = m.type === "boss", c = CHAPTERS[m.ch].color;
     const face = boss ? `<span class="mn-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="mn-ic">${MTYPES[m.type].icon}</span>`;
     return `<button class="mnode ${boss ? "boss" : ""} ${st ? "done" : ""} ${k === nextK ? "next" : ""} ${k === campPick ? "pick" : ""}" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)};--c:${c}" data-k="${k}" ${open ? "" : "disabled"} aria-label="${m.id} ${open ? m.name : "locked"}">
       <span class="mn-disc">${face}</span><span class="mn-num">${m.id}</span>${open ? "" : `<span class="mn-lock">${LOCK_SVG}</span>`}
       ${open ? `<span class="mn-st">${[0, 1, 2].map(i => `<i class="${i < st ? "on" : ""}">★</i>`).join("")}</span>` : ""}</button>`;
   }).join("");
-  const you = (() => { const p = mapPt(furthest); return `<div class="cmap-you" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)}"><span>${esc(store.name || "YOU")}</span></div>`; })();
-  const regions = CHAPTERS.map((c, ci) => {
-    const top = pct(MAP_H - (ci + 1) * BAND, MAP_H), h = pct(BAND, MAP_H), open = chapterUnlocked(ci);
+  const you = partOf(CAMP_LIST[furthest]) !== pi ? "" : (() => { const p = mapPt(furthest); return `<div class="cmap-you" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)}"><span>${esc(store.name || "YOU")}</span></div>`; })();
+  const regions = PARTS[pi].chs.map(ci => { const c = CHAPTERS[ci];
+    const top = pct(MAP_H - (ci % 4 + 1) * BAND, MAP_H), h = pct(BAND, MAP_H), open = chapterUnlocked(ci);
     const prevBoss = ci > 0 ? BOSSES[CHAPTERS[ci - 1].missions.filter(m => m.type === "boss").pop().boss].name : "";
     const got = CAMP_LIST.filter(m => m.ch === ci).reduce((t, m) => t + campStars(m.id), 0);
     const bosses = c.missions.filter(m => m.type === "boss").map(m => BOSSES[m.boss]);
@@ -3042,15 +3522,24 @@ function renderCampaign() {
           <em>🔒 Defeat ${prevBoss} to unlock</em>
         </div></div>` : "";
     return `<div class="cmap-region ${open ? "" : "locked"}" style="top:${top};height:${h};--c:${c.color}">
-      <div class="cmap-banner"><b>CHAPTER ${ci + 1}</b><span>${c.name}</span>${open ? `<i>★ ${got}/18</i>` : `<i class="lk">LOCKED</i>`}</div>${fog}</div>`;
+      <div class="cmap-banner"><b>CHAPTER ${ci + 1}</b><span>${c.name}</span>${open ? `<i>★ ${got}/${c.missions.length * 3}</i>` : `<i class="lk">LOCKED</i>`}</div>${fog}</div>`;
   }).join("");
   const pm = CAMP_LIST[campPick], pg = missionGoal(pm), pst = campStars(pm.id), pc = CHAPTERS[pm.ch].color;
   const scroller = $("cmapScroll"), keep = scroller ? scroller.scrollTop : null;
-  const { svg } = mapSvg();
+  const { svg } = mapSvg(pi);
+  const partStars = q => partKs(q).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
+  const tabs = PARTS.map((P, q) => `<button class="cmap-part ${q === pi ? "on" : ""} ${partUnlocked(q) ? "" : "lk"}" data-part="${q}" style="--c:${q ? "#ff5fa8" : "#ffc21a"}"><b>PART ${q + 1}</b><span>${partUnlocked(q) ? "" : "🔒 "}${P.name}</span><i>★ ${partStars(q)}/${partKs(q).length * 3}</i></button>`).join("");
+  const lastBoss = BOSSES[partLast(pi - 1 >= 0 ? pi - 1 : 0).boss];
   $("campMap").innerHTML = `
-    <div class="cmap-scroll" id="cmapScroll"><div class="cmap">${svg}${regions}${nodes}${you}</div></div>
+    <div class="cmap-scroll" id="cmapScroll"><div class="cmap part-${pi}">${svg}${regions}${nodes}${you}</div></div>
     <div class="cmap-top"><b>THE CAMPAIGN</b><span>★ ${campTotal()} / ${CAMP_LIST.length * 3}</span></div>
-    <div class="cm-brief" style="--c:${pc}">
+    <div class="cmap-parts">${tabs}</div>
+    ${!pOpen ? `<div class="cm-brief cm-plock" style="--c:#ff5fa8">
+      <div class="cm-bt">🔒 Part ${pi + 1} · ${PARTS[pi].name}</div>
+      <div class="muted cm-story-line">A new story, 4 new chapters, 24 new missions and 8 new bosses, including a rival who got his strength the easy way.</div>
+      <div class="cm-goal">⚔ Beat ${lastBoss.name} (mission ${partLast(pi - 1).id}) to unlock it.</div>
+      <div class="cm-btns"><button id="campGo">Back to Part ${pi} ▶</button></div>
+    </div>` : `<div class="cm-brief" style="--c:${pc}">
       <div class="cm-bt"><span class="cm-num">${pm.id}</span> ${pm.name} ${pst ? `<span class="cm-st">${"★".repeat(pst)}<span style="opacity:.25">${"★".repeat(3 - pst)}</span></span>` : ""}</div>
       ${pm.obj ? `<div class="cm-obj">🎯 ${pm.obj}</div>` : ""}
       <div class="muted cm-story-line">${pm.story}</div>
@@ -3058,25 +3547,27 @@ function renderCampaign() {
       <div class="muted cm-rules">${MTYPES[pm.type].stars}</div>
       <div class="muted" id="campStatus" style="font-size:13px"></div>
       <div class="cm-btns"><button id="campGo">${pst ? "Play again" : pm.type === "boss" ? "Fight ⚔" : "Start mission ▶"}</button>${pst || storySeen(pm.id) ? `<button class="cm-replay" id="campStory" title="Watch this mission's story again">📜 Story</button>` : ""}</div>
-    </div>`;
-  $("cmapDone").setAttribute("d", doneRoad(furthest));
+    </div>`}`;
+  $("cmapDone").setAttribute("d", pOpen ? doneRoad(pi, furthest) : "");
   const sc = $("cmapScroll");
   if (campScrollTo || keep == null) {
     campScrollTo = false;
-    requestAnimationFrame(() => { const el = sc.querySelector(".mnode.pick"); if (el) sc.scrollTop = el.offsetTop - sc.clientHeight * 0.42; });
+    requestAnimationFrame(() => { const el = pOpen && sc.querySelector(".mnode.pick"); sc.scrollTop = el ? el.offsetTop - sc.clientHeight * 0.42 : sc.scrollHeight; });
   } else sc.scrollTop = keep;
   sc.querySelectorAll(".mnode").forEach(el => el.onclick = () => { campPick = +el.dataset.k; renderCampaign(); });
+  $("campMap").querySelectorAll(".cmap-part").forEach(el => el.onclick = () => { const q = +el.dataset.part; if (q === campPart) return; campPart = q; campScrollTo = true; sfx.click?.(); renderCampaign(); });
+  if (!pOpen) { $("campGo").onclick = () => { campPart = pi - 1; campScrollTo = true; renderCampaign(); }; renderCampPanel(); return; }
   $("campGo").onclick = () => startMission(campPick);
-  if ($("campStory")) $("campStory").onclick = () => { if (inMatch() || cineOn) return; playCine([...storySteps(pm, "pre"), ...(pst ? storySteps(pm, "post") : [])], { ch: pm.ch, boss: pm.boss }); };
+  if ($("campStory")) $("campStory").onclick = () => { if (inMatch() || cineOn) return; playCine([...storySteps(pm, "pre"), ...(pst ? storySteps(pm, "post") : [])], { ch: pm.ch, boss: pm.boss, fin: !!pst && pm === partLast(partOf(pm)) }); };
   renderCampPanel();
 }
 
 function renderCampPanel() {
-  $("campProg").innerHTML = CHAPTERS.map((c, ci) => {
+  $("campProg").innerHTML = PARTS.map((P, pi) => `<div class="cp-part">PART ${pi + 1} · ${P.name}</div>` + P.chs.map(ci => { const c = CHAPTERS[ci];
     const ms = CAMP_LIST.filter(m => m.ch === ci), done = ms.filter(m => campStars(m.id)).length, got = ms.reduce((t, m) => t + campStars(m.id), 0);
-    return `<div class="cp-row" style="--c:${c.color}"><span>${chapterUnlocked(ci) ? "" : "🔒 "}${ci + 1}. ${c.name}</span><span class="muted">${done}/6 · ★${got}</span>
-      <div class="cp-bar"><i style="width:${done / 6 * 100}%"></i></div></div>`;
-  }).join("");
+    return `<div class="cp-row" style="--c:${c.color}"><span>${chapterUnlocked(ci) ? "" : "🔒 "}${ci + 1}. ${c.name}</span><span class="muted">${done}/${ms.length} · ★${got}</span>
+      <div class="cp-bar"><i style="width:${done / ms.length * 100}%"></i></div></div>`;
+  }).join("")).join("");
   $("campStars").textContent = campTotal();
 }
 
@@ -3208,7 +3699,7 @@ function showMissionResult(mm, won, stars, secs, why, firstClear) {
   $("resStats").innerHTML = stats.map(([k, v]) => `<div><b>${v}</b><span class="muted">${k}</span></div>`).join("");
   const chapterDone = won && firstClear && (!next || next.ch !== mm.m.ch);
   $("resSub").textContent = won
-    ? (chapterDone ? (next ? `🏁 Chapter ${mm.m.ch + 1} complete! 🔓 Chapter ${next.ch + 1}: ${CHAPTERS[next.ch].name}` : "🏆 You finished the whole campaign. Legend.")
+    ? (chapterDone ? campNextText(mm.m, next)
        : firstClear && next ? `🔓 Unlocked: ${next.id} ${next.name}` : stars < 3 ? `Tip: ${MTYPES[mm.m.type].stars}` : "")
     : why;
   $("resMain").textContent = won ? (next ? "Next mission ▶" : "Play again") : "Retry ▶";
@@ -3223,7 +3714,7 @@ function leaveMission() {
   M = null;
   $("mission").hidden = true; mCallout("");
   $("stage").classList.remove("fighting", "in-mission");
-  if (mode === "campaign") { campChapter = campPick = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
+  if (mode === "campaign") { campChapter = campPick = campPart = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
 }
 window.__camp = { list: CAMP_LIST, get M() { return M; }, get F() { return F; } };   // test hook
 $("mQuit").onclick = () => { if (!M) return; try { speechSynthesis.cancel(); } catch {} endSet(false); leaveMission(); renderRank(); flushRankUps(); };

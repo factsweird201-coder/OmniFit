@@ -15,9 +15,10 @@ python3 - "$APP/Contents/Resources/index.html" <<'PY'
 import sys
 html = open("../index.html").read()
 art = open("../art.js").read()
-tag = '<script src="art.js"></script>'
-assert tag in html, "art.js tag missing"
 import re
+m = re.search(r'<script src="art\.js(\?v=\w+)?"></script>', html)
+assert m, "art.js tag missing"
+tag = m.group(0)
 html = re.sub(r"<!--web-only-->.*?<!--/web-only-->", "", html, flags=re.S)   # website-only tags would make the app fetch from a fake domain
 open(sys.argv[1], "w").write(html.replace(tag, "<script>\n" + art + "\n</script>"))
 PY
