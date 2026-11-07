@@ -1,0 +1,15 @@
+{
+  "name": "Push-Up Ranks",
+  "short_name": "Push-Ups",
+  "description": "Count push-ups with your camera, rank up, fight bosses and battle friends live.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07090e",
+  "theme_color": "#07090e",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

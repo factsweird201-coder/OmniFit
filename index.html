@@ -2,8 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Push-Up Ranks</title>
+<!--web-only-->
+<meta name="description" content="Count push-ups with your camera, rank up, fight bosses and battle your friends live.">
+<meta name="theme-color" content="#07090e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Push-Ups">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Push-Up Ranks — battle me in push-ups 💪">
+<meta property="og:description" content="Count reps with your camera, rank up, fight bosses and take on friends in live 1v1 battles.">
+<meta property="og:url" content="https://factsweird201-coder.github.io/push-up-ranks/">
+<meta property="og:image" content="https://factsweird201-coder.github.io/push-up-ranks/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--/web-only-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&display=swap" rel="stylesheet">
@@ -31,6 +50,7 @@
     background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
     background-size: 40px 40px; mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
   }
+  body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }  /* iPhone notch when installed */
   #fx { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 30; }
 
   header { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 22px; border-bottom: 1px solid var(--line); flex-wrap: wrap; background: linear-gradient(180deg, rgba(255,255,255,.03), transparent); }
@@ -415,6 +435,7 @@
   .opp-cam.hit { animation: shake .35s; }
   .emotes { position: absolute; left: 16px; bottom: 60px; display: flex; flex-direction: column; gap: 6px; }
   .emotes button { background: rgba(0,0,0,.55); border: 1px solid var(--line2); padding: 5px 8px; font-size: 20px; border-radius: 12px; line-height: 1.2; }
+  .lost { position: absolute; left: 50%; top: 118px; transform: translateX(-50%); z-index: 6; background: rgba(60,10,16,.85); border: 1px solid var(--bad); color: #ffd0d4; border-radius: 12px; padding: 8px 14px; font: 700 13px var(--display); letter-spacing: .5px; white-space: nowrap; animation: pulseTag 1.2s infinite; }
   .emote-pop { position: absolute; font-size: 54px; pointer-events: none; animation: float 1.6s ease-out forwards; z-index: 5; }
   .sv-name { display: block; margin: 18px auto 0; width: min(320px, 100%); background: rgba(0,0,0,.4); border: 1px solid var(--line2); color: var(--text); border-radius: 12px; padding: 12px; font: 600 18px var(--display); text-align: center; outline: none; user-select: text; }
   .sv-name:focus { border-color: var(--accent); }
@@ -425,10 +446,14 @@
   /* ---------- phones ---------- */
   @media (max-width: 600px) {
     header { padding: 10px 12px; gap: 8px; }
-    .logo { font-size: 16px; } .logo .mark { width: 28px; height: 28px; font-size: 15px; }
+    .logo { font-size: 15px; gap: 7px; letter-spacing: 1px; } .logo .mark { width: 28px; height: 28px; font-size: 15px; }
+    header > div:last-child { gap: 5px !important; } header button.ghost { padding: 6px 9px; font-size: 12px; }
+    .sv-weight { gap: 10px; } .sv-weight input { width: 150px; font-size: 56px; }
+    .sv-round { width: 46px; height: 46px; }
     header .tabs { order: 3; width: 100%; } header .tabs button { flex: 1; padding: 8px 4px; font-size: 13px; }
     main { padding: 10px; gap: 12px; }
-    .stage { aspect-ratio: 3 / 4; border-radius: 16px; }
+    .stage { aspect-ratio: auto; height: calc(100svh - 150px); min-height: 500px; max-height: 780px; border-radius: 16px; }
+    .pvp-box { padding: 12px; gap: 8px; } .pvp { gap: 10px; }
     .chip { padding: 6px 9px; min-width: 56px; border-radius: 11px; } .chip b { font-size: 22px; }
     .hud { left: 8px; top: 8px; gap: 6px; } .phase { right: 8px; top: 8px; }
     .stage.fighting .hud, .stage.fighting .phase { top: 98px; }
@@ -524,6 +549,7 @@
             <div class="hpbar" id="dThemBar"><div class="lag" id="dThemLag"></div><div class="fill" id="dThemFill"></div><div class="ticks"></div><div class="txt" id="dThemTxt"></div></div>
             <div class="reps" id="dThemReps"></div></div>
         </div>
+        <div class="lost" id="dLost" hidden></div>
         <div class="callout" id="dCallout"></div>
         <div class="combo" id="dCombo"></div>
         <div class="opp-cam" id="oppCam"><video id="oppVideo" playsinline autoplay muted></video><canvas id="oppCanvas" width="320" height="240"></canvas><div class="tag"><i></i><span id="oppTag">OPPONENT</span></div></div>
@@ -534,7 +560,7 @@
       <div class="overlay" id="startOverlay">
         <div class="cam">📷</div>
         <div class="t">READY TO TRAIN?</div>
-        <div class="muted" style="max-width:420px">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view. Video never leaves your computer.</div>
+        <div class="muted" style="max-width:420px">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view. Your training video never leaves your device.</div>
         <button id="startBtn">Start camera</button>
         <div class="muted" id="loadMsg"></div>
       </div>
@@ -1141,6 +1167,12 @@ function noise(dur = 0.3, gain = 0.2, freq = 800) {
     s.connect(f).connect(g).connect(ac.destination); s.start();
   } catch {}
 }
+function unlockAudio() {
+  try { ac ||= new AudioContext(); if (ac.state === "suspended") ac.resume(); } catch {}
+  try { if (!unlockAudio.spoke && "speechSynthesis" in window) { unlockAudio.spoke = true; const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch {}
+}
+addEventListener("pointerdown", unlockAudio, { passive: true });
+addEventListener("keydown", unlockAudio);
 const sfx = {
   rep:    () => tone(1000, 0.07),
   down:   () => tone(500, 0.04, "sine", 0.08),
@@ -1194,14 +1226,14 @@ $("tabBoss").onclick = () => setMode("boss");
 $("tabPvp").onclick = () => setMode("pvp");
 
 // ================= REPS =================
-let setCount = 0, pendingRankUps = [];
+let setCount = 0, pendingRankUps = [], bestToasted = false;
 
 function onRep(depthPct) {
   const before = rankIndex(store.total), today = dayKey(), beforeToday = store.days[today] || 0;
   setCount++; store.total++; store.kcal += kcalPerRep();
   lastRepTime = performance.now(); lowSince = 0;
   store.days[today] = beforeToday + 1;
-  if (setCount > store.best) { if (store.best > 0 && setCount === store.best + 1) toast(`🎉 New best set: ${setCount}!`); store.best = setCount; }
+  if (setCount > store.best) { if (store.best > 0 && !bestToasted) { bestToasted = true; toast(`🎉 New best set — keep going!`); } store.best = setCount; }
   save();
   $("setCount").textContent = setCount;
   $("endBtn").disabled = inMatch();
@@ -1239,7 +1271,7 @@ function endSet(showSummary = true) {
     store.sets++; save(); renderRank();
     if (showSummary && !F && !B) showSetDone(setCount);
   }
-  setCount = 0; $("setCount").textContent = 0;
+  setCount = 0; $("setCount").textContent = 0; bestToasted = false;
   $("endBtn").disabled = true;
   lastRepTime = 0; lowSince = 0;
 }
@@ -1773,11 +1805,41 @@ function drawSkeleton(lm) {
   ctx.globalAlpha = 1;
 }
 
+// Phones dim and lock after ~30 s without a touch — keep the screen on while the camera is running.
+let wakeLock = null;
+async function keepAwake() {
+  try { if ("wakeLock" in navigator && !wakeLock && document.visibilityState === "visible") { wakeLock = await navigator.wakeLock.request("screen"); wakeLock.addEventListener("release", () => { wakeLock = null; }); } } catch {}
+}
+document.addEventListener("visibilitychange", () => { if (camReady && document.visibilityState === "visible") keepAwake(); });
+
+const IN_APP = (navigator.userAgent.match(/Instagram|FBAN|FBAV|Snapchat|TikTok|musical_ly|Line\/|Twitter|LinkedInApp|GSA\//) || [])[0];
+function cameraProblem() {
+  if (!window.isSecureContext) return "The camera only works on a secure (https) page.";
+  if (!navigator.mediaDevices?.getUserMedia) return IN_APP
+    ? "This app's built-in browser can't use the camera. Tap ⋯ / Share and choose \"Open in Safari\" or \"Open in Chrome\"."
+    : "This browser can't use the camera. Try Safari, Chrome or Edge.";
+  return "";
+}
+function cameraErrorText(e) {
+  const n = e?.name || "";
+  if (n === "NotAllowedError" || n === "SecurityError") return "Camera access was blocked. Allow the camera for this site (tap the camera or 🔒 icon by the address, or check your browser settings), then try again.";
+  if (n === "NotFoundError" || n === "DevicesNotFoundError") return "No camera found on this device.";
+  if (n === "NotReadableError" || n === "TrackStartError") return "Your camera is busy in another app or tab. Close it and try again.";
+  if (/fetch|network|load/i.test(e?.message || "")) return "Couldn't download the body tracker — check your internet and try again.";
+  return e?.message || String(e);
+}
+async function getCamera() {
+  try { return await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" }, audio: false }); }
+  catch (e) { if (e?.name === "OverconstrainedError") return navigator.mediaDevices.getUserMedia({ video: true, audio: false }); throw e; }
+}
+
 function ensureCamera() {
   if (camReady) return camReady;
   camReady = (async () => {
     $("startBtn").disabled = true;
     try {
+      const problem = cameraProblem();
+      if (problem) throw new Error(problem);
       $("loadMsg").textContent = "Loading pose model…";
       const fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
       const opts = delegate => ({
@@ -1787,17 +1849,18 @@ function ensureCamera() {
       try { landmarker = await PoseLandmarker.createFromOptions(fileset, opts("GPU")); }
       catch (err) { console.warn("GPU failed, using CPU", err); landmarker = await PoseLandmarker.createFromOptions(fileset, opts("CPU")); }
       $("loadMsg").textContent = "Requesting camera…";
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, facingMode: "user" }, audio: false });
+      const stream = await getCamera();
       video.srcObject = stream;
       await video.play();
       canvas.width = video.videoWidth; canvas.height = video.videoHeight;
       $("startOverlay").hidden = true;
       ["hud", "phase", "feedback"].forEach(id => $(id).hidden = false);
+      keepAwake();
       loop();
       return true;
     } catch (e) {
       console.error(e);
-      $("loadMsg").textContent = "Couldn't start: " + (e.message || e);
+      $("loadMsg").textContent = "Couldn't start: " + cameraErrorText(e);
       $("startBtn").disabled = false;
       camReady = null;
       return false;
@@ -1810,6 +1873,10 @@ $("startBtn").onclick = () => ensureCamera();
 function loop() {
   if (video.currentTime !== lastT) {
     lastT = video.currentTime;
+    if (video.videoWidth && (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)) {
+      canvas.width = video.videoWidth; canvas.height = video.videoHeight;   // phone rotated: re-learn your position
+      disarm(); topRef = null;
+    }
     let r;
     try { r = landmarker.detectForVideo(video, performance.now()); }
     catch (e) { console.error(e); setFeedback("Tracker error: " + e.message, "bad"); requestAnimationFrame(loop); return; }
@@ -1861,7 +1928,7 @@ function inviteUrl(code) {
   const base = PUBLIC_URL || (location.protocol === "https:" && location.hostname !== "pushup-ranks.app" ? location.origin + location.pathname : "");
   return base ? `${base}?battle=${code}` : "";
 }
-function send(m) { try { if (net?.conn?.open) net.conn.send(m); } catch (e) { console.warn("send failed", e); } }
+function send(m) { if (window.__netMute) return; try { if (net?.conn?.open) net.conn.send(m); } catch (e) { console.warn("send failed", e); } }   // __netMute: test hook to simulate a dropped phone
 const helloMsg = () => ({ t: "hello", v: 1, vid: shareVid(), name: myName(), rank: rankIndex(store.total), total: store.total, w: store.pvp.w, l: store.pvp.l, d: store.pvp.d });
 const netErr = e => ["network", "server-error", "socket-error", "socket-closed"].includes(e.type)
   ? "Couldn't reach the battle server — check your internet and try again."
@@ -1880,6 +1947,14 @@ async function hostBattle() {
       if (net !== myNet) return c.close();
       if (myNet.conn) { c.on("open", () => { c.send({ t: "full" }); setTimeout(() => c.close(), 500); }); return; }
       attachConn(c);
+      setTimeout(() => {   // they found us but the direct link never opened (strict network) — keep hosting
+        if (net === myNet && myNet.conn === c && !myNet.connected) {
+          try { c.close(); } catch {}
+          myNet.conn = null;
+          lobby.err = "Someone tried to join but your devices couldn't connect directly. This happens on some networks (often mobile data or school/work Wi-Fi) — try both on home Wi-Fi.";
+          renderLobby();
+        }
+      }, 15000);
     });
     peer.on("error", e => {
       if (net !== myNet) return;
@@ -1900,8 +1975,13 @@ async function joinBattle(raw) {
   const myNet = net = { role: "guest", code, mode: "ko", them: null, meReady: false, themReady: false };
   const peer = myNet.peer = new Peer();
   peer.on("call", call => { if (net !== myNet || myNet.call) return call.close(); call.answer(myOutStream()); attachCall(call); });
-  const timer = setTimeout(() => { if (net === myNet && !myNet.connected) lobbyError("Couldn't reach that battle. Check the code and that your friend still has it open.", code); }, 15000);
-  peer.on("open", () => { if (net === myNet) attachConn(peer.connect(PEER_PREFIX + code, { reliable: true })); });
+  const timer = setTimeout(() => {
+    if (net !== myNet || myNet.connected) return;
+    lobbyError(myNet.peerOpen
+      ? "Found the battle but couldn't connect to your friend's device. This happens on some networks (often mobile data or school/work Wi-Fi) — try both on home Wi-Fi, then join again."
+      : "Couldn't reach the battle server — check your internet and try again.", code);
+  }, 15000);
+  peer.on("open", () => { if (net === myNet) { myNet.peerOpen = true; attachConn(peer.connect(PEER_PREFIX + code, { reliable: true })); } });
   peer.on("error", e => {
     if (net !== myNet || myNet.connected) return;
     clearTimeout(timer);
@@ -1913,13 +1993,13 @@ function attachConn(c) {
   const myNet = net; myNet.conn = c;
   c.on("open", () => {
     if (net !== myNet) return;
-    myNet.connected = true;
+    myNet.connected = true; myNet.lastMsgAt = performance.now();
     send(helloMsg());
     if (myNet.role === "host") send({ t: "settings", mode: myNet.mode });
     lobby = { view: "room", err: "", busy: "" };
     if (mode !== "pvp") setMode("pvp"); else renderLobby();
   });
-  c.on("data", m => { if (net === myNet) onNetMsg(m); });
+  c.on("data", m => { if (net === myNet) { myNet.lastMsgAt = performance.now(); onNetMsg(m); } });
   c.on("close", () => { if (net === myNet) onConnClose(); });
   c.on("error", e => console.warn("battle connection", e));
 }
@@ -1973,6 +2053,7 @@ function onNetMsg(m) {
     case "vid":   n.themVid = !!m.v; renderOppVideo(); break;
     case "full":  lobbyError("That battle already has two players."); break;
     case "bye":   onConnClose(); break;
+    case "ping":  break;
   }
 }
 
@@ -2314,10 +2395,11 @@ function renderLobby() {
       : `<div class="pvp-title">YOUR <em>BATTLE</em></div><div class="muted">Send this code to your friend — they pick 1v1 → Join</div>
         <input id="pvCodeBig" class="big-code" readonly value="${code}" aria-label="Battle code">
         ${link ? `<input id="pvLink" readonly value="${esc(link)}" style="max-width:420px;font-size:13px" aria-label="Invite link">` : ""}
-        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button id="pvCopy">${link ? "Copy invite link" : "Copy code"}</button><button class="ghost" id="pvCancel">Cancel</button></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">${link && navigator.share ? `<button id="pvShare">Share invite</button><button class="ghost" id="pvCopy">Copy link</button>` : `<button id="pvCopy">${link ? "Copy invite link" : "Copy code"}</button>`}<button class="ghost" id="pvCancel">Cancel</button></div>
         <div><span class="spin"></span> <span class="muted">Waiting for your opponent to join…</span></div>`;
     $("pvCancel").onclick = cancel;
     if ($("pvCopy")) $("pvCopy").onclick = () => copyText(link || code, link ? "Invite link copied" : "Code copied");
+    if ($("pvShare")) $("pvShare").onclick = () => navigator.share({ title: "Push-Up Ranks battle", text: `Battle me in push-ups 💪 Code: ${code}`, url: link }).catch(() => {});
   } else if (lobby.view === "joining") {
     el.innerHTML = `<div class="pvp-title">JOINING <em>${esc(lobby.code)}</em></div><div><span class="spin"></span> <span class="muted">Connecting to your opponent…</span></div><button class="ghost" id="pvCancel">Cancel</button>`;
     $("pvCancel").onclick = cancel;
@@ -2348,6 +2430,20 @@ function renderLobby() {
 function renderPvpPanel() {
   $("pvW").textContent = store.pvp.w; $("pvL").textContent = store.pvp.l; $("pvD").textContent = store.pvp.d;
 }
+// Heartbeat: a locked phone or dropped signal often doesn't close the link — notice silence instead.
+const LOST_WARN_MS = 6000, LOST_GIVEUP_MS = 25000;
+setInterval(() => { if (net?.connected) send({ t: "ping" }); }, 2000);
+setInterval(() => {
+  if (!net?.connected) { $("dLost").hidden = true; return; }
+  const quiet = performance.now() - (net.lastMsgAt || performance.now());
+  const inArena = !!B && !$("duel").hidden;
+  $("dLost").hidden = !(inArena && quiet > LOST_WARN_MS && B.state !== "over");
+  // mid-fight we give up after 25 s; in the room people may be switching apps to send the code, so wait longer
+  const giveUp = B && (B.state === "fight" || B.state === "countdown") ? LOST_GIVEUP_MS : 90000;
+  if (!$("dLost").hidden) $("dLost").textContent = `📡 Lost connection to ${net.them?.name || "your opponent"}… ${Math.max(0, Math.ceil((giveUp - quiet) / 1000))}s`;
+  if (quiet > giveUp) { console.warn("opponent went silent"); onConnClose(); }
+}, 1000);
+
 function maybeAutoJoin() {
   if (!pendingJoin || $("survey").classList.contains("show")) return;
   const code = pendingJoin; pendingJoin = null;
@@ -2359,6 +2455,7 @@ function maybeAutoJoin() {
 renderRank(); renderRoster(); setMode("train"); renderHearts(); renderPvpPanel();
 if (!store.profile) openSurvey(false);
 maybeAutoJoin();
+{ const pr = cameraProblem(); if (pr) { $("loadMsg").textContent = pr; $("loadMsg").style.color = "var(--bad)"; if (IN_APP) toast("⚠️ Open this page in Safari or Chrome to use your camera"); } }
 </script>
 </body>
 </html>

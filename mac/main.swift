@@ -44,6 +44,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKUIDelegate, WKNaviga
         NSApp.activate(ignoringOtherApps: true)
     }
 
+    // keep the display awake while the app is open — you're on the floor, not touching the Mac
+    var awake: NSObjectProtocol?
+    func applicationDidBecomeActive(_ notification: Notification) {
+        if awake == nil { awake = ProcessInfo.processInfo.beginActivity(options: [.idleDisplaySleepDisabled, .userInitiated], reason: "Counting push-ups") }
+    }
+    func applicationDidResignActive(_ notification: Notification) {
+        if let a = awake { ProcessInfo.processInfo.endActivity(a); awake = nil }
+    }
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 
     // Grant camera to our own page (macOS still shows its system camera prompt the first time).

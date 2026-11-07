@@ -5,6 +5,7 @@ Camera push-up counter that ranks you up by lifetime push-ups, with boss fights 
 **Play:** https://factsweird201-coder.github.io/push-up-ranks/
 
 - Put your phone or laptop on the floor about 2 m away, facing you or side-on.
+- On a phone, use Share → **Add to Home Screen** to get it as an app.
 - Your progress is saved in your browser.
 - Pose tracking runs locally with MediaPipe. In training your video never leaves your device.
 

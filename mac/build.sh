@@ -17,6 +17,8 @@ html = open("../index.html").read()
 art = open("../art.js").read()
 tag = '<script src="art.js"></script>'
 assert tag in html, "art.js tag missing"
+import re
+html = re.sub(r"<!--web-only-->.*?<!--/web-only-->", "", html, flags=re.S)   # website-only tags would make the app fetch from a fake domain
 open(sys.argv[1], "w").write(html.replace(tag, "<script>\n" + art + "\n</script>"))
 PY
 
