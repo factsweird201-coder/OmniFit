@@ -67,6 +67,9 @@
   button:hover:not(:disabled) { filter: brightness(1.08); }
   button:active:not(:disabled) { transform: scale(.97); }
   button:disabled { opacity: .45; cursor: default; }
+  .erase-btn { display: block; margin: 14px auto 0; background: none; border: 0; color: var(--muted); font-size: 12px; text-decoration: underline; opacity: .7; padding: 4px; }
+  .erase-btn:hover { color: var(--bad); opacity: 1; }
+  .sv-restore { margin-top: 16px; }
   button.ghost { background: rgba(255,255,255,.04); color: var(--text); border: 1px solid var(--line2); padding: 8px 14px; font-weight: 600; font-size: 13px; }
 
   .panel { position: relative; background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04); }
@@ -486,7 +489,6 @@
   <div style="display:flex;gap:8px">
     <button class="ghost" id="muteBtn" title="Sound & voice">🔊</button>
     <button class="ghost" id="endBtn" disabled>End set</button>
-    <button class="ghost" id="resetBtn">Reset</button>
   </div>
 </header>
 
@@ -633,6 +635,7 @@
       </div>
       <div class="wt-row"><input id="logWeight" type="number" inputmode="decimal" placeholder="Log today's weight (lb)"><button class="ghost" id="logWeightBtn">Log</button></div>
       <div class="sv-tip" id="profTip" style="font-size:13px"></div>
+      <button class="erase-btn" id="resetBtn">Erase all progress…</button>
     </div>
 
     <div class="panel">
@@ -701,6 +704,7 @@
       <p class="sv-sub">Four quick questions so we can set your daily goal, estimate the calories you burn, track your progress and tune the bosses to your level.</p>
       <input class="sv-name" id="svName" maxlength="16" placeholder="Your fighter name" aria-label="Fighter name">
       <div class="muted" style="margin-top:6px">Shown to opponents in 1v1 battles</div>
+      <button class="ghost sv-restore" id="svRestore" hidden>↩ Undo — bring back my old progress</button>
     </div>
 
     <div class="sv-step" data-step="1">
@@ -840,6 +844,7 @@ function figure(key) {
 
 const $ = id => document.getElementById(id);
 const KEY = "pushupRanks.v1";
+const BACKUP_KEY = KEY + ".erased";   // copy kept when you erase progress, so it can be undone
 
 let store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: false, profile: null, weights: [], kcal: 0 };
 try { store = { ...store, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch {}
@@ -1010,9 +1015,21 @@ function openSurvey(editing) {
   buildSurveyOptions();
   renderSurvey();
   $("svClose").hidden = !editing;
+  let backup = null; try { backup = JSON.parse(localStorage.getItem(BACKUP_KEY) || "null"); } catch {}
+  $("svRestore").hidden = editing || !backup?.profile;
   $("survey").classList.add("show");
 }
 $("svClose").onclick = () => $("survey").classList.remove("show");
+$("svRestore").onclick = () => {
+  let backup = null; try { backup = JSON.parse(localStorage.getItem(BACKUP_KEY) || "null"); } catch {}
+  if (!backup?.profile) return;
+  store = { ...store, ...backup, muted: store.muted }; save();
+  try { localStorage.removeItem(BACKUP_KEY); } catch {}
+  $("survey").classList.remove("show");
+  renderRank(); renderRoster(); renderProfile();
+  toast("↩ Progress restored");
+  maybeAutoJoin();
+};
 document.addEventListener("keydown", e => { if (e.key === "Escape" && sv.editing && $("survey").classList.contains("show")) $("survey").classList.remove("show"); });
 
 function optHtml(key, o, sel, inner) {
@@ -1291,8 +1308,13 @@ function showSetDone(n) {
   setDoneTimer = setTimeout(() => { el.classList.add("out"); setTimeout(() => el.hidden = true, 500); }, 4500);
 }
 $("endBtn").onclick = () => endSet(true);
+// Erasing is tucked away in the profile panel (it used to sit next to "End set" and got hit by accident),
+// asks twice, and keeps a backup so the survey can offer to undo it.
 $("resetBtn").onclick = () => {
-  if (!confirm("Reset ALL progress — ranks, streak, bosses and profile?")) return;
+  if (inMatch()) return;
+  if (!confirm(`Erase ALL your progress?\n\nYour rank, ${store.total.toLocaleString()} push-ups, streak, bosses beaten and profile will be deleted.`)) return;
+  if (!confirm("Are you sure? This starts you over from zero.")) return;
+  try { localStorage.setItem(BACKUP_KEY, JSON.stringify(store)); } catch {}
   store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: store.muted, profile: null, weights: [], kcal: 0, pvp: { w: 0, l: 0, d: 0 }, name: "" };
   setCount = 0; save(); $("setCount").textContent = 0; renderRank(); renderRoster(); openSurvey(false);
 };
@@ -1588,6 +1610,9 @@ const STABLE_FRAMES = 8;         // must hold a valid plank for this many frames
 const MAX_WRIST_DRIFT = 0.32;    // hands must stay planted: drift ≤ 32% of arm gap (real trackers wobble)
 const MIN_SHOULDER_TRAVEL = 0.2; // shoulders must drop ≥ 20% of arm gap
 const MAX_ELBOW_AT_BOTTOM = 150; // elbows must actually bend
+const DEEP_ELBOW = 115;          // elbows bent this far = clearly a real rep…
+const MAX_WRIST_DRIFT_DEEP = 0.75; // …so allow a lot more tracker wobble in the hands
+const MIN_FLARE = 0.25;          // …as long as the elbows flare out like a push-up (not a curl)
 let repsSinceArm = 0, downSince = 0, uprightFrames = 0, goodFrames = 0, topShY = null, topWrist = null, topLeftAt = 0, rep = null, rejectStreak = 0, lastCountedAt = 0;
 const sm = {}; // smoothed points
 const ema = (k, v, a = 0.5) => (sm[k] = sm[k] == null ? v : sm[k] * (1 - a) + v * a);
@@ -1602,7 +1627,7 @@ function logRep(entry) {
   try { localStorage.setItem(LOG_KEY, JSON.stringify(repLog)); } catch {}
 }
 window.__repLog = () => repLog;
-const fmtLog = () => repLog.slice(-80).reverse().map(e => `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
+const fmtLog = () => repLog.slice(-80).reverse().map(e => `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}${e.flare != null ? ` flare ${e.flare}` : ""}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
 $("logDetails").ontoggle = () => { if ($("logDetails").open) $("logPre").textContent = fmtLog(); };
 $("logCopy").onclick = async () => { try { await navigator.clipboard.writeText(fmtLog()); toast("📋 Log copied"); } catch { toast("Couldn't copy — select the text instead"); } };
 
@@ -1635,7 +1660,10 @@ function analyse(lm) {
   if (!sides.length) return { ok: false, msg: "Can't see your arms — step back so your upper body is in frame" };
   const avg = f => sides.reduce((t, S) => t + f(S), 0) / sides.length;
   const gap = avg(S => S.w.y - S.s.y);
-  const wristBelowElbow = avg(S => S.w.y - S.e.y) > -0.02 * H;
+  // Mid push-up the tracker often slides the wrist a bit above the elbow (elbows flared, hands hidden under
+  // the body), so allow more slack once you're set — a curl or arm raise goes far past this.
+  const wristTol = (phase === "down" ? 0.07 : armed ? 0.04 : 0.02) * H;
+  const wristBelowElbow = avg(S => S.w.y - S.e.y) > -wristTol;
   const elbowBelowShoulder = avg(S => S.e.y - S.s.y) > 0;
   const best = sides.reduce((a, b) => (a.e.v + a.w.v >= b.e.v + b.w.v ? a : b));
   const elbow = angle(best.s, best.e, best.w);
@@ -1660,11 +1688,18 @@ function analyse(lm) {
   const upright = uprightFrames >= 5;   // must persist a few frames so one bad hip guess can't break a set
   const shY = ema("shY", avg(S => S.s.y)), wX = ema("wX", avg(S => S.w.x)), wY = ema("wY", avg(S => S.w.y));
   const armVertical = avg(S => Math.abs(S.w.x - S.s.x)) < 1.0 * Math.max(gap, 1);
+  // Elbow flare (front view): how far the elbows stick out sideways past both the shoulder and the wrist,
+  // in shoulder-widths. Push-ups flare the elbows; curls, phone-holding and lap movements keep them in.
+  let flare = 0;
+  if (L.s.v > 0.4 && R.s.v > 0.4) {
+    const mid = (L.s.x + R.s.x) / 2, sw = Math.max(Math.abs(L.s.x - R.s.x), 1);
+    flare = avg(S => Math.abs(S.e.x - mid) - Math.max(Math.abs(S.s.x - mid), Math.abs(S.w.x - mid))) / sw;
+  }
   let why = "";
   if (upright) why = "Get down into a plank — sitting or standing doesn't count";
   else if (!elbowBelowShoulder) why = "Hands on the floor — arms raised doesn't count";
   else if (!wristBelowElbow) why = "Hands on the floor, arms straight";
-  return { ok: true, elbow: smoothAngle, gap: smoothDepth, shY, wX, wY, armVertical, why,
+  return { ok: true, elbow: smoothAngle, gap: smoothDepth, shY, wX, wY, armVertical, flare, why,
            ready: smoothDepth > 0.04 * H && !why };
 }
 
@@ -1721,7 +1756,7 @@ function step(res) {
     if (ratio < 0.62 || res.elbow < 95) {
       phase = "down"; minRatio = ratio; setPhase("DOWN"); sfx.down(); downSince = now;
       rep = { start: topLeftAt || now, topGap: topRef, topShY: topShY ?? res.shY, wrist: topWrist || { x: res.wX, y: res.wY },
-              maxShY: res.shY, drift: 0, minElbow: res.elbow, lo: ratio, hi: ratio, hiGap: res.gap };
+              maxShY: res.shY, drift: 0, minElbow: res.elbow, flare: res.flare, lo: ratio, hi: ratio, hiGap: res.gap };
     }
     else if (ratio < 0.85) setFeedback("Lower…", "warn");
     else setFeedback("Good — go down", "good");
@@ -1749,6 +1784,7 @@ function step(res) {
       rep.maxShY = Math.max(rep.maxShY, res.shY);
       rep.drift = Math.max(rep.drift, Math.hypot(res.wX - rep.wrist.x, res.wY - rep.wrist.y));
       rep.minElbow = Math.min(rep.minElbow, res.elbow);
+      rep.flare = Math.max(rep.flare, res.flare);
     }
     setFeedback(1 - minRatio >= CRIT ? "Deep! Now push!" : "Push up!", "good");
     if (ratio > 0.88) {
@@ -1756,13 +1792,21 @@ function step(res) {
       if (!rep) return;
       const g = rep.topGap || 1;
       const info = { ms: Math.round(now - rep.start), depth: +(1 - minRatio).toFixed(2),
-                     shoulders: +((rep.maxShY - rep.topShY) / g).toFixed(2), hands: +(rep.drift / g).toFixed(2), elbow: Math.round(rep.minElbow) };
+                     shoulders: +((rep.maxShY - rep.topShY) / g).toFixed(2), hands: +(rep.drift / g).toFixed(2), elbow: Math.round(rep.minElbow),
+                     flare: +rep.flare.toFixed(2) };
       rep = null;
       if (info.ms < MIN_REP_MS) return rejectRep("too fast", info);
       if (lastCountedAt && now - lastCountedAt < MIN_GAP_MS) return rejectRep("too fast", info);
-      if (info.hands > MAX_WRIST_DRIFT || info.hands > info.shoulders * 0.6) return rejectRep("keep your hands planted on the floor", info);
-      if (info.shoulders < MIN_SHOULDER_TRAVEL) return rejectRep("lower your chest, not just your arms", info);
-      if (info.elbow > MAX_ELBOW_AT_BOTTOM) return rejectRep("bend your elbows more", info);
+      // A deep elbow bend from a straight-arm plank is the strongest sign of a real push-up. With a laptop
+      // camera the tracker often credits that motion to the wrists instead of the shoulders, so only reject
+      // big hand movement then. Shallow reps still need the stricter checks.
+      if (info.elbow <= DEEP_ELBOW && info.depth >= 0.3 && info.flare >= MIN_FLARE) {
+        if (info.hands > MAX_WRIST_DRIFT_DEEP) return rejectRep("keep your hands planted on the floor", info);
+      } else {
+        if (info.hands > MAX_WRIST_DRIFT || info.hands > info.shoulders * 0.6) return rejectRep("keep your hands planted on the floor", info);
+        if (info.shoulders < MIN_SHOULDER_TRAVEL) return rejectRep("lower your chest, not just your arms", info);
+        if (info.elbow > MAX_ELBOW_AT_BOTTOM) return rejectRep("bend your elbows more", info);
+      }
       rejectStreak = 0; lastCountedAt = now; repsSinceArm++;
       logRep({ ok: true, ...info });
       onRep(1 - minRatio);
