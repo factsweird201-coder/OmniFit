@@ -301,6 +301,46 @@
   .tips li { margin-bottom: 4px; }
   .tips b { color: var(--text); }
   /* ---------- boss select ---------- */
+  .cm-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+  .cm-chip { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 8px 10px; border-radius: 12px; background: rgba(0,0,0,.35); border: 1px solid var(--line2); color: var(--text); text-align: left; min-width: 0; }
+  .cm-chip b { font: 700 11px var(--display); letter-spacing: 1.5px; color: var(--c); }
+  .cm-chip span { font: 700 13px var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .cm-chip i { font-style: normal; font-size: 11px; color: var(--muted); }
+  .cm-chip.on { border-color: var(--c); box-shadow: 0 0 18px color-mix(in srgb, var(--c) 30%, transparent); background: color-mix(in srgb, var(--c) 12%, rgba(0,0,0,.4)); }
+  .cm-chip:disabled { opacity: .45; cursor: default; }
+  .cm-story { font-size: 13.5px; color: var(--muted); margin-bottom: 14px; border-left: 3px solid var(--c); padding: 4px 0 4px 10px; }
+  .cm-story b { color: var(--text); }
+  .cm-path { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; position: relative; margin-bottom: 14px; }
+  .cm-path::before { content: ""; position: absolute; left: 6%; right: 6%; top: 50%; height: 3px; background: linear-gradient(90deg, var(--c), color-mix(in srgb, var(--c) 20%, transparent)); opacity: .5; }
+  .cm-node { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px 8px; border-radius: 16px; background: rgba(10,12,18,.9); border: 1px solid var(--line2); color: var(--text); min-width: 0; }
+  .cm-node .cm-num { position: absolute; left: 7px; top: 5px; }
+  .cm-node .cm-ic { font-size: 30px; line-height: 44px; height: 44px; }
+  .cm-node .cm-art { width: 44px; height: 44px; } .cm-node .cm-art svg { width: 100%; height: 100%; overflow: visible; }
+  .cm-node .cm-nm { font: 700 12px var(--display); line-height: 1.15; text-align: center; min-height: 28px; display: flex; align-items: center; }
+  .cm-node.boss { border-color: color-mix(in srgb, var(--c) 55%, transparent); }
+  .cm-node.next { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,194,26,.2); }
+  .cm-node.pick { border-color: var(--c); background: color-mix(in srgb, var(--c) 16%, rgba(10,12,18,.95)); transform: translateY(-3px); }
+  .cm-node:disabled { opacity: .5; cursor: default; }
+  .cm-num { font: 700 10px var(--display); letter-spacing: 1px; color: var(--muted); }
+  .cm-st { font-size: 12px; color: var(--accent); letter-spacing: 1px; }
+  .cm-brief { background: rgba(0,0,0,.45); border: 1px solid color-mix(in srgb, var(--c) 45%, var(--line2)); border-radius: 16px; padding: 14px 16px; display: grid; gap: 6px; text-align: center; max-width: 560px; margin: 0 auto; }
+  .cm-bt { font: 700 20px var(--display); letter-spacing: .5px; } .cm-bt .cm-num { font-size: 12px; vertical-align: middle; margin-right: 4px; }
+  .cm-goal { font-weight: 700; font-size: 15px; }
+  .cm-brief button { justify-self: center; margin-top: 4px; }
+  .tl-sm { display: none; }
+  .stage.in-mission .hud, .stage.in-mission .phase { top: 128px; }
+  .m-goal { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .m-bar .fill { background: linear-gradient(180deg, #ffe07a, var(--accent) 55%, #c98a00); }
+  .m-timer { font: 700 15px var(--display); letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+  .m-timer.low { color: var(--bad); animation: pulseTag .8s infinite; }
+  .m-big { width: 150px; height: 150px; margin: 20px auto 0; border-radius: 50%; display: grid; place-items: center; font-size: 78px; background: radial-gradient(circle, color-mix(in srgb, var(--c) 35%, transparent), transparent 70%); }
+  .cp-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13px; margin-bottom: 9px; }
+  .cp-bar { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; }
+  .cp-bar i { display: block; height: 100%; background: var(--c); }
+  @media (max-width: 600px) {
+    .cm-chips { grid-template-columns: repeat(2, 1fr); }
+    .cm-path { grid-template-columns: repeat(3, 1fr); } .cm-path::before { display: none; }
+  }
   .bossselect { position: absolute; inset: 0; z-index: 9; overflow: auto; padding: 22px;
     background: radial-gradient(ellipse at 50% 0%, rgba(255,77,94,.16), transparent 60%), radial-gradient(ellipse at 50% 120%, rgba(120,80,255,.14), transparent 60%), linear-gradient(180deg, #0c0e16, #05060a); }
   .bs-head { text-align: center; margin-bottom: 16px; }
@@ -465,7 +505,9 @@
     header > div:last-child { gap: 5px !important; } header button.ghost { padding: 6px 9px; font-size: 12px; }
     .sv-weight { gap: 10px; } .sv-weight input { width: 150px; font-size: 56px; }
     .sv-round { width: 46px; height: 46px; }
-    header .tabs { order: 3; width: 100%; } header .tabs button { flex: 1; padding: 8px 4px; font-size: 13px; }
+    header .tabs { order: 3; width: 100%; } header .tabs button { flex: 1; padding: 8px 2px; font-size: 12.5px; white-space: nowrap; }
+    .tl-lg { display: none; } .tl-sm { display: inline !important; }
+    .stage.in-mission .hud, .stage.in-mission .phase { top: 124px; }
     main { padding: 10px; gap: 12px; }
     .stage { aspect-ratio: auto; height: calc(100svh - 150px); min-height: 500px; max-height: 780px; border-radius: 16px; }
     .pvp-box { padding: 12px; gap: 8px; } .pvp { gap: 10px; }
@@ -495,7 +537,8 @@
   <div class="logo"><div class="mark">💪</div><span>PUSH-UP <em>RANKS</em></span></div>
   <div class="tabs">
     <button id="tabTrain" class="on">Training</button>
-    <button id="tabBoss">⚔ Boss Battles</button>
+    <button id="tabCamp">🗺 Campaign</button>
+    <button id="tabBoss">⚔ <span class="tl-lg">Boss Battles</span><span class="tl-sm">Bosses</span></button>
     <button id="tabPvp">🥊 1v1</button>
   </div>
   <div style="display:flex;gap:8px">
@@ -552,6 +595,19 @@
         <div class="bs-grid" id="bsGrid"></div>
       </div>
 
+      <div class="bossselect campmap" id="campMap" hidden></div>
+      <div class="arena" id="mission" hidden>
+        <div class="boss-top m-top">
+          <div class="boss-row">
+            <div class="boss-name"><span class="lvl" id="mLvl">1-1</span><span id="mName">Mission</span></div>
+            <div class="m-timer" id="mTimer"></div>
+          </div>
+          <div class="m-goal" id="mGoal"></div>
+          <div class="hpbar m-bar"><div class="fill" id="mFill"></div><div class="ticks"></div><div class="txt" id="mTxt"></div></div>
+        </div>
+        <div class="callout" id="mCallout"></div>
+        <div class="arena-ctrls"><button id="mQuit">Quit mission</button></div>
+      </div>
       <div class="pvp" id="pvpLobby" hidden></div>
       <div class="arena" id="duel" hidden>
         <div class="duel-top">
@@ -589,6 +645,15 @@
       </ul>
       <details id="logDetails" class="logbox"><summary>Tracking log (for troubleshooting)</summary>
         <pre id="logPre"></pre><button class="ghost" id="logCopy">Copy log</button></details>
+    </div>
+    <div class="panel" style="margin-top:18px" id="howCamp" hidden>
+      <h3>How the campaign works</h3>
+      <ul class="tips">
+        <li><b>4 chapters, 24 missions.</b> Finish a mission to unlock the next one; each chapter ends with a boss.</li>
+        <li><b>Mission types:</b> 💪 reach a count · ⏱️ beat the clock · 🎯 deep reps only (50%+) · 🔗 no resting over 4 s · 🔥 as many as you can before time runs out · ⚔️ boss fights.</li>
+        <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
+        <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
+      </ul>
     </div>
     <div class="panel" style="margin-top:18px" id="howBoss" hidden>
       <h3>How boss fights work</h3>
@@ -665,6 +730,10 @@
     <div class="panel" id="ladderPanel">
       <h3>Rank ladder</h3><span class="muted">Lifetime push-ups</span>
       <ol class="ladder" id="ladder"></ol>
+    </div>
+    <div class="panel" id="campPanel" hidden>
+      <h3>Campaign</h3><span class="muted"><b id="campStars" style="color:var(--accent)">0</b> / 72 stars</span>
+      <div id="campProg" style="margin-top:10px"></div>
     </div>
     <div class="panel" id="rosterPanel" hidden>
       <h3>Bosses</h3><span class="muted">Pick a fight</span>
@@ -860,7 +929,7 @@ const BACKUP_KEY = KEY + ".erased";   // copy kept when you erase progress, so i
 
 let store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: false, profile: null, weights: [], kcal: 0 };
 try { store = { ...store, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch {}
-store.days ||= {}; store.bosses ||= {}; store.weights ||= []; store.kcal ||= 0;
+store.days ||= {}; store.bosses ||= {}; store.weights ||= []; store.kcal ||= 0; store.campaign ||= {};
 
 const KG_PER_LB = 0.45359237;
 const kcalPerRep = () => store.profile ? 0.0045 * store.profile.weightKg : 0;   // rough estimate: ~0.32 kcal per push-up at 70 kg
@@ -1237,6 +1306,11 @@ function setMode(m) {
   if (inMatch()) return;
   mode = m;
   $("tabTrain").classList.toggle("on", m === "train");
+  $("tabCamp").classList.toggle("on", m === "campaign");
+  $("campPanel").hidden = m !== "campaign";
+  $("howCamp").hidden = m !== "campaign";
+  $("campMap").hidden = m !== "campaign";
+  if (m === "campaign") { renderCampaign(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
   $("tabBoss").classList.toggle("on", m === "boss");
   $("tabPvp").classList.toggle("on", m === "pvp");
   $("pvpPanel").hidden = m !== "pvp";
@@ -1251,6 +1325,7 @@ function setMode(m) {
   if (m === "boss") { renderRoster(); $("bsStatus").textContent = "Beat a boss to unlock the next one."; $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
 }
 $("tabTrain").onclick = () => setMode("train");
+$("tabCamp").onclick = () => setMode("campaign");
 $("tabBoss").onclick = () => setMode("boss");
 $("tabPvp").onclick = () => setMode("pvp");
 
@@ -1271,6 +1346,7 @@ function onRep(depthPct) {
 
   if (F?.active) fightRep(depthPct);
   else if (B?.active) battleRep(depthPct);
+  else if (M?.active) missionRep(depthPct);
   else {
     sfx.rep();
     const [x, y] = centerOf(chip);
@@ -1278,7 +1354,7 @@ function onRep(depthPct) {
   }
   renderRank();
   const after = rankIndex(store.total);
-  if (after > before) { if (F || B) pendingRankUps.push(after); else showRankUp(after); }
+  if (after > before) { if (F || B || M) pendingRankUps.push(after); else showRankUp(after); }
 }
 window.__rep = (d = 0.4) => onRep(d);
 window.__feed = lm => { step(analyse(lm)); if (B) sendPose(lm); };   // test hook: push one pose frame through the detector
@@ -1304,7 +1380,7 @@ function endSet(showSummary = true) {
   setCount = 0; $("setCount").textContent = 0; bestToasted = false;
   $("endBtn").disabled = true;
   lastRepTime = 0; lowSince = 0;
-  if (showSummary && !F && !B) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
+  if (showSummary && !F && !B && !M) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
 }
 function showSetDone(n) {
   const isBest = n >= store.best && n > 1, today = store.days[dayKey()] || 0;
@@ -1329,7 +1405,7 @@ $("resetBtn").onclick = () => {
   if (!confirm(`Erase ALL your progress?\n\nYour rank, ${store.total.toLocaleString()} push-ups, streak, bosses beaten and profile will be deleted.`)) return;
   if (!confirm("Are you sure? This starts you over from zero.")) return;
   try { localStorage.setItem(BACKUP_KEY, JSON.stringify(store)); } catch {}
-  store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: store.muted, profile: null, weights: [], kcal: 0, pvp: { w: 0, l: 0, d: 0 }, name: "" };
+  store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: store.muted, profile: null, weights: [], kcal: 0, pvp: { w: 0, l: 0, d: 0 }, name: "", campaign: {} };
   setCount = 0; save(); $("setCount").textContent = 0; renderRank(); renderRoster(); openSurvey(false);
 };
 
@@ -1341,18 +1417,19 @@ const attackEvery = () => F.boss.every * (F.enraged ? 0.7 : 1);
 const windupTime  = () => F.boss.windup * (F.enraged ? 0.85 : 1);
 const bossCenter = () => centerOf($("bossArt"));
 
-async function startFight(idx) {
-  if (F?.active) return;
+async function startFight(idx, camp = null) {
+  if (F?.active || M) return;
   const boss = BOSSES[idx];
-  if (mode !== "boss") setMode("boss");
-  $("bsStatus").textContent = camReady ? "Get ready…" : "Starting camera and body tracker…";
-  if (!(await ensureCamera())) { $("bsStatus").innerHTML = `<span style="color:var(--bad)">Camera didn't start: ${$("loadMsg").textContent.replace("Couldn't start: ", "")}</span>`; return; }
+  if (!camp && mode !== "boss") setMode("boss");
+  const statusEl = () => $(camp ? "campStatus" : "bsStatus") || $("bsStatus");
+  statusEl().textContent = camReady ? "Get ready…" : "Starting camera and body tracker…";
+  if (!(await ensureCamera())) { statusEl().innerHTML = `<span style="color:var(--bad)">Camera didn't start: ${$("loadMsg").textContent.replace("Couldn't start: ", "")}</span>`; return; }
   if (F?.active) return;
-  $("bossSelect").hidden = true;
+  $("bossSelect").hidden = true; $("campMap").hidden = true;
   endSet(false);
   const n = boss.specials.length;
   F = { idx, boss, active: true, state: "countdown", hp: bossHp(boss), maxHp: bossHp(boss), hearts: 3, nextAttack: boss.every + 2, windupLeft: 0, enraged: false, paused: false,
-        special: null, specialIdx: 0, thresholds: boss.specials.map((_, i) => 1 - (i + 1) / (n + 1)), combo: 0, lastRepAt: 0, reps: 0, crits: 0, parries: 0, elapsed: 0 };
+        camp, special: null, specialIdx: 0, thresholds: boss.specials.map((_, i) => 1 - (i + 1) / (n + 1)), combo: 0, lastRepAt: 0, reps: 0, crits: 0, parries: 0, elapsed: 0 };
   const th = THEMES[boss.id];
   document.documentElement.style.setProperty("--aura", th.aura);
   document.documentElement.style.setProperty("--fog", th.fog);
@@ -1555,6 +1632,7 @@ async function finishFight(won) {
     say(f.boss.win);
     const rec = store.bosses[f.boss.id] || {}, firstWin = !rec.won;
     store.bosses[f.boss.id] = { won: true, stars: Math.max(rec.stars || 0, f.hearts), bestTime: rec.bestTime == null ? time : Math.min(rec.bestTime, time) };
+    if (f.camp) { store.campaign ||= {}; f.firstClear = !store.campaign[f.camp]; store.campaign[f.camp] = Math.max(store.campaign[f.camp] || 0, f.hearts); }
     save();
     setTimeout(() => { confetti(200); showResult(f, true, firstWin, time); }, 1800);
   } else {
@@ -1582,7 +1660,15 @@ function showResult(f, won, firstWin, time) {
     : `It had ${Math.ceil(f.hp)} HP left (${Math.round(f.hp / f.maxHp * 100)}%). Tip: deep reps crit, and push-up during the red bar to parry.`;
   $("resMain").textContent = won ? (hasNext ? "Next boss ⚔" : "Fight again") : "Retry ⚔";
   $("resMain").onclick = () => { closeResult(); startFight(won && hasNext ? f.idx + 1 : f.idx); };
+  $("resBack").textContent = "Back to bosses";
   $("resBack").onclick = () => closeResult();
+  if (f.camp) {   // boss fought as a campaign mission: continue the campaign instead
+    const k = CAMP_LIST.findIndex(m => m.id === f.camp), next = CAMP_LIST[k + 1];
+    if (won && f.firstClear) $("resSub").textContent = next ? (next.ch !== CAMP_LIST[k].ch ? `🏁 Chapter ${CAMP_LIST[k].ch + 1} complete! 🔓 Chapter ${next.ch + 1}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`) : "🏆 You finished the whole campaign. Legend.";
+    $("resMain").textContent = won ? (next ? "Next mission ▶" : "Fight again") : "Retry ⚔";
+    $("resMain").onclick = () => { closeResult(); if (won && next) startMission(k + 1); else startFight(f.idx, f.camp); };
+    $("resBack").textContent = "Back to map";
+  }
   $("resultModal").classList.add("show");
   renderRoster();
 }
@@ -1592,6 +1678,7 @@ function leaveArena() {
   $("arena").hidden = true;
   callout(""); F = null; shownHearts = 3;
   if (mode === "boss") { $("bossSelect").hidden = false; $("bsStatus").textContent = "Beat a boss to unlock the next one."; renderRoster(); }
+  if (mode === "campaign") { campChapter = campPick = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
 }
 
 $("pauseBtn").onclick = () => togglePause();
@@ -1987,6 +2074,253 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+// ================= CAMPAIGN =================
+// 4 chapters × 6 missions. Each chapter has push-up challenges and two boss fights (the regular boss engine).
+// Missions unlock one after another; every mission earns 1–3 stars. Counts scale with your survey level.
+const MTYPES = {
+  reps:    { icon: "💪", goal: m => `Do ${m.n} push-ups`,                                 stars: "⭐⭐⭐ under 2.2 s per push-up · ⭐⭐ under 3.2 s" },
+  timed:   { icon: "⏱️", goal: m => `${m.n} push-ups in ${m.t} seconds`,                    stars: "⭐⭐⭐ with 25% of the time left · ⭐⭐ with 10% left" },
+  deep:    { icon: "🎯", goal: m => `${m.n} deep push-ups (50%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
+  nobreak: { icon: "🔗", goal: m => `${m.n} push-ups without resting more than 4 seconds`,  stars: "⭐⭐⭐ never resting over 2.5 s · ⭐⭐ never over 3.5 s" },
+  endure:  { icon: "🔥", goal: m => `At least ${m.n} push-ups in ${m.t} seconds`,           stars: "⭐⭐⭐ at 140% of the goal · ⭐⭐ at 120%" },
+  boss:    { icon: "⚔️", goal: m => `Defeat ${BOSSES[m.boss].name}`,                        stars: "⭐ per heart you have left" },
+};
+const CHAPTERS = [
+  { name: "Boot Camp", color: "#ffc21a", story: "Sergeant Steel has one question: can you actually do a push-up? Prove it.",
+    missions: [
+      { name: "First Drill",   type: "reps",    n: 8,  story: "Nice and easy. Show the Sergeant your form." },
+      { name: "Quick March",   type: "timed",   n: 10, t: 40, story: "The bell is ringing. Move it, recruit!" },
+      { name: "Slime Trouble", type: "boss",    boss: 0, story: "Something is oozing out of the supply tent…" },
+      { name: "Go Deep",       type: "deep",    n: 6,  story: "Half reps don't impress anyone. Chest to the floor." },
+      { name: "No Breaks",     type: "nobreak", n: 12, story: "Keep moving. The Sergeant hates standing around." },
+      { name: "The Gatekeeper",type: "boss",    boss: 1, story: "A Rock Golem blocks the road out of camp." },
+    ] },
+  { name: "The Dark Woods", color: "#7b8cff", story: "Past the camp lies a forest where something hunts at night. Stay sharp.",
+    missions: [
+      { name: "Forest Run",    type: "endure",  n: 15, t: 60, story: "Get through the woods before nightfall." },
+      { name: "Branch Dodge",  type: "timed",   n: 15, t: 45, story: "Falling branches! Fast reps!" },
+      { name: "Howl",          type: "boss",    boss: 2, story: "A howl in the dark. The Night Wolf found you." },
+      { name: "Root Grip",     type: "deep",    n: 10, story: "Dig deep — the roots only give way to full reps." },
+      { name: "Long Trail",    type: "reps",    n: 25, story: "A long, steady trail. Pace yourself." },
+      { name: "Frozen Lake",   type: "boss",    boss: 3, story: "The Frost Troll guards the only way across." },
+    ] },
+  { name: "Dragon Peaks", color: "#ff6a3d", story: "The mountains burn. A drake rules the skies and something stirs in the lake below.",
+    missions: [
+      { name: "The Climb",     type: "nobreak", n: 20, story: "One slip and you slide back down. Don't stop." },
+      { name: "Thin Air",      type: "endure",  n: 22, t: 60, story: "The air is thin up here. Keep pushing." },
+      { name: "Wings of Fire", type: "boss",    boss: 4, story: "The Inferno Drake dives from the clouds!" },
+      { name: "Scale Breaker", type: "deep",    n: 15, story: "Only deep reps crack dragon scales." },
+      { name: "Lava Dash",     type: "timed",   n: 25, t: 60, story: "The ground is melting. Go go go!" },
+      { name: "The Depths",    type: "boss",    boss: 5, story: "Tentacles burst from the crater lake. The Kraken wakes." },
+    ] },
+  { name: "The Void", color: "#c06bff", story: "The final chapter. A machine and an eye wait at the edge of the world.",
+    missions: [
+      { name: "Edge of the World", type: "reps",    n: 40, story: "Every push-up brings you closer to the end." },
+      { name: "Gravity Well",  type: "nobreak", n: 28, story: "The Void pulls at you. Don't let it hold you down." },
+      { name: "Machine War",   type: "boss",    boss: 6, story: "Titan Mark Two locks on." },
+      { name: "Perfect Form",  type: "deep",    n: 20, story: "Nothing less than perfect from here on." },
+      { name: "Last Stand",    type: "endure",  n: 35, t: 90, story: "Ninety seconds. Everything you've got." },
+      { name: "The Void Eye",  type: "boss",    boss: 7, story: "The Eye opens. This is it, legend." },
+    ] },
+];
+const CAMP_LIST = CHAPTERS.flatMap((c, ci) => c.missions.map((m, mi) => ({ ...m, ch: ci, mi, id: `${ci + 1}-${mi + 1}` })));
+const campScale = () => LEVELS[store.profile?.level]?.boss ?? 1;
+const missionGoal = m => m.type === "boss" ? m : { ...m, n: Math.max(3, Math.round(m.n * campScale())) };
+const campStars = id => (store.campaign || {})[id] || 0;
+const campUnlocked = k => k === 0 || campStars(CAMP_LIST[k - 1].id) > 0;
+const campTotal = () => CAMP_LIST.reduce((t, m) => t + campStars(m.id), 0);
+const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
+let campChapter = null, campPick = null, M = null;
+
+function renderCampaign() {
+  store.campaign ||= {};
+  const nextK = CAMP_LIST.findIndex((m, k) => campUnlocked(k) && !campStars(m.id));
+  if (campChapter == null) campChapter = nextK >= 0 ? CAMP_LIST[nextK].ch : CHAPTERS.length - 1;
+  const ch = CHAPTERS[campChapter];
+  if (campPick == null || CAMP_LIST[campPick].ch !== campChapter) campPick = CAMP_LIST.findIndex((m, k) => m.ch === campChapter && campUnlocked(k) && !campStars(m.id));
+  if (campPick < 0) campPick = CAMP_LIST.findIndex(m => m.ch === campChapter);
+  const chipHtml = CHAPTERS.map((c, ci) => {
+    const open = chapterUnlocked(ci), got = CAMP_LIST.filter(m => m.ch === ci).reduce((t, m) => t + campStars(m.id), 0);
+    return `<button class="cm-chip ${ci === campChapter ? "on" : ""}" style="--c:${c.color}" data-ch="${ci}" ${open ? "" : "disabled"}>
+      <b>${open ? "" : "🔒 "}Ch ${ci + 1}</b><span>${open ? c.name : "Locked"}</span><i>${open ? `★ ${got}/18` : ""}</i></button>`;
+  }).join("");
+  const nodes = CAMP_LIST.map((m, k) => ({ m, k })).filter(({ m }) => m.ch === campChapter).map(({ m, k }) => {
+    const open = campUnlocked(k), st = campStars(m.id), boss = m.type === "boss";
+    const face = boss ? `<span class="cm-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="cm-ic">${MTYPES[m.type].icon}</span>`;
+    return `<button class="cm-node ${boss ? "boss" : ""} ${k === campPick ? "pick" : ""} ${open && !st ? "next" : ""}" data-k="${k}" ${open ? "" : "disabled"}>
+      <span class="cm-num">${m.id}</span>${open ? face : `<span class="cm-ic">🔒</span>`}
+      <span class="cm-nm">${open ? m.name : "???"}</span>
+      <span class="cm-st">${"★".repeat(st)}<span style="opacity:.25">${"★".repeat(3 - st)}</span></span></button>`;
+  }).join("");
+  const pm = CAMP_LIST[campPick], pg = missionGoal(pm), pOpen = campUnlocked(campPick), pst = campStars(pm.id);
+  $("campMap").innerHTML = `
+    <div class="bs-head">
+      <div class="bs-title">THE <em style="color:${ch.color}">CAMPAIGN</em></div>
+      <div class="muted">★ ${campTotal()} / ${CAMP_LIST.length * 3} stars · finish a mission to unlock the next</div>
+    </div>
+    <div class="cm-chips">${chipHtml}</div>
+    <div class="cm-story" style="--c:${ch.color}"><b>Chapter ${campChapter + 1}: ${ch.name}</b> — ${ch.story}</div>
+    <div class="cm-path" style="--c:${ch.color}">${nodes}</div>
+    <div class="cm-brief" style="--c:${ch.color}">
+      <div class="cm-bt"><span class="cm-num">${pm.id}</span> ${pm.name} ${pst ? `<span class="cm-st">${"★".repeat(pst)}</span>` : ""}</div>
+      <div class="muted">${pm.story}</div>
+      <div class="cm-goal">${MTYPES[pm.type].icon} ${MTYPES[pm.type].goal(pg)}</div>
+      <div class="muted" style="font-size:12px">${MTYPES[pm.type].stars}</div>
+      <div class="muted" id="campStatus" style="font-size:13px;min-height:18px"></div>
+      <button id="campGo" ${pOpen ? "" : "disabled"}>${pst ? "Play again" : pm.type === "boss" ? "Fight ⚔" : "Start mission ▶"}</button>
+    </div>`;
+  $("campMap").querySelectorAll(".cm-chip").forEach(el => el.onclick = () => { campChapter = +el.dataset.ch; campPick = null; renderCampaign(); });
+  $("campMap").querySelectorAll(".cm-node").forEach(el => el.onclick = () => { campPick = +el.dataset.k; renderCampaign(); });
+  $("campGo").onclick = () => startMission(campPick);
+  renderCampPanel();
+}
+function renderCampPanel() {
+  $("campProg").innerHTML = CHAPTERS.map((c, ci) => {
+    const ms = CAMP_LIST.filter(m => m.ch === ci), done = ms.filter(m => campStars(m.id)).length, got = ms.reduce((t, m) => t + campStars(m.id), 0);
+    return `<div class="cp-row" style="--c:${c.color}"><span>${chapterUnlocked(ci) ? "" : "🔒 "}${ci + 1}. ${c.name}</span><span class="muted">${done}/6 · ★${got}</span>
+      <div class="cp-bar"><i style="width:${done / 6 * 100}%"></i></div></div>`;
+  }).join("");
+  $("campStars").textContent = campTotal();
+}
+
+function missionText() {
+  const g = M.goal, el = performance.now() - M.startAt, secs = el / 1000;
+  let pct, txt, timer = "";
+  if (M.goal.type === "endure") { pct = Math.min(1, M.reps / g.n); txt = `${M.reps} / ${g.n}`; timer = `${Math.max(0, Math.ceil(g.t - secs))}s left`; }
+  else { pct = Math.min(1, M.reps / g.n); txt = `${M.reps} / ${g.n}`; }
+  if (M.goal.type === "timed") timer = `${Math.max(0, Math.ceil(g.t - secs))}s left`;
+  if (M.goal.type === "reps") timer = fmtTime(secs);
+  if (M.goal.type === "deep") timer = M.misses ? `${M.misses} shallow` : "deep only";
+  if (M.goal.type === "nobreak") timer = M.reps ? `rest ${((performance.now() - M.lastRepAt) / 1000).toFixed(1)}s / 4s` : "start when ready";
+  if (M.state !== "go") timer = "";
+  $("mFill").style.width = pct * 100 + "%"; $("mTxt").textContent = txt; $("mTimer").textContent = timer;
+  $("mTimer").classList.toggle("low", (M.goal.type === "timed" || M.goal.type === "endure") && M.state === "go" && g.t - secs < 10
+    || M.goal.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > 2500);
+}
+function mCallout(text, sub, cls = "") {
+  const c = $("mCallout"); c.className = "callout " + cls;
+  c.innerHTML = text ? `${text}${sub ? `<small>${sub}</small>` : ""}` : "";
+  void c.offsetWidth; c.classList.add("pop");
+}
+
+async function startMission(k) {
+  if (inMatch() || M) return;
+  const m = CAMP_LIST[k];
+  if (!campUnlocked(k)) return;
+  if (mode !== "campaign") setMode("campaign");
+  campChapter = m.ch; campPick = k;
+  if (m.type === "boss") return startFight(m.boss, m.id);
+  const st = $("campStatus"); if (st) st.textContent = camReady ? "Get ready…" : "Starting camera and body tracker…";
+  if (!(await ensureCamera())) { if ($("campStatus")) $("campStatus").innerHTML = `<span style="color:var(--bad)">Camera didn't start: ${$("loadMsg").textContent.replace("Couldn't start: ", "")}</span>`; return; }
+  if (inMatch() || M) return;
+  endSet(false);
+  const ch = CHAPTERS[m.ch];
+  M = { k, m, goal: missionGoal(m), active: true, state: "countdown", reps: 0, misses: 0, startAt: 0, lastRepAt: 0, maxGap: 0 };
+  document.documentElement.style.setProperty("--aura", ch.color);
+  document.documentElement.style.setProperty("--fog", ch.color + "33");
+  $("stage").classList.add("fighting", "in-mission");
+  $("campMap").hidden = true;
+  $("mission").hidden = false;
+  $("mLvl").textContent = m.id; $("mName").textContent = m.name;
+  $("mGoal").textContent = `${MTYPES[m.type].icon} ${MTYPES[m.type].goal(M.goal)}`;
+  missionText();
+  mCallout(m.name, "GET INTO POSITION");
+  say(`${m.name}. ${MTYPES[m.type].goal(M.goal)}. Get into position.`);
+  await wait(2800);
+  for (const n of [3, 2, 1]) { if (!M?.active) return; mCallout(String(n), null, "gold"); sfx.tick(); await wait(800); }
+  if (!M?.active) return;
+  M.state = "go"; M.startAt = performance.now();
+  mCallout("GO!", null, "gold"); sfx.go(); say("Go!");
+  setTimeout(() => M?.state === "go" && $("mCallout").textContent === "GO!" && mCallout(""), 900);
+}
+function missionRep(depthPct) {
+  if (M.state === "countdown") { sfx.rep(); return; }
+  if (M.state !== "go") return;
+  const now = performance.now();
+  if (M.goal.type === "deep" && depthPct < CRIT) { M.misses++; sfx.clang(); mCallout("TOO SHALLOW", "GO DEEPER", "blue"); missionText(); return; }
+  if (M.reps) M.maxGap = Math.max(M.maxGap, (now - M.lastRepAt) / 1000);
+  M.reps++; M.lastRepAt = now;
+  const crit = depthPct >= CRIT;
+  crit ? sfx.crit() : sfx.rep();
+  const [x, y] = centerOf($("mFill"));
+  burst(x, y, { n: crit ? 26 : 14, colors: [CHAPTERS[M.m.ch].color, "#fff2a8", "#fff"], speed: crit ? 8 : 5, size: 3 });
+  const left = M.goal.n - M.reps;
+  if (M.goal.type !== "endure" && left > 0 && left <= 3) mCallout(String(left), left === 1 ? "LAST ONE!" : "TO GO", "gold");
+  else if (M.goal.type === "endure" && M.reps === M.goal.n) { mCallout("GOAL HIT!", "KEEP GOING FOR STARS", "gold"); say("Goal hit! Keep going!"); }
+  missionText();
+  if (M.goal.type !== "endure" && M.reps >= M.goal.n) finishMission(true);
+}
+setInterval(() => {
+  if (!M?.active || M.state !== "go") return;
+  const secs = (performance.now() - M.startAt) / 1000, g = M.goal;
+  if (g.type === "timed" && secs > g.t) return finishMission(false, `Out of time — ${M.reps} of ${g.n} done.`);
+  if (g.type === "endure" && secs >= g.t) return finishMission(M.reps >= g.n, M.reps >= g.n ? "" : `Time! ${M.reps} of ${g.n} — so close.`);
+  if (g.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > 4000) return finishMission(false, `You rested more than 4 seconds after push-up ${M.reps}.`);
+  missionText();
+}, 100);
+
+function missionStars() {
+  const g = M.goal, secs = (performance.now() - M.startAt) / 1000;
+  if (g.type === "reps") { const pace = secs / g.n; return pace <= 2.2 ? 3 : pace <= 3.2 ? 2 : 1; }
+  if (g.type === "timed") { const left = (g.t - secs) / g.t; return left >= 0.25 ? 3 : left >= 0.1 ? 2 : 1; }
+  if (g.type === "deep") return M.misses <= 1 ? 3 : M.misses <= 3 ? 2 : 1;
+  if (g.type === "nobreak") return M.maxGap <= 2.5 ? 3 : M.maxGap <= 3.5 ? 2 : 1;
+  if (g.type === "endure") return M.reps >= g.n * 1.4 ? 3 : M.reps >= g.n * 1.2 ? 2 : 1;
+  return 1;
+}
+function finishMission(won, why = "") {
+  if (!M?.active) return;
+  const mm = M; mm.active = false; mm.state = won ? "won" : "lost";
+  const secs = (performance.now() - mm.startAt) / 1000, stars = won ? missionStars() : 0;
+  missionText();
+  let firstClear = false;
+  if (won) {
+    store.campaign ||= {};
+    firstClear = !store.campaign[mm.m.id];
+    store.campaign[mm.m.id] = Math.max(store.campaign[mm.m.id] || 0, stars);
+    save();
+    mCallout("COMPLETE!", null, "gold"); sfx.victory(); flashStage(); say(`Mission complete! ${stars} star${stars === 1 ? "" : "s"}.`);
+    setTimeout(() => confetti(160), 300);
+  } else { mCallout("FAILED", null, "red"); sfx.defeat(); say("Mission failed. Try again!"); }
+  endSet(false); renderRank();
+  setTimeout(() => showMissionResult(mm, won, stars, secs, why, firstClear), 1500);
+}
+function showMissionResult(mm, won, stars, secs, why, firstClear) {
+  const next = CAMP_LIST[mm.k + 1], ch = CHAPTERS[mm.m.ch];
+  $("resTitle").textContent = won ? "MISSION COMPLETE" : "MISSION FAILED";
+  $("resTitle").style.color = won ? "var(--accent)" : "var(--bad)";
+  $("resRays").className = "rays" + (won ? "" : " red");
+  $("resArt").innerHTML = `<div class="m-big" style="--c:${ch.color}">${MTYPES[mm.m.type].icon}</div>`;
+  $("resArt").className = "art-big";
+  $("resStamp").hidden = true;
+  $("resBig").textContent = `${mm.m.id} · ${mm.m.name}`;
+  $("resStars").innerHTML = won ? [0, 1, 2].map(i => `<span class="${i < stars ? "" : "off"}" style="animation-delay:${0.5 + i * 0.18}s">⭐</span>`).join("") : "";
+  const stats = [["Push-ups", mm.reps], ["Time", fmtTime(secs)]];
+  if (mm.goal.type === "deep") stats.push(["Shallow", mm.misses]);
+  if (mm.goal.type === "nobreak") stats.push(["Longest rest", mm.maxGap.toFixed(1) + "s"]);
+  $("resStats").innerHTML = stats.map(([k, v]) => `<div><b>${v}</b><span class="muted">${k}</span></div>`).join("");
+  const chapterDone = won && firstClear && (!next || next.ch !== mm.m.ch);
+  $("resSub").textContent = won
+    ? (chapterDone ? (next ? `🏁 Chapter ${mm.m.ch + 1} complete! 🔓 Chapter ${next.ch + 1}: ${CHAPTERS[next.ch].name}` : "🏆 You finished the whole campaign. Legend.")
+       : firstClear && next ? `🔓 Unlocked: ${next.id} ${next.name}` : stars < 3 ? `Tip: ${MTYPES[mm.m.type].stars}` : "")
+    : why;
+  $("resMain").textContent = won ? (next ? "Next mission ▶" : "Play again") : "Retry ▶";
+  $("resMain").onclick = () => { closeMission(); startMission(won && next ? mm.k + 1 : mm.k); };
+  $("resBack").textContent = "Back to map";
+  $("resBack").onclick = () => closeMission();
+  $("resultModal").classList.add("show");
+}
+function closeMission() { $("resultModal").classList.remove("show"); leaveMission(); flushRankUps(); }
+function leaveMission() {
+  if (M) M.active = false;
+  M = null;
+  $("mission").hidden = true; mCallout("");
+  $("stage").classList.remove("fighting", "in-mission");
+  if (mode === "campaign") { campChapter = campPick = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
+}
+window.__camp = { list: CAMP_LIST, get M() { return M; }, get F() { return F; } };   // test hook
+$("mQuit").onclick = () => { if (!M) return; try { speechSynthesis.cancel(); } catch {} endSet(false); leaveMission(); renderRank(); flushRankUps(); };
+
 // ================= 1v1 BATTLES (peer-to-peer, no server of our own) =================
 // Two players connect directly with WebRTC via the free PeerJS broker. Each side counts its own reps
 // with the same verified detector; the host keeps the official score. Only rep events and a 12-point
@@ -2002,7 +2336,7 @@ store.pvp ||= { w: 0, l: 0, d: 0 };
 const shareVid = () => store.shareVideo !== false;
 let net = null, B = null, pendingJoin = null, lastPoseSent = 0, lastEmote = 0;
 let lobby = { view: "home", err: "", busy: "" };
-const inMatch = () => !!(F?.active || B?.active);
+const inMatch = () => !!(F?.active || B?.active || M?.active);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const clampInt = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.round(+v || 0)));
 const cleanName = s => String(s ?? "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 16) || "Player";
