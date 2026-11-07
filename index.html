@@ -1605,15 +1605,10 @@ let armed = false, lowSince = 0, lastRepTime = 0;
 const LOW_END_MS = 2500, IDLE_END_MS = 20000;
 
 // ---- rep verification: every rep must look like a real push-up, not just arms moving ----
-const MIN_REP_MS = 380;          // time spent below the top position; faster than this is tracker noise
-const MIN_GAP_MS = 600;          // at most ~1.5 reps per second
-const STABLE_FRAMES = 8;         // must hold a valid plank for this many frames before arming
+const MIN_REP_MS = 300;          // time spent below the top position; faster than this is tracker noise
+const MIN_GAP_MS = 500;          // at most ~1.5 reps per second
+const STABLE_FRAMES = 3;         // must hold a valid plank for this many frames before arming
 const MIN_DEPTH = 0.25;          // arm gap must shrink by at least a quarter
-const MAX_WRIST_JUMP = 1.5;      // hands "moving" more than 1.5 arm-lengths = tracker lost you, not a rep
-const MIN_SHOULDER_TRAVEL = 0.12; // shoulders drop ≥ 12% of arm gap…
-const MAX_ELBOW_AT_BOTTOM = 150; // elbows must actually bend
-const DEEP_ELBOW = 110;          // …or the elbows bend at least this far
-const MIN_UPPER_SWING = 0.3;     // …with the upper arms swinging up towards shoulder level (not a curl)
 let repsSinceArm = 0, downSince = 0, uprightFrames = 0, goodFrames = 0, topShY = null, topWrist = null, topLeftAt = 0, rep = null, rejectStreak = 0, lastCountedAt = 0;
 const sm = {}; // smoothed points
 const ema = (k, v, a = 0.5) => (sm[k] = sm[k] == null ? v : sm[k] * (1 - a) + v * a);
@@ -1725,8 +1720,10 @@ function rejectRep(reason, info) {
 let blockWhy = "", blockSince = 0, blockLogged = 0;
 function noteBlocked(why, info) {
   const now = performance.now();
-  if (why !== blockWhy) { blockWhy = why; blockSince = now; return; }
-  if (why && now - blockSince > 4000 && now - blockLogged > 15000) { blockLogged = now; logRep({ ok: false, reason: "blocked: " + why, ...info }); }
+  if (!why) { blockWhy = ""; blockSince = 0; return; }
+  if (!blockSince) blockSince = now;
+  blockWhy = why;
+  if (now - blockSince > 4000 && now - blockLogged > 15000) { blockLogged = now; logRep({ ok: false, reason: "blocked: " + why, ...info }); }
 }
 function step(res) {
   if (!res.ok) { setFeedback(res.msg, "bad"); checkAutoEnd(true); goodFrames = 0; noteBlocked(res.msg, {}); return; }
@@ -1752,10 +1749,11 @@ function step(res) {
   $("depthMeter").style.width = Math.min(100, depth / 0.6 * 100) + "%";
 
   if (phase === "up" && !armed) {
-    const atTop = ratio > 0.85 && res.gap > 0.08 * (canvas.height || 1) && res.elbow > 135 && res.armVertical;
+    // Simple start: just be at your top position for a moment (no strict plank / straight-arm checks).
+    const atTop = ratio > 0.8 && res.gap > 0.05 * (canvas.height || 1);
     if (atTop && goodFrames >= STABLE_FRAMES) { armed = true; repsSinceArm = 0; rejectStreak = 0; topLeftAt = now; topShY = res.shY; topUpper = res.upper; topWrist = { x: res.wX, y: res.wY }; setPhase("UP"); noteBlocked("", {}); }
     else {
-      const msg = atTop ? "Hold the plank…" : res.elbow <= 135 ? "Straighten your arms to start" : !res.armVertical ? "Hands under your shoulders to start" : "Push up to the top to start";
+      const msg = atTop ? "Hold the plank…" : "Push up to the top to start";
       noteBlocked(msg, { elbow: Math.round(res.elbow), ratio: +ratio.toFixed(2), vertical: res.armVertical });
       setPhase("READY"); setFeedback(msg, "warn"); return;
     }
@@ -1809,15 +1807,8 @@ function step(res) {
       rep = null;
       if (info.ms < MIN_REP_MS) return rejectRep("too fast", info);
       if (lastCountedAt && now - lastCountedAt < MIN_GAP_MS) return rejectRep("too fast", info);
-      // Forgiving on purpose: you already had to hold a straight-arm plank to start, and sitting/standing or
-      // arms-up poses cancel the rep. Here we only need proof you actually went down: the shoulders dropped,
-      // or the elbows bent deep. Hand tracking is too shaky on laptop cameras to judge, so only wild jumps
-      // (the tracker losing you) are rejected.
+      // Simple counting: down and back up, deep enough, not impossibly fast.
       if (info.depth < MIN_DEPTH) return rejectRep("go a bit lower", info);
-      if (info.hands > MAX_WRIST_JUMP) return rejectRep("lost track of your hands — keep them in the picture", info);
-      const deepArms = info.elbow <= DEEP_ELBOW && info.arms >= MIN_UPPER_SWING;
-      if (info.shoulders < MIN_SHOULDER_TRAVEL && !deepArms) return rejectRep("lower your chest, not just your arms", info);
-      if (info.elbow > MAX_ELBOW_AT_BOTTOM) return rejectRep("bend your elbows more", info);
       rejectStreak = 0; lastCountedAt = now; repsSinceArm++;
       logRep({ ok: true, ...info });
       onRep(1 - minRatio);
