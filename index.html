@@ -306,17 +306,42 @@
   .cmap { position: relative; width: 100%; aspect-ratio: 700 / 2800; }
   .cmap-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .cmap-region { position: absolute; left: 0; right: 0; pointer-events: none; }
+  .cmap-region.locked { z-index: 3; }   /* locked missions sit under the haze, the chapter card on top */
   .cmap-banner { position: absolute; z-index: 1; left: 12px; bottom: 14px; display: flex; flex-direction: column; padding: 8px 14px 8px 12px; border-radius: 4px 14px 14px 4px;
     background: rgba(5,6,10,.72); border-left: 4px solid var(--c); backdrop-filter: blur(4px); box-shadow: 0 6px 18px rgba(0,0,0,.4); }
   .cmap-banner b { font: 700 10px var(--display); letter-spacing: 2px; color: var(--c); }
   .cmap-banner span { font: 700 17px var(--display); letter-spacing: .5px; }
   .cmap-banner i { font-style: normal; font-size: 11px; color: var(--accent); }
-  .cmap-fog { position: absolute; inset: 0; background:
-      radial-gradient(circle at 15% 20%, rgba(200,205,220,.16) 0 70px, transparent 140px), radial-gradient(circle at 70% 45%, rgba(200,205,220,.14) 0 90px, transparent 170px),
-      radial-gradient(circle at 35% 80%, rgba(200,205,220,.12) 0 80px, transparent 160px), rgba(8,10,16,.78);
-    backdrop-filter: blur(3px) grayscale(.7); display: grid; place-items: end center; padding-bottom: 90px; }
-  .cmap-lock { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 34px; text-align: center; padding: 14px 20px; border-radius: 16px; background: rgba(0,0,0,.5); border: 1px solid var(--line2); }
-  .cmap-lock b { font: 700 18px var(--display); color: var(--c); } .cmap-lock span { font-size: 13px; color: var(--muted); }
+  /* locked chapter: the region's own scenery shows through a tinted haze, with a themed cloud bank at its edge */
+  .cmap-fog { position: absolute; inset: 0; display: grid; place-items: end center; padding-bottom: 150px; overflow: hidden;
+    background: linear-gradient(0deg, color-mix(in srgb, var(--c) 30%, rgba(6,7,12,.55)) 0%, rgba(6,7,12,.62) 45%, rgba(6,7,12,.8) 100%);
+    backdrop-filter: saturate(.45) blur(1.5px); }
+  .cmap-fog::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .9; }
+  .fog-1::before { background: radial-gradient(ellipse 60% 18% at 30% 35%, rgba(180,200,255,.18), transparent), radial-gradient(ellipse 55% 16% at 75% 60%, rgba(180,200,255,.15), transparent), radial-gradient(ellipse 70% 20% at 40% 82%, rgba(180,200,255,.16), transparent); animation: fogDrift 14s ease-in-out infinite alternate; }
+  .fog-2::before { background: radial-gradient(ellipse 50% 22% at 25% 30%, rgba(90,60,50,.45), transparent), radial-gradient(ellipse 60% 25% at 70% 55%, rgba(70,50,45,.4), transparent), radial-gradient(circle at 50% 100%, rgba(255,110,40,.35), transparent 55%); animation: fogDrift 10s ease-in-out infinite alternate; }
+  .fog-3::before { background: conic-gradient(from 0deg at 50% 45%, rgba(192,107,255,.0), rgba(192,107,255,.22), rgba(90,40,180,.0), rgba(192,107,255,.18), rgba(192,107,255,.0)); animation: voidSpin 40s linear infinite; inset: -30%; }
+  @keyframes fogDrift { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
+  @keyframes voidSpin { to { transform: rotate(360deg); } }
+  .cmap-clouds { position: absolute; left: -2%; width: 104%; bottom: -6px; height: 150px; pointer-events: none; }
+  .cmap-clouds .cb-back { fill: color-mix(in srgb, var(--c) 35%, #2a2e3a); opacity: .9; }
+  .cmap-clouds .cb-front { fill: color-mix(in srgb, var(--c) 18%, #474d5c); }
+  .fog-2 .cmap-clouds .cb-back { fill: #3a2620; } .fog-2 .cmap-clouds .cb-front { fill: #5a3a2c; }
+  .fog-3 .cmap-clouds .cb-back { fill: #2a1146; } .fog-3 .cmap-clouds .cb-front { fill: #3e1d63; }
+  .cmap-lock { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; padding: 16px 22px 14px; border-radius: 20px; max-width: min(340px, 86%);
+    background: linear-gradient(180deg, rgba(10,12,18,.88), rgba(10,12,18,.78)); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--c) 25%, transparent), 0 14px 30px rgba(0,0,0,.5); }
+  .cl-emblem { width: 58px; height: 64px; margin-top: -48px; filter: drop-shadow(0 0 14px var(--c)) drop-shadow(0 6px 6px rgba(0,0,0,.6)); animation: lockSwing 3.2s ease-in-out infinite; transform-origin: 50% 10%; }
+  .cl-emblem svg { width: 100%; height: 100%; }
+  @keyframes lockSwing { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+  .cmap-lock b { font: 700 17px var(--display); color: var(--c); letter-spacing: .5px; }
+  .cmap-lock > span { font-size: 13px; color: #c9cdd8; font-style: italic; }
+  .cmap-lock em { font-style: normal; font: 700 11px var(--display); letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
+  .cl-bosses { display: flex; gap: 18px; margin: 4px 0 2px; }
+  .cl-boss { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .cl-sil { width: 58px; height: 58px; filter: brightness(0) drop-shadow(0 0 1.5px var(--c)) drop-shadow(0 0 8px color-mix(in srgb, var(--c) 60%, transparent)); }
+  .cl-sil svg { width: 100%; height: 100%; overflow: visible; }
+  .cl-boss i { font: 700 11px var(--display); font-style: normal; letter-spacing: 2px; color: var(--c); opacity: .8; }
+  .cmap-banner i.lk { color: var(--muted); letter-spacing: 2px; font: 700 10px var(--display); }
   .mnode { position: absolute; transform: translate(-50%, -50%); width: clamp(50px, 9vw, 72px); aspect-ratio: 1; padding: 0; border: 0; background: none; z-index: 2; filter: none; }
   .mnode.boss { width: clamp(64px, 12vw, 96px); }
   .mn-disc { position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center; overflow: visible;
@@ -326,7 +351,13 @@
   .mnode.boss .mn-disc { border-color: color-mix(in srgb, var(--c) 70%, #59606f); }
   .mnode.next .mn-disc { border-color: #fff; box-shadow: 0 0 0 4px var(--accent), 0 0 28px var(--accent), 0 6px 0 #000a; animation: nodePulse 1.6s ease-in-out infinite; }
   .mnode.pick .mn-disc { outline: 3px solid var(--c); outline-offset: 5px; }
-  .mnode:disabled { cursor: default; } .mnode:disabled .mn-disc { filter: grayscale(1) brightness(.6); }
+  /* locked mission: dark silhouette of what's there, chapter-coloured rim, padlock badge */
+  .mnode:disabled { cursor: default; }
+  .mnode:disabled .mn-disc { background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--c) 22%, #161a24), #0a0c12 75%); border-color: color-mix(in srgb, var(--c) 40%, #2a2f3b); box-shadow: 0 6px 0 #000a, inset 0 0 14px rgba(0,0,0,.7); }
+  .mnode:disabled .mn-ic, .mnode:disabled .mn-art { filter: brightness(0) drop-shadow(0 0 1.2px color-mix(in srgb, var(--c) 85%, #fff)) drop-shadow(0 0 5px color-mix(in srgb, var(--c) 55%, transparent)); }
+  .mnode:disabled .mn-num { color: var(--muted); }
+  .mn-lock { position: absolute; right: -4px; bottom: -4px; width: 40%; aspect-ratio: 64 / 72; filter: drop-shadow(0 2px 3px rgba(0,0,0,.7)); }
+  .mn-lock svg { width: 100%; height: 100%; display: block; }
   .mn-ic { font-size: clamp(22px, 4vw, 32px); line-height: 1; }
   .mn-art { width: 88%; height: 88%; } .mn-art svg { width: 100%; height: 100%; overflow: visible; }
   .mn-num { position: absolute; left: 50%; top: -9px; transform: translateX(-50%); font: 700 10px var(--display); letter-spacing: 1px; color: var(--text); background: #0b0d12; border: 1px solid var(--line2); border-radius: 8px; padding: 1px 6px; white-space: nowrap; }
@@ -2118,7 +2149,7 @@ const CHAPTERS = [
       { name: "No Breaks",     type: "nobreak", n: 12, story: "Keep moving. The Sergeant hates standing around." },
       { name: "The Gatekeeper",type: "boss",    boss: 1, story: "A Rock Golem blocks the road out of camp." },
     ] },
-  { name: "The Dark Woods", color: "#7b8cff", story: "Past the camp lies a forest where something hunts at night. Stay sharp.",
+  { name: "The Dark Woods", color: "#7b8cff", locked: "Mist hides the trail. Something howls in the trees.", story: "Past the camp lies a forest where something hunts at night. Stay sharp.",
     missions: [
       { name: "Forest Run",    type: "endure",  n: 15, t: 60, story: "Get through the woods before nightfall." },
       { name: "Branch Dodge",  type: "timed",   n: 15, t: 45, story: "Falling branches! Fast reps!" },
@@ -2127,7 +2158,7 @@ const CHAPTERS = [
       { name: "Long Trail",    type: "reps",    n: 25, story: "A long, steady trail. Pace yourself." },
       { name: "Frozen Lake",   type: "boss",    boss: 3, story: "The Frost Troll guards the only way across." },
     ] },
-  { name: "Dragon Peaks", color: "#ff6a3d", story: "The mountains burn. A drake rules the skies and something stirs in the lake below.",
+  { name: "Dragon Peaks", color: "#ff6a3d", locked: "Ash and smoke pour down the mountain. The sky glows red.", story: "The mountains burn. A drake rules the skies and something stirs in the lake below.",
     missions: [
       { name: "The Climb",     type: "nobreak", n: 20, story: "One slip and you slide back down. Don't stop." },
       { name: "Thin Air",      type: "endure",  n: 22, t: 60, story: "The air is thin up here. Keep pushing." },
@@ -2136,7 +2167,7 @@ const CHAPTERS = [
       { name: "Lava Dash",     type: "timed",   n: 25, t: 60, story: "The ground is melting. Go go go!" },
       { name: "The Depths",    type: "boss",    boss: 5, story: "Tentacles burst from the crater lake. The Kraken wakes." },
     ] },
-  { name: "The Void", color: "#c06bff", story: "The final chapter. A machine and an eye wait at the edge of the world.",
+  { name: "The Void", color: "#c06bff", locked: "Reality bends here. An eye is waiting.", story: "The final chapter. A machine and an eye wait at the edge of the world.",
     missions: [
       { name: "Edge of the World", type: "reps",    n: 40, story: "Every push-up brings you closer to the end." },
       { name: "Gravity Well",  type: "nobreak", n: 28, story: "The Void pulls at you. Don't let it hold you down." },
@@ -2241,6 +2272,12 @@ function doneRoad(upTo) {
   return d;
 }
 
+const LOCK_SVG = `<svg viewBox="0 0 64 72" aria-hidden="true"><defs><linearGradient id="lkG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a3"/><stop offset=".5" stop-color="#e0a92e"/><stop offset="1" stop-color="#9a6a12"/></linearGradient></defs>
+  <path d="M16,32 V22 a16,16 0 0 1 32,0 V32" fill="none" stroke="#c9ced8" stroke-width="7"/><path d="M16,32 V22 a16,16 0 0 1 32,0 V32" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>
+  <rect x="6" y="30" width="52" height="38" rx="9" fill="url(#lkG)" stroke="#5c3f08" stroke-width="2.5"/><rect x="10" y="33" width="44" height="6" rx="3" fill="#fff" opacity=".35"/>
+  <circle cx="32" cy="47" r="6" fill="#3a2706"/><rect x="29.5" y="49" width="5" height="11" rx="2" fill="#3a2706"/></svg>`;
+// a bank of puffy clouds along the bottom edge of a locked chapter ("fog of war")
+const CLOUD_BANK = (() => { let g = ""; for (let i = 0; i < 16; i++) { const x = i * 46 + (i % 2 ? 18 : 0), r = 34 + (i * 37 % 22); g += `<circle cx="${x}" cy="${110 - (i % 3) * 10}" r="${r}"/>`; } return `<g class="cb-back">${g}</g><g class="cb-front" transform="translate(23,18)">${g}</g>`; })();
 let campScrollTo = true;
 function renderCampaign() {
   store.campaign ||= {};
@@ -2250,9 +2287,9 @@ function renderCampaign() {
   const pct = (v, of) => (v / of * 100).toFixed(3) + "%";
   const nodes = CAMP_LIST.map((m, k) => {
     const p = mapPt(k), open = campUnlocked(k), st = campStars(m.id), boss = m.type === "boss", c = CHAPTERS[m.ch].color;
-    const face = !open ? `<span class="mn-ic">🔒</span>` : boss ? `<span class="mn-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="mn-ic">${MTYPES[m.type].icon}</span>`;
+    const face = boss ? `<span class="mn-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="mn-ic">${MTYPES[m.type].icon}</span>`;
     return `<button class="mnode ${boss ? "boss" : ""} ${st ? "done" : ""} ${k === nextK ? "next" : ""} ${k === campPick ? "pick" : ""}" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)};--c:${c}" data-k="${k}" ${open ? "" : "disabled"} aria-label="${m.id} ${open ? m.name : "locked"}">
-      <span class="mn-disc">${face}</span><span class="mn-num">${m.id}</span>
+      <span class="mn-disc">${face}</span><span class="mn-num">${m.id}</span>${open ? "" : `<span class="mn-lock">${LOCK_SVG}</span>`}
       ${open ? `<span class="mn-st">${[0, 1, 2].map(i => `<i class="${i < st ? "on" : ""}">★</i>`).join("")}</span>` : ""}</button>`;
   }).join("");
   const you = (() => { const p = mapPt(furthest); return `<div class="cmap-you" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)}"><span>${esc(store.name || "YOU")}</span></div>`; })();
@@ -2260,9 +2297,18 @@ function renderCampaign() {
     const top = pct(MAP_H - (ci + 1) * BAND, MAP_H), h = pct(BAND, MAP_H), open = chapterUnlocked(ci);
     const prevBoss = ci > 0 ? BOSSES[CHAPTERS[ci - 1].missions.filter(m => m.type === "boss").pop().boss].name : "";
     const got = CAMP_LIST.filter(m => m.ch === ci).reduce((t, m) => t + campStars(m.id), 0);
+    const bosses = c.missions.filter(m => m.type === "boss").map(m => BOSSES[m.boss]);
+    const fog = !open ? `<div class="cmap-fog fog-${ci}">
+        <svg class="cmap-clouds" viewBox="0 0 700 140" preserveAspectRatio="none" aria-hidden="true">${CLOUD_BANK}</svg>
+        <div class="cmap-lock">
+          <div class="cl-emblem">${LOCK_SVG}</div>
+          <b>Chapter ${ci + 1} · ${c.name}</b>
+          <span>${c.locked}</span>
+          <div class="cl-bosses">${bosses.map(b => `<div class="cl-boss"><span class="cl-sil">${bossArt(b.id)}</span><i>???</i></div>`).join("")}</div>
+          <em>🔒 Defeat ${prevBoss} to unlock</em>
+        </div></div>` : "";
     return `<div class="cmap-region ${open ? "" : "locked"}" style="top:${top};height:${h};--c:${c.color}">
-      <div class="cmap-banner"><b>CHAPTER ${ci + 1}</b><span>${c.name}</span>${open ? `<i>★ ${got}/18</i>` : ""}</div>
-      ${open ? "" : `<div class="cmap-fog"><div class="cmap-lock">🔒<b>${c.name}</b><span>Defeat ${prevBoss} to unlock</span></div></div>`}</div>`;
+      <div class="cmap-banner"><b>CHAPTER ${ci + 1}</b><span>${c.name}</span>${open ? `<i>★ ${got}/18</i>` : `<i class="lk">LOCKED</i>`}</div>${fog}</div>`;
   }).join("");
   const pm = CAMP_LIST[campPick], pg = missionGoal(pm), pst = campStars(pm.id), pc = CHAPTERS[pm.ch].color;
   const scroller = $("cmapScroll"), keep = scroller ? scroller.scrollTop : null;
