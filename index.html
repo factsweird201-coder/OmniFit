@@ -1117,6 +1117,14 @@ const toUnit = (kg, unit) => unit === "kg" ? kg : kg / KG_PER_LB;
 const fmtW = (kg, unit = store.profile?.unit || "lb") => `${(Math.round(toUnit(kg, unit) * 10) / 10).toLocaleString()} ${unit}`;
 const round5 = n => Math.max(10, Math.round(n / 5) * 5);
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch {} };
+// One-time: the campaign got its story, so anyone who already played it starts the campaign over to see the story from
+// the beginning. Only campaign stars are cleared (kept in campaignBeforeStory); push-ups, rank and boss records stay.
+const STORY_VER = 1;
+let campReset = false;
+if ((store.storyVer || 0) < STORY_VER) {
+  if (Object.keys(store.campaign).length) { store.campaignBeforeStory = store.campaign; store.campaign = {}; store.storySeen = {}; campReset = true; }
+  store.storyVer = STORY_VER; save();
+}
 
 const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const rankIndex = total => RANKS.reduce((i, r, idx) => total >= r.at ? idx : i, 0);
@@ -1489,7 +1497,8 @@ function setMode(m) {
   $("campPanel").hidden = m !== "campaign";
   $("howCamp").hidden = m !== "campaign";
   $("campMap").hidden = m !== "campaign";
-  if (m === "campaign") { renderCampaign(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+  if (m === "campaign") { renderCampaign(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (campReset) { campReset = false; toast("📜 The campaign has a story now! It restarted so you can play it from the beginning."); } }
   $("tabBoss").classList.toggle("on", m === "boss");
   $("tabPvp").classList.toggle("on", m === "pvp");
   $("pvpPanel").hidden = m !== "pvp";
