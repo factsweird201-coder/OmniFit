@@ -1594,6 +1594,7 @@ function toast(msg) {
 let mode = "train";
 function setMode(m) {
   if (inMatch()) return;
+  if (m !== mode && camReady && !F && !B && !M && !net) { if (setCount > 0) endSet(); else stopCamera(0, "Start camera"); }   // switching tabs: camera off
   mode = m;
   $("tabTrain").classList.toggle("on", m === "train");
   $("tabCamp").classList.toggle("on", m === "campaign");
@@ -1964,14 +1965,14 @@ function showResult(f, won, firstWin, time) {
     $("resMain").onclick = () => { closeResult(); if (won && next) startMission(k + 1); else startFight(f.idx, f.camp); };
     $("resBack").textContent = "Back to map";
   }
-  $("resultModal").classList.add("show");
+  $("resultModal").classList.add("show"); resultCameraTimeout();
   renderRoster();
 }
 function closeResult() { $("resultModal").classList.remove("show"); leaveArena(); flushRankUps(); }
 function leaveArena() {
   $("stage").classList.remove("fighting");
   $("arena").hidden = true;
-  callout(""); F = null; shownHearts = 3;
+  callout(""); F = null; shownHearts = 3; cameraIdle();
   if (mode === "boss") { $("bossSelect").hidden = false; $("bsStatus").textContent = "Beat a boss to unlock the next one."; renderRoster(); }
   if (mode === "campaign") { campChapter = campPick = campPart = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
 }
@@ -2290,6 +2291,7 @@ async function getCamera() {
 }
 
 function ensureCamera() {
+  clearTimeout(idleTimer);   // something is about to use the camera: don't let a pending idle shutdown turn it off
   if (camReady) return camReady;
   camReady = (async () => {
     $("startBtn").disabled = true;
@@ -2330,8 +2332,20 @@ function ensureCamera() {
 $("startBtn").onclick = () => ensureCamera();
 
 // Turn the camera off (light goes out) and show the start button again for the next set.
-let overlayTimer = 0;
-function stopCamera(overlayDelay = 0) {
+let overlayTimer = 0, idleTimer = 0;
+// After a mission, boss fight or 1v1 ends: if nothing else starts within a moment, turn the camera off.
+// (The short wait means "Next mission" / "Rematch" keeps the camera running instead of restarting it.)
+// Result screen left open: don't keep the camera light on forever (Next mission / Retry just starts it again).
+function resultCameraTimeout() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => { if ($("resultModal").classList.contains("show") && !F?.active && !M?.active && !B) stopCamera(0, "Start camera"); }, 20000);
+}
+function cameraIdle(delay = 1500) {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => { if (camReady && !F && !B && !M && !net) stopCamera(0, "Start camera"); }, delay);
+}
+function stopCamera(overlayDelay = 0, label = "Start next set") {
+  clearTimeout(idleTimer);
   if (!camReady) return;
   const st = video.srcObject;
   video.srcObject = null;
@@ -2342,7 +2356,7 @@ function stopCamera(overlayDelay = 0) {
   disarm(); topRef = null; gapHist.length = 0; smoothDepth = null; smoothAngle = null;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ["hud", "phase", "feedback"].forEach(id => $(id).hidden = true);
-  $("startBtn").textContent = "Start next set";
+  $("startBtn").textContent = label;
   $("startBtn").disabled = false;
   // let the "SET COMPLETE" card show on the dark stage first, then bring back the start button
   clearTimeout(overlayTimer);
@@ -3755,13 +3769,13 @@ function showMissionResult(mm, won, stars, secs, why, firstClear) {
   $("resMain").onclick = () => { closeMission(); startMission(won && next ? mm.k + 1 : mm.k); };
   $("resBack").textContent = "Back to map";
   $("resBack").onclick = () => closeMission();
-  $("resultModal").classList.add("show");
+  $("resultModal").classList.add("show"); resultCameraTimeout();
 }
 function closeMission() { $("resultModal").classList.remove("show"); leaveMission(); flushRankUps(); }
 function leaveMission() {
   if (M) M.active = false;
   M = null;
-  $("mission").hidden = true; mCallout("");
+  $("mission").hidden = true; mCallout(""); cameraIdle();
   $("stage").classList.remove("fighting", "in-mission");
   if (mode === "campaign") { campChapter = campPick = campPart = null; $("campMap").hidden = false; renderCampaign(); }   // jump to the next mission
 }
@@ -3893,6 +3907,7 @@ function leaveNet() {
     setTimeout(() => { try { n.call?.close(); n.conn?.close(); n.peer?.destroy(); } catch {} }, 200);
   }
   if (B) exitDuelArena();
+  cameraIdle();
 }
 
 function onConnClose() {
@@ -4084,7 +4099,7 @@ function showDuelResult(res, reason, them, me) {
   };
   $("resBack").textContent = "Leave";
   $("resBack").onclick = () => { $("resultModal").classList.remove("show"); leaveNet(); lobby = { view: "home", err: "", busy: "" }; renderLobby(); };
-  $("resultModal").classList.add("show");
+  $("resultModal").classList.add("show"); resultCameraTimeout();
   if (res === "win") confetti(200);
 }
 
