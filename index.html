@@ -1474,9 +1474,18 @@ const sfx = {
   victory:() => [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, k) => setTimeout(() => tone(f, 0.24, "triangle", 0.2), k * 130)),
   defeat: () => [392, 330, 262, 196].forEach((f, k) => setTimeout(() => tone(f, 0.38, "sawtooth", 0.12), k * 220)),
 };
+// pick the most natural English voice the device has (premium / enhanced / Google ones beat the old robotic defaults)
+let bestVoice = null;
+function pickVoice() {
+  try {
+    const score = v => (/premium/i.test(v.name) ? 60 : /enhanced|natural|neural/i.test(v.name) ? 50 : /^google/i.test(v.name) ? 40 : /daniel|samantha|karen|moira|serena|arthur/i.test(v.name) ? 20 : 0) + (/^en-(GB|US)/i.test(v.lang) ? 2 : 0);
+    bestVoice = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang) && !/compact/i.test(v.voiceURI || "")).sort((a, b) => score(b) - score(a))[0] || null;
+  } catch {}
+}
+if ("speechSynthesis" in window) { pickVoice(); speechSynthesis.addEventListener?.("voiceschanged", pickVoice); }
 function say(text, v = {}) {
   if (store.muted || !("speechSynthesis" in window)) return;
-  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = v.rate ?? 1.12; u.pitch = v.pitch ?? 0.9; speechSynthesis.speak(u); } catch {}
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); if (bestVoice) u.voice = bestVoice; u.rate = v.rate ?? 1.12; u.pitch = v.pitch ?? 0.9; speechSynthesis.speak(u); } catch {}
 }
 const renderMute = () => $("muteBtn").textContent = store.muted ? "🔇" : "🔊";
 $("muteBtn").onclick = () => { store.muted = !store.muted; save(); renderMute(); if (store.muted) try { speechSynthesis.cancel(); } catch {} };
@@ -2625,11 +2634,51 @@ const cineMusic = {
       lfo.start(t); this.nodes = { out, oscs: [...oscs, lfo] };
     } catch {}
   },
+  duck(on) {
+    const n = this.nodes; if (!n) return;
+    try { const g = n.out.gain, t = ac.currentTime; g.cancelScheduledValues(t); g.setTargetAtTime(on ? 0.011 : 0.03, t, 0.3); } catch {}
+  },
   stop() {
     const n = this.nodes; this.nodes = null; if (!n) return;
     try { const t = ac.currentTime; n.out.gain.cancelScheduledValues(t); n.out.gain.setValueAtTime(Math.max(0.0001, n.out.gain.value), t); n.out.gain.exponentialRampToValueAtTime(0.0001, t + 0.8); n.oscs.forEach(o => o.stop(t + 0.9)); } catch {}
   },
 };
+
+// ---------- recorded voices ----------
+// Every story line is pre-recorded (tools/voices.mjs) as voice/<hash>.m4a, hash = speaker + "|" + line.
+// If a file can't load (offline, or a line with no recording) the device's own voice reads it instead.
+const vhash = s => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); };
+const voiceBase = () => /github\.io$|^localhost$|^127\./.test(location.hostname) ? "voice/" : "https://factsweird201-coder.github.io/push-up-ranks/voice/";
+const voiceCache = new Map();
+let curVoice = null;
+const voiceUrl = (vk, text) => voiceBase() + vhash(vk + "|" + text) + ".m4a";
+function voiceEl(vk, text) {
+  const url = voiceUrl(vk, text);
+  let a = voiceCache.get(url);
+  if (!a) { a = new Audio(); a.preload = "auto"; a.src = url; a.failed = false; a.addEventListener("error", () => a.failed = true); voiceCache.set(url, a); }
+  return a;
+}
+function preloadVoices(list) { if (!store.muted) list.forEach(([vk, text]) => voiceEl(vk, text)); }
+function stopVoice() {
+  if (curVoice) { try { curVoice.pause(); } catch {} curVoice = null; }
+  try { speechSynthesis.cancel(); } catch {}
+  cineMusic.duck(false);
+}
+function speakLine(vk, text, fb = {}) {
+  stopVoice();
+  if (store.muted) return;
+  const a = voiceEl(vk, text);
+  let fell = false;
+  const fallback = () => { if (fell || curVoice !== a) return; fell = true; try { a.pause(); } catch {} curVoice = null; say(text, fb); };
+  if (a.failed) { curVoice = a; return fallback(); }
+  curVoice = a;
+  a.onplaying = () => { if (curVoice === a) cineMusic.duck(true); };
+  a.onended = () => { if (curVoice === a) { cineMusic.duck(false); curVoice = null; } };
+  a.onerror = () => { a.failed = true; fallback(); };
+  try { a.currentTime = 0; } catch {}
+  a.play().catch(fallback);
+  setTimeout(() => { if (curVoice === a && a.paused && !fell) fallback(); }, 3000);   // slow connection: don't leave the line silent
+}
 
 // ---------- cutscene player ----------
 let cineOn = false;
@@ -2651,8 +2700,10 @@ function playCine(steps, ctx = {}) {
     cineOn = true;
     q(".cine-bg").innerHTML = ""; q(".cine-actor").innerHTML = ""; q(".cine-pip").innerHTML = ""; q(".cine-fx").innerHTML = "";
     el.className = "cine show";
-    try { speechSynthesis.cancel(); } catch {}
+    stopVoice();
     cineMusic.start(ctx.ch ?? 0);
+    const vkOf = s => s.who === "boss" ? "boss" + ctx.boss : s.who;
+    preloadVoices(steps.map(s => s.end ? ["title", "The end."] : s.title != null ? ["title", `Chapter ${s.title + 1}. ${CHAPTERS[s.title].name}.`] : [vkOf(s), s.text]));
     const setBg = loc => {
       if (!loc || loc === curBg) return; curBg = loc;
       const L = document.createElement("div"); L.className = "cine-layer" + (Math.random() < .5 ? " kb2" : "");
@@ -2668,8 +2719,7 @@ function playCine(steps, ctx = {}) {
     const finish = () => {
       if (done) return; done = true;
       clearInterval(typing); clearTimeout(timer); removeEventListener("keydown", onKey, true);
-      try { speechSynthesis.cancel(); } catch {}
-      cineMusic.stop(); el.classList.add("out");
+      stopVoice(); cineMusic.stop(); el.classList.add("out");
       setTimeout(() => { el.className = "cine"; q(".cine-bg").innerHTML = ""; q(".cine-fx").innerHTML = ""; cineOn = false; resolve(); }, 650);
     };
     const next = () => {
@@ -2686,14 +2736,14 @@ function playCine(steps, ctx = {}) {
           ? `<small>THANKS FOR PLAYING</small><b style="--c:#ffc21a">THE END</b><i></i><em>The Great Ember burns again. Keep doing your push-ups, legend.</em>`
           : `<small>CHAPTER ${CH_WORDS[s.title]}</small><b style="--c:${c.color}">${c.name}</b><i style="--c:${c.color}"></i>`;
         el.classList.add("titling"); q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
-        sfx.boom(); say(s.end ? "The end." : `Chapter ${s.title + 1}. ${c.name}.`, { pitch: 0.8, rate: 0.95 });
+        sfx.boom(); speakLine("title", s.end ? "The end." : `Chapter ${s.title + 1}. ${c.name}.`, { pitch: 0.8, rate: 0.95 });
         timer = setTimeout(next, s.end ? 6000 : 3600);
         return;
       }
       if (s.who === "narr") {
         el.classList.add("narrating"); typeOut(q(".cine-narr p"), s.text);
         q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
-        say(s.text, { pitch: 0.95, rate: 1.02 });
+        speakLine("narr", s.text, { pitch: 0.95, rate: 1.02 });
         return;
       }
       const who = castOf(s.who, ctx);
@@ -2705,7 +2755,7 @@ function playCine(steps, ctx = {}) {
       if (who.pip) { if (!q(".cine-pip").innerHTML) q(".cine-pip").innerHTML = pipSvg("pa"); q(".cine-pip").style.setProperty("--k", 0.8 + (ctx.ch ?? 0) * 0.18); q(".cine-pip").classList.add("on"); }
       else q(".cine-pip").classList.remove("on");
       typeOut(q(".cine-text"), s.text);
-      say(s.text, who.voice);
+      speakLine(vkOf(s), s.text, who.voice);
     };
     function onKey(e) {
       if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); finish(); }
@@ -2836,6 +2886,7 @@ function sceneQuip(text) {
   const q = $("mQuip"); if (!q || !text) return;
   q.innerHTML = `<span class="mq-face">${pipSvg("pq")}</span><span>${text}</span>`;
   q.classList.remove("show"); void q.offsetWidth; q.classList.add("show");
+  speakLine("pip", text, { pitch: 1.8, rate: 1.15 });
   clearTimeout(quipTimer); quipTimer = setTimeout(() => q.classList.remove("show"), 2600);
 }
 function sceneUpdate() {
@@ -2856,6 +2907,7 @@ function sceneRep() {
 }
 function sceneStart(m) {
   const el = $("mScene");
+  if (m.scene) preloadVoices([HALF_QUIP[m.scene.k], DANGER_QUIP[m.type]].filter(Boolean).map(t => ["pip", t]));
   el.hidden = !m.scene; el.className = "mscene"; $("mQuip").classList.remove("show");
   if (!m.scene) return;
   el.style.setProperty("--c", CHAPTERS[m.ch].color); el.style.setProperty("--p", 0); el.style.setProperty("--d", 0);
