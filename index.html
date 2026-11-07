@@ -552,6 +552,129 @@
   .logbox summary { cursor: pointer; }
   .logbox pre { max-height: 220px; overflow: auto; background: rgba(0,0,0,.4); border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-size: 11px; white-space: pre-wrap; user-select: text; }
 
+
+  /* ---------- campaign cutscenes ---------- */
+  .cine { position: fixed; inset: 0; z-index: 200; background: #000; display: none; overflow: hidden; cursor: pointer; user-select: none; -webkit-user-select: none; --sc: #ffc21a; }
+  .cine.show { display: block; animation: cineIn .6s ease-out; }
+  .cine.out { animation: cineOut .65s ease-in forwards; }
+  @keyframes cineIn { from { opacity: 0; } }
+  @keyframes cineOut { to { opacity: 0; } }
+  .cine-bg, .cine-layer, .cine-fx, .cine-vig { position: absolute; inset: 0; }
+  .cine-layer { opacity: 0; transition: opacity 1.1s ease; }
+  .cine-layer.in { opacity: 1; }
+  .cine-layer svg { width: 100%; height: 100%; display: block; animation: kenburns 16s ease-out forwards; }
+  .cine-layer.kb2 svg { animation-name: kenburns2; }
+  @keyframes kenburns { from { transform: scale(1.14) translate(-1.5%, 1%); } to { transform: scale(1.02) translate(0, 0); } }
+  @keyframes kenburns2 { from { transform: scale(1.02) translate(1%, 0); } to { transform: scale(1.14) translate(-1%, -1.2%); } }
+  .cine-vig { background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0,0,0,.65) 100%); pointer-events: none; }
+  .cine-bar { position: absolute; left: 0; right: 0; height: 0; background: #000; z-index: 4; transition: height .9s cubic-bezier(.6,0,.2,1); }
+  .cine-bar.top { top: 0; } .cine-bar.bot { bottom: 0; }
+  .cine.show .cine-bar { height: 9vh; }
+  /* svg scenery motion */
+  .cb-flick { animation: flick .18s ease-in-out infinite alternate; transform-origin: 0 30px; transform-box: view-box; }
+  @keyframes flick { from { transform: scale(1, 1); } to { transform: scale(.94, 1.07); } }
+  .cine .tw { animation: twinkle 2.6s ease-in-out infinite; } .cine .tw2 { animation: twinkle 4s ease-in-out infinite; }
+  @keyframes twinkle { 50% { opacity: .2; } }
+  .cb-drift { animation: drift 26s ease-in-out infinite alternate; } .cb-drift.rev { animation-direction: alternate-reverse; animation-duration: 34s; }
+  @keyframes drift { from { transform: translateX(-120px); } to { transform: translateX(120px); } }
+  .cb-smoke { animation: smoke 6s ease-in-out infinite alternate; } @keyframes smoke { to { transform: translate(30px, -30px); opacity: .6; } }
+  .cb-flag { animation: flag 1.4s ease-in-out infinite alternate; transform-origin: 248px 497px; transform-box: view-box; } @keyframes flag { to { transform: skewY(-8deg) scaleX(.9); } }
+  .cb-blink { animation: blink 5s infinite; } @keyframes blink { 0%, 44%, 50%, 100% { opacity: 1; } 47% { opacity: 0; } 70%, 80% { opacity: .15; } }
+  .cb-lava { animation: lavaGlow 2.4s ease-in-out infinite alternate; } @keyframes lavaGlow { to { filter: brightness(1.35); } }
+  .cb-bub { animation: bub 3s ease-in infinite; transform-box: fill-box; transform-origin: center; } @keyframes bub { 0% { transform: scale(0); opacity: 1; } 80% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
+  .cb-spin { animation: spin 40s linear infinite; transform-box: view-box; } @keyframes spin { to { transform: rotate(360deg); } }
+  .cb-rays { animation: spin 90s linear infinite; transform-box: view-box; }
+  .cb-float { animation: floaty 7s ease-in-out infinite alternate; } @keyframes floaty { to { transform: translateY(-40px) rotate(6deg); } }
+  .cb-eye { animation: eyeLook 7s ease-in-out infinite; transform-box: view-box; transform-origin: 800px 380px; } @keyframes eyeLook { 0%, 100% { transform: scaleY(1); } 48% { transform: scaleY(1); } 50% { transform: scaleY(.08); } 52% { transform: scaleY(1); } }
+  .cb-pupil { animation: pupil 9s ease-in-out infinite; } @keyframes pupil { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(-40px); } 65% { transform: translateX(36px); } }
+  /* particles */
+  .cine-fx { pointer-events: none; z-index: 1; }
+  .cine-fx i { position: absolute; left: var(--x); border-radius: 50%; animation-duration: var(--du); animation-delay: var(--dl); animation-iteration-count: infinite; animation-timing-function: linear; }
+  .fx-spark, .fx-ember { bottom: -10px; width: calc(5px * var(--s)); height: calc(5px * var(--s)); background: #ffc24a; box-shadow: 0 0 8px #ff9a1a; animation-name: rise; }
+  .fx-ember { background: #ff7a2a; box-shadow: 0 0 10px #ff4a1a; }
+  .fx-ash { top: -10px; width: calc(5px * var(--s)); height: calc(5px * var(--s)); background: #9a9aa0; opacity: .6; animation-name: fall; }
+  .fx-snow { top: -10px; width: calc(6px * var(--s)); height: calc(6px * var(--s)); background: #fff; opacity: .85; animation-name: fall; }
+  .fx-firefly { top: calc(40% + var(--s) * 30%); width: 5px; height: 5px; background: #d8ff7a; box-shadow: 0 0 10px #c8ff4a; animation-name: firefly; animation-timing-function: ease-in-out; animation-direction: alternate; }
+  @keyframes rise { from { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } to { transform: translate(40px, -105vh); opacity: 0; } }
+  @keyframes fall { from { transform: translate(0, 0); } to { transform: translate(-60px, 105vh); } }
+  @keyframes firefly { 0% { transform: translate(0, 0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(60px, -50px); opacity: .2; } }
+  /* actors */
+  .cine-actor { position: absolute; right: 6%; bottom: 20vh; width: min(42vh, 38vw); aspect-ratio: 1; z-index: 2; opacity: 0; transform: translateX(30%) scale(.8); transition: opacity .5s, transform .8s cubic-bezier(.2,1.3,.4,1); filter: drop-shadow(0 0 40px color-mix(in srgb, var(--sc) 60%, transparent)); pointer-events: none; }
+  .cine-actor.on { opacity: 1; transform: none; }
+  .cine-actor svg { width: 100%; height: 100%; overflow: visible; animation: bob 2.6s ease-in-out infinite; }
+  .cine-pip { position: absolute; left: 10%; bottom: 26vh; width: calc(15vh * var(--k, 1)); aspect-ratio: 1; z-index: 2; opacity: 0; transform: translateY(30px) scale(.6); transition: opacity .4s, transform .6s cubic-bezier(.2,1.5,.4,1); filter: drop-shadow(0 0 30px #ff9a1a); pointer-events: none; }
+  .cine-pip.on { opacity: 1; transform: none; }
+  .pip-bob { animation: pipBob 1.8s ease-in-out infinite; transform-origin: 50px 89px; transform-box: view-box; } @keyframes pipBob { 50% { transform: translateY(-5px) scale(1.04, .97); } }
+  /* title cards */
+  .cine-title { position: absolute; inset: 0; z-index: 5; display: grid; place-content: center; text-align: center; gap: 10px; opacity: 0; pointer-events: none; background: radial-gradient(ellipse, rgba(0,0,0,.55), transparent 70%); }
+  .cine.titling .cine-title { opacity: 1; transition: opacity .6s; }
+  .cine-title small { font-family: var(--display); letter-spacing: 12px; font-size: clamp(13px, 2vw, 20px); color: #ddd; animation: titleUp 1s ease-out both; }
+  .cine-title b { font-family: var(--display); font-size: clamp(44px, 9vw, 120px); line-height: 1; letter-spacing: 3px; color: #fff; text-shadow: 0 0 30px var(--c), 0 0 80px var(--c); animation: titleIn 1.4s cubic-bezier(.2,1,.3,1) both .25s; }
+  .cine-title i { height: 3px; width: min(520px, 70vw); margin: 4px auto 0; background: linear-gradient(90deg, transparent, var(--c, #ffc21a), transparent); animation: sweep 1.4s ease-out both .5s; }
+  .cine-title em { color: #eee; font-size: clamp(14px, 2vw, 19px); margin-top: 10px; animation: titleUp 1s ease-out both 1.2s; }
+  @keyframes titleIn { from { opacity: 0; transform: scale(1.4); letter-spacing: 30px; filter: blur(8px); } }
+  @keyframes titleUp { from { opacity: 0; transform: translateY(14px); } }
+  @keyframes sweep { from { transform: scaleX(0); } }
+  /* narration + dialogue */
+  .cine-narr { position: absolute; left: 50%; bottom: calc(9vh + 26px); transform: translateX(-50%); width: min(860px, calc(100% - 40px)); z-index: 5; text-align: center; opacity: 0; pointer-events: none; transition: opacity .4s; }
+  .cine.narrating .cine-narr { opacity: 1; }
+  .cine-narr p { margin: 0; font-size: clamp(17px, 2.4vw, 26px); line-height: 1.45; color: #f4efe6; font-style: italic; text-shadow: 0 2px 12px #000, 0 0 30px #000; min-height: 3em; }
+  .cine-box { position: absolute; left: 50%; bottom: calc(9vh + 18px); transform: translateX(-50%); width: min(880px, calc(100% - 28px)); z-index: 5; display: none; align-items: center; gap: 16px;
+    background: linear-gradient(180deg, rgba(10,12,20,.92), rgba(4,5,10,.95)); border: 1px solid color-mix(in srgb, var(--sc) 55%, #333); border-radius: 18px; padding: 14px 44px 14px 14px; box-shadow: 0 10px 50px rgba(0,0,0,.7), 0 0 30px color-mix(in srgb, var(--sc) 20%, transparent); }
+  .cine.talking .cine-box { display: flex; }
+  .cine-box.pop { animation: boxPop .35s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes boxPop { from { transform: translateX(-50%) translateY(12px) scale(.97); opacity: .3; } }
+  .cine-face { flex: none; width: 84px; height: 84px; border-radius: 16px; overflow: hidden; background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--sc) 40%, #1a1a24), #08090e); border: 2px solid var(--sc); display: grid; place-items: center; }
+  .cine-face svg { width: 92%; height: 92%; overflow: visible; }
+  .cine-talk { min-width: 0; display: grid; gap: 4px; }
+  .cine-who { font-family: var(--display); color: var(--sc); letter-spacing: 1.5px; font-size: 15px; text-transform: uppercase; }
+  .cine-text { margin: 0; color: #f2f2f2; font-size: clamp(16px, 2vw, 20px); line-height: 1.4; min-height: 2.8em; }
+  .cine-next { position: absolute; right: 16px; bottom: 12px; color: var(--sc); font-style: normal; animation: nextBob .8s ease-in-out infinite alternate; }
+  .cine.typing .cine-next { opacity: 0; }
+  @keyframes nextBob { to { transform: translateY(4px); } }
+  .cine-skip { position: absolute; top: calc(9vh + 14px); right: 16px; z-index: 6; background: rgba(0,0,0,.5); color: #ddd; border: 1px solid rgba(255,255,255,.25); padding: 7px 14px; font-size: 13px; border-radius: 999px; }
+  .cine-skip:hover { background: rgba(0,0,0,.8); color: #fff; }
+  .cine-hint { position: absolute; bottom: 2.5vh; left: 0; right: 0; text-align: center; z-index: 6; color: rgba(255,255,255,.4); font-size: 12px; letter-spacing: 1px; pointer-events: none; }
+  @media (max-width: 600px) {
+    .cine-box { gap: 10px; padding: 10px 34px 10px 10px; border-radius: 14px; bottom: calc(9vh + 10px); }
+    .cine-face { width: 58px; height: 58px; border-radius: 12px; }
+    .cine-actor { width: 62vw; right: 50%; transform: translateX(50%) scale(.8); bottom: 34vh; } .cine-actor.on { transform: translateX(50%); }
+    .cine-pip { bottom: 34vh; left: 8%; }
+    .cine-title small { letter-spacing: 7px; }
+  }
+
+  /* ---------- mission scene (what your push-ups power) ---------- */
+  .mscene { position: absolute; right: 4%; top: 27%; width: clamp(180px, 36%, 360px); z-index: 2; pointer-events: none; --p: 0; --d: 0; --c: #ffc21a; }
+  .ms-art { border-radius: 16px; overflow: hidden; border: 2px solid color-mix(in srgb, var(--c) 60%, transparent); box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 calc(10px + var(--p) * 30px) color-mix(in srgb, var(--c) 50%, transparent); transition: box-shadow .3s; }
+  .ms-art svg { display: block; width: 100%; height: auto; }
+  .ms-art svg * { transition: transform .45s cubic-bezier(.2,1.2,.4,1), opacity .4s; }
+  .ms-art svg .cb-flick, .ms-art svg .cb-blink, .ms-art svg .cb-spin, .ms-art svg .cb-lava { transition: none; }
+  .ms-lbl { margin-top: 7px; text-align: center; font-family: var(--display); font-size: clamp(11px, 1.4vw, 14px); letter-spacing: .5px; color: #fff; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); border-radius: 999px; padding: 5px 12px; border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); }
+  .mscene.hit .ms-art { animation: msHit .3s; }
+  @keyframes msHit { 30% { transform: scale(1.035) rotate(-.6deg); filter: brightness(1.25); } }
+  .ms-pump { transform-box: view-box; transform-origin: 36px 111px; }
+  .mscene.hit .ms-pump { animation: pump .3s; } @keyframes pump { 50% { transform: rotate(-22deg); } }
+  .ms-spray { opacity: 0; } .mscene.hit .ms-spray { animation: spray .5s; } @keyframes spray { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+  .ms-fogfront { opacity: 0; transition: opacity .8s; } .mscene.fail .ms-fogfront { opacity: .95; }
+  .ms-wave { animation: wave .5s ease-in-out infinite alternate; transform-box: view-box; transform-origin: 238px 196px; } @keyframes wave { to { transform: rotate(-25deg); } }
+  .mscene.done .ms-art { animation: msDone .9s ease-out; border-color: var(--c); }
+  @keyframes msDone { 0% { filter: brightness(2.2); transform: scale(1.06); } 100% { filter: none; transform: none; } }
+  .mscene.done .ms-obj { animation: shatter .8s ease-in forwards; transform-box: view-box; transform-origin: 150px 140px; }
+  @keyframes shatter { 30% { transform: scale(1.08); } 100% { transform: scale(1.5); opacity: 0; filter: blur(4px); } }
+  .mscene.fail .ms-art { filter: grayscale(.8) brightness(.6); transition: filter .8s; }
+  .ms-quip { position: absolute; left: 50%; top: -14px; transform: translate(-50%, -100%) scale(.7); opacity: 0; display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    background: #fff; color: #1a1208; font-weight: 700; font-size: 13px; padding: 6px 12px 6px 6px; border-radius: 999px; box-shadow: 0 6px 24px rgba(0,0,0,.5); transition: opacity .25s, transform .35s cubic-bezier(.2,1.6,.4,1); }
+  .ms-quip.show { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+  .ms-quip::after { content: ""; position: absolute; left: 50%; bottom: -6px; border: 6px solid transparent; border-top-color: #fff; border-bottom: 0; transform: translateX(-50%); }
+  .mq-face { width: 26px; height: 26px; border-radius: 50%; background: #2a1408; display: grid; place-items: center; } .mq-face svg { width: 24px; height: 24px; }
+  .cm-obj { font-weight: 700; color: var(--text); }
+  .cm-btns { display: flex; gap: 8px; justify-content: center; } .cm-btns #campGo { flex: 1; max-width: 260px; }
+  .cm-btns .cm-replay { background: rgba(255,255,255,.06); color: var(--text); border: 1px solid var(--line2); padding: 0 14px; }
+  @media (max-width: 600px) {
+    .mscene { right: 8px; top: auto; bottom: 56px; width: 46%; }
+    .ms-quip { font-size: 11.5px; white-space: normal; width: max-content; max-width: 46vw; }
+  }
+
   /* ---------- phones ---------- */
   @media (max-width: 600px) {
     header { padding: 10px 12px; gap: 8px; }
@@ -659,6 +782,7 @@
           <div class="m-goal" id="mGoal"></div>
           <div class="hpbar m-bar"><div class="fill" id="mFill"></div><div class="ticks"></div><div class="txt" id="mTxt"></div></div>
         </div>
+        <div class="mscene" id="mScene" hidden><div class="ms-quip" id="mQuip"></div><div class="ms-art" id="mSceneArt"></div><div class="ms-lbl" id="mSceneLbl"></div></div>
         <div class="callout" id="mCallout"></div>
         <div class="arena-ctrls"><button id="mQuit">Quit mission</button></div>
       </div>
@@ -703,7 +827,8 @@
     <div class="panel" style="margin-top:18px" id="howCamp" hidden>
       <h3>How the campaign works</h3>
       <ul class="tips">
-        <li><b>4 chapters, 24 missions.</b> Finish a mission to unlock the next one; each chapter ends with a boss.</li>
+        <li><b>The story:</b> the Great Ember went out and the grey Slump is creeping over the land. Every push-up throws off a spark of Ember, so in every mission your reps power something: light the brazier, drop the gate, push the cart, build the bridge.</li>
+        <li><b>4 chapters, 24 missions.</b> Finish a mission to unlock the next one; each chapter ends with a boss. Story scenes play the first time; tap 📜 Story on the map to watch one again.</li>
         <li><b>Mission types:</b> 💪 reach a count · ⏱️ beat the clock · 🎯 deep reps only (50%+) · 🔗 no resting over 4 s · 🔥 as many as you can before time runs out · ⚔️ boss fights.</li>
         <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
         <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
@@ -1341,9 +1466,9 @@ const sfx = {
   victory:() => [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, k) => setTimeout(() => tone(f, 0.24, "triangle", 0.2), k * 130)),
   defeat: () => [392, 330, 262, 196].forEach((f, k) => setTimeout(() => tone(f, 0.38, "sawtooth", 0.12), k * 220)),
 };
-function say(text) {
+function say(text, v = {}) {
   if (store.muted || !("speechSynthesis" in window)) return;
-  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.12; u.pitch = 0.9; speechSynthesis.speak(u); } catch {}
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = v.rate ?? 1.12; u.pitch = v.pitch ?? 0.9; speechSynthesis.speak(u); } catch {}
 }
 const renderMute = () => $("muteBtn").textContent = store.muted ? "🔇" : "🔊";
 $("muteBtn").onclick = () => { store.muted = !store.muted; save(); renderMute(); if (store.muted) try { speechSynthesis.cancel(); } catch {} };
@@ -1688,7 +1813,11 @@ async function finishFight(won) {
     store.bosses[f.boss.id] = { won: true, stars: Math.max(rec.stars || 0, f.hearts), bestTime: rec.bestTime == null ? time : Math.min(rec.bestTime, time) };
     if (f.camp) { store.campaign ||= {}; f.firstClear = !store.campaign[f.camp]; store.campaign[f.camp] = Math.max(store.campaign[f.camp] || 0, f.hearts); }
     save();
-    setTimeout(() => { confetti(200); showResult(f, true, firstWin, time); }, 1800);
+    setTimeout(async () => {
+      const cm = f.camp && f.firstClear && CAMP_LIST.find(m => m.id === f.camp);
+      if (cm) { await wait(500); await missionStory(cm, "post"); }
+      confetti(200); showResult(f, true, firstWin, time);
+    }, 1800);
   } else {
     callout("DEFEATED", null, "red");
     sfx.defeat(); say(`You were defeated. ${f.boss.name} had ${Math.ceil(f.hp)} health left. Try again!`);
@@ -2186,6 +2315,550 @@ const campTotal = () => CAMP_LIST.reduce((t, m) => t + campStars(m.id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
 let campChapter = null, campPick = null, M = null;
 
+
+// ================= CAMPAIGN STORY =================
+// The Great Ember kept Ironvale strong until the Eye drank it and the grey Slump rolled in. Every push-up throws off
+// a spark of Ember, so in every mission your reps power something on screen. Cutscenes play before a mission
+// the first time you reach it and after your first clear; the 📜 button on the map replays them.
+const MISSION_STORY = {
+  "1-1": { obj: "Light the camp brazier",                  scene: { k: "flame", v: "brazier" } },
+  "1-2": { obj: "Drop the gate before the fog gets in",    scene: { k: "gate" } },
+  "1-3": { obj: "Splat Gloop out of the supply tent" },
+  "1-4": { obj: "Smash the boulder off the camp well",     scene: { k: "crack", v: "rock" } },
+  "1-5": { obj: "Pump water on the burning mess tent",     scene: { k: "douse" } },
+  "1-6": { obj: "Smash the Rock Golem off the road" },
+  "2-1": { obj: "Keep Pip glowing so the eyes stay back",  scene: { k: "flame", v: "pip" } },
+  "2-2": { obj: "Lift the fallen tree off Sergeant Steel", scene: { k: "lift" } },
+  "2-3": { obj: "Drive off the Night Wolf" },
+  "2-4": { obj: "Rip out the Slump roots",                 scene: { k: "crack", v: "roots" } },
+  "2-5": { obj: "Push the supply cart to the lake",        scene: { k: "cart" } },
+  "2-6": { obj: "Free the frozen lake from the Frost Troll" },
+  "3-1": { obj: "Climb the cliff (stop and you slide)",    scene: { k: "climb" } },
+  "3-2": { obj: "Keep the fire alive in the thin air",     scene: { k: "flame", v: "campfire" } },
+  "3-3": { obj: "Bring down the Inferno Drake" },
+  "3-4": { obj: "Break down the dragon-scale door",        scene: { k: "crack", v: "scales" } },
+  "3-5": { obj: "Build the bridge before the lava rises",  scene: { k: "bridge", v: "lava" } },
+  "3-6": { obj: "Sink the Deep Kraken" },
+  "4-1": { obj: "Build a bridge of light into the Void",   scene: { k: "bridge", v: "light" } },
+  "4-2": { obj: "Break free of the gravity well",          scene: { k: "pull" } },
+  "4-3": { obj: "Shut down Titan Mk-II" },
+  "4-4": { obj: "Shatter the Eye's crystal shields",       scene: { k: "crack", v: "crystal" } },
+  "4-5": { obj: "Hold Pip's shield against the Slump",     scene: { k: "shield" } },
+  "4-6": { obj: "Close the Void Eye forever" },
+};
+CAMP_LIST.forEach(m => Object.assign(m, MISSION_STORY[m.id]));
+
+// lines are [speaker, text, backdrop?]; speakers: narr, steel, pip, eye, boss (the mission's boss)
+const STORY = {
+  prologue: [
+    ["narr", "For a thousand years the Great Ember burned on top of Beacon Hill. As long as it burned, everyone in Ironvale stayed strong.", "beacon"],
+    ["narr", "Then one night it went out. A grey fog crept down the hills, and anyone it touched got too tired to stand. People called it the Slump.", "dark"],
+    ["narr", "Only one place held out: Boot Camp, where Sergeant Steel still trains anyone brave enough to show up.", "camp"],
+  ],
+  chapter: [
+    [ ["steel", "So you're the new recruit. Listen up, because I only say this once.", "camp"],
+      ["steel", "Ember isn't magic. It's effort. Every honest push-up you do throws off a spark."],
+      ["pip", "Hi! I'm Pip! I'm the last spark of the Great Ember. Feed me push-ups and I'll grow!"],
+      ["steel", "Make enough sparks and we relight the Ember. Make too few and the Slump takes everything. Hit the floor, recruit."] ],
+    [ ["narr", "Past the camp lie the Dark Woods. The Slump is thickest here, and something hunts in it.", "woods"],
+      ["pip", "It's so dark… I'm the only light out here. Keep me burning, okay?"],
+      ["steel", "Stay close to the spark. Stay sharp."] ],
+    [ ["narr", "The Slump has woken the mountains. Fire pours down Dragon Peaks, and the sky glows red.", "peaks"],
+      ["steel", "The air gets thin up there. Breathe, and keep pushing."],
+      ["pip", "I'm a medium spark now. Dragons don't scare me! …Much."] ],
+    [ ["narr", "Past the peaks the world just stops. Beyond the edge is the Void, and in it waits the Eye that drank the Great Ember.", "void"],
+      ["eye", "Little recruit. Why push so hard? Lie down. Rest. Everyone else did.", "eye"],
+      ["steel", "Don't listen to it. We finish this. Together."] ],
+  ],
+  m: {
+    "1-1": { pre:  [["steel", "The camp brazier went cold last night. You're going to light it.", "camp"], ["pip", "One push-up, one spark. I'll carry them for you!"]],
+             post: [["pip", "Look at that flame! The whole camp is warm again!", "campLit"], ["steel", "Hmph. Not bad. Don't let it go to your head."]] },
+    "1-2": { pre:  [["steel", "Fog's rolling toward the camp! Drop the gate before it gets in. The winch runs on Ember.", "campFog"], ["pip", "Push-ups, fast! I'll pour the sparks into the winch!"]],
+             post: [["pip", "Gate's down! The fog bounced right off it!", "campLit"], ["steel", "Good. But something slipped in before we closed it… check the supply tent."]] },
+    "1-3": { pre:  [["pip", "Ew, ew, EW! The supply tent is full of slime!", "camp"], ["boss", "Blorp. The Slump made me BIG. Now I eat all your snacks."], ["steel", "Punch it with push-ups, recruit! Deep ones hit hardest."]],
+             post: [["pip", "It's just a little puddle again! The Slump made it grumpy.", "campLit"], ["steel", "So the Slump twists creatures. Noted."]] },
+    "1-4": { pre:  [["steel", "A boulder rolled onto the camp well. Half reps won't even scratch it.", "camp"], ["pip", "Chest to the floor, then I hit it REALLY hard!"]],
+             post: [["pip", "CRACK! The water's flowing again!", "campLit"], ["steel", "That's what full range of motion gets you."]] },
+    "1-5": { pre:  [["pip", "Uh oh. I sneezed. The mess tent is on fire.", "campLit"], ["steel", "PIP! Recruit, get on the water pump. Stop pumping and it flares right back up!"]],
+             post: [["steel", "Fire's out. Pip, no more sneezing indoors.", "campLit"], ["pip", "Sorry…"]] },
+    "1-6": { pre:  [["steel", "The road out of camp leads to Beacon Hill, and something big is sitting on it.", "camp"], ["boss", "NONE… SHALL… PASS. The Slump… says… sleep."], ["pip", "It's made of rocks! Good thing you're made of push-ups!"]],
+             post: [["steel", "The road is open. Pack up, recruit. We're going after the Slump.", "campLit"], ["pip", "The fog's trail goes straight into the Dark Woods…"]] },
+    "2-1": { pre:  [["pip", "Every push-up makes me glow brighter. If I go dim, the things in the trees come closer.", "woods"], ["steel", "Then don't let them. Move."]],
+             post: [["pip", "We made it through the thickest part! The eyes stayed back!", "woods"]] },
+    "2-2": { pre:  [["steel", "Ngh! A tree came down on my leg. Lift it, recruit. Fast.", "woods"], ["pip", "Hurry, it's slipping!"]],
+             post: [["steel", "…Thanks. I'll walk it off. Don't tell anyone I needed help.", "woods"], ["pip", "I'm telling everyone."]] },
+    "2-3": { pre:  [["narr", "A howl splits the night.", "woods"], ["boss", "Grrr. The Slump says you're tired. Lie down. Sleep forever."], ["pip", "Don't listen! You're not tired! …Are you tired? NO!"]],
+             post: [["pip", "It ran off! Once the grey left its fur it just looked like a big puppy.", "woods"]] },
+    "2-4": { pre:  [["steel", "The Slump grew these roots overnight. Only deep reps will tear them out.", "woods"]],
+             post: [["pip", "Path's clear! There's a frozen lake up ahead.", "lake"]] },
+    "2-5": { pre:  [["steel", "My leg's still stiff, so you're pushing the supply cart.", "lake"], ["pip", "I'll ride on top! Wheee!"]],
+             post: [["steel", "Good pace. You're getting stronger, recruit.", "lake"], ["pip", "And I'm getting bigger! Look, I'm a medium spark now!"]] },
+    "2-6": { pre:  [["boss", "The lake is MINE. The ice is MINE. And that warm little spark… is MINE.", "lake"], ["pip", "He wants to eat me!!"], ["steel", "Not on my watch. Recruit, go!"]],
+             post: [["steel", "The ice is melting. And look: the Slump's trail goes up the mountain.", "lake"], ["pip", "Toward that red glow… that can't be good."]] },
+    "3-1": { pre:  [["steel", "The rope's frayed. If you stop, you slide back down. So don't stop.", "peaks"]],
+             post: [["pip", "We're above the clouds! Whoa.", "peaks"]] },
+    "3-2": { pre:  [["pip", "The air's so thin up here… I'm flickering. I need sparks!", "peaks"], ["steel", "You heard the spark. Keep it fed."]],
+             post: [["pip", "Phew. Toasty again.", "peaks"]] },
+    "3-3": { pre:  [["boss", "Tiny spark. Tiny warrior. My fire is BIGGER.", "lava"], ["pip", "Is it though? IS IT?"], ["steel", "Deep reps crack its scales. Make every one count!"]],
+             post: [["steel", "It's down. And look, under its nest: a tunnel into the mountain.", "lava"]] },
+    "3-4": { pre:  [["pip", "The drake sealed the tunnel with its old scales. They're super hard.", "lava"], ["steel", "Then go super deep."]],
+             post: [["pip", "We're through! There's a whole lake of fire down here…", "lava"]] },
+    "3-5": { pre:  [["steel", "The lava's rising! Every push-up drops a stone into place. Build that bridge!", "lava"]],
+             post: [["pip", "Made it across! …Why is the lake bubbling?", "lava"]] },
+    "3-6": { pre:  [["boss", "Glorrrb. The Eye promised me the whole sea.", "lava"], ["pip", "What eye?!"], ["steel", "Worry about that later. Fight!"]],
+             post: [["steel", "An Eye at the edge of the world. So that's who's behind the Slump.", "peaks"], ["pip", "We're going there, aren't we?"], ["steel", "We are."]] },
+    "4-1": { pre:  [["pip", "I'm big enough now! Every push-up, I'll make a step of light!", "void"]],
+             post: [["eye", "Persistent. How… tiring.", "eye"]] },
+    "4-2": { pre:  [["eye", "Feel that pull? Stop for one moment and you're mine.", "eye"], ["steel", "So don't stop, recruit."]],
+             post: [["pip", "We broke free!", "void"]] },
+    "4-3": { pre:  [["boss", "UNIT TITAN MK-II. DIRECTIVE: ENFORCE REST. COMPLIANCE IS MANDATORY.", "void"], ["pip", "Nope!"]],
+             post: [["steel", "Scrap metal. One more to go, recruit.", "void"]] },
+    "4-4": { pre:  [["steel", "The Eye hides behind crystal shields. Only perfect reps will break them.", "eye"]],
+             post: [["eye", "No… NO. You were supposed to get TIRED.", "eye"]] },
+    "4-5": { pre:  [["eye", "Then drown in it. All of the Slump, at once!", "eye"], ["pip", "Recruit, I need everything you've got! Hold the shield!"]],
+             post: [["pip", "We held it!! The Eye is wide open!", "eye"]] },
+    "4-6": { pre:  [["eye", "I drank the Great Ember. I will drink you too.", "eye"], ["steel", "Recruit… it's been an honour. Now finish it."]],
+             post: [] },
+  },
+  epilogue: [
+    ["narr", "The Eye closed for good, and out poured a thousand years of stolen Ember.", "void"],
+    ["narr", "Pip flew home to Beacon Hill and the Great Ember roared back to life. The Slump melted away like morning fog.", "dawn"],
+    ["steel", "Not bad, recruit. Not bad at all. …Same time tomorrow?"],
+    ["pip", "The Slump might come back someday. But we'll be ready. Right? RIGHT?"],
+  ],
+};
+const CH_WORDS = ["ONE", "TWO", "THREE", "FOUR"];
+const CH_BG = ["camp", "woods", "peaks", "void"];
+const storySeen = id => !!(store.storySeen || {})[id];
+const markSeen = id => { store.storySeen ||= {}; store.storySeen[id] = 1; save(); };
+function storySteps(m, when) {
+  const s = [], L = l => ({ who: l[0], text: l[1], bg: l[2] });
+  if (when === "pre") {
+    if (m.id === "1-1") s.push(...STORY.prologue.map(L));
+    if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...STORY.chapter[m.ch].map(L));
+    s.push(...(STORY.m[m.id]?.pre || []).map(L));
+  } else {
+    s.push(...(STORY.m[m.id]?.post || []).map(L));
+    if (m.id === CAMP_LIST[CAMP_LIST.length - 1].id) s.push(...STORY.epilogue.map(L), { end: true, bg: "dawn" });
+  }
+  return s;
+}
+const missionStory = (m, when) => playCine(storySteps(m, when), { ch: when === "post" && m.id === "4-6" ? 4 : m.ch, boss: m.boss });
+
+// ---------- characters ----------
+function steelSvg() {
+  return `<svg viewBox="0 0 100 100"><defs><linearGradient id="stHel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d8c44"/><stop offset="1" stop-color="#3f4a22"/></linearGradient></defs>
+    <path d="M14 100 Q16 77 50 75 Q84 77 86 100Z" fill="#4b5a2a"/><path d="M38 86 l12 7 l12 -7 M38 92 l12 7 l12 -7" stroke="#ffc21a" stroke-width="3" fill="none"/>
+    <rect x="43" y="68" width="14" height="10" fill="#c38c63"/>
+    <ellipse cx="50" cy="52" rx="21" ry="24" fill="#d9a47a"/><path d="M29 56 Q50 84 71 56 Q67 75 50 78 Q33 75 29 56Z" fill="#c38c63"/>
+    <path d="M23 47 Q23 16 50 15 Q77 16 77 47 Q50 40 23 47Z" fill="url(#stHel)"/><path d="M20 47 Q50 38 80 47 L80 51 Q50 43 20 51Z" fill="#2e3a18"/>
+    <circle cx="50" cy="29" r="5" fill="#ffc21a"/><path d="M50 25.5 l1.2 2.4 2.6.4 -1.9 1.8.5 2.6 -2.4-1.3 -2.4 1.3.5-2.6 -1.9-1.8 2.6-.4Z" fill="#8a6a10"/>
+    <path d="M35 53 l11 3 M65 53 l-11 3" stroke="#3a2a1a" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="42" cy="59" r="2.3" fill="#1a1a1a"/><circle cx="58" cy="59" r="2.3" fill="#1a1a1a"/>
+    <path d="M50 59 q-3 8 0 10" stroke="#a87048" fill="none" stroke-width="2"/>
+    <path d="M35 71 Q43 64 50 68 Q57 64 65 71 Q57 73 50 71 Q43 73 35 71Z" fill="#5b3a22"/>
+    <path d="M62 46 l4 13" stroke="#a86a4a" stroke-width="1.5"/></svg>`;
+}
+function pipSvg(uid) {
+  return `<svg viewBox="0 0 100 100" class="pip-svg"><defs><radialGradient id="${uid}g" cx=".5" cy=".7" r=".62"><stop offset="0" stop-color="#fff6c8"/><stop offset=".45" stop-color="#ffc21a"/><stop offset="1" stop-color="#ff5a1f"/></radialGradient></defs>
+    <g class="pip-bob"><path d="M50 8 C58 26 77 34 77 58 C77 77 65 89 50 89 C35 89 23 77 23 58 C23 44 33 40 37 27 C42 36 46 33 50 8Z" fill="url(#${uid}g)"/>
+    <ellipse cx="41" cy="60" rx="5.5" ry="7" fill="#fff"/><ellipse cx="59" cy="60" rx="5.5" ry="7" fill="#fff"/>
+    <circle cx="42" cy="62" r="3.3" fill="#2a1408"/><circle cx="60" cy="62" r="3.3" fill="#2a1408"/><circle cx="43.2" cy="60.4" r="1.1" fill="#fff"/><circle cx="61.2" cy="60.4" r="1.1" fill="#fff"/>
+    <path d="M43 73 Q50 79 57 73" stroke="#7a2a08" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="33" cy="69" r="3.6" fill="#ff6a3d" opacity=".45"/><circle cx="67" cy="69" r="3.6" fill="#ff6a3d" opacity=".45"/></g></svg>`;
+}
+function castOf(who, ctx) {
+  if (who === "boss" && ctx.boss != null) { const b = BOSSES[ctx.boss]; return { name: b.name, color: THEMES[b.id].aura, face: bossArt(b.id), actor: bossArt(b.id), voice: { pitch: 0.4, rate: 0.95 } }; }
+  if (who === "eye") return { name: "The Eye", color: "#c06bff", face: bossArt("void"), voice: { pitch: 0.1, rate: 0.82 } };
+  if (who === "pip") return { name: "Pip", color: "#ff9a3d", face: pipSvg("pf"), pip: true, voice: { pitch: 1.8, rate: 1.15 } };
+  return { name: "Sergeant Steel", color: "#ffc21a", face: steelSvg(), voice: { pitch: 0.55, rate: 1.02 } };
+}
+
+// ---------- cutscene backdrops (1600×900, drawn from a fixed seed) ----------
+function cbStars(rnd, n, h = 600) { let s = ""; for (let i = 0; i < n; i++) s += `<circle cx="${(rnd() * 1600) | 0}" cy="${(rnd() * h) | 0}" r="${(0.6 + rnd() * 1.8).toFixed(1)}" fill="#fff" opacity="${(0.3 + rnd() * 0.7).toFixed(2)}" ${rnd() < .3 ? `class="tw" style="animation-delay:${(rnd() * 3).toFixed(1)}s"` : ""}/>`; return s; }
+function cbPines(rnd, n, y0, hMin, hMax, fill, W = 1600) {
+  let d = "";
+  for (let i = 0; i < n; i++) { const x = -W * .025 + W * 1.05 * (i + rnd() * .7) / n, h = hMin + rnd() * (hMax - hMin), w = h * .3;
+    d += `M${x - w} ${y0}L${x} ${y0 - h}L${x + w} ${y0}Z M${x - w * 1.25} ${y0 - h * .22}L${x} ${y0 - h * .8}L${x + w * 1.25} ${y0 - h * .22}Z`; }
+  return `<path d="${d}" fill="${fill}"/><rect x="-20" y="${y0 - 2}" width="${W + 40}" height="${W * .6 - y0 + 20}" fill="${fill}"/>`;
+}
+function cbRidge(rnd, y, amp, step, fill, jag = true) {
+  let d = `M-20 920L-20 ${y}`, i = 0;
+  for (let x = -20; x <= 1660; x += step, i++) d += `L${x} ${(y - (jag ? (i % 2 ? amp * (.55 + rnd() * .45) : amp * rnd() * .3) : amp * rnd())).toFixed(0)}`;
+  return `<path d="${d}L1660 920Z" fill="${fill}"/>`;
+}
+const cbFlame = (x, y, s, id) => `<g transform="translate(${x} ${y}) scale(${s})"><g class="cb-flick"><path d="M0 -70 C14 -44 34 -30 34 -4 C34 18 18 30 0 30 C-18 30 -34 18 -34 -4 C-34 -22 -20 -28 -14 -46 C-8 -34 -4 -40 0 -70Z" fill="url(#${id}o)"/><path d="M0 -38 C8 -24 20 -14 20 2 C20 16 10 22 0 22 C-10 22 -20 16 -20 2 C-20 -12 -8 -18 0 -38Z" fill="url(#${id}i)"/></g></g>`;
+const cbFlameDefs = id => `<linearGradient id="${id}o" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff3d1f"/><stop offset="1" stop-color="#ffb21a"/></linearGradient><linearGradient id="${id}i" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#fffbe8"/></linearGradient>`;
+function cbTower(lit) {
+  return `<path d="M300 920 Q800 600 1300 920Z" fill="${lit ? "#1a1430" : "#26272c"}"/>
+    <path d="M735 770 L758 330 L842 330 L865 770Z" fill="${lit ? "#3a3248" : "#3a3b40"}"/><path d="M800 330 L842 330 L865 770 L800 770Z" fill="#000" opacity=".25"/>
+    <path d="M748 420 H852 M744 520 H856 M740 620 H860 M737 700 H863" stroke="#000" stroke-opacity=".25" stroke-width="4"/>
+    <rect x="790" y="460" width="20" height="38" rx="10" fill="${lit ? "#ffcf6a" : "#15161a"}"/><rect x="790" y="580" width="20" height="38" rx="10" fill="${lit ? "#ffcf6a" : "#15161a"}"/>
+    <path d="M725 300 H875 L862 336 H738Z" fill="${lit ? "#4a4058" : "#45464c"}"/><path d="M738 300 L728 280 H872 L862 300Z" fill="${lit ? "#5a5068" : "#505158"}"/>`;
+}
+function cbVillage(rnd, lit) {
+  let s = "";
+  for (let i = 0; i < 14; i++) { const x = i * 120 - 30 + rnd() * 40, w = 70 + rnd() * 40, h = 50 + rnd() * 40, y = 860 - h + rnd() * 20;
+    if (x > 600 && x < 960) continue;
+    s += `<rect x="${x}" y="${y}" width="${w}" height="${h + 60}" fill="#0b0912"/><path d="M${x - 8} ${y}L${x + w / 2} ${y - 34}L${x + w + 8} ${y}Z" fill="#0b0912"/>`;
+    s += `<rect x="${x + w * .3}" y="${y + 18}" width="12" height="14" fill="${lit ? "#ffcf6a" : "#1b1c22"}" ${lit ? 'class="tw2"' : ""}/>`; }
+  return s;
+}
+function cbFog(rnd, color, op, y0) {
+  let s = "";
+  for (let i = 0; i < 4; i++) { const y = y0 + i * 70; let d = `M-200 ${y}`; for (let x = -200; x <= 1800; x += 200) d += ` Q${x + 100} ${y - 40 - rnd() * 40} ${x + 200} ${y}`;
+    s += `<path class="cb-drift${i % 2 ? " rev" : ""}" d="${d} L1800 920 L-200 920Z" fill="${color}" opacity="${op}"/>`; }
+  return s;
+}
+function cbTents(rnd, glow) {
+  let s = "";
+  [[140, 770, 1.3], [420, 740, 1], [1080, 750, 1.15], [1380, 780, 1.4], [600, 790, .8]].forEach(([x, y, k]) => {
+    const w = 150 * k, h = 120 * k;
+    s += `<path d="M${x - w / 2} ${y}L${x} ${y - h}L${x + w / 2} ${y}Z" fill="#6b4a2a"/><path d="M${x} ${y - h}L${x + w / 2} ${y}H${x + w * .1}Z" fill="#000" opacity=".25"/>
+      <path d="M${x - w * .14} ${y}L${x} ${y - h * .55}L${x + w * .14} ${y}Z" fill="${glow ? "#ffb347" : "#1a120a"}" opacity="${glow ? .8 : 1}"/>`; });
+  return s;
+}
+function cineBg(loc) {
+  const rnd = seeded([...loc].reduce((a, c) => a * 31 + c.charCodeAt(0), 7));
+  const sky = (id, stops) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join("")}</linearGradient>`;
+  const glow = (id, c) => `<radialGradient id="${id}"><stop offset="0" stop-color="${c}" stop-opacity=".9"/><stop offset=".35" stop-color="${c}" stop-opacity=".35"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`;
+  const wrap = (defs, body) => `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs>${defs}</defs>${body}</svg>`;
+  if (loc === "beacon" || loc === "dawn") {
+    const dawn = loc === "dawn";
+    return wrap(sky("sk" + loc, dawn ? [[0, "#22265a"], [.55, "#ff8a4a"], [1, "#ffe08a"]] : [[0, "#070b22"], [.7, "#2a2350"], [1, "#4a2a40"]]) + glow("bg" + loc, "#ffb347") + cbFlameDefs("bf" + loc),
+      `<rect width="1600" height="900" fill="url(#sk${loc})"/>${dawn ? `<g class="cb-rays" style="transform-origin:800px 520px">${Array.from({ length: 12 }, (_, i) => `<path d="M800 520 L${800 + 1400 * Math.cos(i * .52)} ${520 + 1400 * Math.sin(i * .52) - 60} L${800 + 1400 * Math.cos(i * .52 + .2)} ${520 + 1400 * Math.sin(i * .52 + .2)}Z" fill="#fff6c0" opacity=".09"/>`).join("")}</g><circle cx="800" cy="560" r="150" fill="#fff2b0" opacity=".85"/>` : cbStars(rnd, 140)}
+       ${cbRidge(rnd, 700, 160, 120, dawn ? "#5a2c4a" : "#120e26", false)}
+       <g transform="translate(0 120)"><circle cx="800" cy="270" r="${dawn ? 420 : 320}" fill="url(#bg${loc})"/>${cbTower(true)}${cbFlame(800, 266, dawn ? 2.1 : 1.8, "bf" + loc)}</g>${cbVillage(rnd, true)}`);
+  }
+  if (loc === "dark") {
+    return wrap(sky("skd", [[0, "#24262c"], [.7, "#4a4e58"], [1, "#5c606a"]]),
+      `<rect width="1600" height="900" fill="url(#skd)"/>${cbRidge(rnd, 700, 160, 120, "#2c2e34", false)}<g transform="translate(0 120)">${cbTower(false)}</g>
+       <g class="cb-smoke" transform="translate(0 120)"><circle cx="800" cy="260" r="40" fill="#777" opacity=".4"/><circle cx="830" cy="200" r="55" fill="#777" opacity=".25"/><circle cx="790" cy="130" r="70" fill="#777" opacity=".15"/></g>
+       ${cbVillage(rnd, false)}${cbFog(rnd, "#9aa0aa", .22, 520)}`);
+  }
+  if (loc.startsWith("camp")) {
+    const lit = loc === "campLit", fog = loc === "campFog";
+    return wrap(sky("sk" + loc, lit ? [[0, "#1a1030"], [.5, "#6a2a3a"], [1, "#e0803a"]] : [[0, "#141624"], [.55, "#3a2a40"], [1, "#8a5a50"]]) + glow("cg" + loc, "#ffb347") + cbFlameDefs("cf" + loc),
+      `<rect width="1600" height="900" fill="url(#sk${loc})"/>${cbStars(rnd, 50, 350)}<circle cx="1240" cy="250" r="60" fill="#ffe2b0" opacity="${lit ? .25 : .6}"/>
+       <g transform="translate(0 -140)">${cbRidge(rnd, 600, 120, 140, "#2a1c30", false)}${cbPines(rnd, 22, 650, 80, 170, "#1b1424")}
+       <rect x="-20" y="760" width="1640" height="400" fill="#26301c"/><path d="M-20 920 L-20 700 Q400 650 800 690 Q1200 730 1620 680 L1620 920Z" fill="#26301c"/>
+       <rect x="240" y="470" width="8" height="260" fill="#3a2e24"/><path class="cb-flag" d="M248 474 L360 494 L248 520Z" fill="#ffc21a"/>
+       ${cbTents(rnd, lit)}
+       <path d="M30 760 H560 M1000 770 H1600" stroke="#3a2a1a" stroke-width="6"/>${Array.from({ length: 14 }, (_, i) => `<rect x="${30 + i * 40 + (i > 6 ? 690 : 0)}" y="735" width="8" height="45" fill="#3a2a1a"/>`).join("")}
+       ${lit ? `<circle cx="800" cy="700" r="260" fill="url(#cg${loc})"/>` : ""}
+       <path d="M745 735 H855 L840 770 H760Z" fill="#5a4a3a"/><path d="M770 770 L755 820 M830 770 L845 820 M800 770 V820" stroke="#3a2e24" stroke-width="8"/>
+       ${lit ? cbFlame(800, 728, 1.25, "cf" + loc) : `<g class="cb-smoke"><circle cx="800" cy="700" r="18" fill="#888" opacity=".35"/><circle cx="812" cy="660" r="26" fill="#888" opacity=".2"/></g>`}
+       </g><path d="M-20 920 L-20 760 Q300 730 600 770 Q1000 810 1620 750 L1620 920Z" fill="#0e140b"/>
+       ${fog ? cbFog(rnd, "#a8adb6", .3, 420) : ""}`);
+  }
+  if (loc === "woods") {
+    let eyes = ""; for (let i = 0; i < 6; i++) { const x = 100 + rnd() * 1400, y = 560 + rnd() * 160; eyes += `<g class="cb-blink" style="animation-delay:${(rnd() * 4).toFixed(1)}s"><ellipse cx="${x}" cy="${y}" rx="9" ry="5" fill="#ffd23a"/><ellipse cx="${x + 28}" cy="${y}" rx="9" ry="5" fill="#ffd23a"/></g>`; }
+    return wrap(sky("skw", [[0, "#03061a"], [.7, "#101a44"], [1, "#1a2858"]]) + glow("mw", "#bcd0ff"),
+      `<rect width="1600" height="900" fill="url(#skw)"/>${cbStars(rnd, 90, 400)}<circle cx="1200" cy="200" r="220" fill="url(#mw)"/><circle cx="1200" cy="200" r="70" fill="#e6eeff"/>
+       ${cbPines(rnd, 26, 640, 200, 360, "#0e1838")}${cbFog(rnd, "#7b8cff", .1, 560)}${eyes}${cbPines(rnd, 18, 760, 260, 440, "#081028")}${cbPines(rnd, 9, 900, 380, 600, "#03071a")}`);
+  }
+  if (loc === "lake") {
+    let ice = ""; for (let i = 0; i < 9; i++) { const x = 300 + rnd() * 1000; ice += `<path d="M${x} ${700 + rnd() * 60} l${40 + rnd() * 80} ${rnd() * 40 - 10} l${30 + rnd() * 60} ${rnd() * 30}" stroke="#fff" stroke-opacity=".6" stroke-width="2" fill="none"/>`; }
+    return wrap(sky("skl", [[0, "#1a2a55"], [.6, "#5a7ab0"], [1, "#a8c8ec"]]),
+      `<rect width="1600" height="900" fill="url(#skl)"/>${cbStars(rnd, 40, 250)}${cbRidge(rnd, 520, 260, 110, "#3a4e7a")}
+       <path d="M-20 560 Q800 480 1620 560 L1620 600 L-20 600Z" fill="#dfeeff" opacity=".7"/>${cbPines(rnd, 20, 640, 120, 220, "#22345a")}
+       <ellipse cx="800" cy="760" rx="760" ry="120" fill="#bfe3ff"/><ellipse cx="800" cy="750" rx="650" ry="80" fill="#e6f5ff" opacity=".6"/>${ice}
+       ${cbPines(rnd, 12, 930, 150, 260, "#0e1a36")}`);
+  }
+  if (loc === "peaks" || loc === "lava") {
+    const lava = loc === "lava";
+    let rivers = ""; for (let i = 0; i < 4; i++) { const x = 200 + i * 380 + rnd() * 100; rivers += `<path d="M${x} 560 Q${x + 60} 680 ${x - 20} 780 T${x + 30} 920" stroke="#ff7a2a" stroke-width="${8 + rnd() * 10}" fill="none" class="cb-lava"/>`; }
+    return wrap(sky("sk" + loc, lava ? [[0, "#120404"], [.6, "#3a0c06"], [1, "#a8320e"]] : [[0, "#1a0505"], [.55, "#6b1a0a"], [1, "#ff6a3d"]]) + glow("lg" + loc, "#ff6a1a"),
+      lava
+        ? `<rect width="1600" height="900" fill="url(#sklava)"/><path d="M-20 -20 H1620 V140 ${Array.from({ length: 16 }, (_, i) => `L${1620 - i * 105} ${140 + (i % 2 ? 90 + rnd() * 80 : 0)}`).join(" ")} L-20 140Z" fill="#1a0806"/>
+           ${cbRidge(rnd, 620, 120, 90, "#2a0c08")}<ellipse cx="800" cy="860" rx="1100" ry="200" fill="url(#lglava)"/><path d="M-20 790 Q400 760 800 790 Q1200 820 1620 780 L1620 920 L-20 920Z" fill="#ff7a1a" class="cb-lava"/>
+           ${Array.from({ length: 7 }, () => `<circle class="cb-bub" cx="${(rnd() * 1600) | 0}" cy="${820 + rnd() * 60}" r="${8 + rnd() * 14}" fill="#ffd23a" style="animation-delay:${(rnd() * 3).toFixed(1)}s"/>`).join("")}`
+        : `<rect width="1600" height="900" fill="url(#skpeaks)"/>${cbRidge(rnd, 520, 300, 140, "#4a140a")}
+           <path d="M560 920 L760 330 L840 330 L1040 920Z" fill="#2a0a06"/><ellipse cx="800" cy="330" rx="60" ry="14" fill="#ffb21a"/><circle cx="800" cy="330" r="200" fill="url(#lgpeaks)"/>
+           <g class="cb-smoke"><circle cx="790" cy="270" r="50" fill="#3a2a2a" opacity=".6"/><circle cx="830" cy="190" r="80" fill="#3a2a2a" opacity=".45"/><circle cx="770" cy="90" r="110" fill="#3a2a2a" opacity=".3"/></g>
+           ${rivers}${cbRidge(rnd, 760, 160, 120, "#1a0606")}`);
+  }
+  if (loc === "void" || loc === "eye") {
+    const eye = loc === "eye";
+    return wrap(sky("sk" + loc, [[0, "#04010c"], [.6, "#140428"], [1, "#2a0a40"]]) + glow("vg" + loc, "#c06bff") +
+      `<radialGradient id="iris${loc}"><stop offset="0" stop-color="#ffd6ff"/><stop offset=".4" stop-color="#c06bff"/><stop offset="1" stop-color="#3a0a5a"/></radialGradient>`,
+      `<rect width="1600" height="900" fill="url(#sk${loc})"/>${cbStars(rnd, 220, 900)}
+       <g class="cb-spin" style="transform-origin:800px 380px">${[520, 400, 280].map((r, i) => `<ellipse cx="800" cy="380" rx="${r * 1.6}" ry="${r * .5}" fill="none" stroke="${["#6a2aa0", "#c06bff", "#ff6ad5"][i]}" stroke-opacity=".25" stroke-width="${30 - i * 8}"/>`).join("")}</g>
+       <circle cx="800" cy="380" r="${eye ? 520 : 300}" fill="url(#vg${loc})" opacity=".7"/>
+       ${Array.from({ length: 6 }, () => { const x = eye ? (rnd() < .5 ? rnd() * 380 : 1220 + rnd() * 380) : rnd() * 1600, y = 200 + rnd() * 500, w = 40 + rnd() * 80; return `<path class="cb-float" style="animation-delay:${(rnd() * 5).toFixed(1)}s" d="M${x} ${y} l${w} -10 l${w * .3} ${w * .5} l${-w * .6} ${w * .4}Z" fill="#2a1a3a"/>`; }).join("")}
+
+       ${eye ? `<g class="cb-eye"><path d="M420 380 Q800 120 1180 380 Q800 640 420 380Z" fill="#1a0a24" stroke="#c06bff" stroke-width="6"/><circle cx="800" cy="380" r="150" fill="url(#iris${loc})"/><ellipse class="cb-pupil" cx="800" cy="380" rx="34" ry="120" fill="#05010a"/><circle cx="740" cy="320" r="22" fill="#fff" opacity=".7"/></g>` : ""}
+       <path d="M-20 920 L-20 720 L180 700 L320 760 L460 740 L520 920Z" fill="#100818"/><path d="M1100 920 L1160 760 L1300 740 L1460 780 L1620 720 L1620 920Z" fill="#100818"/>`);
+  }
+  return wrap("", `<rect width="1600" height="900" fill="#05060a"/>`);
+}
+const BG_FX = { beacon: "spark", dawn: "spark", dark: "ash", camp: "", campLit: "spark", campFog: "", woods: "firefly", lake: "snow", peaks: "ember", lava: "ember", void: "", eye: "" };
+function cineFx(type) {
+  if (!type) return "";
+  let s = "";
+  for (let i = 0; i < 34; i++) s += `<i class="fx-${type}" style="--x:${(Math.random() * 100).toFixed(1)}%;--dl:${(-Math.random() * 10).toFixed(1)}s;--du:${(5 + Math.random() * 8).toFixed(1)}s;--s:${(0.5 + Math.random()).toFixed(2)}"></i>`;
+  return s;
+}
+
+// ---------- cutscene music: a slow detuned pad per chapter ----------
+const CINE_CHORDS = [[130.8, 196, 329.6], [110, 164.8, 261.6], [73.4, 110, 174.6], [65.4, 92.5, 155.6], [130.8, 196, 246.9, 329.6]];
+const cineMusic = {
+  nodes: null,
+  start(ch = 0) {
+    if (store.muted || this.nodes) return;
+    try {
+      ac ||= new AudioContext(); if (ac.state === "suspended") ac.resume();
+      const t = ac.currentTime, out = ac.createGain(), lp = ac.createBiquadFilter(), lfo = ac.createOscillator(), lfoG = ac.createGain();
+      lp.type = "lowpass"; lp.frequency.value = 650; lp.Q.value = 3; lfo.frequency.value = 0.07; lfoG.gain.value = 300; lfo.connect(lfoG).connect(lp.frequency);
+      out.gain.setValueAtTime(0.0001, t); out.gain.exponentialRampToValueAtTime(0.03, t + 2.5);
+      lp.connect(out).connect(ac.destination);
+      const oscs = (CINE_CHORDS[ch] || CINE_CHORDS[0]).flatMap(f => [-7, 7].map(dt => { const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = f; o.detune.value = dt; o.connect(lp); o.start(t); return o; }));
+      lfo.start(t); this.nodes = { out, oscs: [...oscs, lfo] };
+    } catch {}
+  },
+  stop() {
+    const n = this.nodes; this.nodes = null; if (!n) return;
+    try { const t = ac.currentTime; n.out.gain.cancelScheduledValues(t); n.out.gain.setValueAtTime(Math.max(0.0001, n.out.gain.value), t); n.out.gain.exponentialRampToValueAtTime(0.0001, t + 0.8); n.oscs.forEach(o => o.stop(t + 0.9)); } catch {}
+  },
+};
+
+// ---------- cutscene player ----------
+let cineOn = false;
+function playCine(steps, ctx = {}) {
+  if (!steps.length || window.__noStory) return Promise.resolve();
+  return new Promise(resolve => {
+    let el = $("cine");
+    if (!el) {
+      el = document.createElement("div"); el.id = "cine"; el.className = "cine";
+      el.innerHTML = `<div class="cine-bg"></div><div class="cine-fx"></div><div class="cine-vig"></div><div class="cine-actor"></div><div class="cine-pip"></div>
+        <div class="cine-bar top"></div><div class="cine-bar bot"></div>
+        <div class="cine-title"></div><div class="cine-narr"><p></p></div>
+        <div class="cine-box"><div class="cine-face"></div><div class="cine-talk"><b class="cine-who"></b><p class="cine-text"></p></div><i class="cine-next">▼</i></div>
+        <button class="cine-skip">Skip ▸▸</button><div class="cine-hint">Tap or press Space</div>`;
+      document.body.appendChild(el);
+    }
+    const q = s => el.querySelector(s);
+    let i = -1, typing = null, timer = null, curBg = null, curActor = null, done = false, curNode = null, curText = "";
+    cineOn = true;
+    q(".cine-bg").innerHTML = ""; q(".cine-actor").innerHTML = ""; q(".cine-pip").innerHTML = ""; q(".cine-fx").innerHTML = "";
+    el.className = "cine show";
+    try { speechSynthesis.cancel(); } catch {}
+    cineMusic.start(ctx.ch ?? 0);
+    const setBg = loc => {
+      if (!loc || loc === curBg) return; curBg = loc;
+      const L = document.createElement("div"); L.className = "cine-layer" + (Math.random() < .5 ? " kb2" : "");
+      L.innerHTML = cineBg(loc); q(".cine-bg").appendChild(L);
+      setTimeout(() => L.classList.add("in"), 40);
+      const old = [...q(".cine-bg").children].slice(0, -1); setTimeout(() => old.forEach(o => o.remove()), 1300);
+      q(".cine-fx").innerHTML = cineFx(BG_FX[loc]);
+    };
+    const typeOut = (node, text) => {
+      clearInterval(typing); curNode = node; curText = text; let n = 0; node.textContent = ""; el.classList.add("typing");
+      typing = setInterval(() => { n += 2; node.textContent = text.slice(0, n); if (n >= text.length) { clearInterval(typing); typing = null; el.classList.remove("typing"); } }, 28);
+    };
+    const finish = () => {
+      if (done) return; done = true;
+      clearInterval(typing); clearTimeout(timer); removeEventListener("keydown", onKey, true);
+      try { speechSynthesis.cancel(); } catch {}
+      cineMusic.stop(); el.classList.add("out");
+      setTimeout(() => { el.className = "cine"; q(".cine-bg").innerHTML = ""; q(".cine-fx").innerHTML = ""; cineOn = false; resolve(); }, 650);
+    };
+    const next = () => {
+      if (done) return;
+      if (typing) { clearInterval(typing); typing = null; el.classList.remove("typing"); curNode.textContent = curText; return; }
+      clearTimeout(timer);
+      if (++i >= steps.length) return finish();
+      const s = steps[i];
+      setBg(s.bg);
+      el.classList.remove("titling", "narrating", "talking");
+      if (s.title != null || s.end) {
+        const c = CHAPTERS[s.title] || {};
+        q(".cine-title").innerHTML = s.end
+          ? `<small>THANKS FOR PLAYING</small><b style="--c:#ffc21a">THE END</b><i></i><em>The Great Ember burns again. Keep doing your push-ups, legend.</em>`
+          : `<small>CHAPTER ${CH_WORDS[s.title]}</small><b style="--c:${c.color}">${c.name}</b><i style="--c:${c.color}"></i>`;
+        el.classList.add("titling"); q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
+        sfx.boom(); say(s.end ? "The end." : `Chapter ${s.title + 1}. ${c.name}.`, { pitch: 0.8, rate: 0.95 });
+        timer = setTimeout(next, s.end ? 6000 : 3600);
+        return;
+      }
+      if (s.who === "narr") {
+        el.classList.add("narrating"); typeOut(q(".cine-narr p"), s.text);
+        q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
+        say(s.text, { pitch: 0.95, rate: 1.02 });
+        return;
+      }
+      const who = castOf(s.who, ctx);
+      el.classList.add("talking"); el.style.setProperty("--sc", who.color);
+      q(".cine-face").innerHTML = who.face; q(".cine-who").textContent = who.name;
+      q(".cine-box").classList.remove("pop"); void q(".cine-box").offsetWidth; q(".cine-box").classList.add("pop");
+      if (who.actor && curActor !== who.name) { q(".cine-actor").innerHTML = who.actor; q(".cine-actor").classList.remove("on"); void q(".cine-actor").offsetWidth; q(".cine-actor").classList.add("on"); curActor = who.name; sfx.roar(); }
+      else if (!who.actor) { q(".cine-actor").classList.remove("on"); curActor = null; }
+      if (who.pip) { if (!q(".cine-pip").innerHTML) q(".cine-pip").innerHTML = pipSvg("pa"); q(".cine-pip").style.setProperty("--k", 0.8 + (ctx.ch ?? 0) * 0.18); q(".cine-pip").classList.add("on"); }
+      else q(".cine-pip").classList.remove("on");
+      typeOut(q(".cine-text"), s.text);
+      say(s.text, who.voice);
+    };
+    function onKey(e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); finish(); }
+      else if (e.key === " " || e.key === "Enter" || e.key === "ArrowRight") { e.preventDefault(); e.stopPropagation(); next(); }
+    }
+    addEventListener("keydown", onKey, true);
+    el.onclick = e => { if (e.target.closest(".cine-skip")) finish(); else next(); };
+    setTimeout(next, 350);
+  });
+}
+
+// ---------- mission scenes: what your push-ups are powering ----------
+// Drawn in a 300×220 box. CSS variables drive them: --p (0→1 progress) and --d (0→1 danger: time running out or resting too long).
+const tf = (t, o = "0 0", x = "") => `style="transform:${t};transform-origin:${o};${x}"`;
+const stepIn = (i, n) => `clamp(0, var(--p) * ${n} - ${i}, 1)`;
+function msFlameDefs() { return cbFlameDefs("msf") + `<radialGradient id="msGlow"><stop offset="0" stop-color="#ffb347" stop-opacity=".9"/><stop offset=".5" stop-color="#ff7a1a" stop-opacity=".25"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>`; }
+const msFlame = extra => `<g class="cb-flick"><path d="M0 -70 C14 -44 34 -30 34 -4 C34 18 18 30 0 30 C-18 30 -34 18 -34 -4 C-34 -22 -20 -28 -14 -46 C-8 -34 -4 -40 0 -70Z" fill="url(#msfo)"/><path d="M0 -38 C8 -24 20 -14 20 2 C20 16 10 22 0 22 C-10 22 -20 16 -20 2 C-20 -12 -8 -18 0 -38Z" fill="url(#msfi)"/>${extra || ""}</g>`;
+const msPipFace = `<ellipse cx="-9" cy="2" rx="5" ry="6.5" fill="#fff"/><ellipse cx="9" cy="2" rx="5" ry="6.5" fill="#fff"/><circle cx="-8" cy="4" r="3" fill="#2a1408"/><circle cx="10" cy="4" r="3" fill="#2a1408"/><path d="M-6 14 Q0 19 6 14" stroke="#7a2a08" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+const msPip = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})">${msFlame(msPipFace)}</g>`;
+function sceneSvg(sc) {
+  const W = body => `<svg viewBox="0 0 300 220" preserveAspectRatio="xMidYMid meet"><defs>${msFlameDefs()}</defs>${body}</svg>`;
+  const rnd = seeded(sc.k.length * 97 + (sc.v || "").length);
+  switch (sc.k) {
+    case "flame": {
+      const pip = sc.v === "pip", camp = sc.v === "campfire";
+      const bg = pip ? `<rect width="300" height="220" fill="#050a1c"/>${cbPines(rnd, 7, 205, 90, 170, "#0b1430", 300)}`
+        : camp ? `<rect width="300" height="220" fill="#3a0e08"/><path d="M0 150 L50 90 L90 130 L150 60 L210 120 L250 80 L300 140 V220 H0Z" fill="#1e0806"/>`
+        : `<rect width="300" height="220" fill="#1a1428"/><path d="M0 190 Q150 175 300 190 V220 H0Z" fill="#26301c"/>`;
+      const eyes = pip ? [[-1, 30, 120], [-1, 18, 160], [1, 270, 110], [1, 282, 150], [-1, 40, 75], [1, 258, 70]].map(([dir, x, y], i) =>
+        `<g ${tf(`translateX(calc(${dir * -1} * clamp(0, var(--d) - var(--p) + .35, 1) * 46px))`)}><g class="cb-blink" style="animation-delay:${i * .7}s"><ellipse cx="${x - 7}" cy="${y}" rx="4.5" ry="2.6" fill="#ffd23a"/><ellipse cx="${x + 7}" cy="${y}" rx="4.5" ry="2.6" fill="#ffd23a"/></g></g>`).join("") : "";
+      const base = pip ? "" : camp
+        ? `<path d="M105 196 L195 176 M105 176 L195 196" stroke="#5a3a20" stroke-width="12" stroke-linecap="round"/>${[95, 120, 180, 205].map(x => `<ellipse cx="${x}" cy="198" rx="12" ry="7" fill="#555"/>`).join("")}`
+        : `<rect x="100" y="146" width="100" height="9" rx="4" fill="#7a6650"/><path d="M106 154 H194 L181 180 H119Z" fill="#5a4a3a"/><path d="M124 180 L112 202 M176 180 L188 202 M150 180 V202" stroke="#3a2e24" stroke-width="6"/>`;
+      const fy = pip ? 125 : camp ? 178 : 150, min = pip ? .45 : .1;
+      return W(`${bg}<circle cx="150" cy="${fy - 20}" r="110" fill="url(#msGlow)" ${tf(`scale(calc(.35 + var(--p) * .8))`, `150px ${fy - 20}px`).replace('"', '"opacity:calc(.15 + var(--p) * .85);')}/>${eyes}${base}
+        <g ${tf(`translate(150px, ${fy}px) scale(calc(${min} + var(--p) * ${pip ? .75 : 1.05}))`)}>${msFlame(pip ? msPipFace : "")}</g>`);
+    }
+    case "gate":
+      return W(`<rect width="300" height="220" fill="#232836"/><circle cx="240" cy="40" r="18" fill="#e8e0c8" opacity=".5"/>
+        <g ${tf("translateY(calc((1 - var(--d)) * 34px))", "0 0", "opacity:calc(.15 + var(--d) * .85)")} class="ms-fogin"><ellipse cx="115" cy="170" rx="60" ry="32" fill="#9aa0aa"/><ellipse cx="180" cy="158" rx="70" ry="38" fill="#b8bcc4"/><ellipse cx="150" cy="190" rx="90" ry="26" fill="#8a909a"/></g>
+        <clipPath id="msArch"><path d="M96 200 V82 Q150 46 204 82 V200Z"/></clipPath>
+        <g clip-path="url(#msArch)"><g ${tf("translateY(calc((var(--p) - 1) * 128px))")}>
+          ${[105, 120, 135, 150, 165, 180, 195].map(x => `<rect x="${x - 3}" y="40" width="6" height="160" fill="#3a3a3e"/><path d="M${x - 4} 200 L${x} 212 L${x + 4} 200Z" fill="#3a3a3e"/>`).join("")}
+          ${[70, 110, 150, 190].map(y => `<rect x="96" y="${y}" width="108" height="6" fill="#4a4a50"/>`).join("")}</g></g>
+        <path d="M0 30 H96 V200 H0Z M204 30 H300 V200 H204Z" fill="#6a5e54"/><path d="M96 30 H204 V82 Q150 46 96 82Z" fill="#6a5e54"/>
+        ${[0, 24, 48, 72, 204, 228, 252, 276].map(x => `<rect x="${x + 2}" y="16" width="18" height="16" fill="#6a5e54"/>`).join("")}
+        <path d="M0 70 H96 M0 110 H96 M0 150 H96 M204 70 H300 M204 110 H300 M204 150 H300 M30 30 V70 M60 70 V110 M30 110 V150 M60 150 V190 M240 30 V70 M270 70 V110 M240 110 V150 M270 150 V190" stroke="#4a403a" stroke-width="2"/>
+        <g ${tf("rotate(calc(var(--p) * 900deg))", "40px 92px")}><circle cx="40" cy="92" r="16" fill="none" stroke="#c8a050" stroke-width="5"/><path d="M24 92 H56 M40 76 V108" stroke="#c8a050" stroke-width="4"/></g>
+        <rect y="200" width="300" height="20" fill="#2a2620"/>
+        <g class="ms-fogfront"><ellipse cx="150" cy="180" rx="200" ry="70" fill="#a8adb6"/></g>`);
+    case "crack": {
+      const v = sc.v, cracks = { rock: "#1d1b18", scales: "#ffd23a", crystal: "#fff", roots: "" }[v];
+      const P = ["M150 84 L142 112 L156 130 L146 160", "M150 120 L120 128 L104 146", "M156 130 L186 122 L206 132", "M146 160 L170 170", "M142 112 L118 100", "M120 128 L118 160"];
+      let obj;
+      if (v === "rock") obj = `<rect x="100" y="150" width="100" height="40" rx="6" fill="#6a6a70"/><path d="M84 182 C72 134 104 86 150 84 C204 82 234 128 222 182Z" fill="#7d7a74"/><path d="M150 84 C204 82 234 128 222 182 L170 182 C196 140 186 100 150 84Z" fill="#5e5b56"/><ellipse cx="124" cy="112" rx="14" ry="8" fill="#9a968e" opacity=".7"/>`;
+      if (v === "scales") obj = `<path d="M70 200 V100 Q150 20 230 100 V200Z" fill="#5a1408"/>${Array.from({ length: 6 }, (_, r) => Array.from({ length: 7 }, (_, c) => { const x = 82 + c * 23 + (r % 2) * 11, y = 92 + r * 18; return x > 80 && x < 222 && (y > 92 || (x > 110 && x < 192)) ? `<path d="M${x - 12} ${y} A12 12 0 0 0 ${x + 12} ${y}Z" fill="#b8361a" stroke="#ff8a3d" stroke-width="1.5"/>` : ""; }).join("")).join("")}`;
+      if (v === "crystal") obj = `<path d="M150 50 L178 80 L172 180 L128 180 L122 80Z" fill="#9a4ae0" opacity=".9"/><path d="M150 50 L178 80 L172 180 L150 180Z" fill="#6a2aa0" opacity=".9"/><path d="M104 100 L122 116 L118 184 L94 184 L90 116Z" fill="#c06bff" opacity=".85"/><path d="M196 96 L212 112 L208 184 L184 184 L180 112Z" fill="#b057ff" opacity=".85"/><path d="M140 70 L134 150" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>`;
+      const bg = { rock: `<rect width="300" height="220" fill="#1c2430"/><rect y="182" width="300" height="38" fill="#26301c"/>`, scales: `<rect width="300" height="220" fill="#1a0806"/><rect y="196" width="300" height="24" fill="#2a0c08"/>`,
+        crystal: `<rect width="300" height="220" fill="#0a0418"/>${cbStars(rnd, 30, 220)}<rect y="184" width="300" height="36" fill="#160a24"/>`, roots: `<rect width="300" height="220" fill="#0b1430"/><rect y="190" width="300" height="30" fill="#0a1020"/><path d="M110 200 Q150 60 190 200" fill="#1a2240"/>` }[v];
+      if (v === "roots") {
+        const R = ["M10 60 C80 90 120 40 160 120 S260 150 295 100", "M0 150 C60 120 110 170 170 130 S250 60 300 80", "M30 200 C70 120 140 150 150 90 S220 30 280 20", "M290 200 C230 140 170 180 140 110 S70 40 20 30", "M0 100 C90 110 160 190 300 150", "M60 0 C80 80 200 90 240 220"];
+        obj = R.map((d, i) => `<g ${tf(`translateY(calc(${stepIn(i, 6)} * ${i % 2 ? 60 : -60}px)) rotate(calc(${stepIn(i, 6)} * ${i % 2 ? 20 : -20}deg))`, "150px 110px", `opacity:calc(1 - ${stepIn(i, 6)})`)}><path d="${d}" stroke="#3a2a40" stroke-width="16" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#7a5a9a" stroke-opacity=".5" stroke-width="4" fill="none"/></g>`).join("");
+        return W(`${bg}<g class="ms-obj">${obj}</g>`);
+      }
+      return W(`${bg}<g class="ms-obj">${obj}${P.map((d, i) => `<path d="${d}" stroke="${cracks}" stroke-width="${v === "rock" ? 3.5 : 3}" fill="none" stroke-linecap="round" style="opacity:${stepIn(i, 6)}${v !== "rock" ? `;filter:drop-shadow(0 0 3px ${cracks})` : ""}"/>`).join("")}</g>`);
+    }
+    case "douse":
+      return W(`<rect width="300" height="220" fill="#1b1626"/><rect y="194" width="300" height="26" fill="#22301c"/>
+        <path d="M170 60 L262 196 L78 196Z" fill="#7a5a36"/><path d="M170 60 L190 196 L150 196Z" fill="#4a321c"/>
+        <g class="ms-smoke" style="opacity:calc(var(--p) * .7)"><circle cx="170" cy="60" r="14" fill="#888"/><circle cx="182" cy="34" r="20" fill="#888" opacity=".6"/></g>
+        <g ${tf("translate(170px, 150px) scale(calc(max(.03, 1 - var(--p)) * (1 + var(--d) * .7)))")}>
+          <g transform="translate(-40 10) scale(.8)">${msFlame()}</g><g transform="translate(40 14) scale(.7)">${msFlame()}</g><g transform="translate(0 -10) scale(1.15)">${msFlame()}</g></g>
+        <rect x="18" y="130" width="22" height="66" rx="4" fill="#4a6a8a"/><rect x="40" y="138" width="22" height="7" fill="#4a6a8a"/>
+        <g class="ms-pump"><rect x="14" y="108" width="44" height="7" rx="3" fill="#8a8a8a"/></g>
+        <path class="ms-spray" d="M62 141 Q110 60 156 140" stroke="#6ac8ff" stroke-width="6" stroke-dasharray="9 6" fill="none" stroke-linecap="round"/>`);
+    case "lift":
+      return W(`<rect width="300" height="220" fill="#0b1430"/>${cbPines(rnd, 7, 200, 90, 160, "#101c40", 300)}<rect y="196" width="300" height="24" fill="#0a1020"/>
+        <g class="ms-steel"><path d="M196 198 Q196 176 213 175 Q230 176 230 198Z" fill="#5a6a2e"/><circle cx="222" cy="182" r="2.5" fill="#ffc21a"/><path class="ms-wave" d="M238 196 L250 172" stroke="#d9a47a" stroke-width="7" stroke-linecap="round"/></g>
+        <g ${tf("translateY(calc(var(--d) * 5px)) rotate(calc(var(--p) * -34deg))", "40px 190px")}>
+          <rect x="30" y="170" width="250" height="28" rx="13" fill="#6b4424"/><rect x="30" y="170" width="250" height="9" rx="4" fill="#8a5a30"/><ellipse cx="276" cy="184" rx="9" ry="14" fill="#c8945a"/><ellipse cx="276" cy="184" rx="4" ry="7" fill="none" stroke="#8a5a30" stroke-width="2"/>
+          <path d="M120 170 L104 140 M104 140 L92 136 M180 170 L194 146" stroke="#6b4424" stroke-width="7" stroke-linecap="round"/></g>`);
+    case "cart":
+      return W(`<rect width="300" height="220" fill="url(#msLk)"/><defs><linearGradient id="msLk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2a55"/><stop offset="1" stop-color="#8fb6e0"/></linearGradient></defs>
+        <path d="M0 120 L40 80 L80 110 L130 60 L180 105 L230 70 L300 115 V150 H0Z" fill="#3a4e7a"/><ellipse cx="270" cy="168" rx="70" ry="16" fill="#cfeaff"/>
+        <path d="M0 188 Q150 176 300 182" stroke="#5a4a3a" stroke-width="16" fill="none"/><path d="M0 188 Q150 176 300 182" stroke="#8a7050" stroke-width="2" stroke-dasharray="8 8" fill="none"/>
+        <rect x="262" y="128" width="3" height="40" fill="#ddd"/><path d="M265 130 L286 137 L265 144Z" fill="#ffc21a"/>
+        <g ${tf("translateX(calc(var(--p) * 200px))")}><rect x="10" y="150" width="56" height="24" rx="3" fill="#7a5a36"/><rect x="16" y="138" width="20" height="14" fill="#a07a4a"/><rect x="40" y="140" width="18" height="12" fill="#8a6a3a"/>
+          ${msPip(30, 128, .32)}
+          ${[22, 56].map(x => `<g ${tf("rotate(calc(var(--p) * 1080deg))", `${x}px 178px`)}><circle cx="${x}" cy="178" r="9" fill="#3a2a1a" stroke="#c8a060" stroke-width="2"/><path d="M${x - 9} 178 H${x + 9} M${x} 169 V187" stroke="#c8a060" stroke-width="2"/></g>`).join("")}</g>`);
+    case "climb":
+      return W(`<rect width="300" height="220" fill="url(#msCl)"/><defs><linearGradient id="msCl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0806"/><stop offset="1" stop-color="#ff6a3d"/></linearGradient></defs>
+        <path d="M0 200 Q60 180 120 205 V220 H0Z" fill="#3a1a14" opacity=".6"/><ellipse cx="60" cy="160" rx="60" ry="14" fill="#fff" opacity=".25"/>
+        <path d="M120 220 L128 120 L118 70 L140 22 L300 18 V220Z" fill="#3a1c14"/><path d="M150 40 L170 80 M135 120 L160 150 M140 180 L170 200" stroke="#000" stroke-opacity=".3" stroke-width="3"/>
+        <rect x="150" y="2" width="3" height="22" fill="#ddd"/><path d="M153 4 L172 10 L153 16Z" fill="#ffc21a"/>
+        <path d="M150 22 V220" stroke="#c8a060" stroke-width="2.5"/>
+        <g ${tf("translateY(calc((1 - var(--p)) * 150px + var(--d) * 22px))")}><circle cx="140" cy="36" r="7" fill="#d9a47a"/><rect x="134" y="43" width="12" height="20" rx="4" fill="#4a5a8a"/><path d="M146 46 L151 38 M136 48 L150 44 M136 63 L130 76 M144 63 L148 76" stroke="#d9a47a" stroke-width="4" stroke-linecap="round"/></g>`);
+    case "bridge": {
+      const light = sc.v === "light";
+      const stones = Array.from({ length: 8 }, (_, i) => { const x = 62 + i * 22, s = stepIn(i, 8);
+        return `<g ${tf(`translateY(calc((1 - ${s}) * -46px))`, "0 0", `opacity:${s}`)}><rect x="${x}" y="116" width="21" height="13" rx="3" fill="${light ? "#f0e0ff" : "#6a5a50"}" ${light ? 'style="filter:drop-shadow(0 0 5px #c06bff)"' : ""}/></g>`; }).join("");
+      return W(light
+        ? `<rect width="300" height="220" fill="#08021a"/>${cbStars(rnd, 40, 220)}<g class="cb-spin" style="transform-origin:150px 200px"><ellipse cx="150" cy="200" rx="120" ry="30" fill="none" stroke="#c06bff" stroke-opacity=".4" stroke-width="10"/></g>
+           <path d="M0 116 H62 L52 220 H0Z" fill="#241634"/><path d="M238 116 H300 V220 H250Z" fill="#241634"/>${stones}<g ${tf("translateX(calc(var(--p) * 190px))")}>${msPip(34, 100, .3)}</g>`
+        : `<rect width="300" height="220" fill="#2a0806"/><path d="M0 116 H62 L56 220 H0Z" fill="#2a1410"/><path d="M238 116 H300 V220 H244Z" fill="#2a1410"/>
+           <g ${tf("translateY(calc((1 - var(--d)) * 46px))")}><rect x="0" y="148" width="300" height="80" fill="#ff7a1a" class="cb-lava"/><path d="M0 150 Q40 140 80 150 T160 150 T240 150 T320 150" stroke="#ffd23a" stroke-width="4" fill="none"/></g>${stones}`);
+    }
+    case "pull":
+      return W(`<rect width="300" height="220" fill="#07021a"/>${cbStars(rnd, 40, 220)}
+        <g class="cb-spin" style="transform-origin:58px 110px">${[56, 42, 30].map((r, i) => `<ellipse cx="58" cy="110" rx="${r}" ry="${r * .55}" fill="none" stroke="${["#6a2aa0", "#c06bff", "#ff6ad5"][i]}" stroke-width="${7 - i * 2}" opacity=".8"/>`).join("")}</g><circle cx="58" cy="110" r="20" fill="#000"/>
+        <g style="opacity:var(--d)">${[80, 100, 120, 140].map(y => `<path d="M${200} ${y} L90 ${110 + (y - 110) * .3}" stroke="#c06bff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 8"/>`).join("")}</g>
+        <circle cx="272" cy="110" r="20" fill="none" stroke="#fff6c0" stroke-width="4" style="filter:drop-shadow(0 0 6px #ffc21a)"/>
+        <g ${tf("translateX(calc(var(--p) * 150px - var(--d) * 50px)) scaleX(calc(1 + var(--d) * .5))", "100px 110px")}>${msPip(106, 112, .36)}</g>`);
+    case "shield":
+      return W(`<rect width="300" height="220" fill="#0a0418"/>${cbStars(rnd, 30, 220)}<rect y="196" width="300" height="24" fill="#160a24"/>
+        <defs><radialGradient id="msSh" cy="1"><stop offset=".6" stop-color="#ffc21a" stop-opacity="0"/><stop offset="1" stop-color="#ffc21a" stop-opacity=".45"/></radialGradient></defs>
+        <g ${tf("translateX(calc(var(--d) * 28px))")}><ellipse cx="0" cy="150" rx="46" ry="70" fill="#5a5a66"/><ellipse cx="20" cy="190" rx="40" ry="30" fill="#6a6a76"/></g>
+        <g ${tf("translateX(calc(var(--d) * -28px))")}><ellipse cx="300" cy="150" rx="46" ry="70" fill="#5a5a66"/><ellipse cx="280" cy="190" rx="40" ry="30" fill="#6a6a76"/></g>
+        <path d="M130 196 L136 120 H164 L170 196Z" fill="#3a3248"/><rect x="128" y="112" width="44" height="10" fill="#4a4058"/>
+        <g ${tf("translate(150px, 104px) scale(calc(.35 + var(--p) * .5))")}>${msFlame(msPipFace)}</g>
+        <path class="ms-dome" d="M44 196 A106 106 0 0 1 256 196Z" fill="url(#msSh)" stroke="#ffd27a" stroke-width="3" style="opacity:calc(.2 + var(--p) * .8)"/>`);
+  }
+  return W("");
+}
+const HALF_QUIP = { flame: "It's catching! Keep going!", gate: "Halfway down!", crack: "It's cracking!", douse: "It's shrinking!", lift: "It's moving! Keep lifting!", cart: "Halfway there!", climb: "Halfway up!", bridge: "Keep the stones coming!", pull: "We're pulling away!", shield: "The shield's holding!" };
+const DANGER_QUIP = { timed: "Faster! We're running out of time!", nobreak: "Don't stop now!", endure: "Almost out of time. Push!" };
+let quipTimer = null;
+function sceneQuip(text) {
+  const q = $("mQuip"); if (!q || !text) return;
+  q.innerHTML = `<span class="mq-face">${pipSvg("pq")}</span><span>${text}</span>`;
+  q.classList.remove("show"); void q.offsetWidth; q.classList.add("show");
+  clearTimeout(quipTimer); quipTimer = setTimeout(() => q.classList.remove("show"), 2600);
+}
+function sceneUpdate() {
+  if (!M?.m.scene) return;
+  const g = M.goal, el = $("mScene"), go = M.state === "go", now = performance.now();
+  const p = Math.min(1, M.reps / g.n), secs = go ? (now - M.startAt) / 1000 : 0;
+  let d = 0;
+  if (g.type === "timed" || g.type === "endure") d = Math.min(1, secs / g.t);
+  if (g.type === "nobreak" && M.reps && go) d = Math.min(1, (now - M.lastRepAt) / 4000);
+  el.style.setProperty("--p", p.toFixed(3)); el.style.setProperty("--d", d.toFixed(3));
+  if (go && d > 0.72 && !M.warned && DANGER_QUIP[g.type] && !(g.type === "endure" && M.reps >= g.n)) { M.warned = true; sceneQuip(DANGER_QUIP[g.type]); }
+}
+function sceneRep() {
+  if (!M?.m.scene) return;
+  const el = $("mScene"); el.classList.remove("hit"); void el.offsetWidth; el.classList.add("hit");
+  if (!M.halfQuip && M.reps / M.goal.n >= 0.5 && M.reps < M.goal.n) { M.halfQuip = true; sceneQuip(HALF_QUIP[M.m.scene.k]); }
+  if (M.goal.type === "nobreak") M.warned = false;
+}
+function sceneStart(m) {
+  const el = $("mScene");
+  el.hidden = !m.scene; el.className = "mscene"; $("mQuip").classList.remove("show");
+  if (!m.scene) return;
+  el.style.setProperty("--c", CHAPTERS[m.ch].color); el.style.setProperty("--p", 0); el.style.setProperty("--d", 0);
+  $("mSceneArt").innerHTML = sceneSvg(m.scene); $("mSceneLbl").textContent = m.obj;
+}
+function sceneEnd(won) {
+  if (!M?.m.scene) return;
+  const el = $("mScene"); el.classList.add(won ? "done" : "fail");
+  if (won) { const [x, y] = centerOf($("mSceneArt")); burst(x, y, { n: 50, colors: [CHAPTERS[M.m.ch].color, "#fff2a8", "#fff"], speed: 9, size: 4, life: 1.1 }); ring(x, y, CHAPTERS[M.m.ch].color, 200, 8, 0.7); }
+}
+window.__story = { STORY, playCine, storySteps, sceneSvg, get on() { return cineOn; } };
+
 // ---------- campaign world map ----------
 // One tall map you climb from the bottom (Boot Camp) to the top (The Void). Map units: 700 wide × 2800 tall,
 // each chapter is a 700-unit band. Scenery is drawn once from a fixed seed so it never moves around.
@@ -2318,11 +2991,12 @@ function renderCampaign() {
     <div class="cmap-top"><b>THE CAMPAIGN</b><span>★ ${campTotal()} / ${CAMP_LIST.length * 3}</span></div>
     <div class="cm-brief" style="--c:${pc}">
       <div class="cm-bt"><span class="cm-num">${pm.id}</span> ${pm.name} ${pst ? `<span class="cm-st">${"★".repeat(pst)}<span style="opacity:.25">${"★".repeat(3 - pst)}</span></span>` : ""}</div>
+      ${pm.obj ? `<div class="cm-obj">🎯 ${pm.obj}</div>` : ""}
       <div class="muted cm-story-line">${pm.story}</div>
       <div class="cm-goal">${MTYPES[pm.type].icon} ${MTYPES[pm.type].goal(pg)}</div>
       <div class="muted cm-rules">${MTYPES[pm.type].stars}</div>
       <div class="muted" id="campStatus" style="font-size:13px"></div>
-      <button id="campGo">${pst ? "Play again" : pm.type === "boss" ? "Fight ⚔" : "Start mission ▶"}</button>
+      <div class="cm-btns"><button id="campGo">${pst ? "Play again" : pm.type === "boss" ? "Fight ⚔" : "Start mission ▶"}</button>${pst || storySeen(pm.id) ? `<button class="cm-replay" id="campStory" title="Watch this mission's story again">📜 Story</button>` : ""}</div>
     </div>`;
   $("cmapDone").setAttribute("d", doneRoad(furthest));
   const sc = $("cmapScroll");
@@ -2332,6 +3006,7 @@ function renderCampaign() {
   } else sc.scrollTop = keep;
   sc.querySelectorAll(".mnode").forEach(el => el.onclick = () => { campPick = +el.dataset.k; renderCampaign(); });
   $("campGo").onclick = () => startMission(campPick);
+  if ($("campStory")) $("campStory").onclick = () => { if (inMatch() || cineOn) return; playCine([...storySteps(pm, "pre"), ...(pst ? storySteps(pm, "post") : [])], { ch: pm.ch, boss: pm.boss }); };
   renderCampPanel();
 }
 
@@ -2355,6 +3030,7 @@ function missionText() {
   if (M.goal.type === "nobreak") timer = M.reps ? `rest ${((performance.now() - M.lastRepAt) / 1000).toFixed(1)}s / 4s` : "start when ready";
   if (M.state !== "go") timer = "";
   $("mFill").style.width = pct * 100 + "%"; $("mTxt").textContent = txt; $("mTimer").textContent = timer;
+  sceneUpdate();
   $("mTimer").classList.toggle("low", (M.goal.type === "timed" || M.goal.type === "endure") && M.state === "go" && g.t - secs < 10
     || M.goal.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > 2500);
 }
@@ -2365,11 +3041,15 @@ function mCallout(text, sub, cls = "") {
 }
 
 async function startMission(k) {
-  if (inMatch() || M) return;
+  if (inMatch() || M || cineOn) return;
   const m = CAMP_LIST[k];
   if (!campUnlocked(k)) return;
   if (mode !== "campaign") setMode("campaign");
   campChapter = m.ch; campPick = k;
+  if (!campStars(m.id) && !storySeen(m.id)) {   // first time here: play the story first
+    renderCampaign(); await missionStory(m, "pre"); markSeen(m.id); renderCampaign();
+    if (inMatch() || M) return;
+  }
   if (m.type === "boss") return startFight(m.boss, m.id);
   const st = $("campStatus"); if (st) st.textContent = camReady ? "Get ready…" : "Starting camera and body tracker…";
   if (!(await ensureCamera())) { if ($("campStatus")) $("campStatus").innerHTML = `<span style="color:var(--bad)">Camera didn't start: ${$("loadMsg").textContent.replace("Couldn't start: ", "")}</span>`; return; }
@@ -2384,9 +3064,10 @@ async function startMission(k) {
   $("mission").hidden = false;
   $("mLvl").textContent = m.id; $("mName").textContent = m.name;
   $("mGoal").textContent = `${MTYPES[m.type].icon} ${MTYPES[m.type].goal(M.goal)}`;
+  sceneStart(m);
   missionText();
-  mCallout(m.name, "GET INTO POSITION");
-  say(`${m.name}. ${MTYPES[m.type].goal(M.goal)}. Get into position.`);
+  mCallout(m.name, m.obj ? m.obj.toUpperCase() : "GET INTO POSITION");
+  say(`${m.obj || m.name}. ${MTYPES[m.type].goal(M.goal)}. Get into position.`);
   await wait(2800);
   for (const n of [3, 2, 1]) { if (!M?.active) return; mCallout(String(n), null, "gold"); sfx.tick(); await wait(800); }
   if (!M?.active) return;
@@ -2401,6 +3082,7 @@ function missionRep(depthPct) {
   if (M.goal.type === "deep" && depthPct < CRIT) { M.misses++; sfx.clang(); mCallout("TOO SHALLOW", "GO DEEPER", "blue"); missionText(); return; }
   if (M.reps) M.maxGap = Math.max(M.maxGap, (now - M.lastRepAt) / 1000);
   M.reps++; M.lastRepAt = now;
+  sceneRep();
   const crit = depthPct >= CRIT;
   crit ? sfx.crit() : sfx.rep();
   const [x, y] = centerOf($("mFill"));
@@ -2433,7 +3115,7 @@ function finishMission(won, why = "") {
   if (!M?.active) return;
   const mm = M; mm.active = false; mm.state = won ? "won" : "lost";
   const secs = (performance.now() - mm.startAt) / 1000, stars = won ? missionStars() : 0;
-  missionText();
+  missionText(); sceneEnd(won);
   let firstClear = false;
   if (won) {
     store.campaign ||= {};
@@ -2444,7 +3126,10 @@ function finishMission(won, why = "") {
     setTimeout(() => confetti(160), 300);
   } else { mCallout("FAILED", null, "red"); sfx.defeat(); say("Mission failed. Try again!"); }
   endSet(false); renderRank();
-  setTimeout(() => showMissionResult(mm, won, stars, secs, why, firstClear), 1500);
+  setTimeout(async () => {
+    if (won && firstClear) { await wait(600); await missionStory(mm.m, "post"); }
+    showMissionResult(mm, won, stars, secs, why, firstClear);
+  }, 1500);
 }
 function showMissionResult(mm, won, stars, secs, why, firstClear) {
   const next = CAMP_LIST[mm.k + 1], ch = CHAPTERS[mm.m.ch];
