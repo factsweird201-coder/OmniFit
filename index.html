@@ -1821,9 +1821,11 @@ function toast(msg) {
 
 // ================= MODES =================
 let mode = "train";
+let trainArmed = false;   // set by the Training tab's Start button; cleared when the camera stops or you switch tabs
 function setMode(m) {
   if (inMatch()) return;
-  if (m !== mode && camReady && !F && !B && !M && !net) { if (setCount > 0) endSet(false); stopCamera(0, "Start camera"); }   // switching tabs: camera off
+  if (m !== mode && camReady) { if (setCount > 0) endSet(false); stopCamera(0, "Start camera"); }   // switching tabs: camera off (every tab starts it again from its own button)
+  if (m !== mode) trainArmed = false;
   if (m !== mode) $("setDone").hidden = true;
   mode = m;
   // each tab is its own screen: the "Ready to train?" start screen only belongs to Training
@@ -1865,7 +1867,7 @@ $("tabFood").onclick = () => setMode("food");
 let setCount = 0, pendingRankUps = [], bestToasted = false;
 
 function onRep(depthPct) {
-  if (!inMatch() && mode !== "train") return;   // e.g. still moving on a result screen or the map: not a training set
+  if (!inMatch() && !(mode === "train" && trainArmed)) return;   // training only counts after pressing Start on the Training tab
   if (exercise === "squat") return onSquat(depthPct);
   const before = rankIndex(store.total), today = dayKey(), beforeToday = store.days[today] || 0;
   setCount++; store.total++; store.kcal += kcalPerRep();
@@ -2709,7 +2711,8 @@ function ensureCamera() {
   })();
   return camReady;
 }
-$("startBtn").onclick = () => ensureCamera();
+// Training only counts reps after you press this button (not just because the camera happens to be on)
+$("startBtn").onclick = () => { if (mode !== "train" || inMatch()) return; trainArmed = true; ensureCamera(); };
 
 // Turn the camera off (light goes out) and show the start button again for the next set.
 let overlayTimer = 0, idleTimer = 0;
@@ -2725,7 +2728,7 @@ function cameraIdle(delay = 1500) {
   idleTimer = setTimeout(() => { if (camReady && !F && !B && !M && !net) stopCamera(0, "Start camera"); }, delay);
 }
 function stopCamera(overlayDelay = 0, label = "Start next set") {
-  clearTimeout(idleTimer);
+  clearTimeout(idleTimer); trainArmed = false;
   if (!camReady) return;
   const st = video.srcObject;
   video.srcObject = null;
