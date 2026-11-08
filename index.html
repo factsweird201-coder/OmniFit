@@ -873,6 +873,23 @@
     .fs-form { grid-template-columns: 1fr 1fr; }
     .fs-macs b { font-size: 13px; }
   }
+
+  /* ---------- squats: exercise switch + squat campaign ---------- */
+  .ex-switch { display: inline-flex; padding: 3px; } .ex-switch button { padding: 7px 14px; font-size: 13px; }
+  .overlay .ex-switch { margin: -2px 0 2px; } .overlay .ex-switch button { padding: 9px 18px; font-size: 14px; }
+  .ex-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  #sqStats { margin-top: 8px; } #sqStats:empty { display: none; }
+  .cmap-top .cmap-camps { display: flex; gap: 4px; background: rgba(0,0,0,.45); border: 1px solid var(--line2); border-radius: 12px; padding: 3px; }
+  .cmap-camp { background: transparent; color: #cfd4de; padding: 5px 11px; font-size: 12.5px; border-radius: 9px; letter-spacing: .5px; }
+  .cmap-camp.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a1000; }
+  .cmap-camp.sq.on { background: linear-gradient(135deg, #b8e04a, #4fb38a); }
+  .fog-8::before { background: radial-gradient(ellipse 60% 22% at 30% 40%, rgba(150,150,140,.35), transparent), radial-gradient(ellipse 55% 20% at 72% 60%, rgba(130,130,120,.3), transparent); }
+  .fog-9::before { background: radial-gradient(ellipse 60% 22% at 30% 35%, rgba(160,200,150,.25), transparent), radial-gradient(ellipse 55% 20% at 70% 60%, rgba(140,190,140,.22), transparent); }
+  .fog-10::before { background: radial-gradient(ellipse 60% 20% at 30% 30%, rgba(240,248,255,.3), transparent), radial-gradient(ellipse 55% 18% at 70% 60%, rgba(240,248,255,.26), transparent); }
+  .fog-11::before { background: conic-gradient(from 90deg at 50% 45%, rgba(176,106,224,0), rgba(176,106,224,.2), rgba(90,40,140,0), rgba(176,106,224,.16), rgba(176,106,224,0)); animation: voidSpin 60s linear infinite; }
+  .fog-9 .cmap-clouds .cb-back { fill: #1e3a2e; } .fog-9 .cmap-clouds .cb-front { fill: #2e5a40; }
+  .fog-10 .cmap-clouds .cb-back { fill: #a8c4e0; } .fog-10 .cmap-clouds .cb-front { fill: #d8ecf8; }
+  .fog-11 .cmap-clouds .cb-back { fill: #22103a; } .fog-11 .cmap-clouds .cb-front { fill: #3a2250; }
 </style>
 </head>
 <body>
@@ -904,7 +921,7 @@
       <div class="hud" id="hud" hidden>
         <div class="chip count" id="countChip"><b id="setCount">0</b><span>This set</span></div>
         <div class="chip"><b id="depthVal">–</b><span>Depth</span><div class="depth-meter"><div id="depthMeter"></div></div></div>
-        <div class="chip"><b id="angleVal">–</b><span>Elbow °</span></div>
+        <div class="chip"><b id="angleVal">–</b><span id="angleLbl">Elbow °</span></div>
       </div>
       <div class="chip phase" id="phase" hidden>READY</div>
       <div class="chip feedback" id="feedback" hidden>Get into push-up position</div>
@@ -977,7 +994,8 @@
       <div class="overlay" id="startOverlay">
         <div class="cam">📷</div>
         <div class="t">READY TO TRAIN?</div>
-        <div class="muted" style="max-width:420px">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view. Your training video never leaves your device.<!--web-only--> The site only counts anonymous visits (no cookies).<!--/web-only--></div>
+        <div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">💪 Push-ups</button><button data-ex="squat">🦵 Squats</button></div>
+        <div class="muted" style="max-width:420px"><span id="startTip">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.</span> Your training video never leaves your device.<!--web-only--> The site only counts anonymous visits (no cookies).<!--/web-only--></div>
         <button id="startBtn">Start camera</button>
         <div class="muted" id="loadMsg"></div>
       </div>
@@ -1006,7 +1024,12 @@
     </div>
     <div class="panel" style="margin-top:18px" id="howTrain">
       <h3>How it counts</h3>
-      <ul class="tips">
+      <ul class="tips" id="tipsSquat" hidden>
+        <li>Stand the camera up 2–3 m away, around hip height, so your whole body is in view — facing it or side-on.</li>
+        <li>Stand tall for a second so it learns your height, then sit back and down. Depth hits <b>50%</b> when your thighs are about parallel to the floor — that's a deep rep.</li>
+        <li>Squats get their own lifetime total, best set and daily goal. They also power the 🦵 Squat Campaign. Your rank still comes from push-ups.</li>
+      </ul>
+      <ul class="tips" id="tipsPush">
         <li>Works facing the camera or side-on. Hold the top position for a second so it learns your height.</li>
         <li>Go down until Depth hits ~40% and push back up. Hit <b>50%+</b> for a deep rep.</li>
         <li>Every push-up counts toward your lifetime total and your rank — in training and in boss fights.</li>
@@ -1023,6 +1046,7 @@
         <li><b>Mission types:</b> 💪 reach a count · ⏱️ beat the clock · 🎯 deep reps only (50%+) · 🔗 no resting over 4 s · 🔥 as many as you can before time runs out · ⚔️ boss fights.</li>
         <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
         <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
+        <li><b>🦵 Squat Campaign:</b> a whole separate campaign, <i>The Sinking Lands</i>: 4 chapters, 24 missions and 8 new bosses, all done with squats. Switch campaigns with the buttons at the top of the map.</li>
       </ul>
     </div>
     <div class="panel" style="margin-top:18px" id="howBoss" hidden>
@@ -1097,6 +1121,8 @@
         <span class="muted" id="dailyMsg">Daily goal</span>
         <button class="goal-btn" id="goalBtn">Change goal</button>
       </div>
+      <div class="ex-row"><span class="muted">Training</span><div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">💪 Push-ups</button><button data-ex="squat">🦵 Squats</button></div></div>
+      <div class="muted" id="sqStats"></div>
     </div>
 
     <div class="panel" id="ladderPanel">
@@ -1104,7 +1130,7 @@
       <ol class="ladder" id="ladder"></ol>
     </div>
     <div class="panel" id="campPanel" hidden>
-      <h3>Campaign</h3><span class="muted"><b id="campStars" style="color:var(--accent)">0</b> / 72 stars</span>
+      <h3>Campaign</h3><span class="muted"><b id="campStars" style="color:var(--accent)">0</b> / <span id="campMax">72</span> stars</span>
       <div id="campProg" style="margin-top:10px"></div>
     </div>
     <div class="panel" id="rosterPanel" hidden>
@@ -1261,6 +1287,23 @@ const BOSSES = [
     intro: "Three heads, three yawns. Don't you dare fall asleep.", win: "The Dream Hydra drifts off forever!" },
   { id: "king",     name: "The Hollow King",  hp: 840, every: 4.5, windup: 2.2, specials: ["armor", "heal", "rapid", "frenzy", "armor", "rapid"],
     intro: "The Hollow King rises from his throne of pillows. The final fight.", win: "The Hollow King's crown shatters! Everyone wakes up!" },
+  // ----- Squat campaign: The Sinking Lands (squat fights; not in the Boss Battles list) -----
+  { id: "mole",   name: "Mole Rex",        hp: 90,  every: 9,   windup: 3.5, specials: ["frenzy"], sq: true,
+    intro: "Mole Rex bursts out of the ground. He's been digging under your feet!", win: "Mole Rex dives back underground for good!" },
+  { id: "bull",   name: "Bramble Bull",    hp: 130, every: 8.5, windup: 3.3, specials: ["armor"], sq: true,
+    intro: "The Bramble Bull paws the dirt. Thorns everywhere.", win: "The Bramble Bull charges off into the hills!" },
+  { id: "toad",   name: "Grumbletoad",     hp: 170, every: 7.5, windup: 3.0, specials: ["heal", "frenzy"], sq: true,
+    intro: "Grumbletoad puffs up. Ribbit.", win: "Grumbletoad deflates with a squeak!" },
+  { id: "witch",  name: "The Moss Witch",  hp: 210, every: 7.5, windup: 3.0, specials: ["heal", "armor"], sq: true,
+    intro: "The Moss Witch stirs her cauldron. Sink, sink, sink.", win: "The Moss Witch melts into the swamp!" },
+  { id: "yeti",   name: "Frostback Yeti",  hp: 260, every: 7,   windup: 2.8, specials: ["rapid", "armor", "frenzy"], sq: true,
+    intro: "The Frostback Yeti roars down the steps.", win: "The Yeti tumbles down the mountain!" },
+  { id: "giant",  name: "Glacier Giant",   hp: 310, every: 6.5, windup: 2.7, specials: ["armor", "heal", "rapid"], sq: true,
+    intro: "The Glacier Giant cracks awake. The whole mountain shakes.", win: "The Glacier Giant crumbles into snow!" },
+  { id: "sludge", name: "Sludge Knight",   hp: 370, every: 6,   windup: 2.6, specials: ["armor", "rapid", "heal", "frenzy"], sq: true,
+    intro: "The Sludge Knight raises a dripping sword. For the Queen!", win: "The Sludge Knight splatters into puddles!" },
+  { id: "quag",   name: "Queen Quagmire",  hp: 460, every: 5.5, windup: 2.5, specials: ["armor", "heal", "rapid", "frenzy", "armor"], sq: true,
+    intro: "Queen Quagmire rises from her throne of mud. The final fight.", win: "Queen Quagmire sinks into her own swamp! The land rises!" },
 ];
 
 const SPECIALS = {
@@ -1343,9 +1386,10 @@ const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1
 const rankIndex = total => RANKS.reduce((i, r, idx) => total >= r.at ? idx : i, 0);
 function streak() {
   const d = new Date();
-  if (!store.days[dayKey(d)]) d.setDate(d.getDate() - 1);
+  const did = k => (store.days[k] || 0) + (store.sq?.days?.[k] || 0) > 0;   // push-ups or squats both keep the streak
+  if (!did(dayKey(d))) d.setDate(d.getDate() - 1);
   let n = 0;
-  while (store.days[dayKey(d)] > 0) { n++; d.setDate(d.getDate() - 1); }
+  while (did(dayKey(d))) { n++; d.setDate(d.getDate() - 1); }
   return n;
 }
 
@@ -1423,7 +1467,8 @@ function renderRank() {
   $("rankName").textContent = r.name;
   $("total").textContent = store.total.toLocaleString();
   $("best").textContent = store.best;
-  $("bossesBeat").textContent = `${BOSSES.filter(b => store.bosses[b.id]?.won).length}/${BOSSES.length}`;
+  const pushBosses = BOSSES.filter(b => !b.sq);
+  $("bossesBeat").textContent = `${pushBosses.filter(b => store.bosses[b.id]?.won).length}/${pushBosses.length}`;
   if (next) {
     $("rankBar").style.width = (store.total - r.at) / (next.at - r.at) * 100 + "%";
     $("rankNext").textContent = `${store.total.toLocaleString()} / ${next.at.toLocaleString()} — ${(next.at - store.total).toLocaleString()} more to ${next.name}`;
@@ -1436,20 +1481,22 @@ function renderRank() {
     $("ladder").innerHTML = RANKS.map((rk, idx) =>
       `<li class="${idx <= i ? "got" : ""} ${idx === i ? "cur" : ""}"><span class="i">${rankBadge(idx)}</span><span class="nm">${rk.name}</span><span class="n">${rk.at.toLocaleString()}</span></li>`).join("");
   }
-  const today = store.days[dayKey()] || 0, s = streak();
+  const s = streak(), sqT = store.exercise === "squat", sq = sqStore();
+  const today = sqT ? sq.days[dayKey()] || 0 : store.days[dayKey()] || 0, goal = sqT ? sq.goal : store.goal;
   $("streak").textContent = `${s} day${s === 1 ? "" : "s"}`;
   $("todayCount").textContent = today;
-  $("goalVal").textContent = store.goal;
-  $("dailyBar").style.width = Math.min(100, today / store.goal * 100) + "%";
-  $("dailyMsg").textContent = today >= store.goal ? "✅ Daily goal smashed!" : `${store.goal - today} to go today`;
+  $("goalVal").textContent = goal;
+  $("dailyBar").style.width = Math.min(100, today / goal * 100) + "%";
+  $("dailyMsg").textContent = today >= goal ? `✅ Daily ${sqT ? "squat " : ""}goal smashed!` : `${goal - today} ${EX[sqT ? "squat" : "push"].many} to go today`;
+  $("sqStats").innerHTML = sqT ? `🦵 Squats: <b>${sq.total.toLocaleString()}</b> lifetime · best set <b>${sq.best}</b>` : (store.days[dayKey()] || 0) || !sq.total ? "" : `🦵 ${sq.days[dayKey()] || 0} squats today`;
   renderProfile();
 }
 
-const bossUnlocked = idx => idx === 0 || store.bosses[BOSSES[idx - 1].id]?.won;
+const bossUnlocked = idx => idx === 0 || store.bosses[BOSSES[idx - 1].id]?.won;   // only used for the push-up bosses (squat bosses live in the squat campaign)
 const fmtTime = s => s == null ? "" : `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 function renderRoster() {
-  const nextIdx = BOSSES.findIndex(b => !store.bosses[b.id]?.won);
-  $("roster").innerHTML = BOSSES.map((b, idx) => {
+  const nextIdx = BOSSES.findIndex(b => !b.sq && !store.bosses[b.id]?.won);
+  $("roster").innerHTML = BOSSES.map((b, idx) => { if (b.sq) return "";
     const rec = store.bosses[b.id], open = bossUnlocked(idx);
     const icons = [...new Set(b.specials)].map(s => SPECIALS[s].icon).join(" ");
     const right = !open ? "🔒" : rec?.won ? `${"★".repeat(rec.stars)}<span style="opacity:.25">${"★".repeat(3 - rec.stars)}</span><div class="bs">${fmtTime(rec.bestTime)}</div>` : `<span class="newtag">FIGHT</span>`;
@@ -1461,7 +1508,7 @@ function renderRoster() {
   $("roster").querySelectorAll(".bcard").forEach(el => el.onclick = () => startFight(+el.dataset.idx));
 
   // big boss-select screen in the stage
-  $("bsGrid").innerHTML = BOSSES.map((b, idx) => {
+  $("bsGrid").innerHTML = BOSSES.map((b, idx) => { if (b.sq) return "";
     const rec = store.bosses[b.id], open = bossUnlocked(idx);
     const icons = [...new Set(b.specials)].map(s => SPECIALS[s].icon).join(" ");
     const stars = rec?.won ? `${"★".repeat(rec.stars)}<span style="opacity:.25">${"★".repeat(3 - rec.stars)}</span>` : "";
@@ -1478,6 +1525,7 @@ function renderRoster() {
 }
 
 $("goalBtn").onclick = () => {
+  if (store.exercise === "squat") { const sq = sqStore(), gs = [...new Set([20, 30, 40, 50, 75, 100, 150, sq.goal])].sort((a, b) => a - b); sq.goal = gs[(gs.indexOf(sq.goal) + 1) % gs.length]; save(); renderRank(); return; }
   const goals = [...new Set([20, 25, 40, 50, 75, 100, 120, 150, 200, store.goal])].sort((a, b) => a - b);
   store.goal = goals[(goals.indexOf(store.goal) + 1) % goals.length];
   save(); renderRank();
@@ -1624,7 +1672,7 @@ function renderProfile() {
     $("profChange").innerHTML = `<span class="${p.goal === "tone" ? "" : good ? "delta-good" : "delta-bad"}">${diff > 0 ? "▲" : "▼"} ${Math.round(du * 10) / 10} ${p.unit}</span> from ${fmtW(p.startKg)} start`;
   }
   const today = store.days[dayKey()] || 0;
-  $("kcalToday").textContent = Math.round(today * kcalPerRep());
+  $("kcalToday").textContent = burnedOn(dayKey());
   $("kcalTotal").textContent = Math.round(store.kcal).toLocaleString();
   $("profLevel").textContent = LEVELS[p.level].label;
   $("logWeight").placeholder = `Log today's weight (${p.unit})`;
@@ -1712,7 +1760,8 @@ function announcerLines() {
   const L = ["Profile updated.", "Daily goal complete!", "Fight!", "Incoming! Parry!", "Last heart! Careful!", "Ouch!", "Parry!", "Five combo!", "Ten combo! Unstoppable!",
     "It's enraged! Finish it!", "Go!", "Goal hit! Keep going!", "Mission failed. Try again!", "It's a draw!"];
   RANKS.forEach(r => L.push(`Rank up! You are now ${r.name}`));
-  for (let n = 1; n <= 50; n++) for (const b of ["", " New best!"]) L.push(`Set complete. ${n} push-up${n === 1 ? "" : "s"}.${b}`);
+  for (let n = 1; n <= 50; n++) for (const b of ["", " New best!"]) L.push(`Set complete. ${n} push-up${n === 1 ? "" : "s"}.${b}`, `Set complete. ${n} squat${n === 1 ? "" : "s"}.${b}`);
+  L.push("Daily squat goal complete!");
   BOSSES.forEach(b => L.push(b.intro + " Get into position.", b.win));
   Object.values(SPECIALS).forEach(sp => L.push(sp.say));
   [1, 2, 3].forEach(n => L.push(`Mission complete! ${n} star${n === 1 ? "" : "s"}.`));
@@ -1755,6 +1804,7 @@ function setMode(m) {
   $("campPanel").hidden = m !== "campaign";
   $("howCamp").hidden = m !== "campaign";
   $("campMap").hidden = m !== "campaign";
+  syncExercise();
   if (m === "campaign") { renderCampaign(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" });
     if (campReset) { campReset = false; toast("📜 The campaign has a story now! It restarted so you can play it from the beginning."); } }
   $("tabBoss").classList.toggle("on", m === "boss");
@@ -1785,6 +1835,7 @@ $("tabFood").onclick = () => setMode("food");
 let setCount = 0, pendingRankUps = [], bestToasted = false;
 
 function onRep(depthPct) {
+  if (exercise === "squat") return onSquat(depthPct);
   const before = rankIndex(store.total), today = dayKey(), beforeToday = store.days[today] || 0;
   setCount++; store.total++; store.kcal += kcalPerRep();
   lastRepTime = performance.now(); lowSince = 0;
@@ -1808,8 +1859,24 @@ function onRep(depthPct) {
   const after = rankIndex(store.total);
   if (after > before) { if (F || B || M) pendingRankUps.push(after); else showRankUp(after); }
 }
+// squats: their own totals (no rank-ups), then the same fight / mission / training handling
+function onSquat(depthPct) {
+  const sq = sqStore(), today = dayKey(), beforeToday = sq.days[today] || 0;
+  setCount++; sq.total++; sq.days[today] = beforeToday + 1; store.kcal += kcalPerSquat();
+  lastRepTime = performance.now(); lowSince = 0;
+  if (setCount > sq.best) { if (sq.best > 0 && !bestToasted) { bestToasted = true; toast(`🎉 New best squat set — keep going!`); } sq.best = setCount; }
+  save();
+  $("setCount").textContent = setCount;
+  $("endBtn").disabled = inMatch();
+  const chip = $("countChip"); chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump");
+  if (beforeToday < sq.goal && beforeToday + 1 >= sq.goal) { toast("✅ Daily squat goal complete!"); confetti(90); if (!inMatch() && !M) say("Daily squat goal complete!"); }
+  if (F?.active) fightRep(depthPct);
+  else if (M?.active) missionRep(depthPct);
+  else { sfx.rep(); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  renderRank();
+}
 window.__rep = (d = 0.4) => onRep(d);
-window.__feed = lm => { step(analyse(lm)); if (B) sendPose(lm); };   // test hook: push one pose frame through the detector
+window.__feed = lm => { detect(lm); if (B) sendPose(lm); };   // test hook: push one pose frame through the detector
 
 function showRankUp(i) {
   const r = RANKS[i];
@@ -1835,17 +1902,18 @@ function endSet(showSummary = true) {
   if (showSummary && !F && !B && !M) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
 }
 function showSetDone(n) {
-  const isBest = n >= store.best && n > 1, today = store.days[dayKey()] || 0;
-  const kcal = Math.round(n * kcalPerRep());
+  const sqx = exercise === "squat", sq = sqStore();
+  const isBest = n >= (sqx ? sq.best : store.best) && n > 1, today = sqx ? sq.days[dayKey()] || 0 : store.days[dayKey()] || 0;
+  const kcal = Math.round(n * (sqx ? kcalPerSquat() : kcalPerRep()));
   const el = $("setDone");
-  el.innerHTML = `<div class="t">SET COMPLETE</div><div class="n">${n}</div><div class="u">push-up${n === 1 ? "" : "s"}</div>
-    <div class="s">${kcal ? `🔥 ${kcal} kcal · ` : ""}${today} / ${store.goal} today</div>${isBest ? `<div class="best">🏆 NEW BEST SET</div>` : ""}`;
+  el.innerHTML = `<div class="t">SET COMPLETE</div><div class="n">${n}</div><div class="u">${exWord(n)}</div>
+    <div class="s">${kcal ? `🔥 ${kcal} kcal · ` : ""}${today} / ${sqx ? sq.goal : store.goal} today</div>${isBest ? `<div class="best">🏆 NEW BEST SET</div>` : ""}`;
   el.classList.remove("out"); el.hidden = false; void el.offsetWidth;
   const [x, y] = centerOf(el);
   burst(x, y, { n: 40, colors: ["#ffc21a", "#fff2a8", "#ff8a00"], speed: 9, size: 4 });
   if (isBest) confetti(120);
   sfx.fanfare();
-  say(`Set complete. ${n} push-up${n === 1 ? "" : "s"}.${isBest ? " New best!" : ""}`);
+  say(`Set complete. ${n} ${exWord(n)}.${isBest ? " New best!" : ""}`);
   clearTimeout(setDoneTimer);
   setDoneTimer = setTimeout(() => { el.classList.add("out"); setTimeout(() => el.hidden = true, 500); }, 4500);
 }
@@ -1888,7 +1956,8 @@ async function startFight(idx, camp = null) {
   $("stage").classList.add("fighting");
   $("arena").hidden = false;
   $("bossName").textContent = boss.name;
-  $("bossLvl").textContent = `BOSS ${idx + 1}`;
+  $("bossLvl").textContent = boss.sq ? `SQUAT BOSS ${idx - BOSSES.findIndex(b => b.sq) + 1}` : `BOSS ${idx + 1}`;
+  syncExercise();
   $("bossArt").innerHTML = bossArt(boss.id);
   $("bossWrap").className = "boss-wrap intro";
   $("enrageTag").hidden = true; $("special").hidden = true; $("combo").innerHTML = ""; $("pauseBtn").textContent = "⏸ Pause";
@@ -2109,11 +2178,11 @@ function showResult(f, won, firstWin, time) {
   $("resStamp").hidden = !won;
   $("resBig").textContent = won ? `${f.boss.name} defeated!` : `${f.boss.name} wins this time`;
   $("resStars").innerHTML = won ? [0, 1, 2].map(i => `<span class="${i < f.hearts ? "" : "off"}" style="animation-delay:${0.5 + i * 0.18}s">⭐</span>`).join("") : "";
-  $("resStats").innerHTML = [["Push-ups", f.reps], ["Crits", f.crits], ["Parries", f.parries], ["Time", fmtTime(time)]]
+  $("resStats").innerHTML = [[EX[exercise].Many, f.reps], ["Crits", f.crits], ["Parries", f.parries], ["Time", fmtTime(time)]]
     .map(([k, v]) => `<div><b>${v}</b><span class="muted">${k}</span></div>`).join("");
   $("resSub").textContent = won
     ? (firstWin && hasNext ? `🔓 Unlocked: ${BOSSES[f.idx + 1].name}` : (f.idx + 1 === BOSSES.length ? "You beat every boss. Legend status." : ""))
-    : `It had ${Math.ceil(f.hp)} HP left (${Math.round(f.hp / f.maxHp * 100)}%). Tip: deep reps crit, and push-up during the red bar to parry.`;
+    : `It had ${Math.ceil(f.hp)} HP left (${Math.round(f.hp / f.maxHp * 100)}%). Tip: deep reps crit, and ${exercise === "squat" ? "squat" : "push-up"} during the red bar to parry.`;
   $("resMain").textContent = won ? (hasNext ? "Next boss ⚔" : "Fight again") : "Retry ⚔";
   $("resMain").onclick = () => { closeResult(); startFight(won && hasNext ? f.idx + 1 : f.idx); };
   $("resBack").textContent = "Back to bosses";
@@ -2181,7 +2250,7 @@ function logRep(entry) {
   try { localStorage.setItem(LOG_KEY, JSON.stringify(repLog)); } catch {}
 }
 window.__repLog = () => repLog;
-const fmtLog = () => repLog.slice(-80).reverse().map(e => `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}${e.flare != null ? ` flare ${e.flare}` : ""}${e.arms != null ? ` arms ${e.arms}` : ""}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
+const fmtLog = () => repLog.slice(-80).reverse().map(e => e.ex === "squat" ? `${e.at.slice(5, 19).replace("T", " ")}  SQUAT ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth}${e.knee != null ? ` knee ${e.knee}` : ""}` : ""}` : `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}${e.flare != null ? ` flare ${e.flare}` : ""}${e.arms != null ? ` arms ${e.arms}` : ""}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
 $("logDetails").ontoggle = () => { if ($("logDetails").open) $("logPre").textContent = fmtLog(); };
 $("logCopy").onclick = async () => { try { await navigator.clipboard.writeText(fmtLog()); toast("📋 Log copied"); } catch { toast("Couldn't copy — select the text instead"); } };
 
@@ -2389,6 +2458,126 @@ function step(res) {
 function setPhase(t) { const p = $("phase"); p.textContent = t; p.style.color = t === "DOWN" ? "var(--accent)" : t === "UP" ? "var(--good)" : "var(--muted)"; }
 function setFeedback(t, kind) { const f = $("feedback"); f.textContent = t; f.style.color = kind === "bad" ? "var(--bad)" : kind === "warn" ? "var(--accent)" : "var(--good)"; }
 
+// ================= SQUATS =================
+// Training can count push-ups or squats; the squat campaign and its bosses always use squats, everything else push-ups.
+let exercise = "push";
+const EX = {
+  push:  { one: "push-up", many: "push-ups", Many: "Push-ups", icon: "💪" },
+  squat: { one: "squat",   many: "squats",   Many: "Squats",   icon: "🦵" },
+};
+const exWord = (n, ex = exercise) => n === 1 ? EX[ex].one : EX[ex].many;
+const sqStore = () => { store.sq ||= {}; store.sq.total ||= 0; store.sq.best ||= 0; store.sq.days ||= {}; store.sq.goal ||= 30; return store.sq; };
+const kcalPerSquat = () => store.profile ? 0.0055 * store.profile.weightKg : 0;   // rough: ~0.38 kcal per bodyweight squat at 70 kg
+const burnedOn = d => Math.round((store.days[d] || 0) * kcalPerRep() + (store.sq?.days?.[d] || 0) * kcalPerSquat());
+function wantEx() {
+  if (M) return chEx(M.m.ch);
+  if (F) return F.camp ? chEx(CAMP_LIST.find(m => m.id === F.camp)?.ch ?? 0) : "push";
+  if (B || mode === "pvp" || mode === "boss") return "push";
+  if (mode === "campaign") return CAMPAIGNS[campSet()].ex;
+  return store.exercise === "squat" ? "squat" : "push";
+}
+function syncExercise() {
+  const e = wantEx();
+  if (e === exercise) return;
+  exercise = e;
+  disarm(); topRef = null; smoothDepth = null; gapHist.length = 0; sqReset();
+  renderExUI();
+}
+function setTrainEx(e) {
+  if (inMatch() || M || store.exercise === e || (!store.exercise && e === "push")) return;
+  if (setCount > 0) endSet(true);
+  store.exercise = e; save();
+  syncExercise(); renderExUI(); renderRank();
+  if (camReady) { setPhase("READY"); setFeedback(e === "squat" ? "Stand tall, whole body in view" : "Get into push-up position", "warn"); }
+}
+function renderExUI() {
+  const te = store.exercise === "squat" ? "squat" : "push";
+  document.querySelectorAll(".ex-switch button").forEach(b => b.classList.toggle("on", b.dataset.ex === te));
+  $("angleLbl").textContent = exercise === "squat" ? "Knee °" : "Elbow °";
+  $("startTip").innerHTML = te === "squat"
+    ? "Stand the camera up about 2–3 m away, around hip height, so your whole body from head to feet is in view. Facing it or side-on both work."
+    : "Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.";
+  $("tipsPush").hidden = te === "squat"; $("tipsSquat").hidden = te !== "squat";
+}
+document.querySelectorAll(".ex-switch button").forEach(b => b.onclick = () => setTrainEx(b.dataset.ex));
+
+// ---- squat detection: hips drop below where they sit when you stand tall, then come back up ----
+// Depth is how far the hips drop compared with your leg length: 50% ≈ thighs parallel to the floor (a "deep" squat),
+// the same scale push-ups use, so missions and boss crits work unchanged.
+const SQ_MIN_DEPTH = 0.25, SQ_DOWN = 0.15, SQ_UP = 0.07;
+const SQ = {};
+function sqReset() { Object.assign(SQ, { phase: "up", armed: false, topY: null, scale: null, still: 0, downSince: 0, upFrames: 0, maxD: 0, lastAt: 0, hist: [], d: 0 }); }
+sqReset();
+function squatStep(lm) {
+  const W = canvas.width || 1, H = canvas.height || 1, now = performance.now();
+  const P = i => ({ x: lm[i].x * W, y: lm[i].y * H, v: vis(lm[i]) });
+  const sides = [[11, 23, 25, 27], [12, 24, 26, 28]].map(([s, h, k, a]) => ({ s: P(s), h: P(h), k: P(k), a: P(a) }));
+  const hs = sides.filter(S => S.h.v > 0.4 && S.s.v > 0.4);
+  if (!hs.length) {
+    const msg = sides.some(S => S.s.v > 0.4) ? "Step back so your hips and knees are in the picture" : "Can't see you — step back so your whole body is in view";
+    setFeedback(msg, "bad"); checkAutoEnd(true); SQ.still = 0; noteBlocked(msg, {}); return;
+  }
+  const avg = (arr, f) => arr.reduce((t, S) => t + f(S), 0) / arr.length;
+  const hipY = avg(hs, S => S.h.y), shY = avg(hs, S => S.s.y), torso = Math.abs(hipY - shY);
+  const legs = hs.filter(S => S.k.v > 0.3 && S.a.v > 0.3), kneesOnly = hs.filter(S => S.k.v > 0.3);
+  let knee = null;
+  if (legs.length) { const b = legs.reduce((x, y) => x.k.v + x.a.v >= y.k.v + y.a.v ? x : y); knee = angle(b.h, b.k, b.a); }
+  $("angleVal").textContent = knee == null ? "–" : Math.round(knee);
+  // leg length while standing: hip→ankle if the feet are in view, else 2× hip→knee, else from the torso
+  const legLen = legs.length ? avg(legs, S => S.a.y - S.h.y) : kneesOnly.length ? 2 * avg(kneesOnly, S => S.k.y - S.h.y) : torso * 1.6;
+  const dx = Math.abs(avg(hs, S => S.h.x) - avg(hs, S => S.s.x));
+  const upright = torso > 0.06 * H && torso > 1.2 * dx;   // lying in a plank or on the floor isn't a squat
+  SQ.hist.push(hipY); if (SQ.hist.length > 5) SQ.hist.shift();
+  const hip = [...SQ.hist].sort((a, b) => a - b)[SQ.hist.length >> 1];
+
+  if (!SQ.armed) {
+    checkAutoEnd(true);
+    if (!upright) { SQ.still = 0; SQ.topY = null; setPhase("READY"); setFeedback("Stand up straight to start", "warn"); noteBlocked("not standing", {}); return; }
+    const sc = Math.max(legLen, torso * 1.2, 0.1 * H);
+    if (SQ.topY == null || Math.abs(hip - SQ.topY) > 0.04 * sc) { SQ.topY = hip; SQ.scale = sc; SQ.still = 0; }
+    else { SQ.topY = Math.min(SQ.topY, hip); SQ.scale = SQ.scale * 0.8 + sc * 0.2; SQ.still++; }
+    if (SQ.still < 6) { setPhase("READY"); setFeedback("Stand tall for a second…", "warn"); return; }
+    SQ.armed = true; SQ.phase = "up"; setPhase("UP"); noteBlocked("", {});
+  }
+  const D = Math.max(0, (hip - SQ.topY) / (0.84 * SQ.scale));
+  SQ.d = SQ.d * 0.5 + D * 0.5;
+  const d = SQ.d;
+  $("depthVal").textContent = Math.round(d * 100) + "%";
+  $("depthMeter").style.width = Math.min(100, d / 0.6 * 100) + "%";
+
+  if (SQ.phase === "up") {
+    checkAutoEnd(!upright);
+    // keep learning your standing height: rise above it straight away, settle lower only very slowly
+    if (hip < SQ.topY) SQ.topY = SQ.topY * 0.7 + hip * 0.3;
+    else if (d < 0.06) SQ.topY += (hip - SQ.topY) * 0.01;
+    if (d < 0.06 && upright) SQ.scale = SQ.scale * 0.98 + Math.max(legLen, torso * 1.2, 0.1 * H) * 0.02;
+    setPhase("UP");
+    if (d > SQ_DOWN) { SQ.phase = "down"; SQ.downSince = now; SQ.maxD = d; SQ.upFrames = 0; setPhase("DOWN"); sfx.down(); }
+    else setFeedback(d > 0.08 ? "Lower…" : "Good — squat down", d > 0.08 ? "warn" : "good");
+    return;
+  }
+  checkAutoEnd(false);
+  SQ.maxD = Math.max(SQ.maxD, d);
+  if (now - SQ.downSince > 8000) {   // "down" for ages: your standing height was learned wrong, start over
+    logRep({ ok: false, reason: "reset: stuck at bottom (squat)" });
+    sqReset(); setPhase("READY"); setFeedback("Stand tall to start", "warn"); return;
+  }
+  setFeedback(SQ.maxD >= CRIT ? "Deep! Now stand up!" : SQ.maxD >= SQ_MIN_DEPTH ? "Stand up!" : "Lower…", SQ.maxD >= SQ_MIN_DEPTH ? "good" : "warn");
+  SQ.upFrames = d < SQ_UP ? SQ.upFrames + 1 : 0;
+  if (SQ.upFrames < 3) return;
+  SQ.phase = "up"; setPhase("UP");
+  const info = { ex: "squat", ms: Math.round(now - SQ.downSince), depth: +SQ.maxD.toFixed(2), knee: knee == null ? null : Math.round(knee) };
+  if (info.ms < 350 || (SQ.lastAt && now - SQ.lastAt < 500)) { if (now - lastBlipLog > 3000) { lastBlipLog = now; logRep({ ok: false, reason: "ignored: camera flicker", ...info }); } return; }
+  if (info.depth < SQ_MIN_DEPTH) {
+    logRep({ ok: false, reason: "squat a bit lower", ...info }); setFeedback("Not counted — squat a bit lower", "bad");
+    if ((F?.active && F.state !== "countdown")) callout("NOT COUNTED", "SQUAT LOWER", "red");
+    return;
+  }
+  SQ.lastAt = now; logRep({ ok: true, ...info });
+  onRep(Math.min(1, SQ.maxD));
+}
+function detect(lm) { syncExercise(); exercise === "squat" ? squatStep(lm) : step(analyse(lm)); }
+
 // ================= CAMERA + MODEL + SKELETON =================
 let landmarker, video = $("video"), canvas = $("canvas"), ctx = canvas.getContext("2d"), lastT = -1, camReady = null;
 const BONES = [[11, 12], [11, 13], [13, 15], [12, 14], [14, 16], [11, 23], [12, 24], [23, 24], [23, 25], [25, 27], [24, 26], [26, 28]];
@@ -2537,7 +2726,7 @@ function loop() {
     catch (e) { console.error(e); setFeedback("Tracker error: " + e.message, "bad"); requestAnimationFrame(loop); return; }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const lm = r.landmarks?.[0];
-    if (lm) { drawSkeleton(lm); step(analyse(lm)); if (B) sendPose(lm); }
+    if (lm) { drawSkeleton(lm); detect(lm); if (B) sendPose(lm); }
     else { setFeedback("Step into frame", "bad"); checkAutoEnd(true); }
   }
   requestAnimationFrame(loop);
@@ -2547,11 +2736,11 @@ function loop() {
 // 8 chapters × 6 missions, in two parts of 4 chapters. Each chapter has push-up challenges and two boss fights (the regular boss engine).
 // Missions unlock one after another; every mission earns 1–3 stars. Counts scale with your survey level.
 const MTYPES = {
-  reps:    { icon: "💪", goal: m => `Do ${m.n} push-ups`,                                 stars: "⭐⭐⭐ under 2.2 s per push-up · ⭐⭐ under 3.2 s" },
-  timed:   { icon: "⏱️", goal: m => `${m.n} push-ups in ${m.t} seconds`,                    stars: "⭐⭐⭐ with 25% of the time left · ⭐⭐ with 10% left" },
-  deep:    { icon: "🎯", goal: m => `${m.n} deep push-ups (50%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
-  nobreak: { icon: "🔗", goal: m => `${m.n} push-ups without resting more than 4 seconds`,  stars: "⭐⭐⭐ never resting over 2.5 s · ⭐⭐ never over 3.5 s" },
-  endure:  { icon: "🔥", goal: m => `At least ${m.n} push-ups in ${m.t} seconds`,           stars: "⭐⭐⭐ at 140% of the goal · ⭐⭐ at 120%" },
+  reps:    { icon: "💪", goal: m => `Do ${m.n} ${exM(m).many}`,                                 stars: "⭐⭐⭐ under 2.2 s per push-up · ⭐⭐ under 3.2 s" },
+  timed:   { icon: "⏱️", goal: m => `${m.n} ${exM(m).many} in ${m.t} seconds`,                    stars: "⭐⭐⭐ with 25% of the time left · ⭐⭐ with 10% left" },
+  deep:    { icon: "🎯", goal: m => exM(m) === EX.squat ? `${m.n} deep squats (thighs to parallel)` : `${m.n} deep push-ups (50%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
+  nobreak: { icon: "🔗", goal: m => `${m.n} ${exM(m).many} without resting more than 4 seconds`,  stars: "⭐⭐⭐ never resting over 2.5 s · ⭐⭐ never over 3.5 s" },
+  endure:  { icon: "🔥", goal: m => `At least ${m.n} ${exM(m).many} in ${m.t} seconds`,           stars: "⭐⭐⭐ at 140% of the goal · ⭐⭐ at 120%" },
   boss:    { icon: "⚔️", goal: m => `Defeat ${BOSSES[m.boss].name}`,                        stars: "⭐ per heart you have left" },
 };
 const CHAPTERS = [
@@ -2628,20 +2817,69 @@ const CHAPTERS = [
       { name: "Wide Awake",      type: "nobreak", n: 32, story: "The King whispers: just close your eyes…" },
       { name: "The Hollow King", type: "boss",    boss: 15, story: "The throne of pillows. The final fight." },
     ] },
+  // ----- Squat campaign: The Sinking Lands -----
+  { name: "Rumble Farms", color: "#9ccc3a", story: "The fields are sinking into grey mud, and the ground shakes every night.",
+    missions: [
+      { name: "Stand Tall",      type: "reps",    n: 10, story: "Show the Sergeant your squat. Every one lifts the barn." },
+      { name: "Haystack Fire",   type: "timed",   n: 12, t: 40, story: "The quake knocked a lantern into the hay!" },
+      { name: "Tunnel Trouble",  type: "boss",    boss: 16, story: "Something is digging under the fields." },
+      { name: "Rock Bottom",     type: "deep",    n: 8,  story: "A boulder is damming the river. Only deep squats crack it." },
+      { name: "Fence Lift",      type: "nobreak", n: 14, story: "The fence fell on Sergeant Steel. Keep lifting!" },
+      { name: "Thorn Charge",    type: "boss",    boss: 17, story: "Thorns, horns and a very bad mood." },
+    ] },
+  { name: "Mirebog", color: "#4fb38a", locked: "Past the farms the ground turns to swamp. It swallows anything that stands still.", story: "A swamp that swallows anything that stops moving.",
+    missions: [
+      { name: "Lantern Walk",    type: "endure",  n: 18, t: 60, story: "Keep Pip glowing through the fog." },
+      { name: "Stilt Village",   type: "timed",   n: 16, t: 45, story: "A whole village on stilts is sinking." },
+      { name: "Grumble",         type: "boss",    boss: 18, story: "The water bubbles. Something big is coming up." },
+      { name: "Root Rip",        type: "deep",    n: 12, story: "Roots are dragging the ground down like ropes." },
+      { name: "River Raft",      type: "reps",    n: 28, story: "The raft is leaking. Squat to bail!" },
+      { name: "Hut of Moss",     type: "boss",    boss: 19, story: "An old witch stirs a pot of grey sludge." },
+    ] },
+  { name: "The Thousand Steps", color: "#8fd3ff", locked: "A staircase of ice climbs into the clouds. Snow hangs over every step.", story: "A staircase of ice, a thousand steps high. Legs only.",
+    missions: [
+      { name: "First Hundred",   type: "reps",    n: 30, story: "Every squat is a step. Only nine hundred to go after this." },
+      { name: "Avalanche!",      type: "nobreak", n: 24, story: "Snow is pouring down the steps. Keep the shield up!" },
+      { name: "Abominable",      type: "boss",    boss: 20, story: "Something big, white and furry blocks the steps." },
+      { name: "Ice Breaker",     type: "deep",    n: 15, story: "A wall of solid ice. Only deep squats break it." },
+      { name: "Crevasse Run",    type: "timed",   n: 28, t: 55, story: "The steps split open. Build a bridge, fast!" },
+      { name: "The Mountain Wakes", type: "boss", boss: 21, story: "At the top, the mountain itself stands up." },
+    ] },
+  { name: "The Mire Throne", color: "#c58bff", locked: "Deep under the mountain, a queen pulls the whole world down.", story: "Queen Quagmire's kingdom, deep underground.",
+    missions: [
+      { name: "Into the Dark",   type: "endure",  n: 32, t: 75, story: "Light the old miners' brazier and push on." },
+      { name: "Cave-In",         type: "timed",   n: 30, t: 60, story: "The tunnel roof is coming down!" },
+      { name: "Kneel and Sink",  type: "boss",    boss: 22, story: "A knight of dripping mud guards the throne." },
+      { name: "Heart of the Mire", type: "deep",  n: 18, story: "Crystals pulse under the throne, pulling everything down." },
+      { name: "Rising City",     type: "nobreak", n: 30, story: "A whole city lies under the mud. Lift it." },
+      { name: "Queen Quagmire",  type: "boss",    boss: 23, story: "The throne of mud. The final fight." },
+    ] },
 ];
-CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : 1);
-const PARTS = [{ name: "The Great Ember", chs: [0, 1, 2, 3] }, { name: "The Hollow King", chs: [4, 5, 6, 7] }];
-const CAMP_LIST = CHAPTERS.flatMap((c, ci) => c.missions.map((m, mi) => ({ ...m, ch: ci, mi, id: `${ci + 1}-${mi + 1}` })));
+CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : ci < 8 ? 1 : 2);
+const PARTS = [{ name: "The Great Ember", chs: [0, 1, 2, 3] }, { name: "The Hollow King", chs: [4, 5, 6, 7] }, { name: "The Sinking Lands", chs: [8, 9, 10, 11] }];
+// two separate campaigns share the mission engine: push-ups (parts 1 and 2) and squats (its own 4 chapters, numbered 1–4, ids S1-1…)
+const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2] }];
+const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
+const campSet = () => store.campSet === 1 ? 1 : 0;
+const chEx = ci => CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex;
+const exM = m => EX[chEx(m.ch ?? 0)];
+const mStarsTxt = m => MTYPES[m.type].stars.replace(/push-ups?/g, w => w.endsWith("s") ? exM(m).many : exM(m).one);
+const mIcon = m => m.type === "reps" ? exM(m).icon : MTYPES[m.type].icon;
+const chNum = ci => ci - PARTS[CHAPTERS[ci].part].chs[0] + (CHAPTERS[ci].part === 1 ? 5 : 1);
+const missionId = (ci, mi) => `${CHAPTERS[ci].part === 2 ? "S" : ""}${chNum(ci)}-${mi + 1}`;
+const CAMP_LIST = CHAPTERS.flatMap((c, ci) => c.missions.map((m, mi) => ({ ...m, ch: ci, mi, id: missionId(ci, mi) })));
+const campOfK = k => campOfPart(CHAPTERS[CAMP_LIST[k].ch].part);
+const campKs = c => CAMP_LIST.flatMap((m, k) => campOfK(k) === c ? [k] : []);
 const campScale = () => LEVELS[store.profile?.level]?.boss ?? 1;
 const missionGoal = m => m.type === "boss" ? m : { ...m, n: Math.max(3, Math.round(m.n * campScale())) };
 const campStars = id => (store.campaign || {})[id] || 0;
-const campUnlocked = k => k === 0 || campStars(CAMP_LIST[k - 1].id) > 0;
-const campTotal = () => CAMP_LIST.reduce((t, m) => t + campStars(m.id), 0);
+const campUnlocked = k => k === 0 || campOfK(k) !== campOfK(k - 1) || campStars(CAMP_LIST[k - 1].id) > 0;   // each campaign starts open
+const campTotal = (c = campSet()) => campKs(c).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
 const partUnlocked = pi => chapterUnlocked(PARTS[pi].chs[0]);
-const campNextText = (cur, next) => !next ? "🏆 You beat the Hollow King and finished the whole campaign. Legend!"
+const campNextText = (cur, next) => !next ? (chEx(cur.ch) === "squat" ? "🏆 You sank Queen Quagmire and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
   : CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part ? `🏁 Part ${PART_WORDS[CHAPTERS[cur.ch].part][0] + PART_WORDS[CHAPTERS[cur.ch].part].slice(1).toLowerCase()} complete! 🔓 Part ${PART_WORDS[CHAPTERS[next.ch].part][0] + PART_WORDS[CHAPTERS[next.ch].part].slice(1).toLowerCase()}: ${PARTS[CHAPTERS[next.ch].part].name}`
-  : next.ch !== cur.ch ? `🏁 Chapter ${cur.ch + 1} complete! 🔓 Chapter ${next.ch + 1}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`;
+  : next.ch !== cur.ch ? `🏁 Chapter ${chNum(cur.ch)} complete! 🔓 Chapter ${chNum(next.ch)}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`;
 let campChapter = null, campPick = null, M = null;
 
 
@@ -2698,6 +2936,30 @@ const MISSION_STORY = {
   "8-4": { obj: "Smash the Mirror of Rest",                scene: { k: "crack", v: "mirror" } },
   "8-5": { obj: "Fight off the King's sleep spell",        scene: { k: "pull", v: "sleep" } },
   "8-6": { obj: "Shatter the Hollow King's crown" },
+  "S1-1": { obj: "Lift the sinking barn out of the mud",     scene: { k: "rise", v: "barn" } },
+  "S1-2": { obj: "Put out the haystack fire",                scene: { k: "douse" } },
+  "S1-3": { obj: "Pop Mole Rex out of his tunnels" },
+  "S1-4": { obj: "Crack the boulder damming the river",      scene: { k: "crack", v: "rock" } },
+  "S1-5": { obj: "Lift the fallen fence off Sergeant Steel", scene: { k: "lift" } },
+  "S1-6": { obj: "Chase the Bramble Bull out of the corn" },
+  "S2-1": { obj: "Keep Pip glowing in the swamp fog",        scene: { k: "flame", v: "pip" } },
+  "S2-2": { obj: "Raise the stilt village out of the swamp", scene: { k: "rise", v: "hut" } },
+  "S2-3": { obj: "Deflate Grumbletoad" },
+  "S2-4": { obj: "Rip out the Mire roots",                   scene: { k: "crack", v: "roots" } },
+  "S2-5": { obj: "Bail out the raft before it sinks",        scene: { k: "boat" } },
+  "S2-6": { obj: "Melt the Moss Witch's spell" },
+  "S3-1": { obj: "Climb the first hundred steps",            scene: { k: "steps" } },
+  "S3-2": { obj: "Hold Pip's shield against the avalanche",  scene: { k: "shield" } },
+  "S3-3": { obj: "Send the Yeti tumbling" },
+  "S3-4": { obj: "Smash the wall of ice",                    scene: { k: "crack", v: "ice" } },
+  "S3-5": { obj: "Bridge the crevasse",                      scene: { k: "bridge", v: "sky" } },
+  "S3-6": { obj: "Topple the Glacier Giant" },
+  "S4-1": { obj: "Light the old miners' brazier",            scene: { k: "flame", v: "brazier" } },
+  "S4-2": { obj: "Push the pillar back up before the cave-in", scene: { k: "rise", v: "pillar" } },
+  "S4-3": { obj: "Splatter the Sludge Knight" },
+  "S4-4": { obj: "Shatter the Mire crystals",                scene: { k: "crack", v: "crystal" } },
+  "S4-5": { obj: "Lift the sunken city",                     scene: { k: "rise", v: "city" } },
+  "S4-6": { obj: "Sink Queen Quagmire" },
 };
 CAMP_LIST.forEach(m => Object.assign(m, MISSION_STORY[m.id]));
 
@@ -2809,6 +3071,33 @@ const STORY = {
     ["steel", "Good. First thing tomorrow, kid. Don't be late."],
     ["pip", "The Ember has never been brighter! We did it, legend!"],
   ],
+  // ----- Squat campaign: The Sinking Lands -----
+  prologue3: [
+    ["narr", "The Hollow King is gone and the whole world is awake. But in the farmlands east of Ironvale, the ground has started to sink.", "farm"],
+    ["narr", "Fields slide into grey mud. Barns tip over. Whole villages are sinking into something people call the Mire.", "bog"],
+    ["steel", "Push-ups saved the sky, recruit. This time the trouble is under our feet.", "camp"],
+    ["steel", "Ember from your arms makes sparks. Ember from your legs makes lift. Every squat pushes the ground back up."],
+    ["pip", "Leg day! Leg day! I've always wanted to see a leg day!"],
+  ],
+  chapter3: [
+    [ ["narr", "Rumble Farms. These fields used to feed half of Ironvale. Now they shake every night.", "farm"],
+      ["pip", "The scarecrows are sinking! And something is digging under the barn!"],
+      ["steel", "Feet shoulder-width. Chest up. Sit back like there's a chair behind you, then stand up hard. Go."] ],
+    [ ["narr", "Past the farms, the ground turns to swamp. This is Mirebog, and it swallows anything that stands still.", "bog"],
+      ["pip", "Ew, ew, ew. My feet are wet, and I don't even have feet."],
+      ["steel", "Keep moving. In a bog, the one who stops is the one who sinks."] ],
+    [ ["narr", "The Mire is pouring down from the mountains. The only way up is the Thousand Steps, carved into the ice.", "steps"],
+      ["pip", "A thousand?! Who counted them? Did you count them?"],
+      ["steel", "Every step is a squat. By the top, you'll have legs like tree trunks."] ],
+    [ ["narr", "Deep under the mountain lies the Mire Throne, where Queen Quagmire pulls the whole world down, one inch at a time.", "mire"],
+      ["quag", "Why fight it, little sparks? Everything falls in the end. Sit down. Sink. Stay."],
+      ["pip", "She wants us to sit down… so we'll stand up! Again and again and again!"] ],
+  ],
+  epilogue3: [
+    ["narr", "With the Queen gone, the Mire drains away. The farms rise, the swamp turns green, and the Thousand Steps sparkle in the sun.", "dawn"],
+    ["steel", "Push-ups and squats, recruit. Arms and legs. Now you're the complete package."],
+    ["pip", "Same time tomorrow? I'll bring snacks! Leg day snacks!"],
+  ],
 };
 Object.assign(STORY.m, {
   "5-1": { pre:  [["steel", "We borrowed a fishing boat, and it leaks. Every push-up bails out a bucket.", "coast"], ["pip", "Stop for too long and we sink! No pressure!"]],
@@ -2862,22 +3151,61 @@ Object.assign(STORY.m, {
   "8-6": { pre:  [["king", "I made the Eye, you know. I made the Slump. A whole world, resting. Wasn't it peaceful?", "throne"], ["steel", "Peaceful isn't the same as alive."],
                   ["vexr", "Go get him, recruit. For everyone he put to sleep."], ["pip", "This is it! Everything we've got!"]],
            post: [] },
+  // ----- Squat campaign -----
+  "S1-1": { pre:  [["steel", "Every squat pushes the ground up. Lift that barn before it's gone.", "farm"], ["pip", "Look! Every time you stand up, the barn comes up with you!"]],
+            post: [["pip", "It's out of the mud! You lifted a whole barn with your legs!", "farm"]] },
+  "S1-2": { pre:  [["narr", "The quake knocked a lantern into the hay. The whole field is about to go up.", "farm"]],
+            post: [["steel", "Fire's out. Good legs, recruit."]] },
+  "S1-3": { pre:  [["narr", "The ground bulges. A pair of tiny eyes and a huge pink nose pop out of the dirt.", "farm"], ["boss", "Mine! All the dirt is mine! The Queen promised me every field!"], ["pip", "The Queen? What queen?"]],
+            post: [["boss", "Okay, okay! The Queen of the Mire told me to dig! She's pulling everything down!", "farm"], ["steel", "A queen under the mud. Wonderful."]] },
+  "S1-4": { pre:  [["pip", "A boulder rolled into the river, and the water is turning the fields into swamp!", "farm"]] },
+  "S1-5": { pre:  [["steel", "The quake knocked the fence on top of me. Don't just stand there. Well… stand there, then squat, then stand there."]],
+            post: [["steel", "Thanks, recruit. My knees aren't what they used to be. Yours are, though."]] },
+  "S1-6": { pre:  [["narr", "Something big crashes through the corn. Thorns, horns, and a very bad mood.", "farm"], ["boss", "Snort! The Queen says nobody stands up on her land!"]],
+            post: [["pip", "It ran off! The fields are rising back up!", "farm"], ["steel", "The mud trail leads east. Into the swamp."]] },
+  "S2-1": { pre:  [["pip", "It's so foggy… I can barely see my own glow. Keep me bright!", "bog"]] },
+  "S2-2": { pre:  [["narr", "A whole village on stilts is sinking into the swamp, one inch at a time.", "bog"]],
+            post: [["pip", "They're up! Everybody's waving at us!"]] },
+  "S2-3": { pre:  [["narr", "The water bubbles. A toad the size of a house rises out of the muck.", "bog"], ["boss", "Grumble. Nobody hops in my swamp. Grumble."]],
+            post: [["boss", "Ribbit… the Moss Witch made me do it…", "bog"]] },
+  "S2-4": { pre:  [["steel", "These roots are pulling the ground down like ropes. Rip them out.", "bog"]] },
+  "S2-5": { pre:  [["pip", "The raft's leaking! Squat faster! Bail, bail, bail!", "bog"]] },
+  "S2-6": { pre:  [["narr", "In a hut made of moss, an old witch stirs a pot of grey sludge.", "bog"], ["boss", "My Queen will drown the whole world in the Mire. And you can't stop a swamp, dearie."], ["pip", "Watch us!"]],
+            post: [["boss", "The Queen… is waiting… past the top of the Thousand Steps…", "bog"], ["steel", "Then we climb."]] },
+  "S3-1": { pre:  [["pip", "Step one. Step two. Step three. Only nine hundred and ninety-seven to go!", "steps"]] },
+  "S3-2": { pre:  [["narr", "A rumble from above. Snow is pouring down the steps!", "steps"], ["steel", "Get behind Pip's shield and keep it charged. Don't stop!"]] },
+  "S3-3": { pre:  [["narr", "A huge white shape blocks the steps. It's furry. It's angry. It's hungry.", "steps"], ["boss", "Roar! No climbing! These are my steps!"]],
+            post: [["boss", "Fine… go up… the Giant will squash you anyway…", "steps"]] },
+  "S3-4": { pre:  [["pip", "A wall of solid ice! Only really deep squats can break it.", "steps"]] },
+  "S3-5": { pre:  [["narr", "The steps split open. A crevasse with no bottom.", "steps"], ["steel", "Build the bridge, recruit. Fast."]] },
+  "S3-6": { pre:  [["narr", "The top of the Thousand Steps. The mountain itself stands up.", "steps"], ["boss", "I… am… the… mountain. You… shall… not… climb."], ["pip", "Wait. We're fighting a whole mountain?"]],
+            post: [["narr", "The Giant crumbles. Behind it, a tunnel leads down, deep into the dark.", "mire"], ["quag", "Come down, little sparks. Come down to me."]] },
+  "S4-1": { pre:  [["steel", "It's pitch black down here. Light the old miners' brazier.", "mire"]] },
+  "S4-2": { pre:  [["narr", "The tunnel groans. The ceiling is coming down!", "mire"], ["pip", "Push the pillar back up! Squat! Squat!"]] },
+  "S4-3": { pre:  [["narr", "A knight made of dripping mud steps out of the dark.", "mire"], ["boss", "None shall reach Her Majesty. Kneel, and sink."]],
+            post: [["boss", "Forgive me… my Queen…", "mire"]] },
+  "S4-4": { pre:  [["quag", "Feel how heavy your legs are? That's the Mire. It wants you to sit down forever.", "mire"], ["pip", "Don't listen! Break those crystals!"]] },
+  "S4-5": { pre:  [["narr", "Under the throne lies a whole city, swallowed by the Mire long ago.", "mire"], ["steel", "Lift it, recruit. Lift the whole city."]],
+            post: [["quag", "No! No! Everything is supposed to fall!", "mire"]] },
+  "S4-6": { pre:  [["quag", "Every tower falls. Every mountain sinks. Every hero sits down in the end. Why stand up?", "mire"], ["steel", "Because we can."],
+                   ["pip", "And because we did a LOT of leg days! Go get her, recruit!"]],
+            post: [] },
 });
 const CH_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT"];
-const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream"];
-const PART_WORDS = ["ONE", "TWO"];
+const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream", "farm", "bog", "steps", "mire"];
+const PART_WORDS = ["ONE", "TWO", "THREE"];
 const partOf = m => CHAPTERS[m.ch].part;
 const partFirst = pi => CAMP_LIST.find(m => partOf(m) === pi), partLast = pi => CAMP_LIST.findLast(m => partOf(m) === pi);
-const partLine = pi => `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
-const endLine = pi => pi < PARTS.length - 1 ? "End of part one." : "The end.";
+const partLine = pi => pi === 2 ? `The squat campaign. ${PARTS[pi].name}.` : `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
+const endLine = pi => pi === 0 ? "End of part one." : "The end.";
 const storySeen = id => !!(store.storySeen || {})[id];
 const markSeen = id => { store.storySeen ||= {}; store.storySeen[id] = 1; save(); };
 function storySteps(m, when) {
   const s = [], L = l => ({ who: l[0], text: l[1], bg: l[2] });
-  const pi = partOf(m), P2 = pi ? "2" : "";
+  const pi = partOf(m), P2 = ["", "2", "3"][pi];
   if (when === "pre") {
-    if (m === partFirst(pi)) s.push({ part: pi, bg: pi ? "coast" : "beacon" }, ...STORY["prologue" + P2].map(L));
-    if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...(pi ? STORY.chapter2[m.ch - 4] : STORY.chapter[m.ch]).map(L));
+    if (m === partFirst(pi)) s.push({ part: pi, bg: ["beacon", "coast", "farm"][pi] }, ...STORY["prologue" + P2].map(L));
+    if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...STORY["chapter" + P2][m.ch - PARTS[pi].chs[0]].map(L));
     s.push(...(STORY.m[m.id]?.pre || []).map(L));
   } else {
     s.push(...(STORY.m[m.id]?.post || []).map(L));
@@ -2914,6 +3242,7 @@ function castOf(who, ctx) {
   if (who === "vex") { const id = ctx.boss === 13 ? "vex2" : "vex", a = bossArt(id); return { name: "Vex", color: THEMES[id].aura, face: a, actor: a, voice: { pitch: 0.75, rate: 1.08 } }; }
   if (who === "vexr") return { name: "Vex", color: "#ffc861", face: bossArt("vexgood"), voice: { pitch: 0.75, rate: 1.05 } };
   if (who === "king") { const a = bossArt("king"); return { name: "The Hollow King", color: THEMES.king.aura, face: a, actor: a, voice: { pitch: 0.3, rate: 0.85 } }; }
+  if (who === "quag") { const a = bossArt("quag"); return { name: "Queen Quagmire", color: THEMES.quag.aura, face: a, actor: a, voice: { pitch: 1.2, rate: 0.9 } }; }
   if (who === "eye") return { name: "The Eye", color: "#c06bff", face: bossArt("void"), voice: { pitch: 0.1, rate: 0.82 } };
   if (who === "pip") return { name: "Pip", color: "#ff9a3d", face: pipSvg("pf"), pip: true, voice: { pitch: 1.8, rate: 1.15 } };
   return { name: "Sergeant Steel", color: "#ffc21a", face: steelSvg(), voice: { pitch: 0.55, rate: 1.02 } };
@@ -3050,6 +3379,58 @@ function cineBg(loc) {
        <path d="M1280 920 L1300 520 Q1400 470 1500 500 L1620 520 L1620 920Z" fill="#2a2a30"/><g transform="translate(1420 300)"><path d="M-36 200 L-24 0 H24 L36 200Z" fill="#e8e8e0"/><path d="M-32 130 H32 L34 160 H-34Z M-28 50 H28 L30 80 H-30Z" fill="#c0392b"/><rect x="-30" y="-40" width="60" height="40" fill="#3a3a40"/><path d="M-38 -40 H38 L0 -80Z" fill="#8a2a22"/></g>
        ${Array.from({ length: 5 }, (_, i) => `<path class="cb-float" style="animation-delay:${i}s" d="M${600 + i * 130} ${200 + (i % 2) * 60} q14 -14 28 0 q14 -14 28 0" stroke="#222" stroke-width="4" fill="none"/>`).join("")}`);
   }
+  // ----- squat campaign backdrops -----
+  if (loc === "farm") {   // sunset farmland cracking and sinking into grey mud
+    const barn = (x, y, s, tilt) => `<g transform="translate(${x} ${y}) rotate(${tilt}) scale(${s})"><path d="M-90 0 V-110 L0 -170 L90 -110 V0Z" fill="#a8322a"/><path d="M-90 -110 L0 -170 L90 -110" stroke="#e8e0d0" stroke-width="10" fill="none"/>
+      <rect x="-34" y="-80" width="68" height="80" fill="#6a1a14"/><path d="M-34 -80 L34 0 M34 -80 L-34 0" stroke="#e8e0d0" stroke-width="6"/><rect x="-18" y="-140" width="36" height="26" fill="#3a0a08"/></g>`;
+    return wrap(sky("skfa", [[0, "#2a3a6a"], [.45, "#c86a5a"], [.7, "#ffb86a"], [1, "#ffb86a"]]) + glow("sunfa", "#ffe0a0"),
+      `<rect width="1600" height="900" fill="url(#skfa)"/><circle cx="1180" cy="470" r="300" fill="url(#sunfa)"/><circle cx="1180" cy="500" r="90" fill="#fff0c8" opacity=".9"/>
+       ${cloud(360, 150, 1.2, "#8a5a70", .55, "cb-drift")}${cloud(900, 110, .8, "#9a6a7a", .5, "cb-drift rev")}
+       <path d="M-20 520 Q300 470 620 510 T1240 500 T1620 520 V920 H-20Z" fill="#6a8a3a"/>
+       ${Array.from({ length: 9 }, (_, i) => `<path d="M-20 ${560 + i * 40} Q800 ${540 + i * 46} 1620 ${560 + i * 40}" stroke="#c8b050" stroke-width="${6 + i * 2}" fill="none" opacity=".55"/>`).join("")}
+       ${barn(1350, 600, .9, -9)}
+       <path d="M300 900 C340 760 520 700 760 700 C1000 700 1120 780 1180 900Z" fill="#6a6a72"/><path d="M380 900 C420 790 560 740 760 740 C960 740 1060 800 1100 900Z" fill="#4a4a54"/>
+       ${Array.from({ length: 8 }, () => `<circle class="cb-float" style="animation-delay:${(rnd() * 3).toFixed(1)}s" cx="${(500 + rnd() * 520) | 0}" cy="${(760 + rnd() * 120) | 0}" r="${(6 + rnd() * 14) | 0}" fill="#8a8a94" opacity=".7"/>`).join("")}
+       <path d="M200 620 L250 680 L230 720 L300 800 M1000 640 L1060 690 L1040 740" stroke="#2a2a20" stroke-width="7" fill="none"/>
+       <g transform="translate(560 690) rotate(14)"><rect x="-4" y="-120" width="8" height="140" fill="#6a4a2a"/><rect x="-50" y="-92" width="100" height="8" fill="#6a4a2a"/><circle cy="-128" r="20" fill="#e8c878"/><path d="M-26 -140 L26 -140 L0 -168Z" fill="#8a5a2a"/><path d="M-30 -84 L30 -84 L22 -30 L-22 -30Z" fill="#4a6aa8"/></g>`);
+  }
+  if (loc === "bog") {   // foggy green swamp with dead trees and lily pads
+    const tree = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-14 0 C-10 -120 -20 -200 0 -300 C20 -200 10 -120 14 0Z" fill="#1e2a22"/><path d="M0 -200 C40 -230 80 -230 110 -270 M0 -160 C-50 -180 -90 -170 -120 -210 M2 -250 C-20 -280 -30 -300 -60 -320" stroke="#1e2a22" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M80 -232 q4 40 0 70 M-90 -176 q-4 36 0 60 M40 -226 q3 30 0 50" stroke="#4a6a3a" stroke-width="6" fill="none" opacity=".8"/></g>`;
+    return wrap(sky("skbo", [[0, "#0e1e1a"], [.55, "#2a4a3a"], [1, "#3a5a3a"]]) + glow("mobo", "#d8f0c0"),
+      `<rect width="1600" height="900" fill="url(#skbo)"/><circle cx="1260" cy="180" r="200" fill="url(#mobo)" opacity=".6"/><circle cx="1260" cy="180" r="60" fill="#e8f4d8" opacity=".85"/>
+       ${cbStars(rnd, 30, 300)}
+       ${tree(200, 640, 1.1)}${tree(560, 600, .7)}${tree(1420, 660, 1.2)}${tree(1060, 610, .6)}
+       <rect x="-20" y="600" width="1640" height="320" fill="#1e3a2e"/>
+       ${Array.from({ length: 14 }, () => `<ellipse cx="${(rnd() * 1600) | 0}" cy="${(640 + rnd() * 240) | 0}" rx="${(30 + rnd() * 60) | 0}" ry="${(8 + rnd() * 10) | 0}" fill="#4a8a3a" opacity=".75"/>`).join("")}
+       ${Array.from({ length: 10 }, () => `<circle class="cb-float" style="animation-delay:${(rnd() * 3).toFixed(1)}s" cx="${(rnd() * 1600) | 0}" cy="${(660 + rnd() * 220) | 0}" r="${(3 + rnd() * 7) | 0}" fill="#8aba6a" opacity=".6"/>`).join("")}
+       ${cbFog(rnd, "#a8c8a0", .22, 520)}${cbFog(rnd, "#c8e0c0", .14, 680)}
+       <g transform="translate(860 640)"><path d="M-110 0 V-90 L0 -150 L110 -90 V0Z" fill="#3a3a26"/><path d="M-130 -84 L0 -164 L130 -84" stroke="#4a6a2a" stroke-width="22" fill="none"/><rect x="-20" y="-60" width="40" height="60" fill="#0e1410"/><rect x="40" y="-70" width="30" height="24" fill="#c8ff6a" opacity=".7"/>
+       ${[-90, -30, 30, 90].map(x => `<rect x="${x - 5}" y="0" width="10" height="70" fill="#2a2a1a"/>`).join("")}</g>`);
+  }
+  if (loc === "steps") {   // a staircase of ice climbing a mountain into the clouds
+    let steps = "";
+    for (let i = 0; i < 16; i++) { const t = i / 15, x = 560 + Math.sin(t * 5) * 220 * (1 - t), y = 880 - t * 640, w = 260 - t * 200; steps += `<rect x="${(x - w / 2) | 0}" y="${y | 0}" width="${w | 0}" height="${(36 - t * 26) | 0}" fill="#d8eefa"/><rect x="${(x - w / 2) | 0}" y="${y | 0}" width="${w | 0}" height="6" fill="#fff"/>`; }
+    return wrap(sky("skst", [[0, "#2a4a8a"], [.5, "#7aa8d8"], [1, "#d8ecf8"]]),
+      `<rect width="1600" height="900" fill="url(#skst)"/>
+       <path d="M-20 900 L300 360 L460 480 L760 120 L1060 470 L1240 330 L1620 900Z" fill="#8aa8c8"/><path d="M760 120 L840 220 L800 210 L760 260 L720 200 L690 220Z M300 360 L340 410 L300 400 L270 420Z M1240 330 L1290 390 L1240 380 L1210 400Z" fill="#fff"/>
+       <path d="M-20 900 L240 600 L520 760 L760 520 L1100 760 L1380 560 L1620 900Z" fill="#5a7aa0"/>
+       ${steps}
+       ${cloud(1280, 200, 1.4, "#fff", .75, "cb-drift")}${cloud(200, 260, 1, "#fff", .6, "cb-drift rev")}${cloud(760, 140, .9, "#fff", .7, "cb-drift")}
+       ${cbFog(rnd, "#ffffff", .25, 640)}`);
+  }
+  if (loc === "mire") {   // the Mire Throne: an underground cavern of purple mud
+    return wrap(sky("skmi", [[0, "#07030c"], [.6, "#22103a"], [1, "#3a1a4a"]]) + glow("thmi", "#ff7ae0"),
+      `<rect width="1600" height="900" fill="url(#skmi)"/>
+       ${Array.from({ length: 22 }, (_, i) => { const x = i * 76 + rnd() * 30, h = 80 + rnd() * 200; return `<path d="M${x | 0} -10 L${(x + 24) | 0} ${h | 0} L${(x + 48) | 0} -10Z" fill="#1a0e26"/>`; }).join("")}
+       <circle cx="800" cy="460" r="330" fill="url(#thmi)" opacity=".5"/>
+       <g transform="translate(800 560)"><path d="M-170 120 V-120 Q-170 -230 -90 -260 L-60 -170 L0 -300 L60 -170 L90 -260 Q170 -230 170 -120 V120Z" fill="#3a2250"/><path d="M-120 120 V-60 Q0 -110 120 -60 V120Z" fill="#5a3a7a"/>
+       <circle cy="-190" r="22" fill="#ff7ae0" class="cb-blink"/><path d="M-170 120 q20 60 40 0 q20 60 40 0 q20 60 40 0 q20 60 40 0 q20 60 40 0 q20 60 40 0 q20 60 40 0 q20 60 40 0 q10 30 20 0" fill="#3a2250"/></g>
+       <path d="M-20 760 Q400 700 800 740 T1620 740 V920 H-20Z" fill="#2a1638"/>
+       ${Array.from({ length: 14 }, () => `<circle class="cb-float" style="animation-delay:${(rnd() * 3).toFixed(1)}s" cx="${(rnd() * 1600) | 0}" cy="${(760 + rnd() * 120) | 0}" r="${(5 + rnd() * 14) | 0}" fill="#6a3a8a" opacity=".75"/>`).join("")}
+       ${[[180, 700], [1420, 690], [420, 760], [1180, 770]].map(([x, y]) => `<path d="M${x - 30} ${y} L${x - 6} ${y - 150} L${x + 4} ${y - 60} L${x + 22} ${y - 120} L${x + 32} ${y}Z" fill="#b06ae0" opacity=".85"/><path d="M${x - 6} ${y - 150} L${x + 4} ${y - 60} L${x - 4} ${y}" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none"/>`).join("")}
+       ${cbFog(rnd, "#8a4aa8", .2, 660)}`);
+  }
   if (loc === "storm") {
     const bolt = (x, d) => `<path class="cb-bolt" style="animation-delay:${d}s" d="M${x} 120 l-40 160 h40 l-60 190 l120 -230 h-46 l46 -120Z" fill="#e8f4ff" filter="drop-shadow(0 0 20px #9fd8ff)"/>`;
     return wrap(sky("skst", [[0, "#05080f"], [.6, "#1a2636"], [1, "#2a3a48"]]),
@@ -3107,7 +3488,7 @@ function cineBg(loc) {
   }
   return wrap("", `<rect width="1600" height="900" fill="#05060a"/>`);
 }
-const BG_FX = { beacon: "spark", dawn: "spark", dark: "ash", camp: "", campLit: "spark", campFog: "", woods: "firefly", lake: "snow", peaks: "ember", lava: "ember", void: "", eye: "",
+const BG_FX = { farm: "", bog: "firefly", steps: "snow", mire: "ash", beacon: "spark", dawn: "spark", dark: "ash", camp: "", campLit: "spark", campFog: "", woods: "firefly", lake: "snow", peaks: "ember", lava: "ember", void: "", eye: "",
   coast: "", storm: "rain", gears: "spark", sky: "", dream: "zzz", throne: "zzz" };
 function cineFx(type) {
   if (!type) return "";
@@ -3118,7 +3499,8 @@ function cineFx(type) {
 
 // ---------- cutscene music: a slow detuned pad per chapter ----------
 const CINE_CHORDS = [[130.8, 196, 329.6], [110, 164.8, 261.6], [73.4, 110, 174.6], [65.4, 92.5, 155.6],
-  [146.8, 220, 349.2], [110, 146.8, 233.1], [98, 146.8, 246.9, 293.7], [77.8, 116.5, 185, 233.1]];
+  [146.8, 220, 349.2], [110, 146.8, 233.1], [98, 146.8, 246.9, 293.7], [77.8, 116.5, 185, 233.1],
+  [130.8, 164.8, 246.9], [98, 123.5, 185], [146.8, 185, 293.7], [69.3, 103.8, 164.8]];
 const CINE_FINALE = [130.8, 196, 246.9, 329.6];
 const cineMusic = {
   nodes: null,
@@ -3218,7 +3600,7 @@ function playCine(steps, ctx = {}) {
     stopVoice();
     cineMusic.start(ctx.fin ? "fin" : ctx.ch ?? 0);
     const vkOf = s => s.who === "boss" ? "boss" + ctx.boss : s.who;
-    const titleLine = s => s.end != null ? endLine(s.end) : s.part != null ? partLine(s.part) : `Chapter ${s.title + 1}. ${CHAPTERS[s.title].name}.`;
+    const titleLine = s => s.end != null ? endLine(s.end) : s.part != null ? partLine(s.part) : `Chapter ${chNum(s.title)}. ${CHAPTERS[s.title].name}.`;
     preloadVoices(steps.map(s => s.end != null || s.part != null || s.title != null ? ["title", titleLine(s)] : [vkOf(s), s.text]));
     const setBg = loc => {
       if (!loc || loc === curBg) return; curBg = loc;
@@ -3247,14 +3629,18 @@ function playCine(steps, ctx = {}) {
       setBg(s.bg);
       el.classList.remove("titling", "narrating", "talking");
       if (s.title != null || s.end != null || s.part != null) {
-        const c = CHAPTERS[s.title] || {}, pc = s.part ? "#ff5fa8" : "#ffc21a";
-        q(".cine-title").innerHTML = s.end != null
-          ? (s.end < PARTS.length - 1
+        const c = CHAPTERS[s.title] || {}, pc = ["#ffc21a", "#ff5fa8", "#b8e04a"][s.part] || "#ffc21a";
+        q(".cine-title").innerHTML = s.end === 2
+          ? `<small>THE SQUAT CAMPAIGN</small><b style="--c:#b8e04a">THE END</b><i style="--c:#b8e04a"></i><em>Queen Quagmire is sunk and the land has risen again. Arms and legs, legend. Keep squatting.</em>`
+          : s.end != null
+          ? (s.end === 0
             ? `<small>END OF PART ONE</small><b style="--c:#ffc21a">${PARTS[s.end].name}</b><i></i><em>But someone else wants the world asleep… 🔓 Part Two: ${PARTS[s.end + 1].name} is now open on the map.</em>`
             : `<small>THANKS FOR PLAYING</small><b style="--c:#ff5fa8">THE END</b><i style="--c:#ff5fa8"></i><em>The Hollow King is beaten and the whole world is awake. Keep doing your push-ups, legend.</em>`)
+          : s.part === 2
+          ? `<small>THE SQUAT CAMPAIGN</small><b style="--c:${pc}">${PARTS[2].name}</b><i style="--c:${pc}"></i>`
           : s.part != null
           ? `<small>PART ${PART_WORDS[s.part]}</small><b style="--c:${pc}">${PARTS[s.part].name}</b><i style="--c:${pc}"></i>`
-          : `<small>CHAPTER ${CH_WORDS[s.title]}</small><b style="--c:${c.color}">${c.name}</b><i style="--c:${c.color}"></i>`;
+          : `<small>CHAPTER ${CH_WORDS[chNum(s.title) - 1]}</small><b style="--c:${c.color}">${c.name}</b><i style="--c:${c.color}"></i>`;
         el.classList.toggle("parting", s.part != null);
         el.classList.add("titling"); q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
         sfx.boom(); speakLine("title", titleLine(s), { pitch: 0.8, rate: 0.95 });
@@ -3329,7 +3715,7 @@ function sceneSvg(sc) {
         <rect y="200" width="300" height="20" fill="#2a2620"/>
         <g class="ms-fogfront"><ellipse cx="150" cy="180" rx="200" ry="70" fill="#a8adb6"/></g>`);
     case "crack": {
-      const v = sc.v, cracks = { rock: "#1d1b18", scales: "#ffd23a", crystal: "#fff", roots: "", metal: "#0e0e10", mirror: "#fff" }[v];
+      const v = sc.v, cracks = { rock: "#1d1b18", scales: "#ffd23a", crystal: "#fff", ice: "#ffffff", roots: "", metal: "#0e0e10", mirror: "#fff" }[v];
       const P = ["M150 84 L142 112 L156 130 L146 160", "M150 120 L120 128 L104 146", "M156 130 L186 122 L206 132", "M146 160 L170 170", "M142 112 L118 100", "M120 128 L118 160"];
       let obj;
       if (v === "rock") obj = `<rect x="100" y="150" width="100" height="40" rx="6" fill="#6a6a70"/><path d="M84 182 C72 134 104 86 150 84 C204 82 234 128 222 182Z" fill="#7d7a74"/><path d="M150 84 C204 82 234 128 222 182 L170 182 C196 140 186 100 150 84Z" fill="#5e5b56"/><ellipse cx="124" cy="112" rx="14" ry="8" fill="#9a968e" opacity=".7"/>`;
@@ -3341,8 +3727,10 @@ function sceneSvg(sc) {
         <ellipse cx="150" cy="110" rx="70" ry="92" fill="#ffd24a"/><ellipse cx="150" cy="110" rx="60" ry="82" fill="url(#msMir)"/><path d="M110 60 L130 40 M168 172 L186 150" stroke="#fff" stroke-opacity=".6" stroke-width="5" stroke-linecap="round"/>
         <g style="opacity:calc(.8 - var(--p) * .6)"><ellipse cx="150" cy="104" rx="22" ry="26" fill="#d9a47a"/><path d="M138 102 q5 4 10 0 M152 102 q5 4 10 0" stroke="#3a2010" stroke-width="2.5" fill="none"/><path d="M118 150 Q150 128 182 150 V180 H118Z" fill="#7a4a9a"/><text x="178" y="80" font-size="18" font-weight="700" fill="#7a3a9a">z</text><text x="190" y="64" font-size="13" font-weight="700" fill="#7a3a9a">z</text></g>
         <circle cx="150" cy="18" r="9" fill="#ff5fa8"/><circle cx="150" cy="202" r="9" fill="#ff5fa8"/>`;
+      if (v === "ice") obj = `<rect x="56" y="40" width="188" height="150" fill="#a8d8f4"/>${Array.from({ length: 5 }, (_, r) => Array.from({ length: 4 }, (_, c) => `<rect x="${58 + c * 47 + (r % 2) * 20}" y="${42 + r * 30}" width="44" height="27" rx="3" fill="${(r + c) % 2 ? "#cfeefc" : "#bfe4f8"}" stroke="#7ab8e0" stroke-width="1.5"/>`).join("")).join("")}<rect x="56" y="40" width="188" height="150" fill="none" stroke="#5a9ac8" stroke-width="4"/>`;
       if (v === "crystal") obj = `<path d="M150 50 L178 80 L172 180 L128 180 L122 80Z" fill="#9a4ae0" opacity=".9"/><path d="M150 50 L178 80 L172 180 L150 180Z" fill="#6a2aa0" opacity=".9"/><path d="M104 100 L122 116 L118 184 L94 184 L90 116Z" fill="#c06bff" opacity=".85"/><path d="M196 96 L212 112 L208 184 L184 184 L180 112Z" fill="#b057ff" opacity=".85"/><path d="M140 70 L134 150" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>`;
       const bg = { rock: `<rect width="300" height="220" fill="#1c2430"/><rect y="182" width="300" height="38" fill="#26301c"/>`, scales: `<rect width="300" height="220" fill="#1a0806"/><rect y="196" width="300" height="24" fill="#2a0c08"/>`,
+        ice: `<rect width="300" height="220" fill="#7aa8d8"/><path d="M0 90 L60 40 L110 80 L170 20 L230 70 L300 30 V220 H0Z" fill="#a8c4e0"/><rect y="190" width="300" height="30" fill="#e8f4fc"/>`,
         crystal: `<rect width="300" height="220" fill="#0a0418"/>${cbStars(rnd, 30, 220)}<rect y="184" width="300" height="36" fill="#160a24"/>`,
         metal: `<rect width="300" height="220" fill="#2a1e16"/><path d="M0 40 H300 M0 196 H300" stroke="#4a3420" stroke-width="10"/><rect y="200" width="300" height="20" fill="#1a120c"/>`,
         mirror: `<rect width="300" height="220" fill="#2a0830"/><path d="M0 0 H60 Q40 110 60 220 H0Z M300 0 H240 Q260 110 240 220 H300Z" fill="#7a1a5a"/><rect y="204" width="300" height="16" fill="#1a0620"/>`, roots: `<rect width="300" height="220" fill="#0b1430"/><rect y="190" width="300" height="30" fill="#0a1020"/><path d="M110 200 Q150 60 190 200" fill="#1a2240"/>` }[v];
@@ -3352,6 +3740,32 @@ function sceneSvg(sc) {
         return W(`${bg}<g class="ms-obj">${obj}</g>`);
       }
       return W(`${bg}<g class="ms-obj">${obj}${P.map((d, i) => `<path d="${d}" stroke="${cracks}" stroke-width="${v === "rock" ? 3.5 : 3}" fill="none" stroke-linecap="round" style="opacity:${stepIn(i, 6)}${v !== "rock" ? `;filter:drop-shadow(0 0 3px ${cracks})` : ""}"/>`).join("")}</g>`);
+    }
+    case "rise": {   // squat campaign: a building / pillar / city sinks into mud and rises as you squat
+      const v = sc.v || "barn";
+      const bg = { barn: `<rect width="300" height="220" fill="#e89a6a"/><circle cx="240" cy="70" r="26" fill="#fff0c8"/><path d="M0 150 Q150 135 300 150 V220 H0Z" fill="#6a8a3a"/>`,
+        hut: `<rect width="300" height="220" fill="#1e3a2e"/><circle cx="60" cy="50" r="18" fill="#e8f4d8" opacity=".8"/><path d="M30 150 C26 90 34 60 30 20 M270 150 C274 90 266 60 270 30" stroke="#16241a" stroke-width="8"/>`,
+        pillar: `<rect width="300" height="220" fill="#1a0e26"/><rect y="0" width="300" height="34" fill="#3a2250"/>${[30, 80, 140, 200, 260].map(x => `<path d="M${x - 14} 34 L${x} 70 L${x + 14} 34Z" fill="#3a2250"/>`).join("")}`,
+        city: `<rect width="300" height="220" fill="#22103a"/>${cbStars(rnd, 20, 90)}` }[v];
+      const mud = v === "barn" ? "#6a6a72" : v === "hut" ? "#2a4a2a" : "#3a2250", mudTop = v === "barn" ? "#8a8a94" : v === "hut" ? "#4a7a3a" : "#5a3a7a";
+      let obj;
+      if (v === "barn") obj = `<path d="M100 196 V120 L150 86 L200 120 V196Z" fill="#a8322a"/><path d="M100 120 L150 86 L200 120" stroke="#e8e0d0" stroke-width="6" fill="none"/><rect x="132" y="146" width="36" height="50" fill="#6a1a14"/><path d="M132 146 L168 196 M168 146 L132 196" stroke="#e8e0d0" stroke-width="4"/><rect x="141" y="104" width="18" height="14" fill="#3a0a08"/>`;
+      if (v === "hut") obj = `<path d="M96 140 V108 L150 76 L204 108 V140Z" fill="#6a5a3a"/><path d="M86 112 L150 70 L214 112" stroke="#4a7a3a" stroke-width="12" fill="none"/><rect x="140" y="114" width="20" height="26" fill="#1a1a10"/><rect x="176" y="112" width="16" height="12" fill="#c8ff6a" opacity=".8"/>${[106, 136, 164, 194].map(x => `<rect x="${x - 3}" y="140" width="6" height="60" fill="#3a2a1a"/>`).join("")}`;
+      if (v === "pillar") obj = `<rect x="122" y="40" width="56" height="160" fill="#6a5a80"/><rect x="114" y="40" width="72" height="14" fill="#8a7aa0"/><rect x="114" y="186" width="72" height="14" fill="#8a7aa0"/><path d="M138 54 V186 M162 54 V186" stroke="#4a3a60" stroke-width="4"/>`;
+      if (v === "city") obj = [[60, 90, 34], [104, 60, 30], [150, 40, 40], [198, 70, 30], [240, 100, 34]].map(([x, h, w], i) => `<rect x="${x - w / 2}" y="${200 - h - 60}" width="${w}" height="${h + 60}" fill="${i % 2 ? "#5a3a7a" : "#6a4a8a"}"/>${Array.from({ length: 4 }, (_, r) => `<rect x="${x - w / 4}" y="${200 - h - 50 + r * 18}" width="${w / 2}" height="8" fill="#ffd27a" style="opacity:calc(var(--p) * 1.4 - ${r * .2})"/>`).join("")}`).join("") + `<path d="M150 ${100} L150 74 L162 82" stroke="#ff7ae0" stroke-width="3" fill="#ff7ae0"/>`;
+      const drop = v === "pillar" ? 115 : v === "city" ? 110 : 90;
+      const roof = v === "pillar" ? `<g ${tf("translateY(calc((1 - var(--p)) * 30px + var(--d) * 14px))")}><rect width="300" height="40" fill="#2a1a3a"/></g>` : "";
+      return W(`${bg}${roof}<g class="ms-bob" style="animation-duration:3s"><g ${tf(`translateY(calc((1 - var(--p)) * ${drop}px + var(--d) * 16px))`)}>${obj}</g></g>
+        <path d="M0 176 Q75 166 150 176 T300 174 V220 H0Z" fill="${mud}"/><path d="M0 176 Q75 166 150 176 T300 174" stroke="${mudTop}" stroke-width="4" fill="none"/>
+        ${[40, 120, 210, 268].map((x, i) => `<circle class="ms-pulse" style="animation-delay:${i * .3}s" cx="${x}" cy="${190 + (i % 2) * 10}" r="${4 + i % 3 * 2}" fill="${mudTop}"/>`).join("")}`);
+    }
+    case "steps": {   // squat campaign: climb the icy staircase; each squat is a step
+      let st = "";
+      for (let i = 0; i < 9; i++) st += `<rect x="${20 + i * 30}" y="${196 - i * 20}" width="${300 - i * 30}" height="${20 + i * 20}" fill="${i % 2 ? "#cfe6f6" : "#bcdcf2"}"/><rect x="${20 + i * 30}" y="${196 - i * 20}" width="30" height="5" fill="#fff"/>`;
+      return W(`<rect width="300" height="220" fill="#7aa8d8"/><path d="M0 120 L70 50 L120 90 L180 30 L240 80 L300 40 V220 H0Z" fill="#a8c4e0"/><path d="M180 30 L196 50 L180 46 L168 52Z" fill="#fff"/>
+        ${st}<rect x="278" y="14" width="3" height="20" fill="#ddd"/><path d="M281 16 L298 22 L281 28Z" fill="#ffc21a"/>
+        <g ${tf("translate(calc(var(--p) * 236px), calc(var(--p) * -138px + var(--d) * 12px))")}><g transform="translate(34 174)"><circle cy="-30" r="7" fill="#d9a47a"/><rect x="-6" y="-23" width="12" height="16" rx="4" fill="#4a5a8a"/><path d="M-4 -7 L-8 6 M4 -7 L8 6" stroke="#2a2a3a" stroke-width="4" stroke-linecap="round"/></g>
+        ${msPip(52, 150, .26)}</g>`);
     }
     case "douse":
       return W(`<rect width="300" height="220" fill="#1b1626"/><rect y="194" width="300" height="26" fill="#22301c"/>
@@ -3526,7 +3940,7 @@ function sceneSvg(sc) {
   }
   return W("");
 }
-const HALF_QUIP = { flame: "It's catching! Keep going!", gate: "Halfway down!", crack: "It's cracking!", douse: "It's shrinking!", lift: "It's moving! Keep lifting!", cart: "Halfway there!", climb: "Halfway up!", bridge: "Keep the stones coming!", pull: "We're pulling away!", shield: "The shield's holding!",
+const HALF_QUIP = { rise: "It's coming up! Keep squatting!", steps: "Halfway up the steps!", flame: "It's catching! Keep going!", gate: "Halfway down!", crack: "It's cracking!", douse: "It's shrinking!", lift: "It's moving! Keep lifting!", cart: "Halfway there!", climb: "Halfway up!", bridge: "Keep the stones coming!", pull: "We're pulling away!", shield: "The shield's holding!",
   boat: "We're staying afloat! Keep bailing!", lighthouse: "The lamp's warming up!", anchor: "It's coming loose!", sail: "The sail's filling up!", gears: "It's turning! Keep pushing!", conveyor: "We're catching up!", core: "It's cooling down!", balloon: "We're lifting off!", windmill: "Keep it spinning!", charge: "Half charged!", wake: "People are waking up!" };
 const DANGER_QUIP = { timed: "Faster! We're running out of time!", nobreak: "Don't stop now!", endure: "Almost out of time. Push!" };
 let quipTimer = null;
@@ -3632,7 +4046,7 @@ function mapSvg(pi = 0) {
     g += place(9, y0 + 60, y1, 60, (x, y, r) => { const w = 26 + r() * 30; return `<g transform="translate(${x},${y})"><ellipse cx="0" cy="0" rx="${w}" ry="${w * 0.32}" fill="#5b3a8a"/><path d="M${-w},0 Q0,${w * 1.1} ${w},0Z" fill="#2c1846"/><ellipse cx="0" cy="-2" rx="${w * 0.8}" ry="${w * 0.18}" fill="#8a63c9" opacity=".6"/></g>`; });
     g += `<g transform="translate(560,${y0 + 70})" opacity=".55"><ellipse rx="70" ry="34" fill="#c06bff" opacity=".25"/><ellipse rx="48" ry="22" fill="#1a0b2e" stroke="#c06bff" stroke-width="3"/><circle r="14" fill="#ff3a6a"/><circle r="5" fill="#000"/></g>`;
   }
-  } else {
+  } else if (pi === 1) {
   // --- Chapter 5: Tidewreck Coast (sea, sandbars, wrecks, lighthouse) ---
   { const [y0, y1] = band(4);
     g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gCoast)"/>`;
@@ -3674,6 +4088,39 @@ function mapSvg(pi = 0) {
     g += `<g transform="translate(590,${y0 + 120})"><rect x="-50" y="-20" width="100" height="80" fill="#4a1a5a"/>${[-50, -16, 18].map(x => `<rect x="${x}" y="-32" width="12" height="14" fill="#4a1a5a"/>`).join("")}<rect x="-62" y="-60" width="26" height="120" fill="#5a2268"/><rect x="36" y="-60" width="26" height="120" fill="#5a2268"/><path d="M-66,-60 L-49,-98 L-32,-60Z M32,-60 L49,-98 L66,-60Z" fill="#ff5fa8"/><path d="M-14,60 V24 Q0,10 14,24 V60Z" fill="#1a0824"/><rect x="-54" y="-40" width="10" height="14" fill="#ff8ad0" opacity=".5"/><rect x="44" y="-40" width="10" height="14" fill="#ff8ad0" opacity=".5"/></g>`;
   }
   }
+  if (pi === 2) {
+  // --- Squat 1: Rumble Farms (crop rows, hay bales, barn, cracks) ---
+  { const [y0, y1] = band(8);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gFarm)"/>`;
+    for (let yy = y0 + 20; yy < y1; yy += 26) g += `<path d="M0,${yy} Q350,${yy + 10} 700,${yy}" stroke="#c8b050" stroke-width="7" fill="none" opacity=".35"/>`;
+    g += place(9, y0, y1, 44, (x, y, r) => `<g transform="translate(${x},${y})"><ellipse cx="0" cy="12" rx="22" ry="6" fill="#000" opacity=".2"/><ellipse cx="0" cy="0" rx="20" ry="14" fill="#e0c060"/><path d="M-14,-4 H14 M-16,4 H16" stroke="#b8963a" stroke-width="2"/></g>`);
+    g += place(5, y0, y1, 50, (x, y, r) => `<path d="M${x - 40},${y} L${x - 16},${y + 14} L${x - 4},${y - 6} L${x + 20},${y + 10} L${x + 40},${y - 2}" stroke="#4a4a40" stroke-width="5" fill="none"/>`);
+    g += `<g transform="translate(110,${y0 + 130}) rotate(-8)"><path d="M-46,40 V-14 L0,-46 L46,-14 V40Z" fill="#a8322a"/><path d="M-46,-14 L0,-46 L46,-14" stroke="#e8e0d0" stroke-width="5" fill="none"/><rect x="-16" y="4" width="32" height="36" fill="#6a1a14"/><ellipse cx="0" cy="44" rx="70" ry="12" fill="#6a6a72"/></g>`;
+    g += place(4, y0 + 40, y1 - 40, 60, (x, y) => `<g transform="translate(${x},${y})"><rect x="-2" y="-30" width="4" height="40" fill="#6a4a2a"/><rect x="-18" y="-22" width="36" height="4" fill="#6a4a2a"/><circle cy="-34" r="7" fill="#e8c878"/></g>`);
+  }
+  // --- Squat 2: Mirebog (murky water, lily pads, dead trees, fog) ---
+  { const [y0, y1] = band(9);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gBog)"/>`;
+    g += place(30, y0, y1, 26, (x, y, r) => `<g transform="translate(${x},${y})"><ellipse rx="${12 + r() * 10}" ry="${6 + r() * 4}" fill="#4a8a3a" opacity=".8"/><path d="M0,0 L10,-4" stroke="#1e3a2e" stroke-width="2"/></g>`);
+    g += place(10, y0, y1, 44, (x, y, r) => { const s = .6 + r() * .6; return `<g transform="translate(${x},${y}) scale(${s})"><path d="M-5,20 C-3,-20 -6,-40 0,-60 C6,-40 3,-20 5,20Z" fill="#16241a"/><path d="M0,-30 C14,-38 24,-38 32,-50 M0,-20 C-14,-26 -24,-24 -32,-34" stroke="#16241a" stroke-width="4" fill="none" stroke-linecap="round"/></g>`; });
+    g += place(18, y0, y1, 20, (x, y, r) => `<ellipse cx="${x}" cy="${y}" rx="${30 + r() * 40}" ry="${6 + r() * 6}" fill="#a8c8a0" opacity=".12"/>`);
+    g += `<g transform="translate(590,${y0 + 140})"><path d="M-40,20 V-10 L0,-36 L40,-10 V20Z" fill="#3a3a26"/><path d="M-50,-8 L0,-42 L50,-8" stroke="#4a6a2a" stroke-width="10" fill="none"/>${[-30, -10, 10, 30].map(x => `<rect x="${x - 2}" y="20" width="4" height="26" fill="#2a2a1a"/>`).join("")}</g>`;
+  }
+  // --- Squat 3: The Thousand Steps (ice, snow, zigzag stairs) ---
+  { const [y0, y1] = band(10);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gSteps)"/>`;
+    g += place(14, y0 + 20, y1, 70, (x, y, r) => { const w = 40 + r() * 40, h = 50 + r() * 60; return `<g transform="translate(${x},${y})"><path d="M${-w},20 L0,${-h} L${w},20Z" fill="#8aa8c8"/><path d="M0,${-h} L${w * .3},${-h * .55} L0,${-h * .62} L${-w * .3},${-h * .5}Z" fill="#fff"/></g>`; });
+    g += place(40, y0, y1, 14, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${1.5 + r() * 2.5}" fill="#fff" opacity="${0.5 + r() * 0.5}"/>`);
+    g += place(6, y0, y1, 40, (x, y) => `<g transform="translate(${x},${y})">${[0, 1, 2, 3].map(i => `<rect x="${-30 + i * 12}" y="${10 - i * 8}" width="${60 - i * 24 > 12 ? 60 - i * 24 : 12}" height="8" fill="#e8f4fc" stroke="#9ac4e0" stroke-width="1"/>`).join("")}</g>`);
+  }
+  // --- Squat 4: The Mire Throne (purple mud, crystals, bubbles, throne) ---
+  { const [y0, y1] = band(11);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gMire)"/>`;
+    g += place(34, y0, y1, 18, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${3 + r() * 9}" fill="#6a3a8a" opacity="${0.4 + r() * 0.4}"/>`);
+    g += place(10, y0, y1, 40, (x, y, r) => { const s = .6 + r() * .7; return `<g transform="translate(${x},${y}) scale(${s})"><path d="M-14,16 L-4,-40 L2,-8 L10,-30 L16,16Z" fill="#b06ae0" opacity=".85"/><path d="M-4,-40 L2,-8 L-2,16" stroke="#fff" stroke-opacity=".5" stroke-width="2" fill="none"/></g>`; });
+    g += `<g transform="translate(590,${y0 + 120})"><path d="M-50,50 V-30 Q-50,-60 -26,-70 L-16,-44 L0,-80 L16,-44 L26,-70 Q50,-60 50,-30 V50Z" fill="#3a2250"/><path d="M-34,50 V-10 Q0,-26 34,-10 V50Z" fill="#5a3a7a"/><circle cy="-50" r="7" fill="#ff7ae0"/></g>`;
+  }
+  }
   // soft seams between chapters
   for (let ci = 1; ci < 4; ci++) { const y = MAP_H - ci * BAND; g += `<rect x="0" y="${y - 40}" width="${MAP_W}" height="80" fill="url(#gSeam)"/>`; }
   const roadSvg = `<path d="${road}" stroke="#000" stroke-opacity=".45" stroke-width="40" fill="none" stroke-linecap="round"/>
@@ -3690,6 +4137,10 @@ function mapSvg(pi = 0) {
       <linearGradient id="gGears" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1e16"/><stop offset="1" stop-color="#46321f"/></linearGradient>
       <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c5fae"/><stop offset="1" stop-color="#7fbde8"/></linearGradient>
       <linearGradient id="gDream" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14051f"/><stop offset="1" stop-color="#3a1046"/></linearGradient>
+      <linearGradient id="gFarm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a7a2a"/><stop offset="1" stop-color="#7a9a3a"/></linearGradient>
+      <linearGradient id="gBog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e2a20"/><stop offset="1" stop-color="#1e4a34"/></linearGradient>
+      <linearGradient id="gSteps" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ac4e8"/><stop offset="1" stop-color="#cfe6f6"/></linearGradient>
+      <linearGradient id="gMire" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e0618"/><stop offset="1" stop-color="#2a1440"/></linearGradient>
       <linearGradient id="gSeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
     </defs>${g}${roadSvg}<path id="cmapDone" d="" stroke="#ffc21a" stroke-width="8" fill="none" stroke-linecap="round" opacity=".85"/></svg>` };
   return mapSvgCache[pi];
@@ -3712,10 +4163,11 @@ const CLOUD_BANK = (() => { let g = ""; for (let i = 0; i < 16; i++) { const x =
 let campScrollTo = true, campPart = null;
 function renderCampaign() {
   store.campaign ||= {};
-  const nextK = CAMP_LIST.findIndex((m, k) => campUnlocked(k) && !campStars(m.id));
-  const furthest = nextK >= 0 ? nextK : CAMP_LIST.length - 1;
-  if (campPick == null || !campUnlocked(campPick)) { campPick = furthest; campScrollTo = true; }
-  if (campPart == null) campPart = partOf(CAMP_LIST[campPick]);
+  const cs = campSet(), cks = campKs(cs);
+  const nextK = cks.find(k => campUnlocked(k) && !campStars(CAMP_LIST[k].id)) ?? -1;
+  const furthest = nextK >= 0 ? nextK : cks[cks.length - 1];
+  if (campPick == null || !campUnlocked(campPick) || campOfK(campPick) !== cs) { campPick = furthest; campScrollTo = true; }
+  if (campPart == null || campOfPart(campPart) !== cs) campPart = partOf(CAMP_LIST[campPick]);
   const pi = campPart, ks = partKs(pi), pOpen = partUnlocked(pi);
   if (pOpen && partOf(CAMP_LIST[campPick]) !== pi) {   // switched parts: pick the furthest open mission in this part
     const nk = ks.find(k => campUnlocked(k) && !campStars(CAMP_LIST[k].id));
@@ -3724,7 +4176,7 @@ function renderCampaign() {
   const pct = (v, of) => (v / of * 100).toFixed(3) + "%";
   const nodes = ks.map(k => { const m = CAMP_LIST[k];
     const p = mapPt(k), open = campUnlocked(k), st = campStars(m.id), boss = m.type === "boss", c = CHAPTERS[m.ch].color;
-    const face = boss ? `<span class="mn-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="mn-ic">${MTYPES[m.type].icon}</span>`;
+    const face = boss ? `<span class="mn-art">${bossArt(BOSSES[m.boss].id)}</span>` : `<span class="mn-ic">${mIcon(m)}</span>`;
     return `<button class="mnode ${boss ? "boss" : ""} ${st ? "done" : ""} ${k === nextK ? "next" : ""} ${k === campPick ? "pick" : ""}" style="left:${pct(p.x, MAP_W)};top:${pct(p.y, MAP_H)};--c:${c}" data-k="${k}" ${open ? "" : "disabled"} aria-label="${m.id} ${open ? m.name : "locked"}">
       <span class="mn-disc">${face}</span><span class="mn-num">${m.id}</span>${open ? "" : `<span class="mn-lock">${LOCK_SVG}</span>`}
       ${open ? `<span class="mn-st">${[0, 1, 2].map(i => `<i class="${i < st ? "on" : ""}">★</i>`).join("")}</span>` : ""}</button>`;
@@ -3739,24 +4191,24 @@ function renderCampaign() {
         <svg class="cmap-clouds" viewBox="0 0 700 140" preserveAspectRatio="none" aria-hidden="true">${CLOUD_BANK}</svg>
         <div class="cmap-lock">
           <div class="cl-emblem">${LOCK_SVG}</div>
-          <b>Chapter ${ci + 1} · ${c.name}</b>
+          <b>Chapter ${chNum(ci)} · ${c.name}</b>
           <span>${c.locked}</span>
           <div class="cl-bosses">${bosses.map(b => `<div class="cl-boss"><span class="cl-sil">${bossArt(b.id)}</span><i>???</i></div>`).join("")}</div>
           <em>🔒 Defeat ${prevBoss} to unlock</em>
         </div></div>` : "";
     return `<div class="cmap-region ${open ? "" : "locked"}" style="top:${top};height:${h};--c:${c.color}">
-      <div class="cmap-banner"><b>CHAPTER ${ci + 1}</b><span>${c.name}</span>${open ? `<i>★ ${got}/${c.missions.length * 3}</i>` : `<i class="lk">LOCKED</i>`}</div>${fog}</div>`;
+      <div class="cmap-banner"><b>CHAPTER ${chNum(ci)}</b><span>${c.name}</span>${open ? `<i>★ ${got}/${c.missions.length * 3}</i>` : `<i class="lk">LOCKED</i>`}</div>${fog}</div>`;
   }).join("");
   const pm = CAMP_LIST[campPick], pg = missionGoal(pm), pst = campStars(pm.id), pc = CHAPTERS[pm.ch].color;
   const scroller = $("cmapScroll"), keep = scroller ? scroller.scrollTop : null;
   const { svg } = mapSvg(pi);
   const partStars = q => partKs(q).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
-  const tabs = PARTS.map((P, q) => `<button class="cmap-part ${q === pi ? "on" : ""} ${partUnlocked(q) ? "" : "lk"}" data-part="${q}" style="--c:${q ? "#ff5fa8" : "#ffc21a"}"><b>PART ${q + 1}</b><span>${partUnlocked(q) ? "" : "🔒 "}${P.name}</span><i>★ ${partStars(q)}/${partKs(q).length * 3}</i></button>`).join("");
+  const tabs = CAMPAIGNS[cs].parts.length < 2 ? "" : PARTS.map((P, q) => CAMPAIGNS[cs].parts.includes(q) && `<button class="cmap-part ${q === pi ? "on" : ""} ${partUnlocked(q) ? "" : "lk"}" data-part="${q}" style="--c:${q ? "#ff5fa8" : "#ffc21a"}"><b>PART ${q + 1}</b><span>${partUnlocked(q) ? "" : "🔒 "}${P.name}</span><i>★ ${partStars(q)}/${partKs(q).length * 3}</i></button>`).filter(Boolean).join("");
   const lastBoss = BOSSES[partLast(pi - 1 >= 0 ? pi - 1 : 0).boss];
   $("campMap").innerHTML = `
     <div class="cmap-scroll" id="cmapScroll"><div class="cmap part-${pi}">${svg}${regions}${nodes}${you}</div></div>
-    <div class="cmap-top"><b>THE CAMPAIGN</b><span>★ ${campTotal()} / ${CAMP_LIST.length * 3}</span></div>
-    <div class="cmap-parts">${tabs}</div>
+    <div class="cmap-top"><div class="cmap-camps">${CAMPAIGNS.map((C, q) => `<button class="cmap-camp ${q ? "sq" : ""} ${q === cs ? "on" : ""}" data-camp="${q}">${C.icon} ${C.name.replace(" Campaign", "")}</button>`).join("")}</div><span>★ ${campTotal()} / ${cks.length * 3}</span></div>
+    ${tabs ? `<div class="cmap-parts">${tabs}</div>` : ""}
     ${!pOpen ? `<div class="cm-brief cm-plock" style="--c:#ff5fa8">
       <div class="cm-bt">🔒 Part ${pi + 1} · ${PARTS[pi].name}</div>
       <div class="muted cm-story-line">A new story, 4 new chapters, 24 new missions and 8 new bosses, including a rival who got his strength the easy way.</div>
@@ -3766,8 +4218,8 @@ function renderCampaign() {
       <div class="cm-bt"><span class="cm-num">${pm.id}</span> ${pm.name} ${pst ? `<span class="cm-st">${"★".repeat(pst)}<span style="opacity:.25">${"★".repeat(3 - pst)}</span></span>` : ""}</div>
       ${pm.obj ? `<div class="cm-obj">🎯 ${pm.obj}</div>` : ""}
       <div class="muted cm-story-line">${pm.story}</div>
-      <div class="cm-goal">${MTYPES[pm.type].icon} ${MTYPES[pm.type].goal(pg)}</div>
-      <div class="muted cm-rules">${MTYPES[pm.type].stars}</div>
+      <div class="cm-goal">${mIcon(pm)} ${MTYPES[pm.type].goal(pg)}</div>
+      <div class="muted cm-rules">${mStarsTxt(pm)}</div>
       <div class="muted" id="campStatus" style="font-size:13px"></div>
       <div class="cm-btns"><button id="campGo">${pst ? "Play again" : pm.type === "boss" ? "Fight ⚔" : "Start mission ▶"}</button>${pst || storySeen(pm.id) ? `<button class="cm-replay" id="campStory" title="Watch this mission's story again">📜 Story</button>` : ""}</div>
     </div>`}`;
@@ -3778,6 +4230,7 @@ function renderCampaign() {
     requestAnimationFrame(() => { const el = pOpen && sc.querySelector(".mnode.pick"); sc.scrollTop = el ? el.offsetTop - sc.clientHeight * 0.42 : sc.scrollHeight; });
   } else sc.scrollTop = keep;
   sc.querySelectorAll(".mnode").forEach(el => el.onclick = () => { campPick = +el.dataset.k; renderCampaign(); });
+  $("campMap").querySelectorAll(".cmap-camp").forEach(el => el.onclick = () => { const q = +el.dataset.camp; if (q === cs || inMatch() || M) return; store.campSet = q; save(); campPick = campPart = null; campScrollTo = true; sfx.click?.(); syncExercise(); renderCampaign(); });
   $("campMap").querySelectorAll(".cmap-part").forEach(el => el.onclick = () => { const q = +el.dataset.part; if (q === campPart) return; campPart = q; campScrollTo = true; sfx.click?.(); renderCampaign(); });
   if (!pOpen) { $("campGo").onclick = () => { campPart = pi - 1; campScrollTo = true; renderCampaign(); }; renderCampPanel(); return; }
   $("campGo").onclick = () => startMission(campPick);
@@ -3786,12 +4239,13 @@ function renderCampaign() {
 }
 
 function renderCampPanel() {
-  $("campProg").innerHTML = PARTS.map((P, pi) => `<div class="cp-part">PART ${pi + 1} · ${P.name}</div>` + P.chs.map(ci => { const c = CHAPTERS[ci];
+  const cs = campSet();
+  $("campProg").innerHTML = PARTS.map((P, pi) => !CAMPAIGNS[cs].parts.includes(pi) ? "" : `<div class="cp-part">${pi === 2 ? "🦵 SQUAT CAMPAIGN" : `PART ${pi + 1}`} · ${P.name}</div>` + P.chs.map(ci => { const c = CHAPTERS[ci];
     const ms = CAMP_LIST.filter(m => m.ch === ci), done = ms.filter(m => campStars(m.id)).length, got = ms.reduce((t, m) => t + campStars(m.id), 0);
-    return `<div class="cp-row" style="--c:${c.color}"><span>${chapterUnlocked(ci) ? "" : "🔒 "}${ci + 1}. ${c.name}</span><span class="muted">${done}/${ms.length} · ★${got}</span>
+    return `<div class="cp-row" style="--c:${c.color}"><span>${chapterUnlocked(ci) ? "" : "🔒 "}${chNum(ci)}. ${c.name}</span><span class="muted">${done}/${ms.length} · ★${got}</span>
       <div class="cp-bar"><i style="width:${done / ms.length * 100}%"></i></div></div>`;
   }).join("")).join("");
-  $("campStars").textContent = campTotal();
+  $("campStars").textContent = campTotal(); $("campMax").textContent = campKs(cs).length * 3;
 }
 
 function missionText() {
@@ -3832,13 +4286,14 @@ async function startMission(k) {
   endSet(false);
   const ch = CHAPTERS[m.ch];
   M = { k, m, goal: missionGoal(m), active: true, state: "countdown", reps: 0, misses: 0, startAt: 0, lastRepAt: 0, maxGap: 0 };
+  syncExercise();
   document.documentElement.style.setProperty("--aura", ch.color);
   document.documentElement.style.setProperty("--fog", ch.color + "33");
   $("stage").classList.add("fighting", "in-mission");
   $("campMap").hidden = true;
   $("mission").hidden = false;
   $("mLvl").textContent = m.id; $("mName").textContent = m.name;
-  $("mGoal").textContent = `${MTYPES[m.type].icon} ${MTYPES[m.type].goal(M.goal)}`;
+  $("mGoal").textContent = `${mIcon(m)} ${MTYPES[m.type].goal(M.goal)}`;
   sceneStart(m);
   missionText();
   mCallout(m.name, m.obj ? m.obj.toUpperCase() : "GET INTO POSITION");
@@ -3873,7 +4328,7 @@ setInterval(() => {
   const secs = (performance.now() - M.startAt) / 1000, g = M.goal;
   if (g.type === "timed" && secs > g.t) return finishMission(false, `Out of time — ${M.reps} of ${g.n} done.`);
   if (g.type === "endure" && secs >= g.t) return finishMission(M.reps >= g.n, M.reps >= g.n ? "" : `Time! ${M.reps} of ${g.n} — so close.`);
-  if (g.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > 4000) return finishMission(false, `You rested more than 4 seconds after push-up ${M.reps}.`);
+  if (g.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > 4000) return finishMission(false, `You rested more than 4 seconds after ${exM(M.m).one} ${M.reps}.`);
   missionText();
 }, 100);
 
@@ -3907,26 +4362,26 @@ function finishMission(won, why = "") {
   }, 1500);
 }
 function showMissionResult(mm, won, stars, secs, why, firstClear) {
-  const next = CAMP_LIST[mm.k + 1], ch = CHAPTERS[mm.m.ch];
+  const next = campOfK(mm.k + 1 < CAMP_LIST.length ? mm.k + 1 : mm.k) === campOfK(mm.k) && mm.k + 1 < CAMP_LIST.length ? CAMP_LIST[mm.k + 1] : null, ch = CHAPTERS[mm.m.ch];
   $("resTitle").textContent = won ? "MISSION COMPLETE" : "MISSION FAILED";
   $("resTitle").style.color = won ? "var(--accent)" : "var(--bad)";
   $("resRays").className = "rays" + (won ? "" : " red");
-  $("resArt").innerHTML = `<div class="m-big" style="--c:${ch.color}">${MTYPES[mm.m.type].icon}</div>`;
+  $("resArt").innerHTML = `<div class="m-big" style="--c:${ch.color}">${mIcon(mm.m)}</div>`;
   $("resArt").className = "art-big";
   $("resStamp").hidden = true;
   $("resBig").textContent = `${mm.m.id} · ${mm.m.name}`;
   $("resStars").innerHTML = won ? [0, 1, 2].map(i => `<span class="${i < stars ? "" : "off"}" style="animation-delay:${0.5 + i * 0.18}s">⭐</span>`).join("") : "";
-  const stats = [["Push-ups", mm.reps], ["Time", fmtTime(secs)]];
+  const stats = [[exM(mm.m).Many, mm.reps], ["Time", fmtTime(secs)]];
   if (mm.goal.type === "deep") stats.push(["Shallow", mm.misses]);
   if (mm.goal.type === "nobreak") stats.push(["Longest rest", mm.maxGap.toFixed(1) + "s"]);
   $("resStats").innerHTML = stats.map(([k, v]) => `<div><b>${v}</b><span class="muted">${k}</span></div>`).join("");
   const chapterDone = won && firstClear && (!next || next.ch !== mm.m.ch);
   $("resSub").textContent = won
     ? (chapterDone ? campNextText(mm.m, next)
-       : firstClear && next ? `🔓 Unlocked: ${next.id} ${next.name}` : stars < 3 ? `Tip: ${MTYPES[mm.m.type].stars}` : "")
+       : firstClear && next ? `🔓 Unlocked: ${next.id} ${next.name}` : stars < 3 ? `Tip: ${mStarsTxt(mm.m)}` : "")
     : why;
   $("resMain").textContent = won ? (next ? "Next mission ▶" : "Play again") : "Retry ▶";
-  $("resMain").onclick = () => { closeMission(); startMission(won && next ? mm.k + 1 : mm.k); };
+  $("resMain").onclick = () => { closeMission(); startMission(won && next ? mm.k + 1 : mm.k); };   // next is null at the end of a campaign
   $("resBack").textContent = "Back to map";
   $("resBack").onclick = () => closeMission();
   $("resultModal").classList.add("show"); resultCameraTimeout();
@@ -4606,7 +5061,7 @@ function foodRefresh() { if (mode === "food") renderFood(); }
 // ---------- today: calorie ring + macro bars ----------
 function renderFoodToday(T) {
   const t = sumItems(dayLog(foodDay)), today = foodDay === dayKey();
-  const burned = Math.round((store.days[foodDay] || 0) * kcalPerRep());
+  const burned = burnedOn(foodDay), nPush = store.days[foodDay] || 0, nSq = store.sq?.days?.[foodDay] || 0;
   const budget = T.kcal + burned, left = budget - t[0], frac = Math.min(1, t[0] / budget), over = left < 0;
   const C = 2 * Math.PI * 52;
   const water = dayLog(foodDay).filter(it => it.f === "water").reduce((a, it) => a + it.g, 0) / 250;
@@ -4630,7 +5085,7 @@ function renderFoodToday(T) {
     </div>
     <div class="fd-foot">
       <span>🎯 ${r0(T.kcal)} kcal goal (${GOALS[T.goal].icon} ${GOALS[T.goal].name})</span>
-      <span>💪 ${burned ? `+${burned} kcal from ${store.days[foodDay]} push-ups` : today ? "Push-ups add to your budget" : "No push-ups this day"}</span>
+      <span>💪 ${burned ? `+${burned} kcal from ${[nPush && `${nPush} ${exWord(nPush, "push")}`, nSq && `${nSq} ${exWord(nSq, "squat")}`].filter(Boolean).join(" + ")}` : today ? "Push-ups and squats add to your budget" : "No push-ups or squats this day"}</span>
       <span>💧 ${fmtServ(Math.round(water * 4) / 4)} / ${T.water} glasses <button class="ghost fd-water" id="fdWater" title="Log a glass of water">+1</button></span>
     </div>`;
   $("fdToday").querySelectorAll(".fd-dnav").forEach(b => b.onclick = () => { foodDay = shiftDay(foodDay, +b.dataset.dd); renderFood(); });
@@ -4936,6 +5391,7 @@ function renderMicros(T) {
     }).join("");
 }
 window.__food = { store: () => nstore(), render: () => renderFood(), FOODS, nutriTargets, mealPlan, sumItems, buildMeal, getFood, offFood };
+renderExUI(); renderRank();
 </script>
 </body>
 </html>
