@@ -42,6 +42,10 @@ CHAPTERS.forEach((c, ci) => add("title", `Chapter ${chNum(ci)}. ${c.name}.`)); a
   const src = html.match(/function announcerLines\(\) \{[\s\S]*?\n\}/); if (!src) throw new Error("couldn't find announcerLines");
   new Function("RANKS", "BOSSES", "SPECIALS", src[0] + "; return announcerLines();")(RANKS, BOSSES, SPECIALS).forEach(t => add("ann", t)); }
 
+// personal trainers: each line in TRAINER_LINES, spoken by that trainer
+{ const TL = grab(/const TRAINER_LINES = (\{[\s\S]*?\n\});/, "TRAINER_LINES");
+  Object.entries(TL).forEach(([id, pools]) => Object.values(pools).flat().forEach(t => add("t" + id, t))); }
+
 // pitch shift by factor k while keeping (or nudging) the speed
 const P = (k, tempo = 1) => `asetrate=${Math.round(22050 * k)},aresample=44100,atempo=${(tempo / k).toFixed(4)}`;
 const EYE = { rate: 0.44, af: `${P(0.7)},chorus=0.6:0.9:45|60:0.35|0.3:0.25|0.4:2|1.3,aecho=0.8:0.8:260|520:0.35|0.2` };
@@ -87,6 +91,9 @@ const CAST = {
   baron:  { rate: 0.46, af: `${P(0.80, 0.97)},aecho=0.8:0.7:90|180:0.3|0.15,acompressor=threshold=-18dB:ratio=3` },       // Baron Gravity: posh, heavy
   vex:   { rate: 0.54, af: `${P(1.10, 1.06)},highpass=f=120,aecho=0.8:0.4:28:0.12` },                                    // Vex: cocky rival, cold edge
   vexr:  { rate: 0.50, af: `${P(1.10, 1.03)},highpass=f=110` },                                                          // Vex, back on our side
+  tmax:   { rate: 0.58, af: `${P(1.04, 1.04)},highpass=f=80,acompressor=threshold=-20dB:ratio=4:attack=5:release=60` },                      // Coach Max: hyped
+  tsam:   { voice: "com.apple.voice.compact.en-US.Samantha", rate: 0.48, af: "aresample=44100,highpass=f=70,acompressor=threshold=-20dB:ratio=2" }, // Coach Sam: calm
+  tsarge: { rate: 0.54, af: `${P(0.84, 1.02)},highpass=f=70,acompressor=threshold=-16dB:ratio=5:attack=3:release=50,aecho=0.8:0.3:20:0.08` }, // Sarge: gruff, barking
   king:  { rate: 0.40, af: `${P(0.82, 0.94)},chorus=0.5:0.9:50|70:0.3|0.25:0.2|0.3:2|1.5,aecho=0.8:0.8:200|400:0.3|0.18` }, // The Hollow King: slow, syrupy, huge hall
 };
 CAST.boss11 = CAST.vex; CAST.boss13 = { rate: 0.52, af: `${CAST.vex.af},flanger=delay=3:depth=4:speed=0.5,aecho=0.8:0.6:120:0.25` }; CAST.boss15 = CAST.king; CAST.boss23 = CAST.quag; CAST.boss31 = CAST.baron;
@@ -100,7 +107,7 @@ for (const [h, { who, text }] of lines) {
   const out = join(OUT, h + ".m4a");
   if (existsSync(out)) continue;
   const c = CAST[who] || CAST.narr, raw = join(TMP, h + ".caf");
-  execFileSync(join(TMP, "tts"), [VOICE, String(c.rate), "1.0", raw, speakable(text)], { stdio: "pipe" });
+  execFileSync(join(TMP, "tts"), [c.voice || VOICE, String(c.rate), "1.0", raw, speakable(text)], { stdio: "pipe" });
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", raw, "-af", `${c.af},loudnorm=I=-16:TP=-1.5:LRA=11`, "-ar", "44100", "-ac", "1", "-c:a", "aac", "-b:a", "40k", "-movflags", "+faststart", out]);
   unlinkSync(raw); made++;
   process.stdout.write(`${who.padEnd(6)} ${text.slice(0, 60)}\n`);

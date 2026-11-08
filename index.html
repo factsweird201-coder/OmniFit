@@ -983,6 +983,37 @@
     .hx-bar { grid-template-columns: minmax(0, 1fr) auto; } .hx-for { display: none; } .hx-clock b { font-size: 22px; } .hx-r { gap: 6px; } .hx-r .cb-r { gap: 4px; } .hx-r .cb-r button { padding: 7px 9px; font-size: 13px; min-width: 36px; } .hx-dots { gap: 3px; } .hx-dots i { width: 7px; } .hx-dots i.run { width: 5px; }
     .hx-flash b { font-size: 22px; } .hx-flash { padding: 10px 16px; }
   }
+
+  /* ---- personal trainer ---- */
+  .tr-face { --c: var(--accent); display: inline-block; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid var(--c); flex: none; box-shadow: 0 0 14px color-mix(in srgb, var(--c) 35%, transparent); }
+  .tr-face svg { width: 100%; height: 100%; display: block; }
+  .tr-head { display: flex; align-items: center; gap: 12px; }
+  .tr-who { display: grid; gap: 1px; } .tr-who b { font: 700 18px var(--display); letter-spacing: .5px; } .tr-who span { font-size: 12.5px; color: var(--muted); }
+  .tr-gear { margin-left: auto; padding: 7px 11px; font-size: 13px; white-space: nowrap; flex: none; } .tr-who { min-width: 0; }
+  .tr-bubble { position: relative; margin: 12px 0 10px; padding: 11px 13px; border-radius: 14px; font-size: 14px; line-height: 1.5;
+    background: color-mix(in srgb, var(--c) 10%, rgba(255,255,255,.02)); border: 1px solid color-mix(in srgb, var(--c) 40%, transparent); }
+  .tr-bubble::before { content: ""; position: absolute; left: 20px; top: -7px; width: 12px; height: 12px; transform: rotate(45deg); background: inherit; border-left: inherit; border-top: inherit; }
+  .tr-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 14px; text-align: center; }
+  .tr-week span { display: block; font: 700 10.5px var(--display); color: var(--muted); letter-spacing: 1px; margin-bottom: 3px; }
+  .tr-week i { display: grid; place-items: center; height: 26px; border-radius: 8px; font-style: normal; font-size: 13px; border: 1px solid var(--line2); background: rgba(255,255,255,.03); }
+  .tr-week .did i { background: rgba(47,212,122,.18); border-color: rgba(47,212,122,.6); color: var(--good); }
+  .tr-week .today i { box-shadow: 0 0 0 2px var(--accent) inset; } .tr-week .future i { opacity: .45; }
+  .tr-set { border-top: 1px solid var(--line); padding-top: 12px; margin-bottom: 14px; }
+  .tr-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tr-opt { display: grid; justify-items: center; gap: 3px; padding: 10px 6px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid var(--line2); color: var(--text, #fff); }
+  .tr-opt .tr-face { width: 44px; height: 44px; } .tr-opt b { font: 700 13.5px var(--display); } .tr-opt small { font-size: 11px; color: var(--muted); font-weight: 400; }
+  .tr-opt.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); }
+  .tr-talk { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; font-size: 13px; }
+  .tr-say { position: absolute; left: 12px; bottom: 62px; z-index: 7; display: flex; align-items: center; gap: 10px; max-width: min(440px, calc(100% - 24px)); pointer-events: none;
+    background: rgba(8,10,16,.88); border: 1px solid var(--line2); border-radius: 16px; padding: 8px 14px 8px 8px; box-shadow: 0 8px 30px rgba(0,0,0,.45); }
+  .tr-say .tr-av { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex: none; } .tr-say .tr-av svg { width: 100%; height: 100%; display: block; }
+  .tr-say .tr-txt { font-size: 15px; font-weight: 600; line-height: 1.3; } .tr-say .tr-txt b { display: block; font: 700 10.5px var(--display); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
+  .tr-say.in { animation: trIn .35s cubic-bezier(.2,1.4,.4,1); } @keyframes trIn { from { opacity: 0; transform: translateY(14px) scale(.92); } }
+  .tr-quote { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: start; } .tr-quote .tr-face { width: 40px; height: 40px; }
+  @media (max-width: 600px) {
+    .tr-say { bottom: 58px; padding: 6px 10px 6px 6px; } .tr-say .tr-av { width: 34px; height: 34px; } .tr-say .tr-txt { font-size: 13.5px; }
+    .tr-pick { gap: 6px; } .tr-opt small { display: none; } .tr-bubble { font-size: 13.5px; }
+  }
 </style>
 </head>
 <body>
@@ -1042,6 +1073,7 @@
         </div>
       </div>
 
+      <div class="tr-say" id="trSay" hidden><div class="tr-av"></div><div class="tr-txt"></div></div>
       <div class="setdone" id="setDone" hidden></div>
 
       <div class="coach-bar" id="coachBar" hidden>
@@ -1144,9 +1176,10 @@
       <div class="panel" id="fdPlan"></div>
     </div>
     <div class="panel coach-panel" style="margin-top:18px" id="coachPanel">
-      <div class="co-head"><h3>🧠 Coach · Today's workout</h3><span class="muted" id="coachGoal"></span></div>
+      <div id="trainerBox"></div>
+      <div class="co-head"><h3>Today's workout</h3><span class="muted" id="coachGoal"></span></div>
       <div id="coachBody"></div>
-      <div class="muted co-how">The coach alternates push days and squat days. It watches every rep (how many, how deep, how fast, and where you slowed down) and moves your next target up, holds it, or eases off.</div>
+      <div class="muted co-how">Your trainer alternates push days and squat days. It watches every rep (how many, how deep, how fast, and where you slowed down) and moves your next target up, holds it, or eases off.</div>
     </div>
     <div class="panel" style="margin-top:18px" id="howTrain">
       <h3>How it counts</h3>
@@ -1940,6 +1973,7 @@ function announcerLines() {
 let annSet = null, annCur = null;
 function say(text, v = {}) {
   if (store.muted) return;
+  trStop();
   annSet ||= new Set(announcerLines());
   if (!annSet.has(text)) return tts(text, v);
   try { speechSynthesis.cancel(); } catch {}
@@ -1954,7 +1988,7 @@ function say(text, v = {}) {
   setTimeout(() => { if (annCur === a && a.paused && !a.ended && !fell) fallback(); }, 1500);   // slow connection: don't go silent
 }
 const renderMute = () => $("muteBtn").textContent = store.muted ? "🔇" : "🔊";
-$("muteBtn").onclick = () => { store.muted = !store.muted; save(); renderMute(); if (store.muted) try { speechSynthesis.cancel(); } catch {} };
+$("muteBtn").onclick = () => { store.muted = !store.muted; save(); renderMute(); if (store.muted) { try { speechSynthesis.cancel(); } catch {} trStop(); } };
 renderMute();
 
 function toast(msg) {
@@ -2039,7 +2073,7 @@ function onRep(depthPct) {
   else if (B?.active) battleRep(depthPct);
   else if (M?.active) missionRep(depthPct);
   else {
-    sfx.rep(); coachRep(depthPct);
+    sfx.rep(); coachRep(depthPct); trRep(depthPct);
     const [x, y] = centerOf(chip);
     burst(x, y, { n: 14, colors: ["#ffc21a", "#fff2a8"], speed: 5, size: 3, life: 0.6 });
   }
@@ -2060,7 +2094,7 @@ function onSquat(depthPct) {
   if (beforeToday < sq.goal && beforeToday + 1 >= sq.goal) { toast("✅ Daily squat goal complete!"); confetti(90); if (!inMatch() && !M) say("Daily squat goal complete!"); }
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
-  else { sfx.rep(); coachRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  else { sfx.rep(); coachRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
 window.__rep = (d = 0.4) => onRep(d);
@@ -2104,6 +2138,7 @@ function showSetDone(n) {
   if (isBest) confetti(120);
   sfx.fanfare();
   say(`Set complete. ${n} ${exWord(n)}.${isBest ? " New best!" : ""}`);
+  trSetDone(n);
   clearTimeout(setDoneTimer);
   setDoneTimer = setTimeout(() => { el.classList.add("out"); setTimeout(() => el.hidden = true, 500); }, 4500);
 }
@@ -2435,6 +2470,7 @@ const LOG_KEY = "pushupRanks.log";
 let repLog = [];
 try { repLog = JSON.parse(localStorage.getItem(LOG_KEY) || "[]"); } catch {}
 function logRep(entry) {
+  if (typeof trainerInit !== "undefined") trHear(entry);
   repLog.push({ at: new Date().toISOString(), ...entry });
   if (repLog.length > 300) repLog = repLog.slice(-300);
   try { localStorage.setItem(LOG_KEY, JSON.stringify(repLog)); } catch {}
@@ -2877,7 +2913,7 @@ function ensureCamera() {
   return camReady;
 }
 // Training only counts reps after you press this button (not just because the camera happens to be on)
-$("startBtn").onclick = () => { if (mode !== "train" || inMatch()) return; trainArmed = true; ensureCamera(); };
+$("startBtn").onclick = () => { if (mode !== "train" || inMatch()) return; trainArmed = true; ensureCamera(); trHello(); };
 
 // Turn the camera off (light goes out) and show the start button again for the next set.
 let overlayTimer = 0, idleTimer = 0;
@@ -3918,6 +3954,7 @@ function voiceEl(vk, text) {
 }
 function preloadVoices(list) { if (!store.muted) list.forEach(([vk, text]) => voiceEl(vk, text)); }
 function stopVoice() {
+  trStop();
   if (curVoice) { try { curVoice.pause(); } catch {} curVoice = null; }
   try { speechSynthesis.cancel(); } catch {}
   cineMusic.duck(false);
@@ -5913,7 +5950,7 @@ function coachStart(ex) {
   const p = coachPlan(ex);
   if (setCount > 0) endSet(false);
   CW = { active: true, ...p, idx: 0, phase: "ready", sets_done: [], cur: null, until: 0, startedAt: Date.now(), said10: false };
-  trainArmed = true; syncExercise(); renderExUI();
+  trainArmed = true; syncExercise(); renderExUI(); trHello();
   $("stage").classList.add("coaching"); $("coachBar").hidden = false;
   $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" });
   coachRestUI(); renderCoach();
@@ -5932,7 +5969,9 @@ function coachPhase(ph, secs = 0) {
     disarm(); sqReset();
     const last = CW.cur.last;
     say(last ? "Last set. As many as you can. Go!" : `Set ${CW.idx + 1} of ${CW.sets}. Go!`); sfx.go();
+    if (last) trainer("lastSet", { prio: 2, delay: 2400 });
   }
+  if (ph === "rest" && secs >= 40) setTimeout(() => { if (CW?.active && CW.phase === "rest") trainer("rest"); }, Math.min(secs * 450, 30000));
   coachRestUI(); coachBarUI();
 }
 function coachLoop() {
@@ -6049,6 +6088,7 @@ function coachRestUI() {
   coachBarUI();
 }
 function renderCoach() {
+  if (typeof trainerInit !== "undefined") renderTrainer();
   const el = $("coachBody"); if (!el) return;
   if (!store.profile) { el.innerHTML = `<p class="muted">Set up your profile first, so the coach can build a plan that fits your level and goal.</p>`; return; }
   const c = coachStore(), st = coachStyle(), g = GOALS[store.profile.goal] || GOALS.tone;
@@ -6084,7 +6124,9 @@ function showCoachReport(r) {
     <div class="co-verdict">${r.to > r.from ? "📈" : r.to < r.from ? "📉" : "➡️"} ${r.verdict}${r.stopped ? "" : `<b>Next ${r.ex === "squat" ? "squat" : "push"} day: ${coachStyle().sets} × ${r.to}${r.to !== r.from ? ` (was ${r.from})` : ""}</b>`}</div>
     <div class="row"><button id="coachOk">Done</button></div>`;
   m.classList.add("show");
+  { const v = m.querySelector(".co-verdict"); v.innerHTML = trQuote(v.innerHTML); }
   if (!r.stopped) { confetti(90); sfx.fanfare(); say("Workout complete!"); }
+  trainer(r.stopped ? "stopped" : "done", { prio: 3, force: true, delay: r.stopped ? 300 : 2300 });
   $("coachOk").onclick = () => { m.classList.remove("show"); flushRankUps(); };
 }
 $("cbStop").onclick = () => coachStop();
@@ -6171,7 +6213,7 @@ function kneeStep(lm) {
 let hxTick = 0;
 function hxStart(div = hxStore().div) {
   if (mode !== "hyrox" || inMatch() || CW?.active || HR?.active) return;
-  hxStore().div = div; save();
+  hxStore().div = div; save(); trHello();
   if (setCount > 0) endSet(false);
   HR = { active: true, div, segs: hxSegs(div), idx: 0, phase: "ready", splits: [], skipped: [], counts: [], count: 0, until: 0, best: hxStore().best[div] || null, startedAt: Date.now(), reps: 0 };
   $("hxLobby").hidden = true; $("stage").classList.add("coaching"); $("hxBar").hidden = false;
@@ -6228,6 +6270,7 @@ function hxRep(depthPct) {
   const s = HR.segs[HR.idx];
   if (!s.cam || s.ex === "knees") return false;
   HR.count++; HR.reps++;
+  if (!s.tally) trRep(depthPct);
   if (!s.tally) { sfx.rep(); $("setCount").textContent = HR.count; const chip = $("countChip"); chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump"); }
   if (HR.count >= s.target) queueMicrotask(() => hxNext(false));   // after onRep has finished counting this rep
   else hxBarUI();
@@ -6236,6 +6279,7 @@ function hxRep(depthPct) {
 function hxKnee() {
   if (!HR?.active || HR.phase !== "go" || HR.segs[HR.idx].ex !== "knees") return;
   HR.count++;
+  trRep(0, { knees: true });
   $("setCount").textContent = HR.count;
   if (HR.count % 10 === 0) sfx.rep();
   if (HR.count >= HR.segs[HR.idx].target) return hxNext(false);
@@ -6350,6 +6394,8 @@ function showHxReport(r) {
     <div class="co-verdict">${tips.join(" ")}</div>
     <div class="row"><button id="hxAgain">Race again</button><button class="ghost" id="hxOk">Done</button></div>`;
   m.classList.add("show");
+  { const v = m.querySelector(".co-verdict"); v.innerHTML = trQuote(v.innerHTML); }
+  trainer("done", { prio: 3, force: true, delay: 2300 });
   confetti(r.pb ? 200 : 90); r.pb ? sfx.victory() : sfx.fanfare(); say(r.pb ? "New personal best!" : "Race complete!");
   const close = () => { m.classList.remove("show"); flushRankUps(); };
   $("hxOk").onclick = close;
@@ -6365,6 +6411,250 @@ $("hxQuit").onclick = () => {
 };
 var hxInit = true;
 window.__hx = { start: hxStart, next: hxNext, get R() { return HR; }, store: hxStore, segs: hxSegs, go: i => hxGo(i), lines: () => HX_STATIONS.map(s => s.say) };   // test hook
+
+// ================= PERSONAL TRAINER: a coach with a face and a voice who watches every rep =================
+// Talks during Training sets, coach workouts and Hyrox races, using what the camera sees: depth, tempo,
+// slowing down, reps left, personal bests. Each trainer has their own recorded voice (tools/voices.mjs records
+// TRAINER_LINES as speakers tmax / tsam / tsarge), a daily check-in and a week view.
+const TRAINERS = {
+  max:   { name: "Coach Max", tag: "Hype coach", vk: "tmax", color: "#ff8a1a", tts: { rate: 1.15, pitch: 1.0 },
+           greet: n => `Hey ${n}!`, close: "Let's go! 🔥", doneToday: "Today's work is done. Eat well, sleep well, and come back hungry tomorrow!" },
+  sam:   { name: "Coach Sam", tag: "Calm form coach", vk: "tsam", color: "#3ad6c0", tts: { rate: 1.0, pitch: 1.1 },
+           greet: n => `Hi ${n}.`, close: "Quality over quantity. 🌿", doneToday: "You've trained today. Recovery is part of the plan, so rest well." },
+  sarge: { name: "Sarge", tag: "Drill sergeant", vk: "tsarge", color: "#9bbf4a", tts: { rate: 1.05, pitch: 0.7 },
+           greet: n => `Listen up, ${n}!`, close: "Move it! 🪖", doneToday: "Today's mission is complete. Rest up, recruit. Tomorrow we go again." },
+};
+const TRAINER_LINES = {
+  max: {
+    hello: ["Let's go! Time to get to work!", "Ready to crush it today?", "Welcome back, champ! Let's move!"],
+    rep: ["Yes! Keep it rolling!", "That's it! Strong!", "Looking good, keep going!", "Beautiful reps!", "Let's go, let's go!"],
+    shallow: ["Get lower! All the way down!", "Deeper! Make it count!", "Lower! You've got more range than that!"],
+    fast: ["Whoa, control it! Slow on the way down!", "Not so fast! Own every rep!"],
+    slow: ["Don't stop now! Push!", "Come on, one more! You've got this!", "Dig deep! Keep moving!"],
+    deep: ["Great depth! That's how it's done!", "Deep reps! Love it!"],
+    best: ["That's a new personal best! Keep going!"],
+    three: ["Three more!"], two: ["Two more!"], one: ["Last one! Make it count!"],
+    lastSet: ["Last set! Leave nothing in the tank!"],
+    rest: ["Shake it out. Big breaths. You're doing great.", "Get some water. Next set's going to be even better."],
+    setGood: ["What a set! Proud of you!", "Clean set! That's the standard!"],
+    setShallow: ["Good effort! Next set, go deeper on every rep."],
+    setShort: ["Every rep counts. Let's build on that!"],
+    done: ["Workout done! You showed up and crushed it!", "That's a wrap! Incredible work today!"],
+    stopped: ["No worries, we'll get it next time!"],
+    blocked: ["Step back! I need to see all of you!"],
+    count: ["Ten!", "Twenty!", "Thirty!", "Forty!", "Fifty!"],
+  },
+  sam: {
+    hello: ["Good to see you. Let's have a great session.", "Welcome back. Quality over quantity today.", "Hi. Let's focus on smooth, controlled reps."],
+    rep: ["Nice and smooth.", "Good control.", "Steady breathing. Good.", "That's good form.", "Keep that rhythm."],
+    shallow: ["A little deeper, please.", "Use your full range. Go lower.", "Lower down. Quality reps only."],
+    fast: ["Slow down. Two seconds on the way down.", "Control the descent. No rushing."],
+    slow: ["Breathe, and keep going.", "Stay with it. One rep at a time.", "You can do one more. Stay calm."],
+    deep: ["Lovely depth.", "Perfect range of motion."],
+    best: ["That's a new personal best. Well done."],
+    three: ["Three more."], two: ["Two more."], one: ["Last one. Make it a good one."],
+    lastSet: ["Final set. Keep your form to the very end."],
+    rest: ["Breathe in slowly, and out. Let your heart rate settle.", "Shake out your arms and legs. Stay loose."],
+    setGood: ["That was a quality set.", "Excellent form that set."],
+    setShallow: ["Good set. Next one, focus on going deeper."],
+    setShort: ["Every rep counts. Well done for showing up."],
+    done: ["Workout complete. That was good, honest work.", "Well done today. Rest up and recover."],
+    stopped: ["That's all right. Rest, and we'll try again."],
+    blocked: ["Please step back so I can see your whole body."],
+    count: ["Ten.", "Twenty.", "Thirty.", "Forty.", "Fifty."],
+  },
+  sarge: {
+    hello: ["On your feet, recruit! Time to work!", "Fall in! We train today!", "No excuses today. Let's move!"],
+    rep: ["Keep moving, recruit!", "That's what I like to see!", "Don't slow down!", "Again! Again!", "Good! Now keep it up!"],
+    shallow: ["Lower, recruit! That doesn't count in my book!", "All the way down! No half reps!", "I said lower!"],
+    fast: ["Slow down! This isn't a race!", "Control it, recruit!"],
+    slow: ["Did I say stop? Move!", "Pain is weakness leaving the body! Push!", "Get up! One more!"],
+    deep: ["Now that's a real rep!", "Good depth, recruit!"],
+    best: ["New personal best! Don't you dare stop now!"],
+    three: ["Three more!"], two: ["Two more!"], one: ["Last one! Finish it!"],
+    lastSet: ["Final set! Give me everything you've got!"],
+    rest: ["Breathe, recruit. Rest is earned, not given.", "Shake it off. The next set is coming."],
+    setGood: ["Outstanding, recruit!", "That's how a soldier trains!"],
+    setShallow: ["Sloppy! Next set, full range or nothing!"],
+    setShort: ["That's a start. I expect more next time!"],
+    done: ["Mission complete! Dismissed, soldier!", "Not bad, recruit. Same time tomorrow!"],
+    stopped: ["Quitting early? We'll fix that tomorrow."],
+    blocked: ["Step back! I can't see you, recruit!"],
+    count: ["Ten!", "Twenty!", "Thirty!", "Forty!", "Fifty!"],
+  },
+};
+// faces (64×64)
+const TRAINER_ART = {
+  max: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="31" fill="#3a1d08"/><path d="M10 64 Q12 46 32 45 Q52 46 54 64Z" fill="#ff8a1a"/><path d="M26 45 L32 52 L38 45" fill="#fff" opacity=".9"/>
+    <ellipse cx="32" cy="30" rx="14" ry="16" fill="#e8a878"/><path d="M17 24 L20 12 L25 18 L29 9 L33 17 L38 9 L41 18 L46 12 L47 24Z" fill="#2a1a10"/><rect x="17" y="20" width="30" height="5" rx="2" fill="#ff3a3a"/>
+    <circle cx="26.5" cy="30" r="2" fill="#2a1a10"/><circle cx="37.5" cy="30" r="2" fill="#2a1a10"/><path d="M24 26.5 L29 27.5 M35 27.5 L40 26.5" stroke="#2a1a10" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M25 37 Q32 44 39 37Z" fill="#fff" stroke="#8a3a2a" stroke-width="1.4"/></svg>`,
+  sam: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="31" fill="#0a2e2a"/><path d="M10 64 Q12 46 32 45 Q52 46 54 64Z" fill="#2aa898"/><path d="M27 45 Q32 50 37 45" stroke="#e8f8f4" stroke-width="2" fill="none"/>
+    <path d="M17 32 Q15 12 32 12 Q49 12 47 32 L45 40 Q50 36 52 46 Q46 44 45 40Z" fill="#4a2a1a"/><ellipse cx="32" cy="31" rx="13" ry="15" fill="#c98a5a"/><path d="M19 26 Q24 15 34 17 Q43 18 45 27 Q38 21 30 22 Q24 23 19 26Z" fill="#4a2a1a"/>
+    <path d="M24 31 Q26.5 29 29 31 M35 31 Q37.5 29 40 31" stroke="#2a1a10" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M27 38 Q32 41.5 37 38" stroke="#7a3a2a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <circle cx="23" cy="35" r="2.2" fill="#e87a6a" opacity=".35"/><circle cx="41" cy="35" r="2.2" fill="#e87a6a" opacity=".35"/></svg>`,
+  sarge: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="31" fill="#1e2610"/><path d="M10 64 Q12 46 32 45 Q52 46 54 64Z" fill="#5a6a2a"/><path d="M28 45 L32 50 L36 45" fill="#3a4418"/>
+    <ellipse cx="32" cy="31" rx="14" ry="15" fill="#d8a070"/><path d="M15 22 Q16 10 32 10 Q48 10 49 22 Z" fill="#4a5a22"/><path d="M14 22 H52 Q53 25 47 25 H17 Q12 25 14 22Z" fill="#3a4818"/><circle cx="32" cy="16" r="2.5" fill="#e8c840"/>
+    <path d="M23 29 L29 30.5 M35 30.5 L41 29" stroke="#2a1a10" stroke-width="2.2" stroke-linecap="round"/><circle cx="26.5" cy="32.5" r="1.8" fill="#2a1a10"/><circle cx="37.5" cy="32.5" r="1.8" fill="#2a1a10"/>
+    <path d="M24 38 Q28 35.5 32 37 Q36 35.5 40 38 Q36 39.5 32 38.5 Q28 39.5 24 38Z" fill="#5a3a20"/><path d="M28 41.5 H36" stroke="#7a3a2a" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+};
+const WEEK_GOAL = { bulk: 4, cut: 5, tone: 3, strength: 4 };
+const trStore = () => { store.trainer ||= {}; const t = store.trainer; if (!TRAINERS[t.id]) t.id = "max"; t.talk ||= "lots"; return t; };
+const trT = () => TRAINERS[trStore().id];
+var trCur = null, trLast = {}, trLastAt = 0, trHideT = 0, trSet = { depths: [], deepRun: 0, saidDeep: false, saidBest: false, gaps: [], saidSlowAt: 0, lastMs: 0, startBest: 0 };
+const trAgo = k => trLast[k] == null ? Infinity : performance.now() - trLast[k];   // ms since a cue was last given
+function trStop() { if (trCur) try { trCur.pause(); } catch {} trCur = null; }
+
+// is the trainer watching right now? (Training sets, coach workouts, Hyrox races; never fights, missions or story)
+const trWatching = () => !inMatch() && !M && camReady && ((mode === "train" && trainArmed) || (mode === "hyrox" && HR?.active && HR.phase === "go"));
+// say one line from a pool. prio 1 = chatter (only when "Talk: lots"), 2 = coaching cue, 3 = always
+function trainer(key, { prio = 1, force = false, delay = 0 } = {}) {
+  const st = trStore(); if (st.talk === "off") return;
+  if (st.talk === "some" && prio < 2) return;
+  if (delay) { setTimeout(() => trainer(key, { prio, force }), delay); return; }
+  if (!force && !trWatching()) return;
+  const now = performance.now();
+  const gap = st.talk === "some" ? 6000 : 3200;
+  if (!force && now - trLastAt < (prio >= 2 ? 800 : gap)) return;   // coaching cues may cut in over chatter
+  if (!force && annCur && !annCur.paused && !annCur.ended) return;   // the announcer is talking
+  const pool = TRAINER_LINES[st.id]?.[key]; if (!pool?.length) return;
+  let text = pool[Math.floor(Math.random() * pool.length)];
+  if (pool.length > 1 && text === trLast[key]) text = pool[(pool.indexOf(text) + 1) % pool.length];
+  trLast[key] = text; trLastAt = now;
+  trBubble(text);
+  if (store.muted) return;
+  trStop();
+  const T = TRAINERS[st.id], a = voiceEl(T.vk, text);
+  if (a.failed) return tts(text, T.tts);
+  trCur = a; try { a.currentTime = 0; } catch {}
+  a.play().catch(() => tts(text, T.tts));
+}
+function trBubble(text) {
+  const el = $("trSay"), T = trT();
+  el.querySelector(".tr-av").innerHTML = TRAINER_ART[trStore().id];
+  el.querySelector(".tr-txt").innerHTML = `<b style="color:${T.color}">${T.name}</b>${esc(text)}`;
+  el.hidden = false; el.classList.remove("in"); void el.offsetWidth; el.classList.add("in");
+  clearTimeout(trHideT); trHideT = setTimeout(() => el.hidden = true, 3600);
+}
+// a counted rep in a set the trainer is watching
+function trRep(depthPct, { knees = false } = {}) {
+  if (!trWatching()) return;
+  let n, target = 0, beat = 0;
+  if (HR?.active) { n = HR.count; target = HR.segs[HR.idx].target || 0; }
+  else if (CW?.active) { if (CW.phase !== "set") return; n = CW.cur.times.length; target = CW.cur.last ? 0 : CW.cur.target; }
+  else n = setCount;
+  // your best before this set started (onRep has already raised it by the time we hear about the rep)
+  if (n <= 1) trSet = { depths: [], deepRun: 0, saidDeep: false, saidBest: false, gaps: [], saidSlowAt: 0, lastMs: trSet.lastMs, lastAt: 0, startBest: (b => b === n ? n - 1 : b)((exercise === "squat" ? sqStore().best : store.best) || 0) };
+  if (!HR?.active && !CW?.active) beat = trSet.startBest;
+  const now = performance.now();
+  if (trSet.lastAt) trSet.gaps.push(now - trSet.lastAt); trSet.lastAt = now;
+  if (knees) { const left = target - n; if (left === 3) trainer("three", { prio: 2 }); else if (left === 1) trainer("one", { prio: 2 }); return; }
+  const d = Math.min(1, depthPct || 0); trSet.depths.push(d);
+  trSet.deepRun = d >= CRIT ? trSet.deepRun + 1 : 0;
+  const left = target ? target - n : 99;
+  if (left === 3) return trainer("three", { prio: 2 });
+  if (left === 2) return trainer("two", { prio: 2 });
+  if (left === 1) return trainer("one", { prio: 2 });
+  if (left <= 0) return;
+  if (beat >= 5 && n === beat + 1 && !trSet.saidBest) { trSet.saidBest = true; return trainer("best", { prio: 2, force: true }); }
+  if (trSet.lastMs && trSet.lastMs < (exercise === "squat" ? 600 : 650) && trAgo("fastAt") > 15000) { trLast.fastAt = now; return trainer("fast", { prio: 2 }); }
+  if (n % 10 === 0 && n <= 50) return trCount(n);
+  if (trSet.deepRun === 3 && !trSet.saidDeep) { trSet.saidDeep = true; return trainer("deep"); }
+  if (n % 5 === 0) trainer("rep");
+}
+// milestone counts say exactly that number
+function trCount(n) {
+  const st = trStore(); if (st.talk !== "lots" || !trWatching()) return;
+  const text = TRAINER_LINES[st.id].count[n / 10 - 1]; if (!text) return;
+  trLastAt = performance.now(); trBubble(text);
+  if (store.muted) return;
+  trStop(); const T = TRAINERS[st.id], a = voiceEl(T.vk, text);
+  if (a.failed) return tts(text, T.tts);
+  trCur = a; try { a.currentTime = 0; } catch {} a.play().catch(() => tts(text, T.tts));
+}
+// what the detectors log: rejected reps, blocked view, rep tempo
+function trHear(e) {
+  if (!trWatching()) return;
+  const now = performance.now();
+  if (e.ok) { trSet.lastMs = e.ms || 0; return; }
+  if (/lower/.test(e.reason || "") && trAgo("shallowAt") > 8000) { trLast.shallowAt = now; trainer("shallow", { prio: 2 }); }
+  else if (/^blocked/.test(e.reason || "") && trAgo("blockedAt") > 25000) { trLast.blockedAt = now; trainer("blocked", { prio: 2 }); }
+}
+// slowing down mid-set
+setInterval(() => {
+  if (!trWatching() || !lastRepTime) return;
+  const inSet = HR?.active ? HR.segs[HR.idx].cam && HR.segs[HR.idx].ex !== "knees" && HR.count >= 3 : CW?.active ? CW.phase === "set" && CW.cur.times.length >= 3 : setCount >= 3;
+  if (!inSet) return;
+  const g = trSet.gaps.slice(-5), med = g.length ? [...g].sort((a, b) => a - b)[g.length >> 1] : 1500;
+  const quiet = performance.now() - lastRepTime;
+  if (quiet > Math.max(2600, med * 1.9) && quiet < 9000 && trSet.saidSlowAt !== lastRepTime) { trSet.saidSlowAt = lastRepTime; trainer("slow", { prio: 2 }); }
+}, 500);
+// after a free Training set
+function trSetDone(n) {
+  const st = trStore(); if (st.talk === "off") return;
+  const dep = trSet.depths.length ? trSet.depths.reduce((a, b) => a + b, 0) / trSet.depths.length : 0.5;
+  const key = n < 5 ? "setShort" : dep < 0.33 ? "setShallow" : "setGood";
+  setTimeout(() => trainer(key, { prio: 2, force: true }), 2600);
+}
+function trHello() {
+  const st = trStore(); if (st.hello === dayKey()) return;
+  st.hello = dayKey(); save();
+  setTimeout(() => trainer("hello", { prio: 3, force: true }), 400);
+}
+
+// ---------- the daily check-in panel ----------
+function trWeek() {
+  const d = new Date(), dow = (d.getDay() + 6) % 7, mon = new Date(d); mon.setDate(d.getDate() - dow);
+  const hx = new Set((store.hyrox?.hist || []).map(h => h.d));
+  return Array.from({ length: 7 }, (_, i) => { const x = new Date(mon); x.setDate(mon.getDate() + i); const k = dayKey(x);
+    const reps = (store.days[k] || 0) + (store.sq?.days?.[k] || 0);
+    return { k, l: "MTWTFSS"[i], did: reps >= 10 || hx.has(k), today: i === dow, future: i > dow }; });
+}
+function trMessage() {
+  const T = trT(), name = (store.name || "").trim() || "champ", parts = [T.greet(name)];
+  const c = coachStore(), hist = c.hist.filter(h => !h.stopped), last = hist[hist.length - 1];
+  const week = trWeek(), done = week.filter(w => w.did).length, goal = WEEK_GOAL[store.profile?.goal] || 3;
+  // days in a row trained, up to yesterday
+  let run = 0; { const x = new Date(); x.setDate(x.getDate() - 1); while (((store.days[dayKey(x)] || 0) + (store.sq?.days?.[dayKey(x)] || 0)) >= 10 && run < 30) { run++; x.setDate(x.getDate() - 1); } }
+  if (coachDoneToday() || week.find(w => w.today)?.did) parts.push(T.doneToday);
+  else if (run >= 5) parts.push(`You've trained ${run} days in a row. A rest day or a light session today is smart, not lazy.`);
+  else {
+    const p = coachPlan();
+    parts.push(`Today: ${EX[p.ex].icon} ${p.ex === "squat" ? "squat" : "push"} day, ${p.sets} × ${p.target}.`);
+    if (last) {
+      if (last.to > last.from) parts.push(`Last ${last.ex === "squat" ? "squat" : "push"} day you moved up to ${last.to}. Let's prove it wasn't luck.`);
+      else if (last.to < last.from) parts.push("Last session was tough, so I eased the target. Build it back up.");
+      else if (last.depth < 0.35) parts.push(`Focus today: depth. Your reps averaged ${Math.round(last.depth * 100)}%, aim for 50%.`);
+      else parts.push("Hit every set today and the target goes up.");
+    } else parts.push("This is our first workout together. I'll watch every rep and set your targets from what I see.");
+  }
+  parts.push(`This week: ${done} of ${goal} workouts.`);
+  const nt = typeof nutriTargets === "function" ? nutriTargets() : null, food = store.food?.[dayKey()] || [];
+  if (nt && new Date().getHours() >= 17) { const got = Math.round(sumItems(food)[1]); if (got < nt.p * 0.5) parts.push(`Protein so far: ${got} of ${nt.p} g. Get some in after training.`); }
+  parts.push(T.close);
+  return parts.join(" ");
+}
+function renderTrainer() {
+  const el = $("trainerBox"); if (!el) return;
+  const st = trStore(), T = trT();
+  if (!store.profile) { el.innerHTML = ""; return; }
+  el.innerHTML = `
+    <div class="tr-head"><div class="tr-face" style="--c:${T.color}">${TRAINER_ART[st.id]}</div>
+      <div class="tr-who"><b>${T.name}</b><span>${T.tag} · your trainer</span></div>
+      <button class="ghost tr-gear" id="trGear" aria-expanded="${!!renderTrainer.open}">⚙️ Trainer</button></div>
+    <div class="tr-bubble" style="--c:${T.color}">${esc(trMessage())}</div>
+    <div class="tr-week">${trWeek().map(w => `<div class="${w.did ? "did" : ""}${w.today ? " today" : ""}${w.future ? " future" : ""}"><span>${w.l}</span><i>${w.did ? "✓" : ""}</i></div>`).join("")}</div>
+    <div class="tr-set" ${renderTrainer.open ? "" : "hidden"}>
+      <div class="tr-pick">${Object.entries(TRAINERS).map(([k, t]) => `<button class="tr-opt${k === st.id ? " on" : ""}" data-t="${k}" style="--c:${t.color}"><span class="tr-face">${TRAINER_ART[k]}</span><b>${t.name}</b><small>${t.tag}</small></button>`).join("")}</div>
+      <div class="tr-talk"><span class="muted">Talks during sets:</span>${[["lots", "A lot"], ["some", "Only cues"], ["off", "Off"]].map(([k, l]) => `<button class="fd-chip${st.talk === k ? " on" : ""}" data-talk="${k}">${l}</button>`).join("")}</div>
+    </div>`;
+  $("trGear").onclick = () => { renderTrainer.open = !renderTrainer.open; renderTrainer(); };
+  el.querySelectorAll(".tr-opt").forEach(b => b.onclick = () => { st.id = b.dataset.t; save(); renderTrainer(); trainer("hello", { prio: 3, force: true }); });
+  el.querySelectorAll("[data-talk]").forEach(b => b.onclick = () => { st.talk = b.dataset.talk; save(); renderTrainer(); });
+}
+const trQuote = text => `<div class="tr-quote"><span class="tr-face" style="--c:${trT().color}">${TRAINER_ART[trStore().id]}</span><div>${text}</div></div>`;
+var trainerInit = true;
+window.__trainer = { say: trainer, rep: trRep, hear: trHear, msg: trMessage, store: trStore, get set() { return trSet; }, dbg: () => ({ watching: trWatching(), ann: !!(annCur && !annCur.paused && !annCur.ended), annSrc: annCur?.src?.slice(-14), since: Math.round(performance.now() - trLastAt), last: { ...trLast } }) };   // test hook
 
 renderExUI(); renderRank(); renderCoach(); renderHyrox(); $("coachPanel").hidden = mode !== "train";
 </script>
