@@ -5474,7 +5474,7 @@ const shiftDay = (d, n) => { const [y, m, dd] = d.split("-").map(Number); return
 const dayLabel = d => d === dayKey() ? "Today" : d === shiftDay(dayKey(), -1) ? "Yesterday" : d === shiftDay(dayKey(), 1) ? "Tomorrow" : "";
 const dayLong = d => { const [y, m, dd] = d.split("-").map(Number); return new Date(y, m - 1, dd).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }); };
 
-let foodDay = dayKey(), foodCat = "all", foodQ = "", onlineFoods = [], onlineBusy = false, addMeal = null, foodBuilt = false;
+let foodDay = dayKey(), foodCat = "all", foodQ = "", onlineFoods = [], onlineBusy = false, onlineFailed = false, addMeal = null, foodBuilt = false;
 
 function renderFood() {
   nstore();
@@ -5557,12 +5557,13 @@ function renderFoodCar() {
   $("fdCount").textContent = foodCat === "online" ? (onlineBusy ? "Searching…" : `${list.length} online results`) : `${list.length} of ${total} foods`;
   car.innerHTML = onlineBusy ? `<div class="fd-empty">🌐 Searching millions of packaged foods…</div>`
     : list.length ? list.map(foodCard).join("")
-    : `<div class="fd-empty">${foodCat === "online" ? "Nothing found online — try a simpler name or a brand." : foodQ ? `No “${esc(foodQ)}” in the list yet.` : "Nothing here yet — foods you log show up here."}
+    : `<div class="fd-empty">${foodCat === "online" ? (onlineFailed ? `Couldn't reach the food databases. <button class="ghost" id="fdRetry">🔄 Try again</button>` : "Nothing found online — try a simpler name or a brand.") : foodQ ? `No “${esc(foodQ)}” in the list yet.` : "Nothing here yet — foods you log show up here."}
        ${foodQ && foodCat !== "online" ? `<button id="fdTryOnline">🌐 Search online for “${esc(foodQ)}”</button>` : ""}</div>`;
   car.scrollLeft = 0; $("fdScrub").value = 0;
   $("fdScrub").disabled = car.scrollWidth <= car.clientWidth + 4;
   car.querySelectorAll(".fd-card").forEach(b => b.onclick = () => openFoodSheet(getFood(b.dataset.id)));
   if ($("fdTryOnline")) $("fdTryOnline").onclick = searchOnline;
+  if ($("fdRetry")) $("fdRetry").onclick = searchOnline;
 }
 $("fdCar").addEventListener("scroll", () => { const c = $("fdCar"), max = c.scrollWidth - c.clientWidth; $("fdScrub").value = max > 0 ? Math.round(c.scrollLeft / max * 1000) : 0; }, { passive: true });
 $("fdScrub").oninput = e => { const c = $("fdCar"); c.scrollLeft = e.target.value / 1000 * (c.scrollWidth - c.clientWidth); };
@@ -5574,20 +5575,65 @@ $("fdOnline").onclick = searchOnline;
 $("fdQuick").onclick = () => openQuickAdd();
 $("fdSetup").onclick = () => openSurvey(false);
 
-// Open Food Facts: free, open database of packaged foods (no key needed)
+// Online food search. Open Food Facts (free, open database of packaged foods, no key) is tried first, a few times:
+// its search often answers "busy" (503) for a moment. If it still fails, USDA FoodData Central is the backup.
+const onlineCache = new Map();
+async function fetchJson(url, ms = 15000) {
+  const ac = new AbortController(), t = setTimeout(() => ac.abort(), ms);
+  try { const res = await fetch(url, { referrerPolicy: "no-referrer", signal: ac.signal }); if (!res.ok) throw new Error("HTTP " + res.status); return await res.json(); }
+  finally { clearTimeout(t); }
+}
+async function searchOFF(q) {
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=30&fields=code,product_name,brands,nutriments,serving_quantity,serving_size`;
+  let err;
+  for (const wait of [0, 900, 2200]) {
+    if (wait) await new Promise(r => setTimeout(r, wait));
+    const t0 = Date.now();
+    try { const j = await fetchJson(url); return (j.products || []).map(offFood); }
+    catch (e) { err = e; if (Date.now() - t0 > 10000) break; }   // a slow timeout won't get better by asking again
+  }
+  throw err;
+}
+async function searchFDC(q) {
+  const j = await fetchJson(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&query=${encodeURIComponent(q)}&pageSize=30`, 12000);
+  return (j.foods || []).map(fdcFood);
+}
 async function searchOnline() {
   const q = $("fdQ").value.trim();
   if (q.length < 2) { toast("🌐 Type a food or brand first, then search online"); $("fdQ").focus(); return; }
   if (onlineBusy) return;
   onlineBusy = true; foodCat = "online"; renderFoodChips(); renderFoodCar();
-  try {
-    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=30&fields=code,product_name,brands,nutriments,serving_quantity,serving_size`;
-    const res = await fetch(url, { referrerPolicy: "no-referrer" }); if (!res.ok) throw new Error(res.status);
-    const j = await res.json();
-    const seen = new Set();
-    onlineFoods = (j.products || []).map(offFood).filter(f => f && !seen.has(f.name) && seen.add(f.name));
-  } catch { onlineFoods = []; toast("Couldn't reach the online food database — check your connection"); }
+  const key = q.toLowerCase();
+  let list = onlineCache.get(key), failed = false;
+  if (!list) {
+    try { list = await searchOFF(q); } catch { list = null; }
+    if (!list || !list.filter(Boolean).length) {   // busy, down, or nothing found: ask the backup database
+      try { const b = await searchFDC(q); list = [...(list || []), ...b]; } catch { if (!list) failed = true; }
+    }
+    if (list?.filter(Boolean).length) onlineCache.set(key, list);
+  }
+  const seen = new Set();
+  onlineFoods = (list || []).filter(f => f && !seen.has(f.name.toLowerCase()) && seen.add(f.name.toLowerCase()));
+  onlineFailed = failed;
+  if (failed) toast(navigator.onLine === false ? "You're offline — connect to the internet to search online" : "The online food databases are busy right now — try again in a minute");
   onlineBusy = false; renderFoodChips(); renderFoodCar();
+}
+// USDA FoodData Central: nutrients are per 100 g; branded foods also give a serving size
+const titleCase = s => s === s.toUpperCase() ? s.toLowerCase().replace(/(^|[\s(/-])\w/g, c => c.toUpperCase()) : s;
+function fdcFood(p) {
+  const by = {}; (p.foodNutrients || []).forEach(n => { by[n.nutrientNumber] ??= n.value; });
+  const v = k => Math.max(0, parseFloat(by[k]) || 0);
+  let kcal = parseFloat(by["208"] ?? by["958"] ?? by["957"]);
+  if (!(kcal >= 0) && by["268"] != null) kcal = by["268"] / 4.184;
+  const name = titleCase(String(p.description || "").trim());
+  if (!(kcal >= 0) || !name || !p.fdcId) return null;
+  const brand = titleCase(String(p.brandName || p.brandOwner || "").trim());
+  const unit = String(p.servingSizeUnit || "").toLowerCase(), ss = parseFloat(p.servingSize);
+  const hasServ = ss > 0 && /^(g|grm|ml|mlt)$/.test(unit);
+  return { id: "fdc-" + p.fdcId, name: (name + (brand && !name.toLowerCase().includes(brand.toLowerCase()) ? ` (${brand})` : "")).slice(0, 60),
+    e: p.dataType === "Branded" ? "🛒" : "🥗", cat: "online", sl: hasServ ? String(p.householdServingFullText || `${Math.round(ss)} g`).slice(0, 22) : "100 g", sg: hasServ ? Math.round(ss) : 100,
+    n: [kcal, v("203"), v("205"), v("204"), v("291"), v("269"), v("307"), v("306"), v("301"), v("303"), v("304"), v("309"), v("320"), v("401"), v("328"), v("418")].map(x => Math.round(x * 100) / 100),
+    diet: "", roles: "" };
 }
 function offFood(p) {
   const n = p.nutriments || {}, name = String(p.product_name || "").trim();
