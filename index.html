@@ -1992,9 +1992,9 @@ function announcerLines() {
   // Hyrox at home
   L.push("Run 1. High knees. Go!", "Run 2. Jumping jacks. Go!", "Run 3. Butt kicks. Go!", "Run 4. Skaters. Go!", "Run 5. High knees. Go!", "Run 6. Squat jumps. Go!", "Run 7. Jumping jacks. Go!", "Last run! Sprint knees. Empty the tank!");
   L.push( "Welcome to Hyrox at home. Get ready.", "Race complete!", "New personal best!",
-    "Station one. Ski erg. Push-ups. Go!", "Station two. Sled push. Wall sit. Hold it!", "Station three. Sled pull. Plank. Hold it!",
-    "Station four. Burpee broad jumps. Burpees. Go!", "Station five. Row. Push-ups. Go!", "Station six. Farmers carry. Mountain climbers. Go!",
-    "Station seven. Sandbag lunges. Lunges. Go!", "Final station. Wall balls. Squats. Finish it!");
+    "Station one. Push-ups. Go!", "Station two. Wall sit. Hold it!", "Station three. Plank. Hold it!",
+    "Station four. Burpees. Go!", "Station five. Push-ups. Go!", "Station six. Mountain climbers. Go!",
+    "Station seven. Lunges. Go!", "Final station. Squats. Finish it!");
   BOSSES.forEach(b => L.push(b.intro + " Get into position.", b.win));
   Object.values(SPECIALS).forEach(sp => L.push(sp.say));
   [1, 2, 3].forEach(n => L.push(`Mission complete! ${n} star${n === 1 ? "" : "s"}.`));
@@ -6192,14 +6192,14 @@ const HX_RUNS = [
 ];
 const CARDIO = new Set(["knees", "jacks", "kicks", "skate"]);
 const HX_STATIONS = [
-  { real: "SkiErg", icon: "🎿", name: "Push-ups", ex: "push", cam: true, tally: true, t: { lite: 10, open: 20, pro: 30 }, say: "Station one. Ski erg. Push-ups. Go!", tip: "Chest down, push back up." },
-  { real: "Sled Push", icon: "🛷", name: "Wall sit", ex: "squat", cam: false, secs: { lite: 30, open: 45, pro: 60 }, say: "Station two. Sled push. Wall sit. Hold it!", tip: "Back flat on a wall, thighs level with the floor. Hold it!" },
-  { real: "Sled Pull", icon: "🪢", name: "Plank", ex: "push", cam: false, secs: { lite: 30, open: 45, pro: 60 }, say: "Station three. Sled pull. Plank. Hold it!", tip: "Straight line from head to heels. Squeeze everything." },
-  { real: "Burpee Broad Jumps", icon: "🐸", name: "Burpees", ex: "squat", cam: true, tally: false, t: { lite: 6, open: 10, pro: 16 }, say: "Station four. Burpee broad jumps. Burpees. Go!", tip: "Chest to the floor, then jump up tall. Counts each time you stand back up." },
-  { real: "Row", icon: "🚣", name: "Push-ups", ex: "push", cam: true, tally: true, t: { lite: 10, open: 15, pro: 25 }, say: "Station five. Row. Push-ups. Go!", tip: "Keep them moving, chest down every rep." },
-  { real: "Farmers Carry", icon: "🧳", name: "Mountain climbers", ex: "push", cam: false, secs: { lite: 30, open: 45, pro: 60 }, say: "Station six. Farmers carry. Mountain climbers. Go!", tip: "Hands under shoulders, drive your knees to your chest, fast." },
-  { real: "Sandbag Lunges", icon: "🎒", name: "Lunges", ex: "squat", cam: true, tally: false, t: { lite: 16, open: 24, pro: 36 }, say: "Station seven. Sandbag lunges. Lunges. Go!", tip: "Step back, back knee nearly to the floor. Alternate legs." },
-  { real: "Wall Balls", icon: "🏐", name: "Squats", ex: "squat", cam: true, tally: true, t: { lite: 30, open: 50, pro: 75 }, say: "Final station. Wall balls. Squats. Finish it!", tip: "Full squat, then drive up and reach high like you're throwing the ball." },
+  { real: "SkiErg", icon: "💪", name: "Push-ups", ex: "push", cam: true, tally: true, t: { lite: 10, open: 20, pro: 30 }, say: "Station one. Push-ups. Go!", tip: "Chest down, push back up." },
+  { real: "Sled Push", icon: "🧱", name: "Wall sit", ex: "squat", cam: false, secs: { lite: 30, open: 45, pro: 60 }, say: "Station two. Wall sit. Hold it!", tip: "Back flat on a wall, thighs level with the floor. Hold it!" },
+  { real: "Sled Pull", icon: "🪵", name: "Plank", ex: "push", cam: false, secs: { lite: 30, open: 45, pro: 60 }, say: "Station three. Plank. Hold it!", tip: "Straight line from head to heels. Squeeze everything." },
+  { real: "Burpee Broad Jumps", icon: "🐸", name: "Burpees", ex: "squat", cam: true, tally: false, t: { lite: 6, open: 10, pro: 16 }, say: "Station four. Burpees. Go!", tip: "Chest to the floor, then jump up tall. Counts each time you stand back up." },
+  { real: "Row", icon: "💪", name: "Push-ups", ex: "push", cam: true, tally: true, t: { lite: 10, open: 15, pro: 25 }, say: "Station five. Push-ups. Go!", tip: "Keep them moving, chest down every rep." },
+  { real: "Farmers Carry", icon: "🧗", name: "Mountain climbers", ex: "push", cam: false, secs: { lite: 30, open: 45, pro: 60 }, say: "Station six. Mountain climbers. Go!", tip: "Hands under shoulders, drive your knees to your chest, fast." },
+  { real: "Sandbag Lunges", icon: "🦵", name: "Lunges", ex: "squat", cam: true, tally: false, t: { lite: 16, open: 24, pro: 36 }, say: "Station seven. Lunges. Go!", tip: "Step back, back knee nearly to the floor. Alternate legs." },
+  { real: "Wall Balls", icon: "🏋️", name: "Squats", ex: "squat", cam: true, tally: true, t: { lite: 30, open: 50, pro: 75 }, say: "Final station. Squats. Finish it!", tip: "Full squat, then drive up and reach high like you're throwing the ball." },
 ];
 function hxSegs(div) {
   const out = [];
@@ -6398,7 +6398,7 @@ function hxFinish() {
 // ---- UI ----
 function hxFlash(s) {
   const el = $("hxFlash");
-  el.innerHTML = `<small>${hxSegLabel(s)}</small><b>${s.icon} ${s.name}</b><span>${hxGoal(s)}${s.kind === "station" ? ` · replaces ${s.real}` : ""}</span>`;
+  el.innerHTML = `<small>${hxSegLabel(s)}</small><b>${s.icon} ${s.name}</b><span>${hxGoal(s)}</span>`;
   el.hidden = false; el.classList.remove("go"); void el.offsetWidth; el.classList.add("go");
   clearTimeout(hxFlash.t); hxFlash.t = setTimeout(() => el.hidden = true, 1900);
 }
@@ -6407,7 +6407,7 @@ function hxBarUI() {
   const s = HR.segs[HR.idx], now = performance.now(), going = HR.phase === "go";
   const raceT = going || HR.splits.length ? HR.splits.reduce((a, b) => a + b, 0) + (going ? (now - HR.segStart) / 1000 : 0) : 0;
   $("hxSeg").textContent = going ? `${s.icon} ${hxSegLabel(s)}` : "🏁 HYROX AT HOME";
-  $("hxName").innerHTML = going ? `${s.name}<em class="hx-for"> · for ${s.kind === "station" ? s.real : "the 1 km run"}</em>` : `${HX_DIVS[HR.div].name} · get ready`;
+  $("hxName").innerHTML = going ? s.name : `${HX_DIVS[HR.div].name} · get ready`;
   $("hxDots").innerHTML = HR.segs.map((x, i) => `<i class="${x.kind}${i < HR.idx || (i === HR.idx && !going && HR.splits.length > i) ? " done" : i === HR.idx && going ? " on" : ""}"></i>`).join("");
   if (s.secs && going) {
     const left = Math.max(0, Math.ceil(s.secs - (now - HR.segStart) / 1000));
@@ -6443,7 +6443,7 @@ function renderHyrox() {
     <div class="hx-divs">${Object.entries(HX_DIVS).map(([k, d]) => `<button class="hx-div${k === div ? " on" : ""}" data-div="${k}"><b>${d.icon} ${d.name}</b><span>${d.note}</span><em>${h.best[k] ? `PB ${hxFmt(h.best[k].total)}` : "no race yet"}</em></button>`).join("")}</div>
     <div class="hx-course">${HX_STATIONS.map((_, i) => { const r = segs[i * 2], s = segs[i * 2 + 1];
       const pb = j => best ? `<i>${hxFmt(best.splits[j])}</i>` : "";
-      return `<div class="hx-row"><span class="hx-n">${i + 1}</span><span class="hx-run">${r.icon} ${hxGoal(r)}${pb(i * 2)}</span><span class="hx-st">${s.icon} <b>${s.name}</b> ${s.secs ? `${s.secs} s` : `× ${s.target}`}<small>${s.real}</small>${pb(i * 2 + 1)}</span></div>`; }).join("")}</div>
+      return `<div class="hx-row"><span class="hx-n">${i + 1}</span><span class="hx-run">${r.icon} ${hxGoal(r)}${pb(i * 2)}</span><span class="hx-st">${s.icon} <b>${s.name}</b> ${s.secs ? `${s.secs} s` : `× ${s.target}`}${pb(i * 2 + 1)}</span></div>`; }).join("")}</div>
     <div class="hx-go"><button id="hxGo">▶ Start ${HX_DIVS[div].name} race</button><div class="muted" id="hxStatus">${best ? `Your ${HX_DIVS[div].name} PB: <b>${hxFmt(best.total)}</b>` : "Your first race sets your PB."}</div></div>`;
   lob.querySelectorAll(".hx-div").forEach(b => b.onclick = () => { if (HR?.active) return; h.div = b.dataset.div; save(); renderHyrox(); });
   $("hxGo").onclick = () => hxStart(h.div);
@@ -6470,7 +6470,7 @@ function showHxReport(r) {
   const cell = i => { const t = r.splits[i], b = best?.splits?.[i], d = b != null ? t - b : null;
     return `<b>${hxFmt(t)}</b>${r.skipped[i] ? `<small class="bad">skipped</small>` : d != null ? `<small class="${d <= 0 ? "ok" : "bad"}">${hxDelta(d)}</small>` : ""}`; };
   const row = n => { const s = segs[n * 2 + 1];
-    return `<tr><td class="hx-n">${n + 1}</td><td>${cell(n * 2)}</td><td>${s.icon} ${s.name}<small>${hxGoal(s)} · ${s.real}</small></td><td>${cell(n * 2 + 1)}</td></tr>`; };
+    return `<tr><td class="hx-n">${n + 1}</td><td>${cell(n * 2)}</td><td>${s.icon} ${s.name}<small>${hxGoal(s)}</small></td><td>${cell(n * 2 + 1)}</td></tr>`; };
   m.querySelector(".card").innerHTML = `
     <h2>${r.pb ? "🏆 NEW PERSONAL BEST" : "RACE COMPLETE"}</h2>
     <div class="big">${hxFmt(r.total)}</div>
@@ -6869,7 +6869,7 @@ function trAnalyze() {
     const slowest = hx.map(r => { let mi = -1, mt = -1; r.splits.forEach((t, i) => { if (i % 2 && t > mt) { mt = t; mi = i; } }); return (mi - 1) / 2; });
     const counts = {}; slowest.forEach(i => counts[i] = (counts[i] || 0) + 1);
     const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-    if (top && top[1] >= 2) { const st = HX_STATIONS[top[0]]; add("info", "🏁", `${st.icon} ${st.name} (${st.real}) was your slowest Hyrox station in ${top[1]} of ${hx.length} races. Practise it on push or squat days.`); }
+    if (top && top[1] >= 2) { const st = HX_STATIONS[top[0]]; add("info", "🏁", `${st.icon} ${st.name} was your slowest Hyrox station in ${top[1]} of ${hx.length} races. Practise it on push or squat days.`); }
   }
   ins.sort((a, b) => b.prio - a.prio);
   return { ins, R, S };
