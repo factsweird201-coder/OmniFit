@@ -2241,8 +2241,9 @@ $("resetBtn").onclick = () => {
 let F = null;
 const CRIT = 0.48;
 const wait = ms => new Promise(r => setTimeout(r, ms));
-const attackEvery = () => F.boss.every * (F.enraged ? 0.7 : 1);
-const windupTime  = () => F.boss.windup * (F.enraged ? 0.85 : 1);
+const fightPace = () => exercise === "situp" ? 1.4 : 1;   // a sit-up takes longer, so sit-up bosses wind up slower
+const attackEvery = () => F.boss.every * (F.enraged ? 0.7 : 1) * fightPace();
+const windupTime  = () => F.boss.windup * (F.enraged ? 0.85 : 1) * fightPace();
 const bossCenter = () => centerOf($("bossArt"));
 
 async function startFight(idx, camp = null) {
@@ -2347,7 +2348,7 @@ function tick(dt) {
     }
     if (F.special.left <= 0) endSpecial();
   }
-  if (F.combo && performance.now() - F.lastRepAt > 3000) { F.combo = 0; $("combo").innerHTML = ""; }
+  if (F.combo && performance.now() - F.lastRepAt > 3000 * fightPace()) { F.combo = 0; $("combo").innerHTML = ""; }
   if (F.state === "fight") {
     F.nextAttack -= dt * (F.special?.type === "rapid" ? 2 : 1);
     if (F.nextAttack <= 0) {
@@ -2387,7 +2388,7 @@ function fightRep(depthPct) {
   if ((F.state !== "fight" && F.state !== "windup") || F.paused) return;
   F.reps++;
   const now = performance.now();
-  F.combo = now - F.lastRepAt < 3000 ? F.combo + 1 : 1;
+  F.combo = now - F.lastRepAt < 3000 * fightPace() ? F.combo + 1 : 1;
   F.lastRepAt = now;
 
   const crit = depthPct >= CRIT;
@@ -3093,10 +3094,10 @@ function loop() {
 // 8 chapters × 6 missions, in two parts of 4 chapters. Each chapter has push-up challenges and two boss fights (the regular boss engine).
 // Missions unlock one after another; every mission earns 1–3 stars. Counts scale with your survey level.
 const MTYPES = {
-  reps:    { icon: "💪", goal: m => `Do ${m.n} ${exM(m).many}`,                                 stars: "⭐⭐⭐ under 2.2 s per push-up · ⭐⭐ under 3.2 s" },
+  reps:    { icon: "💪", goal: m => `Do ${m.n} ${exM(m).many}`,                                 stars: m => `⭐⭐⭐ under ${+(2.2 * mPace(m)).toFixed(1)} s per push-up · ⭐⭐ under ${+(3.2 * mPace(m)).toFixed(1)} s` },
   timed:   { icon: "⏱️", goal: m => `${m.n} ${exM(m).many} in ${m.t} seconds`,                    stars: "⭐⭐⭐ with 25% of the time left · ⭐⭐ with 10% left" },
   deep:    { icon: "🎯", goal: m => exM(m) === EX.squat ? `${m.n} deep squats (thighs to parallel)` : exM(m) === EX.situp ? `${m.n} full sit-ups (all the way up)` : `${m.n} deep push-ups (50%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
-  nobreak: { icon: "🔗", goal: m => `${m.n} ${exM(m).many} without resting more than 4 seconds`,  stars: "⭐⭐⭐ never resting over 2.5 s · ⭐⭐ never over 3.5 s" },
+  nobreak: { icon: "🔗", goal: m => `${m.n} ${exM(m).many} without resting more than ${restMax(m)} seconds`,  stars: m => `⭐⭐⭐ never resting over ${+(2.5 * mPace(m)).toFixed(1)} s · ⭐⭐ never over ${+(3.5 * mPace(m)).toFixed(1)} s` },
   endure:  { icon: "🔥", goal: m => `At least ${m.n} ${exM(m).many} in ${m.t} seconds`,           stars: "⭐⭐⭐ at 140% of the goal · ⭐⭐ at 120%" },
   boss:    { icon: "⚔️", goal: m => `Defeat ${BOSSES[m.boss].name}`,                        stars: "⭐ per heart you have left" },
 };
@@ -3299,7 +3300,7 @@ const partNo = pi => CAMPAIGNS[campOfPart(pi)].parts.indexOf(pi);   // 0 = part 
 const campSet = () => store.campSet === 1 || store.campSet === 2 ? store.campSet : 0;
 const chEx = ci => CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex;
 const exM = m => EX[chEx(m.ch ?? 0)];
-const mStarsTxt = m => MTYPES[m.type].stars.replace(/push-ups?/g, w => w.endsWith("s") ? exM(m).many : exM(m).one);
+const mStarsTxt = m => (typeof MTYPES[m.type].stars === "function" ? MTYPES[m.type].stars(m) : MTYPES[m.type].stars).replace(/push-ups?/g, w => w.endsWith("s") ? exM(m).many : exM(m).one);
 const mIcon = m => m.type === "reps" ? exM(m).icon : MTYPES[m.type].icon;
 const chNum = ci => ci - PARTS[CHAPTERS[ci].part].chs[0] + (CHAPTERS[ci].part % 2 ? 5 : 1);
 const missionId = (ci, mi) => `${{ squat: "S", situp: "U" }[CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex] || ""}${chNum(ci)}-${mi + 1}`;
@@ -3307,7 +3308,11 @@ const CAMP_LIST = CHAPTERS.flatMap((c, ci) => c.missions.map((m, mi) => ({ ...m,
 const campOfK = k => campOfPart(CHAPTERS[CAMP_LIST[k].ch].part);
 const campKs = c => CAMP_LIST.flatMap((m, k) => campOfK(k) === c ? [k] : []);
 const campScale = () => LEVELS[store.profile?.level]?.boss ?? 1;
-const missionGoal = m => m.type === "boss" ? m : { ...m, n: Math.max(3, Math.round(m.n * campScale())) };
+// a sit-up takes longer than a push-up or squat (lie back, curl all the way up), so sit-up missions get more time
+const PACE = { push: 1, squat: 1, situp: 1.6 };
+const mPace = m => PACE[chEx(m.ch ?? 0)] || 1;
+const restMax = m => +(4 * mPace(m)).toFixed(1);   // nobreak: longest rest allowed, in seconds
+const missionGoal = m => m.type === "boss" ? m : { ...m, n: Math.max(3, Math.round(m.n * campScale())), ...(m.t ? { t: Math.round(m.t * mPace(m) / 5) * 5 } : {}) };
 const campStars = id => (store.campaign || {})[id] || 0;
 const campUnlocked = k => k === 0 || campOfK(k) !== campOfK(k - 1) || campStars(CAMP_LIST[k - 1].id) > 0;   // each campaign starts open
 const campTotal = (c = campSet()) => campKs(c).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
@@ -4634,7 +4639,7 @@ function sceneUpdate() {
   const p = Math.min(1, M.reps / g.n), secs = go ? (now - M.startAt) / 1000 : 0;
   let d = 0;
   if (g.type === "timed" || g.type === "endure") d = Math.min(1, secs / g.t);
-  if (g.type === "nobreak" && M.reps && go) d = Math.min(1, (now - M.lastRepAt) / 4000);
+  if (g.type === "nobreak" && M.reps && go) d = Math.min(1, (now - M.lastRepAt) / (restMax(M.m) * 1000));
   el.style.setProperty("--p", p.toFixed(3)); el.style.setProperty("--d", d.toFixed(3));
   if (go && d > 0.72 && !M.warned && DANGER_QUIP[g.type] && !(g.type === "endure" && M.reps >= g.n)) { M.warned = true; sceneQuip(DANGER_QUIP[g.type]); }
 }
@@ -5004,12 +5009,12 @@ function missionText() {
   if (M.goal.type === "timed") timer = `${Math.max(0, Math.ceil(g.t - secs))}s left`;
   if (M.goal.type === "reps") timer = fmtTime(secs);
   if (M.goal.type === "deep") timer = M.misses ? `${M.misses} shallow` : "deep only";
-  if (M.goal.type === "nobreak") timer = M.reps ? `rest ${((performance.now() - M.lastRepAt) / 1000).toFixed(1)}s / 4s` : "start when ready";
+  if (M.goal.type === "nobreak") timer = M.reps ? `rest ${((performance.now() - M.lastRepAt) / 1000).toFixed(1)}s / ${restMax(M.m)}s` : "start when ready";
   if (M.state !== "go") timer = "";
   $("mFill").style.width = pct * 100 + "%"; $("mTxt").textContent = txt; $("mTimer").textContent = timer;
   sceneUpdate();
   $("mTimer").classList.toggle("low", (M.goal.type === "timed" || M.goal.type === "endure") && M.state === "go" && g.t - secs < 10
-    || M.goal.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > 2500);
+    || M.goal.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > restMax(M.m) * 625);
 }
 function mCallout(text, sub, cls = "") {
   const c = $("mCallout"); c.className = "callout " + cls;
@@ -5076,16 +5081,16 @@ setInterval(() => {
   const secs = (performance.now() - M.startAt) / 1000, g = M.goal;
   if (g.type === "timed" && secs > g.t) return finishMission(false, `Out of time — ${M.reps} of ${g.n} done.`);
   if (g.type === "endure" && secs >= g.t) return finishMission(M.reps >= g.n, M.reps >= g.n ? "" : `Time! ${M.reps} of ${g.n} — so close.`);
-  if (g.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > 4000) return finishMission(false, `You rested more than 4 seconds after ${exM(M.m).one} ${M.reps}.`);
+  if (g.type === "nobreak" && M.reps > 0 && performance.now() - M.lastRepAt > restMax(M.m) * 1000) return finishMission(false, `You rested more than ${restMax(M.m)} seconds after ${exM(M.m).one} ${M.reps}.`);
   missionText();
 }, 100);
 
 function missionStars() {
   const g = M.goal, secs = (performance.now() - M.startAt) / 1000;
-  if (g.type === "reps") { const pace = secs / g.n; return pace <= 2.2 ? 3 : pace <= 3.2 ? 2 : 1; }
+  if (g.type === "reps") { const pace = secs / g.n / mPace(M.m); return pace <= 2.2 ? 3 : pace <= 3.2 ? 2 : 1; }
   if (g.type === "timed") { const left = (g.t - secs) / g.t; return left >= 0.25 ? 3 : left >= 0.1 ? 2 : 1; }
   if (g.type === "deep") return M.misses <= 1 ? 3 : M.misses <= 3 ? 2 : 1;
-  if (g.type === "nobreak") return M.maxGap <= 2.5 ? 3 : M.maxGap <= 3.5 ? 2 : 1;
+  if (g.type === "nobreak") { const gap = M.maxGap / mPace(M.m); return gap <= 2.5 ? 3 : gap <= 3.5 ? 2 : 1; }
   if (g.type === "endure") return M.reps >= g.n * 1.4 ? 3 : M.reps >= g.n * 1.2 ? 2 : 1;
   return 1;
 }
