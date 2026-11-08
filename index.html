@@ -880,6 +880,8 @@
   .overlay .ex-switch { margin: -2px 0 2px; } .overlay .ex-switch button { padding: 9px 18px; font-size: 14px; }
   .ex-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
   #sqStats { margin-top: 8px; } #sqStats:empty { display: none; }
+  .ex-switch button { white-space: nowrap; }
+  @media (max-width: 600px) { .ex-switch button, .overlay .ex-switch button { padding: 8px 11px; font-size: 13px; } .ex-row { flex-wrap: wrap; } }
   .cmap-top .cmap-camps { display: flex; gap: 4px; background: rgba(0,0,0,.45); border: 1px solid var(--line2); border-radius: 12px; padding: 3px; }
   .cmap-camp { background: transparent; color: #cfd4de; padding: 5px 11px; font-size: 12.5px; border-radius: 9px; letter-spacing: .5px; }
   .cmap-camp.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a1000; }
@@ -1186,7 +1188,7 @@
       <div class="overlay" id="startOverlay">
         <div class="cam">📷</div>
         <div class="t">READY TO TRAIN?</div>
-        <div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">💪 Push-ups</button><button data-ex="squat">🦵 Squats</button></div>
+        <div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">💪 Push-ups</button><button data-ex="squat">🦵 Squats</button><button data-ex="situp">🛏️ Sit-ups</button></div>
         <div class="muted" style="max-width:420px"><span id="startTip">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.</span> Your training video never leaves your device.<!--web-only--> The site only counts anonymous visits (no cookies).<!--/web-only--></div>
         <button id="startBtn">Start camera</button>
         <div class="muted" id="loadMsg"></div>
@@ -1226,6 +1228,11 @@
         <li>Stand the camera up 2–3 m away, around hip height, so your whole body is in view — facing it or side-on.</li>
         <li>Stand tall for a second so it learns your height, then sit back and down. Depth hits <b>50%</b> when your thighs are about parallel to the floor — that's a deep rep.</li>
         <li>Squats get their own lifetime total, best set and daily goal. They also power the 🦵 Squat Campaign. Your rank still comes from push-ups.</li>
+      </ul>
+      <ul class="tips" id="tipsSitup" hidden>
+        <li>Put the camera on the floor 2–3 m to your side, so it sees you <b>side-on</b>: shoulders and hips in view.</li>
+        <li>Lie flat on your back, knees bent, then sit all the way up. A rep counts when you sit up past halfway from lying down. Sit up tall (about 60°+) for a full rep.</li>
+        <li>Sit-ups get their own lifetime total, best set and daily goal. They also power the 🛏️ Sit-Up Campaign. Your rank still comes from push-ups.</li>
       </ul>
       <ul class="tips" id="tipsPush">
         <li>Works facing the camera or side-on. Hold the top position for a second so it learns your height.</li>
@@ -1330,7 +1337,7 @@
         <span class="muted" id="dailyMsg">Daily goal</span>
         <button class="goal-btn" id="goalBtn">Change goal</button>
       </div>
-      <div class="ex-row"><span class="muted">Training</span><div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">💪 Push-ups</button><button data-ex="squat">🦵 Squats</button></div></div>
+      <div class="ex-row"><span class="muted">Training</span><div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">💪 Push-ups</button><button data-ex="squat">🦵 Squats</button><button data-ex="situp">🛏️ Sit-ups</button></div></div>
       <div class="muted" id="sqStats"></div>
     </div>
 
@@ -1732,14 +1739,14 @@ function renderRank() {
     $("ladder").innerHTML = RANKS.map((rk, idx) =>
       `<li class="${idx <= i ? "got" : ""} ${idx === i ? "cur" : ""}"><span class="i">${rankBadge(idx)}</span><span class="nm">${rk.name}</span><span class="n">${rk.at.toLocaleString()}</span></li>`).join("");
   }
-  const s = streak(), sqT = store.exercise === "squat", sq = sqStore();
-  const today = sqT ? sq.days[dayKey()] || 0 : store.days[dayKey()] || 0, goal = sqT ? sq.goal : store.goal;
+  const s = streak(), te = trainEx(), sqT = te === "squat", sq = sqStore(), su = suStore(), side = te === "push" ? null : te === "squat" ? sq : su;
+  const today = side ? side.days[dayKey()] || 0 : store.days[dayKey()] || 0, goal = side ? side.goal : store.goal;
   $("streak").textContent = `${s} day${s === 1 ? "" : "s"}`;
   $("todayCount").textContent = today;
   $("goalVal").textContent = goal;
   $("dailyBar").style.width = Math.min(100, today / goal * 100) + "%";
-  $("dailyMsg").textContent = today >= goal ? `✅ Daily ${sqT ? "squat " : ""}goal smashed!` : `${goal - today} ${EX[sqT ? "squat" : "push"].many} to go today`;
-  $("sqStats").innerHTML = sqT ? `🦵 Squats: <b>${sq.total.toLocaleString()}</b> lifetime · best set <b>${sq.best}</b>` : (store.days[dayKey()] || 0) || !sq.total ? "" : `🦵 ${sq.days[dayKey()] || 0} squats today`;
+  $("dailyMsg").textContent = today >= goal ? `✅ Daily ${te === "push" ? "" : te === "squat" ? "squat " : "sit-up "}goal smashed!` : `${goal - today} ${EX[te].many} to go today`;
+  $("sqStats").innerHTML = te === "situp" ? `🛏️ Sit-ups: <b>${su.total.toLocaleString()}</b> lifetime · best set <b>${su.best}</b>` : sqT ? `🦵 Squats: <b>${sq.total.toLocaleString()}</b> lifetime · best set <b>${sq.best}</b>` : (store.days[dayKey()] || 0) || !sq.total ? "" : `🦵 ${sq.days[dayKey()] || 0} squats today`;
   renderProfile();
 }
 
@@ -1776,6 +1783,7 @@ function renderRoster() {
 }
 
 $("goalBtn").onclick = () => {
+  if (store.exercise === "situp") { const su = suStore(), gs = [...new Set([10, 20, 30, 40, 50, 75, 100, su.goal])].sort((a, b) => a - b); su.goal = gs[(gs.indexOf(su.goal) + 1) % gs.length]; save(); renderRank(); return; }
   if (store.exercise === "squat") { const sq = sqStore(), gs = [...new Set([20, 30, 40, 50, 75, 100, 150, sq.goal])].sort((a, b) => a - b); sq.goal = gs[(gs.indexOf(sq.goal) + 1) % gs.length]; save(); renderRank(); return; }
   const goals = [...new Set([20, 25, 40, 50, 75, 100, 120, 150, 200, store.goal])].sort((a, b) => a - b);
   store.goal = goals[(goals.indexOf(store.goal) + 1) % goals.length];
@@ -2012,8 +2020,8 @@ function announcerLines() {
   const L = ["Profile updated.", "Daily goal complete!", "Fight!", "Incoming! Parry!", "Last heart! Careful!", "Ouch!", "Parry!", "Five combo!", "Ten combo! Unstoppable!",
     "It's enraged! Finish it!", "Go!", "Goal hit! Keep going!", "Mission failed. Try again!", "It's a draw!"];
   RANKS.forEach(r => L.push(`Rank up! You are now ${r.name}`));
-  for (let n = 1; n <= 50; n++) for (const b of ["", " New best!"]) L.push(`Set complete. ${n} push-up${n === 1 ? "" : "s"}.${b}`, `Set complete. ${n} squat${n === 1 ? "" : "s"}.${b}`);
-  L.push("Daily squat goal complete!");
+  for (let n = 1; n <= 50; n++) for (const b of ["", " New best!"]) L.push(`Set complete. ${n} push-up${n === 1 ? "" : "s"}.${b}`, `Set complete. ${n} squat${n === 1 ? "" : "s"}.${b}`, `Set complete. ${n} sit-up${n === 1 ? "" : "s"}.${b}`);
+  L.push("Daily squat goal complete!", "Daily sit-up goal complete!");
   L.push("Get ready.", "Ten seconds.", "Set done. Rest.", "Last set. As many as you can. Go!", "Workout complete!");
   for (let m = 2; m <= 6; m++) for (let n = 1; n < m; n++) L.push(`Set ${n} of ${m}. Go!`);
   // Hyrox at home
@@ -2156,18 +2164,20 @@ function onSquat(depthPct) {
   else { sfx.rep(); coachRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
-// sit-ups (campaign only for now): their own totals, then the same fight / mission handling
+// sit-ups: their own totals, then the same fight / mission handling
 function onSitup(depthPct) {
-  const su = suStore(), today = dayKey();
-  setCount++; su.total++; su.days[today] = (su.days[today] || 0) + 1; store.kcal += kcalPerSitup();
+  const su = suStore(), today = dayKey(), beforeToday = su.days[today] || 0;
+  setCount++; su.total++; su.days[today] = beforeToday + 1; store.kcal += kcalPerSitup();
   lastRepTime = performance.now(); lowSince = 0;
-  if (setCount > su.best) su.best = setCount;
+  if (setCount > su.best) { if (su.best > 0 && !bestToasted) { bestToasted = true; toast(`🎉 New best sit-up set — keep going!`); } su.best = setCount; }
   save();
   $("setCount").textContent = setCount;
+  $("endBtn").disabled = inMatch();
+  if (beforeToday < su.goal && beforeToday + 1 >= su.goal) { toast("✅ Daily sit-up goal complete!"); confetti(90); if (!inMatch() && !M) say("Daily sit-up goal complete!"); }
   const chip = $("countChip"); chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump");
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
-  else { sfx.rep(); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b88aff", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  else { sfx.rep(); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b88aff", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
 window.__rep = (d = 0.4) => onRep(d);
@@ -2199,12 +2209,12 @@ function endSet(showSummary = true) {
   if (showSummary && !F && !B && !M) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
 }
 function showSetDone(n) {
-  const sqx = exercise === "squat", sq = sqStore();
-  const isBest = n >= (sqx ? sq.best : store.best) && n > 1, today = sqx ? sq.days[dayKey()] || 0 : store.days[dayKey()] || 0;
-  const kcal = Math.round(n * (sqx ? kcalPerSquat() : kcalPerRep()));
+  const side = exercise === "squat" ? sqStore() : exercise === "situp" ? suStore() : null;
+  const isBest = n >= (side ? side.best : store.best) && n > 1, today = side ? side.days[dayKey()] || 0 : store.days[dayKey()] || 0;
+  const kcal = Math.round(n * (exercise === "squat" ? kcalPerSquat() : exercise === "situp" ? kcalPerSitup() : kcalPerRep()));
   const el = $("setDone");
   el.innerHTML = `<div class="t">SET COMPLETE</div><div class="n">${n}</div><div class="u">${exWord(n)}</div>
-    <div class="s">${kcal ? `🔥 ${kcal} kcal · ` : ""}${today} / ${sqx ? sq.goal : store.goal} today</div>${isBest ? `<div class="best">🏆 NEW BEST SET</div>` : ""}`;
+    <div class="s">${kcal ? `🔥 ${kcal} kcal · ` : ""}${today} / ${side ? side.goal : store.goal} today</div>${isBest ? `<div class="best">🏆 NEW BEST SET</div>` : ""}`;
   el.classList.remove("out"); el.hidden = false; void el.offsetWidth;
   const [x, y] = centerOf(el);
   burst(x, y, { n: 40, colors: ["#ffc21a", "#fff2a8", "#ff8a00"], speed: 9, size: 4 });
@@ -2549,7 +2559,7 @@ function logRep(entry) {
   try { localStorage.setItem(LOG_KEY, JSON.stringify(repLog)); } catch {}
 }
 window.__repLog = () => repLog;
-const fmtLog = () => repLog.slice(-80).reverse().map(e => e.ex === "squat" ? `${e.at.slice(5, 19).replace("T", " ")}  SQUAT ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth}${e.knee != null ? ` knee ${e.knee}` : ""}` : ""}` : `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}${e.flare != null ? ` flare ${e.flare}` : ""}${e.arms != null ? ` arms ${e.arms}` : ""}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
+const fmtLog = () => repLog.slice(-80).reverse().map(e => e.ex === "situp" ? `${e.at.slice(5, 19).replace("T", " ")}  SIT-UP ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms height ${e.depth} torso ${e.torso}°` : ""}` : e.ex === "squat" ? `${e.at.slice(5, 19).replace("T", " ")}  SQUAT ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth}${e.knee != null ? ` knee ${e.knee}` : ""}` : ""}` : `${e.at.slice(5, 19).replace("T", " ")}  ${e.ok ? "COUNTED" : e.reason}${e.ms != null ? `  ${e.ms}ms depth ${e.depth} shoulders ${e.shoulders} hands ${e.hands} elbow ${e.elbow}${e.flare != null ? ` flare ${e.flare}` : ""}${e.arms != null ? ` arms ${e.arms}` : ""}` : e.elbow != null ? `  elbow ${e.elbow}${e.ratio != null ? ` top ${e.ratio}` : ""}${e.vertical === false ? " arms-not-vertical" : ""}` : ""}`).join("\n") || "Nothing logged yet.";
 $("logDetails").ontoggle = () => { if ($("logDetails").open) $("logPre").textContent = fmtLog(); };
 $("logCopy").onclick = async () => { try { await navigator.clipboard.writeText(fmtLog()); toast("📋 Log copied"); } catch { toast("Couldn't copy — select the text instead"); } };
 
@@ -2771,7 +2781,7 @@ const EX = {
   skate: { one: "skater", many: "skaters", Many: "Skaters", icon: "⛸️" },
 };
 const exWord = (n, ex = exercise) => n === 1 ? EX[ex].one : EX[ex].many;
-const suStore = () => { store.su ||= {}; store.su.total ||= 0; store.su.best ||= 0; store.su.days ||= {}; return store.su; };
+const suStore = () => { store.su ||= {}; store.su.total ||= 0; store.su.best ||= 0; store.su.days ||= {}; store.su.goal ||= 20; return store.su; };
 const kcalPerSitup = () => store.profile ? 0.0045 * store.profile.weightKg : 0;   // rough: ~0.3 kcal per sit-up at 70 kg
 const sqStore = () => { store.sq ||= {}; store.sq.total ||= 0; store.sq.best ||= 0; store.sq.days ||= {}; store.sq.goal ||= 30; return store.sq; };
 const kcalPerSquat = () => store.profile ? 0.0055 * store.profile.weightKg : 0;   // rough: ~0.38 kcal per bodyweight squat at 70 kg
@@ -2783,7 +2793,7 @@ function wantEx() {
   if (F) return F.camp ? chEx(CAMP_LIST.find(m => m.id === F.camp)?.ch ?? 0) : "push";
   if (B || mode === "pvp" || mode === "boss") return "push";
   if (mode === "campaign") return CAMPAIGNS[campSet()].ex;
-  return store.exercise === "squat" ? "squat" : "push";
+  return trainEx();
 }
 function syncExercise() {
   const e = wantEx();
@@ -2792,6 +2802,7 @@ function syncExercise() {
   disarm(); topRef = null; smoothDepth = null; gapHist.length = 0; sqReset(); suReset();
   renderExUI();
 }
+function trainEx() { return store.exercise === "squat" || store.exercise === "situp" ? store.exercise : "push"; }
 function setTrainEx(e) {
   if (inMatch() || M || CW?.active || HR?.active || store.exercise === e || (!store.exercise && e === "push")) return;
   if (setCount > 0) endSet(true);
@@ -2800,13 +2811,15 @@ function setTrainEx(e) {
   if (camReady) { setPhase("READY"); setFeedback(e === "squat" ? "Stand tall, whole body in view" : e === "situp" ? "Lie on your back, side-on to the camera" : "Get into push-up position", "warn"); }
 }
 function renderExUI() {
-  const te = store.exercise === "squat" ? "squat" : "push";
+  const te = trainEx();
   document.querySelectorAll(".ex-switch button").forEach(b => b.classList.toggle("on", b.dataset.ex === te));
   $("angleLbl").textContent = exercise === "knees" ? "Knee lift" : exercise === "jacks" ? "Arms up" : exercise === "kicks" ? "Heel lift" : exercise === "skate" ? "Side shift" : exercise === "squat" ? "Knee °" : exercise === "situp" ? "Torso °" : "Elbow °";
-  $("startTip").innerHTML = te === "squat"
+  $("startTip").innerHTML = te === "situp"
+    ? "Put your device on the floor about 2–3 m to your side, so it sees you side-on while you lie on your back: shoulders and hips in view."
+    : te === "squat"
     ? "Stand the camera up about 2–3 m away, around hip height, so your whole body from head to feet is in view. Facing it or side-on both work."
     : "Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.";
-  $("tipsPush").hidden = te === "squat"; $("tipsSquat").hidden = te !== "squat";
+  $("tipsPush").hidden = te !== "push"; $("tipsSquat").hidden = te !== "squat"; $("tipsSitup").hidden = te !== "situp";
 }
 document.querySelectorAll(".ex-switch button").forEach(b => b.onclick = () => setTrainEx(b.dataset.ex));
 
@@ -6867,7 +6880,7 @@ function trRep(depthPct, { knees = false } = {}) {
   else if (CW?.active) { if (CW.phase !== "set") return; n = CW.cur.times.length; target = CW.cur.last ? 0 : CW.cur.target; }
   else n = setCount;
   // your best before this set started (onRep has already raised it by the time we hear about the rep)
-  if (n <= 1) trSet = { depths: [], deepRun: 0, saidDeep: false, saidBest: false, gaps: [], saidSlowAt: 0, lastMs: trSet.lastMs, lastAt: 0, startBest: (b => b === n ? n - 1 : b)((exercise === "squat" ? sqStore().best : store.best) || 0) };
+  if (n <= 1) trSet = { depths: [], deepRun: 0, saidDeep: false, saidBest: false, gaps: [], saidSlowAt: 0, lastMs: trSet.lastMs, lastAt: 0, startBest: (b => b === n ? n - 1 : b)((exercise === "situp" ? suStore().best : exercise === "squat" ? sqStore().best : store.best) || 0) };
   if (!HR?.active && !CW?.active) beat = trSet.startBest;
   const now = performance.now();
   if (trSet.lastAt) trSet.gaps.push(now - trSet.lastAt); trSet.lastAt = now;
