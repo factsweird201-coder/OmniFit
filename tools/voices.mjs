@@ -44,7 +44,9 @@ CHAPTERS.forEach((c, ci) => add("title", `Chapter ${chNum(ci)}. ${c.name}.`)); a
 
 // personal trainers: each line in TRAINER_LINES, spoken by that trainer
 { const TL = grab(/const TRAINER_LINES = (\{[\s\S]*?\n\});/, "TRAINER_LINES");
-  Object.entries(TL).forEach(([id, pools]) => Object.values(pools).flat().forEach(t => add("t" + id, t))); }
+  Object.entries(TL).forEach(([id, pools]) => Object.values(pools).flat().forEach(t => add("t" + id, t)));
+  const ST = grab(/const STRETCHES = (\[[\s\S]*?\n\]);/, "STRETCHES");
+  Object.keys(TL).forEach(id => ST.forEach(s => add("t" + id, s.say))); }
 
 // pitch shift by factor k while keeping (or nudging) the speed
 const P = (k, tempo = 1) => `asetrate=${Math.round(22050 * k)},aresample=44100,atempo=${(tempo / k).toFixed(4)}`;
