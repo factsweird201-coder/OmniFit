@@ -10,7 +10,7 @@ swiftc -O -swift-version 5 main.swift -o build/PushUpRanks-arm64 -framework AppK
 swiftc -O -swift-version 5 main.swift -o build/PushUpRanks-x86_64 -framework AppKit -framework WebKit -target x86_64-apple-macos13
 lipo -create build/PushUpRanks-arm64 build/PushUpRanks-x86_64 -output "$APP/Contents/MacOS/PushUpRanks"
 
-# bundle art.js into the page (the app loads index.html as a single document)
+# bundle art.js and foods.js into the page (the app loads index.html as a single document)
 python3 - "$APP/Contents/Resources/index.html" <<'PY'
 import sys
 html = open("../index.html").read()
@@ -20,7 +20,11 @@ m = re.search(r'<script src="art\.js(\?v=\w+)?"></script>', html)
 assert m, "art.js tag missing"
 tag = m.group(0)
 html = re.sub(r"<!--web-only-->.*?<!--/web-only-->", "", html, flags=re.S)   # website-only tags would make the app fetch from a fake domain
-open(sys.argv[1], "w").write(html.replace(tag, "<script>\n" + art + "\n</script>"))
+html = html.replace(tag, "<script>\n" + art + "\n</script>")
+m = re.search(r'<script src="foods\.js(\?v=\w+)?"></script>', html)
+assert m, "foods.js tag missing"
+html = html.replace(m.group(0), "<script>\n" + open("../foods.js").read() + "\n</script>")
+open(sys.argv[1], "w").write(html)
 PY
 
 # icon
