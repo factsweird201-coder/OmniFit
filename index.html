@@ -899,6 +899,51 @@
   .fog-14 .cmap-clouds .cb-back { fill: #2a1410; } .fog-14 .cmap-clouds .cb-front { fill: #4a2418; }
   .fog-15 .cmap-clouds .cb-back { fill: #14123a; } .fog-15 .cmap-clouds .cb-front { fill: #2a2858; }
   #startOverlay.not-train { display: none; }
+
+  /* ---------- coach ---------- */
+  .stage.coaching .hud, .stage.coaching .phase { top: 104px; }
+  .coach-bar { position: absolute; left: 12px; right: 12px; top: 12px; z-index: 6; display: grid; grid-template-columns: 1fr minmax(140px, 1.3fr) auto; align-items: center; gap: 14px;
+    background: rgba(8,10,16,.72); backdrop-filter: blur(8px); border: 1px solid var(--line2); border-radius: 16px; padding: 10px 14px; }
+  .cb-l { display: grid; gap: 3px; } .cb-l span:first-child { font: 700 13px var(--display); letter-spacing: 2px; color: var(--accent); }
+  #cbSet { font: 700 12px var(--display); letter-spacing: 1.5px; color: var(--muted); }
+  .cb-dots { display: flex; gap: 5px; } .cb-dots i { width: 18px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.14); }
+  .cb-dots i.done { background: var(--good, #2fd47a); } .cb-dots i.on { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .cb-num { display: flex; align-items: baseline; gap: 6px; justify-content: center; } .cb-num b { font: 700 38px var(--display); line-height: 1; }
+  .cb-num span { color: var(--muted); font-size: 13px; }
+  .cb-bar { height: 7px; border-radius: 4px; background: rgba(255,255,255,.1); overflow: hidden; margin-top: 6px; } .cb-bar div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent2), var(--accent)); transition: width .25s; }
+  .cb-r { display: flex; gap: 6px; } .cb-r button { padding: 8px 12px; font-size: 13px; }
+  .coach-rest { position: absolute; inset: 0; z-index: 9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 110px 20px 20px;
+    background: radial-gradient(ellipse at center, rgba(10,12,22,.82), rgba(0,0,0,.9)); }
+  .cr-t { font: 700 16px var(--display); letter-spacing: 6px; color: var(--accent); }
+  .cr-ring { --k: 1; width: 150px; height: 150px; border-radius: 50%; display: grid; place-items: center; position: relative;
+    background: conic-gradient(var(--accent) calc(var(--k) * 360deg), rgba(255,255,255,.08) 0); transition: background .25s; }
+  .cr-ring::before { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: #0b0d14; }
+  .cr-n { position: relative; font: 700 44px var(--display); font-variant-numeric: tabular-nums; }
+  .cr-next { font-weight: 700; font-size: 15px; } .cr-cue { max-width: 420px; font-size: 13.5px; }
+  .cr-btns { display: flex; gap: 8px; margin-top: 4px; }
+  .coach-panel .co-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; } .coach-panel h3 { margin: 0 0 10px; }
+  .co-done { background: rgba(47,212,122,.1); border: 1px solid rgba(47,212,122,.35); border-radius: 12px; padding: 9px 12px; font-size: 13.5px; margin-bottom: 10px; }
+  .co-plan { display: grid; gap: 6px; } .co-day { font: 700 20px var(--display); } .co-sets b { font-size: 17px; } .co-cue { font-size: 13.5px; }
+  .co-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .co-trend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .co-trend > div { background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; display: grid; gap: 2px; font-size: 12px; color: var(--muted); }
+  .co-trend b { font: 700 22px var(--display); color: var(--text); }
+  .co-dots { display: flex; gap: 4px; align-items: center; min-height: 10px; } .co-dots i { width: 9px; height: 9px; border-radius: 50%; background: #8a8f9c; }
+  .co-dots i.up { background: var(--good, #2fd47a); } .co-dots i.down { background: var(--bad); }
+  .co-how { font-size: 12.5px; margin-top: 12px; }
+  .coach-card { max-width: 560px; width: min(560px, 92vw); }
+  .co-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13.5px; }
+  .co-table th { font: 700 10px var(--display); letter-spacing: 1.5px; color: var(--muted); text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line2); }
+  .co-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  .co-table td small { display: block; color: var(--warn, #ffb03a); font-size: 11.5px; }
+  .co-table td.ok { color: var(--good, #2fd47a); } .co-table td.bad { color: var(--bad); }
+  .co-verdict { margin-top: 14px; font-size: 14px; line-height: 1.45; background: rgba(255,255,255,.04); border: 1px solid var(--line2); border-radius: 12px; padding: 10px 12px; text-align: left; }
+  .co-verdict b { display: block; margin-top: 4px; color: var(--accent); }
+  @media (max-width: 600px) {
+    .coach-bar { grid-template-columns: 1fr auto; gap: 6px 10px; padding: 8px 10px; } .cb-c { grid-column: 1 / -1; grid-row: 2; } .cb-num b { font-size: 28px; }
+    .stage.coaching .hud, .stage.coaching .phase { top: 128px; } .coach-rest { padding-top: 130px; } .cr-ring { width: 110px; height: 110px; } .cr-n { font-size: 32px; }
+    .co-table { font-size: 12px; } .co-table td, .co-table th { padding: 5px 3px; }
+  }
 </style>
 </head>
 <body>
@@ -958,6 +1003,19 @@
       </div>
 
       <div class="setdone" id="setDone" hidden></div>
+
+      <div class="coach-bar" id="coachBar" hidden>
+        <div class="cb-l"><span id="cbDay">💪 PUSH DAY</span><span id="cbSet">GET READY</span><span class="cb-dots" id="cbDots"></span></div>
+        <div class="cb-c"><div class="cb-num"><b id="cbReps">0</b><span id="cbTarget">/ 15</span></div><div class="cb-bar"><div id="cbFill"></div></div></div>
+        <div class="cb-r"><button id="cbFinish" hidden>Finish set ✓</button><button class="ghost" id="cbStop">Stop</button></div>
+      </div>
+      <div class="coach-rest" id="coachRest" hidden>
+        <div class="cr-t">REST</div>
+        <div class="cr-ring"><div class="cr-n">1:30</div></div>
+        <div class="cr-next"></div>
+        <div class="muted cr-cue"></div>
+        <div class="cr-btns"><button class="ghost" id="crMore">+30 s</button><button id="crSkip">Skip ▶</button></div>
+      </div>
 
       <div class="bossselect" id="bossSelect" hidden>
         <div class="bs-head">
@@ -1030,6 +1088,11 @@
       </div>
       <div class="panel" id="fdLog"></div>
       <div class="panel" id="fdPlan"></div>
+    </div>
+    <div class="panel coach-panel" style="margin-top:18px" id="coachPanel">
+      <div class="co-head"><h3>🧠 Coach · Today's workout</h3><span class="muted" id="coachGoal"></span></div>
+      <div id="coachBody"></div>
+      <div class="muted co-how">The coach alternates push days and squat days. It watches every rep (how many, how deep, how fast, and where you slowed down) and moves your next target up, holds it, or eases off.</div>
     </div>
     <div class="panel" style="margin-top:18px" id="howTrain">
       <h3>How it counts</h3>
@@ -1180,6 +1243,8 @@
     </div>
   </div>
 </div>
+
+<div class="modal" id="coachModal"><div class="card coach-card"></div></div>
 
 <div class="fsheet" id="fSheet"><div class="fs-card" id="fsCard" role="dialog" aria-label="Food"></div></div>
 
@@ -1667,6 +1732,7 @@ function finishSurvey() {
   $("survey").classList.remove("show");
   renderRank(); renderRoster();
   confetti(120); sfx.fanfare();
+  if (coachInit) renderCoach();
   say(sv.editing ? "Profile updated." : `Plan locked in. ${store.goal} push-ups a day. Let's go!`);
   toast(sv.editing ? "✅ Profile updated" : `🎯 Daily goal set to ${store.goal}`);
   maybeAutoJoin();
@@ -1788,6 +1854,8 @@ function announcerLines() {
   RANKS.forEach(r => L.push(`Rank up! You are now ${r.name}`));
   for (let n = 1; n <= 50; n++) for (const b of ["", " New best!"]) L.push(`Set complete. ${n} push-up${n === 1 ? "" : "s"}.${b}`, `Set complete. ${n} squat${n === 1 ? "" : "s"}.${b}`);
   L.push("Daily squat goal complete!");
+  L.push("Get ready.", "Ten seconds.", "Set done. Rest.", "Last set. As many as you can. Go!", "Workout complete!");
+  for (let m = 2; m <= 6; m++) for (let n = 1; n < m; n++) L.push(`Set ${n} of ${m}. Go!`);
   BOSSES.forEach(b => L.push(b.intro + " Get into position.", b.win));
   Object.values(SPECIALS).forEach(sp => L.push(sp.say));
   [1, 2, 3].forEach(n => L.push(`Mission complete! ${n} star${n === 1 ? "" : "s"}.`));
@@ -1821,9 +1889,11 @@ function toast(msg) {
 
 // ================= MODES =================
 let mode = "train";
+let CW = null;   // the coach workout in progress (see COACH below)
 let trainArmed = false;   // set by the Training tab's Start button; cleared when the camera stops or you switch tabs
 function setMode(m) {
   if (inMatch()) return;
+  if (m !== mode && CW?.active) coachAbort();
   if (m !== mode && camReady) { if (setCount > 0) endSet(false); stopCamera(0, "Start camera"); }   // switching tabs: camera off (every tab starts it again from its own button)
   if (m !== mode) trainArmed = false;
   if (m !== mode) $("setDone").hidden = true;
@@ -1851,6 +1921,7 @@ function setMode(m) {
   $("fdTargets").hidden = $("fdMicros").hidden = m !== "food";
   if (m === "food") { foodDay = dayKey(); renderFood(); }
   $("ladderPanel").hidden = m !== "train";
+  $("coachPanel").hidden = m !== "train"; if (m === "train" && coachInit) renderCoach();
   $("rosterPanel").hidden = m !== "boss";
   $("howTrain").hidden = m !== "train";
   $("howBoss").hidden = m !== "boss";
@@ -1867,7 +1938,8 @@ $("tabFood").onclick = () => setMode("food");
 let setCount = 0, pendingRankUps = [], bestToasted = false;
 
 function onRep(depthPct) {
-  if (!inMatch() && !(mode === "train" && trainArmed)) return;   // training only counts after pressing Start on the Training tab
+  if (!inMatch() && !(mode === "train" && trainArmed)) return;
+  if (!inMatch() && CW?.active && CW.phase !== "set") return;   // resting between coach sets   // training only counts after pressing Start on the Training tab
   if (exercise === "squat") return onSquat(depthPct);
   const before = rankIndex(store.total), today = dayKey(), beforeToday = store.days[today] || 0;
   setCount++; store.total++; store.kcal += kcalPerRep();
@@ -1884,13 +1956,13 @@ function onRep(depthPct) {
   else if (B?.active) battleRep(depthPct);
   else if (M?.active) missionRep(depthPct);
   else {
-    sfx.rep();
+    sfx.rep(); coachRep(depthPct);
     const [x, y] = centerOf(chip);
     burst(x, y, { n: 14, colors: ["#ffc21a", "#fff2a8"], speed: 5, size: 3, life: 0.6 });
   }
   renderRank();
   const after = rankIndex(store.total);
-  if (after > before) { if (F || B || M) pendingRankUps.push(after); else showRankUp(after); }
+  if (after > before) { if (F || B || M || CW?.active) pendingRankUps.push(after); else showRankUp(after); }
 }
 // squats: their own totals (no rank-ups), then the same fight / mission / training handling
 function onSquat(depthPct) {
@@ -1905,7 +1977,7 @@ function onSquat(depthPct) {
   if (beforeToday < sq.goal && beforeToday + 1 >= sq.goal) { toast("✅ Daily squat goal complete!"); confetti(90); if (!inMatch() && !M) say("Daily squat goal complete!"); }
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
-  else { sfx.rep(); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  else { sfx.rep(); coachRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
 window.__rep = (d = 0.4) => onRep(d);
@@ -1924,6 +1996,7 @@ function flushRankUps() { if (pendingRankUps.length) showRankUp(pendingRankUps.s
 
 let setDoneTimer = 0;
 function endSet(showSummary = true) {
+  if (CW?.active && !CW.ending && mode === "train") { coachSetEnd(); return; }   // during a coach workout, ending a set moves to the rest timer
   const hadReps = setCount > 0;
   if (setCount > 0) {
     store.sets++; save(); renderRank();
@@ -2503,6 +2576,7 @@ const sqStore = () => { store.sq ||= {}; store.sq.total ||= 0; store.sq.best ||=
 const kcalPerSquat = () => store.profile ? 0.0055 * store.profile.weightKg : 0;   // rough: ~0.38 kcal per bodyweight squat at 70 kg
 const burnedOn = d => Math.round((store.days[d] || 0) * kcalPerRep() + (store.sq?.days?.[d] || 0) * kcalPerSquat());
 function wantEx() {
+  if (CW?.active) return CW.ex;
   if (M) return chEx(M.m.ch);
   if (F) return F.camp ? chEx(CAMP_LIST.find(m => m.id === F.camp)?.ch ?? 0) : "push";
   if (B || mode === "pvp" || mode === "boss") return "push";
@@ -2517,7 +2591,7 @@ function syncExercise() {
   renderExUI();
 }
 function setTrainEx(e) {
-  if (inMatch() || M || store.exercise === e || (!store.exercise && e === "push")) return;
+  if (inMatch() || M || CW?.active || store.exercise === e || (!store.exercise && e === "push")) return;
   if (setCount > 0) endSet(true);
   store.exercise = e; save();
   syncExercise(); renderExUI(); renderRank();
@@ -2729,6 +2803,7 @@ function cameraIdle(delay = 1500) {
 }
 function stopCamera(overlayDelay = 0, label = "Start next set") {
   clearTimeout(idleTimer); trainArmed = false;
+  if (CW?.active) coachAbort(true);
   if (!camReady) return;
   const st = video.srcObject;
   video.srcObject = null;
@@ -5654,7 +5729,234 @@ function renderMicros(T) {
     }).join("");
 }
 window.__food = { store: () => nstore(), render: () => renderFood(), FOODS, nutriTargets, mealPlan, sumItems, buildMeal, getFood, offFood };
-renderExUI(); renderRank();
+
+// ================= COACH: a daily plan that adjusts itself from what the camera sees =================
+// Push days and squat days alternate. Each workout is a few sets with rest in between; the last set is
+// "as many as you can". Afterwards the coach looks at every rep (count, depth, pace, where you slowed down
+// or got shallow) and moves next time's target up, holds it, or eases off.
+const COACH_STYLE = {
+  bulk:     { sets: 4, rest: 90,  mult: 1.0,  cue: "Lower slowly, about 2 seconds down, then drive up. Slow reps build muscle." },
+  cut:      { sets: 5, rest: 45,  mult: 0.85, cue: "Short rests, keep moving. More volume, more burn." },
+  tone:     { sets: 3, rest: 60,  mult: 1.0,  cue: "Smooth, steady reps with full range every time." },
+  strength: { sets: 5, rest: 120, mult: 0.65, cue: "Fewer reps, all deep. Pause for a moment at the bottom of each one." },
+};
+const COACH_START = { push: { l0: 5, l1: 8, l2: 14, l3: 22 }, squat: { l0: 10, l1: 14, l2: 20, l3: 28 } };
+const coachStore = () => { store.coach ||= {}; store.coach.hist ||= []; store.coach.next ||= "push"; return store.coach; };
+const coachStyle = () => COACH_STYLE[store.profile?.goal] || COACH_STYLE.tone;
+function coachBase(ex) {
+  const c = coachStore();
+  if (!c[ex]?.base) {   // first time: start from the profile level, or from your best set if you have one
+    const lvl = store.profile?.level || "l1", best = ex === "squat" ? store.sq?.best || 0 : store.best || 0;
+    c[ex] = { base: best >= 5 ? Math.max(3, Math.min(60, Math.round(best * 0.6))) : COACH_START[ex][lvl] || COACH_START[ex].l1 };
+  }
+  return c[ex].base;
+}
+const coachTarget = ex => Math.max(2, Math.round(coachBase(ex) * coachStyle().mult));
+const coachDoneToday = () => coachStore().hist.some(h => h.d === dayKey() && !h.stopped);
+function coachPlan(ex = coachStore().next) { const st = coachStyle(); return { ex, sets: st.sets, target: coachTarget(ex), rest: st.rest, cue: st.cue }; }
+
+// ---------- reading the reps ----------
+const median = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[s.length >> 1]; };
+function setStats(s) {
+  const n = s.times.length, depths = s.depths, gaps = s.times.slice(1).map((t, i) => (t - s.times[i]) / 1000);
+  const depth = depths.length ? depths.reduce((a, b) => a + b, 0) / depths.length : 0;
+  const pace = gaps.length ? gaps.reduce((a, b) => a + b, 0) / gaps.length : 0;
+  let slowAt = 0, shallowAt = 0;
+  const g0 = median(gaps.slice(0, 3));
+  for (let i = 3; i < gaps.length; i++) if (gaps[i] > Math.max(1.2, g0 * 1.7)) { slowAt = i + 2; break; }   // gaps[i] is the wait before rep i+2
+  const d0 = depths.slice(0, 3).reduce((a, b) => a + b, 0) / Math.max(1, Math.min(3, depths.length));
+  for (let i = 3; i < depths.length; i++) if (depths[i] < d0 * 0.7 && depths[i] < 0.4) { shallowAt = i + 1; break; }
+  return { n, depth, pace, slowAt, shallowAt, deep: depths.filter(d => d >= CRIT).length };
+}
+
+// ---------- the workout ----------
+function coachStart(ex) {
+  if (mode !== "train" || inMatch() || CW?.active || !store.profile) return;
+  const p = coachPlan(ex);
+  if (setCount > 0) endSet(false);
+  CW = { active: true, ...p, idx: 0, phase: "ready", sets_done: [], cur: null, until: 0, startedAt: Date.now(), said10: false };
+  trainArmed = true; syncExercise(); renderExUI();
+  $("stage").classList.add("coaching"); $("coachBar").hidden = false;
+  $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  coachRestUI(); renderCoach();
+  ensureCamera().then(ok => {
+    if (!CW?.active) return;
+    if (!ok) { coachAbort(); return; }
+    trainArmed = true; CW.camOn = true; coachPhase("ready", 8); say("Get ready.");
+  });
+  clearInterval(coachTick); coachTick = setInterval(coachLoop, 250);
+}
+let coachTick = 0;
+function coachPhase(ph, secs = 0) {
+  CW.phase = ph; CW.until = performance.now() + secs * 1000; CW.said10 = false; CW.lastTick = 0;
+  if (ph === "set") {
+    CW.cur = { target: CW.target, last: CW.idx === CW.sets - 1, times: [], depths: [] };
+    disarm(); sqReset();
+    const last = CW.cur.last;
+    say(last ? "Last set. As many as you can. Go!" : `Set ${CW.idx + 1} of ${CW.sets}. Go!`); sfx.go();
+  }
+  coachRestUI(); coachBarUI();
+}
+function coachLoop() {
+  if (!CW?.active) { clearInterval(coachTick); return; }
+  const now = performance.now(), left = Math.ceil((CW.until - now) / 1000);
+  if (CW.phase === "ready" || CW.phase === "rest") {
+    if (!CW.camOn) return;
+    if (left <= 10 && !CW.said10 && CW.phase === "rest" && left > 3) { CW.said10 = true; say("Ten seconds."); }
+    if (left <= 3 && left > 0 && CW.lastTick !== left) { CW.lastTick = left; sfx.tick(); }
+    if (left <= 0) coachPhase("set");
+    else coachRestUI();
+  } else if (CW.phase === "set") {
+    const c = CW.cur, quiet = c.times.length ? now - c.times[c.times.length - 1] : 0;
+    // last set ends a few seconds after you stop; a normal set that stalls for a long time counts as short
+    if (c.times.length && quiet > (c.last ? 6000 : 15000)) coachSetEnd();
+  }
+}
+function coachRep(depthPct) {
+  if (!CW?.active || CW.phase !== "set") return;
+  const c = CW.cur; c.times.push(performance.now()); c.depths.push(Math.min(1, depthPct));
+  coachBarUI();
+  if (!c.last && c.times.length >= c.target) coachSetEnd();
+}
+function coachSetEnd() {
+  if (!CW?.active || CW.phase !== "set") return;
+  const c = CW.cur; CW.sets_done = (CW.sets_done || []); CW.sets_done.push(c);
+  CW.ending = true; endSet(false); CW.ending = false;   // saves the set (totals already counted rep by rep)
+  CW.idx++;
+  if (CW.idx >= CW.sets) return coachFinish(false);
+  say("Set done. Rest."); sfx.rep();
+  coachPhase("rest", CW.rest);
+}
+function coachSkipRest() { if (CW?.active && (CW.phase === "rest" || CW.phase === "ready") && CW.camOn) coachPhase("set"); }
+function coachMoreRest() { if (CW?.active && CW.phase === "rest") { CW.until += 30000; coachRestUI(); } }
+function coachClear() {
+  clearInterval(coachTick);
+  $("stage").classList.remove("coaching"); $("coachBar").hidden = true; $("coachRest").hidden = true;
+}
+function coachAbort(fromCamera = false) {
+  if (!CW?.active) return;
+  const done = CW.sets_done || [];
+  if (CW.phase === "set" && CW.cur?.times.length) done.push(CW.cur);
+  CW.active = false; coachClear();
+  if (done.length && !fromCamera) { CW.sets_done = done; coachFinish(true); return; }
+  CW = null; if (!fromCamera) stopCamera(0, "Start camera");
+  renderCoach();
+}
+// stop on request: keep what you did, but the plan doesn't change
+function coachStop() { if (!CW?.active) return; if (CW.phase === "set" && CW.cur?.times.length) { CW.ending = true; endSet(false); CW.ending = false; } coachAbort(); }
+
+function coachFinish(stopped) {
+  const w = CW, sets = w.sets_done || [], ex = w.ex, c = coachStore();
+  w.active = false; coachClear(); stopCamera(0, "Start camera");
+  const stats = sets.map(setStats), reps = stats.reduce((t, s) => t + s.n, 0);
+  const allDepth = sets.flatMap(s => s.depths), depth = allDepth.length ? allDepth.reduce((a, b) => a + b, 0) / allDepth.length : 0;
+  const deep = allDepth.filter(d => d >= CRIT).length;
+  const base = coachBase(ex), step = Math.max(1, Math.round(base * 0.08));
+  let nb = base, verdict;
+  if (stopped) verdict = "Stopped early, so your plan stays the same. Finish all the sets next time to move up.";
+  else {
+    const normal = sets.filter(s => !s.last), last = sets.find(s => s.last);
+    const missed = normal.filter(s => s.times.length < s.target).length;
+    const extra = last ? last.times.length - last.target : 0;
+    const tired = stats.some((s, i) => !sets[i].last && (s.slowAt && s.slowAt <= sets[i].target * 0.6));
+    if (missed >= 2 || (last && last.times.length < last.target * 0.6)) { nb = Math.max(2, Math.round(base * 0.9)); verdict = `That was a tough one, so next time eases off a little. Build it back up.`; }
+    else if (missed === 1 || extra < 0) verdict = "Close! Same target next time. Hit every set and it goes up.";
+    else if (depth < 0.33) verdict = "You hit every set, but your reps were shallow. Same target next time: go deeper before we add reps.";
+    else if (tired) verdict = "Every set done, but you slowed down early. Same target next time to make it feel easy.";
+    else if (extra >= 3 && depth >= 0.4) { nb = base + step * 2; verdict = `Strong! You smashed the last set (+${extra}). Big jump next time.`; }
+    else { nb = base + step; verdict = "Every set done with good form. Moving you up."; }
+    c[ex] = { base: nb }; c.next = ex === "push" ? "squat" : "push";
+  }
+  // one coaching tip from how the reps looked, matched to your goal
+  if (!stopped && reps >= 4) {
+    const goal = store.profile?.goal || "tone", allStats = stats.filter(x => x.n > 1), pace = allStats.length ? allStats.reduce((t, x) => t + x.pace, 0) / allStats.length : 0;
+    const tip = goal === "bulk" && pace && pace < 1.6 ? `Tip: you averaged ${pace.toFixed(1)} s a rep. For size, slow down to about 2 to 3 seconds, lowering slowly.`
+      : goal === "strength" && deep / reps < 0.7 ? `Tip: only ${Math.round(deep / reps * 100)}% of your reps were deep. For strength, make every rep count all the way down.`
+      : goal === "cut" && pace > 2.5 ? `Tip: pick up the pace a little. Quicker reps and short rests burn more.`
+      : stats.some(x => x.shallowAt) ? `Tip: your reps got shallow towards the end of a set. Stop the set there rather than cutting reps short.` : "";
+    if (tip) verdict += " " + tip;
+  }
+  const nextT = Math.max(2, Math.round(nb * coachStyle().mult)), fromT = Math.max(2, Math.round(base * coachStyle().mult));
+  c.hist.push({ d: dayKey(), ex, goal: store.profile?.goal || "tone", sets: sets.map(s => [s.target, s.times.length]), depth: +depth.toFixed(2), from: fromT, to: nextT, stopped: !!stopped });
+  if (c.hist.length > 40) c.hist = c.hist.slice(-40);
+  save(); renderRank(); CW = null; renderCoach();
+  showCoachReport({ ex, sets, stats, reps, depth, deep, verdict, from: fromT, to: nextT, stopped, secs: Math.round((Date.now() - w.startedAt) / 1000) });
+}
+
+// ---------- UI ----------
+function coachBarUI() {
+  if (!CW?.active) return;
+  const E = EX[CW.ex], c = CW.cur, n = c && CW.phase === "set" ? c.times.length : 0, t = c?.target ?? CW.target;
+  const last = CW.phase === "set" ? c.last : CW.idx === CW.sets - 1;
+  $("cbDay").textContent = `${E.icon} ${CW.ex === "squat" ? "SQUAT" : "PUSH"} DAY`;
+  $("cbSet").textContent = CW.phase === "set" ? `SET ${CW.idx + 1} / ${CW.sets}${last ? " · LAST" : ""}` : CW.phase === "rest" ? `REST · NEXT SET ${CW.idx + 1} / ${CW.sets}` : "GET READY";
+  $("cbReps").textContent = n;
+  $("cbTarget").textContent = last ? `/ ${t}+ ${E.many}` : `/ ${t} ${E.many}`;
+  $("cbFill").style.width = Math.min(100, n / t * 100) + "%";
+  $("cbDots").innerHTML = Array.from({ length: CW.sets }, (_, i) => `<i class="${i < CW.idx ? "done" : i === CW.idx && CW.phase === "set" ? "on" : ""}"></i>`).join("");
+  $("cbFinish").hidden = CW.phase !== "set" || !c?.last || !n;
+}
+function coachRestUI() {
+  const el = $("coachRest");
+  if (!CW?.active || (CW.phase !== "rest" && CW.phase !== "ready")) { el.hidden = true; return; }
+  const left = Math.max(0, Math.ceil((CW.until - performance.now()) / 1000)), total = CW.phase === "ready" ? 8 : CW.rest;
+  const E = EX[CW.ex], last = CW.idx === CW.sets - 1;
+  el.hidden = false;
+  el.querySelector(".cr-t").textContent = CW.phase === "ready" ? (CW.camOn ? "GET READY" : "STARTING CAMERA…") : "REST";
+  el.querySelector(".cr-n").textContent = CW.camOn ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "…";
+  el.querySelector(".cr-ring").style.setProperty("--k", CW.camOn ? Math.max(0, Math.min(1, left / total)) : 1);
+  el.querySelector(".cr-next").textContent = `Next: set ${CW.idx + 1} of ${CW.sets} · ${last ? `as many ${E.many} as you can (at least ${CW.target})` : `${CW.target} ${E.many}`}`;
+  el.querySelector(".cr-cue").textContent = CW.cue;
+  $("crMore").hidden = CW.phase !== "rest";
+  coachBarUI();
+}
+function renderCoach() {
+  const el = $("coachBody"); if (!el) return;
+  if (!store.profile) { el.innerHTML = `<p class="muted">Set up your profile first, so the coach can build a plan that fits your level and goal.</p>`; return; }
+  const c = coachStore(), st = coachStyle(), g = GOALS[store.profile.goal] || GOALS.tone;
+  $("coachGoal").textContent = `${g.icon} ${g.name} plan`;
+  const p = coachPlan(), E = EX[p.ex], other = p.ex === "push" ? "squat" : "push";
+  const doneToday = coachDoneToday(), last = c.hist.filter(h => !h.stopped).slice(-1)[0];
+  const trend = ex => { const h = c.hist.filter(x => x.ex === ex && !x.stopped).slice(-6); return h.length ? h.map(x => `<i class="${x.to > x.from ? "up" : x.to < x.from ? "down" : ""}" title="${x.d}: ${x.sets.map(s => s[1]).join(", ")}"></i>`).join("") : `<span class="muted">no workouts yet</span>`; };
+  el.innerHTML = `
+    ${doneToday ? `<div class="co-done">✅ Today's workout is done${last ? ` · ${last.sets.reduce((t, s) => t + s[1], 0)} ${EX[last.ex].many}, depth ${Math.round(last.depth * 100)}%` : ""}. Come back tomorrow for ${E.icon} ${p.ex === "squat" ? "squat" : "push"} day.</div>` : ""}
+    <div class="co-plan">
+      <div class="co-day">${E.icon} ${doneToday ? "Next: " : "Today: "}${p.ex === "squat" ? "Squat day" : "Push day"}</div>
+      <div class="co-sets"><b>${p.sets} sets × ${p.target}</b> ${E.many} <span class="muted">· last set: as many as you can · rest ${p.rest} s</span></div>
+      <div class="muted co-cue">💡 ${p.cue}</div>
+      <div class="co-btns"><button id="coachGo">▶ ${doneToday ? "Do another workout" : "Start workout"}</button><button class="ghost" id="coachSwap">Swap to ${other === "squat" ? "🦵 squats" : "💪 push-ups"}</button></div>
+    </div>
+    <div class="co-trend"><div><span>💪 Push-up target</span><b>${coachTarget("push")}</b><span class="co-dots">${trend("push")}</span></div><div><span>🦵 Squat target</span><b>${coachTarget("squat")}</b><span class="co-dots">${trend("squat")}</span></div></div>`;
+  $("coachGo").onclick = () => coachStart(p.ex);
+  $("coachSwap").onclick = () => { if (CW?.active) return; c.next = other; save(); renderCoach(); };
+}
+function showCoachReport(r) {
+  const E = EX[r.ex], m = $("coachModal");
+  const row = (s, st, i) => {
+    const ok = s.last ? st.n >= s.target : st.n >= s.target;
+    const note = s.last ? (st.n > s.target ? `+${st.n - s.target} extra 🔥` : st.n === s.target ? "hit it" : `${s.target - st.n} short`) : ok ? "✓" : `${s.target - st.n} short`;
+    const warn = st.shallowAt ? `got shallow at rep ${st.shallowAt}` : st.slowAt ? `slowed down at rep ${st.slowAt}` : "";
+    return `<tr><td>${i + 1}${s.last ? " · max" : ""}</td><td><b>${st.n}</b>/${s.target}</td><td>${st.n ? Math.round(st.depth * 100) + "%" : "–"}</td><td>${st.n > 1 ? st.pace.toFixed(1) + " s" : "–"}</td><td class="${ok ? "ok" : "bad"}">${note}${warn ? `<small>${warn}</small>` : ""}</td></tr>`;
+  };
+  m.querySelector(".card").innerHTML = `
+    <h2>${r.stopped ? "WORKOUT STOPPED" : "WORKOUT COMPLETE"}</h2>
+    <div class="big">${E.icon} ${r.ex === "squat" ? "Squat" : "Push"} day</div>
+    <div class="result-stats"><div><b>${r.reps}</b>${E.Many}</div><div><b>${Math.round(r.depth * 100)}%</b>Avg depth</div><div><b>${r.reps ? Math.round(r.deep / r.reps * 100) : 0}%</b>Deep reps</div><div><b>${Math.floor(r.secs / 60)}:${String(r.secs % 60).padStart(2, "0")}</b>Time</div></div>
+    <table class="co-table"><thead><tr><th>Set</th><th>Reps</th><th>Depth</th><th>Pace</th><th></th></tr></thead><tbody>${r.sets.map((s, i) => row(s, r.stats[i], i)).join("")}</tbody></table>
+    <div class="co-verdict">${r.to > r.from ? "📈" : r.to < r.from ? "📉" : "➡️"} ${r.verdict}${r.stopped ? "" : `<b>Next ${r.ex === "squat" ? "squat" : "push"} day: ${coachStyle().sets} × ${r.to}${r.to !== r.from ? ` (was ${r.from})` : ""}</b>`}</div>
+    <div class="row"><button id="coachOk">Done</button></div>`;
+  m.classList.add("show");
+  if (!r.stopped) { confetti(90); sfx.fanfare(); say("Workout complete!"); }
+  $("coachOk").onclick = () => { m.classList.remove("show"); flushRankUps(); };
+}
+$("cbStop").onclick = () => coachStop();
+$("cbFinish").onclick = () => coachSetEnd();
+$("crSkip").onclick = () => coachSkipRest();
+$("crMore").onclick = () => coachMoreRest();
+var coachInit = true;   // setMode can run during start-up before this point
+window.__coach = { plan: coachPlan, start: coachStart, get W() { return CW; }, store: coachStore, skip: coachSkipRest, setStats };   // test hook
+
+renderExUI(); renderRank(); renderCoach(); $("coachPanel").hidden = mode !== "train";
 </script>
 </body>
 </html>
