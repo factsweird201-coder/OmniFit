@@ -890,6 +890,14 @@
   .fog-9 .cmap-clouds .cb-back { fill: #1e3a2e; } .fog-9 .cmap-clouds .cb-front { fill: #2e5a40; }
   .fog-10 .cmap-clouds .cb-back { fill: #a8c4e0; } .fog-10 .cmap-clouds .cb-front { fill: #d8ecf8; }
   .fog-11 .cmap-clouds .cb-back { fill: #22103a; } .fog-11 .cmap-clouds .cb-front { fill: #3a2250; }
+  .fog-12::before { background: radial-gradient(ellipse 60% 22% at 30% 40%, rgba(240,170,110,.3), transparent), radial-gradient(ellipse 55% 20% at 72% 60%, rgba(220,140,90,.26), transparent); }
+  .fog-13::before { background: repeating-linear-gradient(100deg, rgba(160,230,240,0) 0 22px, rgba(160,230,240,.10) 22px 24px), radial-gradient(ellipse 70% 25% at 50% 60%, rgba(90,190,220,.22), transparent); }
+  .fog-14::before { background: radial-gradient(ellipse 50% 22% at 30% 40%, rgba(90,70,60,.5), transparent), radial-gradient(ellipse 50% 22% at 70% 60%, rgba(255,110,40,.18), transparent); }
+  .fog-15::before { background: conic-gradient(from 90deg at 50% 45%, rgba(168,138,255,0), rgba(168,138,255,.2), rgba(60,40,140,0), rgba(168,138,255,.16), rgba(168,138,255,0)); animation: voidSpin 60s linear infinite; }
+  .fog-12 .cmap-clouds .cb-back { fill: #8a4a2a; } .fog-12 .cmap-clouds .cb-front { fill: #b8683a; }
+  .fog-13 .cmap-clouds .cb-back { fill: #0a3a5a; } .fog-13 .cmap-clouds .cb-front { fill: #1a5a7a; }
+  .fog-14 .cmap-clouds .cb-back { fill: #2a1410; } .fog-14 .cmap-clouds .cb-front { fill: #4a2418; }
+  .fog-15 .cmap-clouds .cb-back { fill: #14123a; } .fog-15 .cmap-clouds .cb-front { fill: #2a2858; }
 </style>
 </head>
 <body>
@@ -1046,7 +1054,7 @@
         <li><b>Mission types:</b> 💪 reach a count · ⏱️ beat the clock · 🎯 deep reps only (50%+) · 🔗 no resting over 4 s · 🔥 as many as you can before time runs out · ⚔️ boss fights.</li>
         <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
         <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
-        <li><b>🦵 Squat Campaign:</b> a whole separate campaign, <i>The Sinking Lands</i>: 4 chapters, 24 missions and 8 new bosses, all done with squats. Switch campaigns with the buttons at the top of the map.</li>
+        <li><b>🦵 Squat Campaign:</b> a whole separate campaign done with squats, in two parts: <i>The Sinking Lands</i> and <i>The Heavy Sky</i> (unlocks after Queen Quagmire). 8 chapters, 48 missions and 16 bosses. Switch campaigns with the buttons at the top of the map.</li>
       </ul>
     </div>
     <div class="panel" style="margin-top:18px" id="howBoss" hidden>
@@ -1304,6 +1312,23 @@ const BOSSES = [
     intro: "The Sludge Knight raises a dripping sword. For the Queen!", win: "The Sludge Knight splatters into puddles!" },
   { id: "quag",   name: "Queen Quagmire",  hp: 460, every: 5.5, windup: 2.5, specials: ["armor", "heal", "rapid", "frenzy", "armor"], sq: true,
     intro: "Queen Quagmire rises from her throne of mud. The final fight.", win: "Queen Quagmire sinks into her own swamp! The land rises!" },
+  // ----- Squat campaign part 2: The Heavy Sky -----
+  { id: "scorp",  name: "Sandsting",        hp: 520,  every: 5.4, windup: 2.5, specials: ["rapid", "frenzy", "armor"], sq: true,
+    intro: "Sandsting bursts out of the sand, tail raised high.", win: "Sandsting scuttles off into the dunes!" },
+  { id: "cactus", name: "Cactus Colossus",  hp: 580,  every: 5.3, windup: 2.5, specials: ["armor", "heal", "armor"], sq: true,
+    intro: "The Cactus Colossus uproots itself. Mind the spikes!", win: "The Cactus Colossus topples over with a thud!" },
+  { id: "crab",   name: "Clatterclaw",      hp: 640,  every: 5.2, windup: 2.4, specials: ["armor", "rapid", "heal"], sq: true,
+    intro: "Clatterclaw snaps its giant claws. Snip snap!", win: "Clatterclaw scuttles away sideways!" },
+  { id: "angler", name: "The Abyss Angler", hp: 700,  every: 5.0, windup: 2.4, specials: ["frenzy", "heal", "rapid", "frenzy"], sq: true,
+    intro: "A light glows in the dark water. Don't follow it!", win: "The Abyss Angler sinks back into the deep!" },
+  { id: "cinder", name: "Cinderhorn",       hp: 760,  every: 4.9, windup: 2.3, specials: ["rapid", "armor", "frenzy", "heal"], sq: true,
+    intro: "Cinderhorn stamps, and lava cracks open in its hide.", win: "Cinderhorn cools into solid rock!" },
+  { id: "ogre",   name: "The Anvil Ogre",   hp: 820,  every: 4.8, windup: 2.3, specials: ["armor", "armor", "rapid", "heal", "frenzy"], sq: true,
+    intro: "The Anvil Ogre lifts a hammer the size of a door.", win: "The Anvil Ogre drops his hammer on his own toe!" },
+  { id: "moth",   name: "Moonmoth",         hp: 900,  every: 4.7, windup: 2.2, specials: ["heal", "rapid", "frenzy", "heal", "armor"], sq: true,
+    intro: "Moonmoth spreads its silver wings across the sky.", win: "Moonmoth flutters away into the stars!" },
+  { id: "baron",  name: "Baron Gravity",    hp: 1000, every: 4.4, windup: 2.1, specials: ["armor", "heal", "rapid", "frenzy", "armor", "rapid"], sq: true,
+    intro: "Baron Gravity adjusts his monocle. Everything falls for me. The final fight.", win: "Baron Gravity goes flying off into space! The sky is light again!" },
 ];
 
 const SPECIALS = {
@@ -2854,19 +2879,60 @@ const CHAPTERS = [
       { name: "Rising City",     type: "nobreak", n: 30, story: "A whole city lies under the mud. Lift it." },
       { name: "Queen Quagmire",  type: "boss",    boss: 23, story: "The throne of mud. The final fight." },
     ] },
+  // ----- Squat campaign part 2: The Heavy Sky -----
+  { name: "Sunscorch Canyon", color: "#ff9a4a", story: "Under the Iron Moon the cliffs crumble and boulders rain down.",
+    missions: [
+      { name: "Heavy Feet",       type: "reps",    n: 32, story: "Everything weighs double under the Iron Moon. Squat through it." },
+      { name: "Boulder Rain",     type: "timed",   n: 30, t: 55, story: "Rocks are falling off the cliffs. Keep the shield up!" },
+      { name: "Sting Operation",  type: "boss",    boss: 24, story: "The sand is moving. Something with a tail is under it." },
+      { name: "Canyon Wall",      type: "deep",    n: 16, story: "A rockslide blocked the only road. Only deep squats crack it." },
+      { name: "Rope Bridge",      type: "nobreak", n: 30, story: "Build a bridge over the gorge before the ropes snap." },
+      { name: "Prickly Problem",  type: "boss",    boss: 25, story: "A cactus as tall as a house just pulled up its roots." },
+    ] },
+  { name: "The Drowned Reef", color: "#3ac8d8", locked: "The Iron Moon pulls the sea higher every night. The coral towns are underwater.", story: "The coral towns are underwater, and the sea is still rising.",
+    missions: [
+      { name: "Deep Breath",      type: "endure",  n: 34, t: 75, story: "Keep Pip glowing in the deep, dark water." },
+      { name: "Sunken Ship",      type: "timed",   n: 32, t: 60, story: "A ship full of reef folk is stuck on the sea floor." },
+      { name: "Snip Snap",        type: "boss",    boss: 26, story: "Something with huge claws guards the coral gate." },
+      { name: "Moon Crystals",    type: "deep",    n: 18, story: "Moon crystals are pulling the sea up. Smash them." },
+      { name: "Whirlpool",        type: "nobreak", n: 34, story: "A whirlpool is dragging the raft down. Bail!" },
+      { name: "The Light Below",  type: "boss",    boss: 27, story: "A light glows in the trench. Don't swim towards it." },
+    ] },
+  { name: "The Magma Forge", color: "#ff5a3a", locked: "To reach the moon you need a balloon, and only the Magma Forge can make one.", story: "The forge has been taken over. The Baron's goons are making chains for the moon.",
+    missions: [
+      { name: "Bellows",          type: "reps",    n: 40, story: "The forge has gone cold. Squat to pump the bellows." },
+      { name: "Lava Flow",        type: "timed",   n: 36, t: 60, story: "Lava is pouring towards the village. Cool it down!" },
+      { name: "Hot Head",         type: "boss",    boss: 28, story: "A rhino made of rock and lava blocks the forge door." },
+      { name: "Obsidian Gate",    type: "deep",    n: 20, story: "A gate of black glass. Only deep squats break it." },
+      { name: "Magma Bridge",     type: "nobreak", n: 38, story: "Build a bridge over the lava river. Don't stop!" },
+      { name: "Hammer Time",      type: "boss",    boss: 29, story: "The ogre who runs the forge wants his hammer to do the talking." },
+    ] },
+  { name: "The Iron Moon", color: "#b8c8ff", locked: "High above the clouds hangs the Iron Moon, with Baron Gravity's fortress on top.", story: "Baron Gravity's moon fortress, right above the world.",
+    missions: [
+      { name: "Liftoff",          type: "endure",  n: 42, t: 80, story: "Every squat heats the balloon. Up, up, up!" },
+      { name: "Moon Stairs",      type: "timed",   n: 40, t: 60, story: "Climb the steps up the side of the moon." },
+      { name: "Silver Wings",     type: "boss",    boss: 30, story: "A giant moth guards the fortress gate." },
+      { name: "Gravity Engine",   type: "deep",    n: 22, story: "The engine pulling the moon down runs on crystals. Break them!" },
+      { name: "Hold the Tower",   type: "nobreak", n: 44, story: "The fortress tower is falling on the town below. Push it back up!" },
+      { name: "Baron Gravity",    type: "boss",    boss: 31, story: "The Baron himself. The final fight." },
+    ] },
 ];
-CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : ci < 8 ? 1 : 2);
-const PARTS = [{ name: "The Great Ember", chs: [0, 1, 2, 3] }, { name: "The Hollow King", chs: [4, 5, 6, 7] }, { name: "The Sinking Lands", chs: [8, 9, 10, 11] }];
+CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : ci < 8 ? 1 : ci < 12 ? 2 : 3);
+const PARTS = [{ name: "The Great Ember", chs: [0, 1, 2, 3] }, { name: "The Hollow King", chs: [4, 5, 6, 7], teaser: "A new story, 4 new chapters, 24 new missions and 8 new bosses, including a rival who got his strength the easy way." },
+  { name: "The Sinking Lands", chs: [8, 9, 10, 11] },
+  { name: "The Heavy Sky", chs: [12, 13, 14, 15], teaser: "An iron moon is pulling the world down. A new story, 4 new chapters, 24 new missions and 8 new bosses, and a villain who wants everyone flat on the ground." }];
+const PART_COLORS = ["#ffc21a", "#ff5fa8", "#b8e04a", "#7ad8ff"];
 // two separate campaigns share the mission engine: push-ups (parts 1 and 2) and squats (its own 4 chapters, numbered 1–4, ids S1-1…)
-const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2] }];
+const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2, 3] }];
 const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
+const partNo = pi => CAMPAIGNS[campOfPart(pi)].parts.indexOf(pi);   // 0 = part one of its own campaign
 const campSet = () => store.campSet === 1 ? 1 : 0;
 const chEx = ci => CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex;
 const exM = m => EX[chEx(m.ch ?? 0)];
 const mStarsTxt = m => MTYPES[m.type].stars.replace(/push-ups?/g, w => w.endsWith("s") ? exM(m).many : exM(m).one);
 const mIcon = m => m.type === "reps" ? exM(m).icon : MTYPES[m.type].icon;
-const chNum = ci => ci - PARTS[CHAPTERS[ci].part].chs[0] + (CHAPTERS[ci].part === 1 ? 5 : 1);
-const missionId = (ci, mi) => `${CHAPTERS[ci].part === 2 ? "S" : ""}${chNum(ci)}-${mi + 1}`;
+const chNum = ci => ci - PARTS[CHAPTERS[ci].part].chs[0] + (CHAPTERS[ci].part % 2 ? 5 : 1);
+const missionId = (ci, mi) => `${CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex === "squat" ? "S" : ""}${chNum(ci)}-${mi + 1}`;
 const CAMP_LIST = CHAPTERS.flatMap((c, ci) => c.missions.map((m, mi) => ({ ...m, ch: ci, mi, id: missionId(ci, mi) })));
 const campOfK = k => campOfPart(CHAPTERS[CAMP_LIST[k].ch].part);
 const campKs = c => CAMP_LIST.flatMap((m, k) => campOfK(k) === c ? [k] : []);
@@ -2877,8 +2943,8 @@ const campUnlocked = k => k === 0 || campOfK(k) !== campOfK(k - 1) || campStars(
 const campTotal = (c = campSet()) => campKs(c).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
 const partUnlocked = pi => chapterUnlocked(PARTS[pi].chs[0]);
-const campNextText = (cur, next) => !next ? (chEx(cur.ch) === "squat" ? "🏆 You sank Queen Quagmire and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
-  : CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part ? `🏁 Part ${PART_WORDS[CHAPTERS[cur.ch].part][0] + PART_WORDS[CHAPTERS[cur.ch].part].slice(1).toLowerCase()} complete! 🔓 Part ${PART_WORDS[CHAPTERS[next.ch].part][0] + PART_WORDS[CHAPTERS[next.ch].part].slice(1).toLowerCase()}: ${PARTS[CHAPTERS[next.ch].part].name}`
+const campNextText = (cur, next) => !next ? (chEx(cur.ch) === "squat" ? "🏆 You sent Baron Gravity flying and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
+  : CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part ? `🏁 Part ${PART_WORDS[partNo(CHAPTERS[cur.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[cur.ch].part)].slice(1).toLowerCase()} complete! 🔓 Part ${PART_WORDS[partNo(CHAPTERS[next.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[next.ch].part)].slice(1).toLowerCase()}: ${PARTS[CHAPTERS[next.ch].part].name}`
   : next.ch !== cur.ch ? `🏁 Chapter ${chNum(cur.ch)} complete! 🔓 Chapter ${chNum(next.ch)}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`;
 let campChapter = null, campPick = null, M = null;
 
@@ -2960,6 +3026,30 @@ const MISSION_STORY = {
   "S4-4": { obj: "Shatter the Mire crystals",                scene: { k: "crack", v: "crystal" } },
   "S4-5": { obj: "Lift the sunken city",                     scene: { k: "rise", v: "city" } },
   "S4-6": { obj: "Sink Queen Quagmire" },
+  "S5-1": { obj: "Launch the scout balloon over the canyon",  scene: { k: "balloon", v: "canyon" } },
+  "S5-2": { obj: "Hold Pip's shield against the falling rocks", scene: { k: "shield" } },
+  "S5-3": { obj: "Pull Sandsting out of the sand" },
+  "S5-4": { obj: "Crack the rockslide off the road",           scene: { k: "crack", v: "rock" } },
+  "S5-5": { obj: "Bridge the gorge",                           scene: { k: "bridge", v: "sky" } },
+  "S5-6": { obj: "Topple the Cactus Colossus" },
+  "S6-1": { obj: "Keep Pip glowing in the deep",               scene: { k: "flame", v: "pip" } },
+  "S6-2": { obj: "Raise the sunken ship",                      scene: { k: "rise", v: "ship" } },
+  "S6-3": { obj: "Get past Clatterclaw" },
+  "S6-4": { obj: "Smash the moon crystals",                    scene: { k: "crack", v: "crystal" } },
+  "S6-5": { obj: "Bail out the raft in the whirlpool",         scene: { k: "boat" } },
+  "S6-6": { obj: "Put out the Abyss Angler's light" },
+  "S7-1": { obj: "Pump the bellows and light the forge",       scene: { k: "flame", v: "brazier" } },
+  "S7-2": { obj: "Cool the lava before it reaches the village", scene: { k: "douse" } },
+  "S7-3": { obj: "Cool down Cinderhorn" },
+  "S7-4": { obj: "Break the obsidian gate",                    scene: { k: "crack", v: "rock" } },
+  "S7-5": { obj: "Bridge the lava river",                      scene: { k: "bridge", v: "lava" } },
+  "S7-6": { obj: "Out-hammer the Anvil Ogre" },
+  "S8-1": { obj: "Fly the balloon up to the Iron Moon",        scene: { k: "balloon", v: "moon" } },
+  "S8-2": { obj: "Climb the moon stairs",                      scene: { k: "steps" } },
+  "S8-3": { obj: "Get past Moonmoth" },
+  "S8-4": { obj: "Smash the gravity engine's crystals",        scene: { k: "crack", v: "crystal" } },
+  "S8-5": { obj: "Push the falling tower back up",             scene: { k: "rise", v: "pillar" } },
+  "S8-6": { obj: "Send Baron Gravity flying" },
 };
 CAMP_LIST.forEach(m => Object.assign(m, MISSION_STORY[m.id]));
 
@@ -3098,6 +3188,33 @@ const STORY = {
     ["steel", "Push-ups and squats, recruit. Arms and legs. Now you're the complete package."],
     ["pip", "Same time tomorrow? I'll bring snacks! Leg day snacks!"],
   ],
+  // ----- Squat campaign part 2: The Heavy Sky -----
+  prologue4: [
+    ["narr", "The Mire is drained and the land has risen. But one night, a second moon appears in the sky. It's made of iron, and it's getting closer.", "moon"],
+    ["narr", "Everything feels heavier under the Iron Moon. Rocks fall from the cliffs. The sea creeps over the reef. People can barely stand up.", "canyon"],
+    ["steel", "Gravity's gone wrong, recruit. And whatever's up there is doing it on purpose.", "camp"],
+    ["baron", "Down you go, little people. Flat on the ground, where you belong. I am Baron Gravity, and everything falls for me.", "moon"],
+    ["pip", "Everything's heavy except my mood! Squats fight gravity, right? Then let's squat that moon right back into space!"],
+  ],
+  chapter4: [
+    [ ["narr", "Sunscorch Canyon. Under the Iron Moon, the cliffs are crumbling and boulders rain down every hour.", "canyon"],
+      ["pip", "My glow feels heavy. Is that even possible? That shouldn't be possible."],
+      ["steel", "Heavy legs are strong legs. Squat with the weight, recruit, and stand up anyway."] ],
+    [ ["narr", "The moon pulls the sea higher every night. Now the coral towns of the Drowned Reef are underwater.", "reef"],
+      ["pip", "Blub, blub. That's me practising. I can't swim!"],
+      ["steel", "Hold your breath and squat. The sea wants to keep everything down there."] ],
+    [ ["narr", "To reach the moon, you need a balloon of iron cloth and a fire hot enough to lift it. Only the Magma Forge can make them.", "forge"],
+      ["steel", "The Baron's goons have taken the forge. They're making chains to pull the moon even closer."],
+      ["pip", "Chains for the moon? That's the worst idea anyone's ever had!"] ],
+    [ ["narr", "The balloon is ready. High above the clouds hangs the Iron Moon, and on top sits Baron Gravity's fortress.", "moon"],
+      ["baron", "You came all the way up here? How exhausting for your little legs. Sit down. Stay down."],
+      ["pip", "Our legs are tree trunks now, mister! You're in big trouble!"] ],
+  ],
+  epilogue4: [
+    ["narr", "With the gravity engine smashed, the Iron Moon drifts away into the stars. The rocks stop falling, the sea goes back, and everyone stands up straight again.", "dawn"],
+    ["steel", "Two whole campaigns of leg day, recruit. Gravity itself couldn't keep you down."],
+    ["pip", "Can we go home now? My legs are tired, and I don't even have legs!"],
+  ],
 };
 Object.assign(STORY.m, {
   "5-1": { pre:  [["steel", "We borrowed a fishing boat, and it leaks. Every push-up bails out a bucket.", "coast"], ["pip", "Stop for too long and we sink! No pressure!"]],
@@ -3190,21 +3307,60 @@ Object.assign(STORY.m, {
   "S4-6": { pre:  [["quag", "Every tower falls. Every mountain sinks. Every hero sits down in the end. Why stand up?", "mire"], ["steel", "Because we can."],
                    ["pip", "And because we did a LOT of leg days! Go get her, recruit!"]],
             post: [] },
+  // ----- Squat campaign part 2 -----
+  "S5-1": { pre:  [["steel", "We need eyes on that moon. Every squat heats the scout balloon. Get it up!", "canyon"], ["pip", "Ooh, a balloon! Can I ride in it? I'm very light. Well, I used to be."]],
+            post: [["pip", "It's flying! And… uh oh. The moon is a lot closer than it looks.", "canyon"]] },
+  "S5-2": { pre:  [["narr", "A rumble from the cliffs. Boulders are tumbling down the canyon!", "canyon"], ["steel", "Behind Pip's shield, recruit. Keep it charged!"]] },
+  "S5-3": { pre:  [["narr", "The sand shifts. A tail with a stinger the size of a door rises out of the dunes.", "canyon"], ["boss", "Hisss. The Baron says nobody stands up in my canyon."]],
+            post: [["boss", "Hisss… the Baron will crush you all flat…", "canyon"], ["pip", "Flat? Never heard of it!"]] },
+  "S5-4": { pre:  [["steel", "A rockslide blocked the only road west. Deep squats, recruit. Crack it open.", "canyon"]] },
+  "S5-5": { pre:  [["pip", "The gorge is too wide to jump! Build us a bridge, quick!", "canyon"]],
+            post: [["steel", "Nice work. Don't look down. I said don't look down!"]] },
+  "S5-6": { pre:  [["narr", "A cactus as tall as a house pulls its roots out of the ground and turns around.", "canyon"], ["boss", "Prickly, prickly. Come give me a hug!"], ["pip", "Absolutely not!"]],
+            post: [["boss", "Ow… the sea… the Baron is pulling up the sea next…", "canyon"], ["steel", "Then we go to the reef."]] },
+  "S6-1": { pre:  [["pip", "It's so dark down here. Keep me glowing, or we'll get lost!", "reef"]] },
+  "S6-2": { pre:  [["narr", "A ship full of reef folk sank when the sea rose. They're still inside, waiting.", "reef"], ["steel", "Every squat lifts it. Bring them up."]],
+            post: [["pip", "They're out! They're waving! Somebody's waving a fish!", "reef"]] },
+  "S6-3": { pre:  [["narr", "Two giant claws block the coral gate. Snip. Snap.", "reef"], ["boss", "Nobody gets past Clatterclaw! Snip snap!"]],
+            post: [["boss", "Okay, okay! The Baron's crystals are in the trench! Snip… snap…", "reef"]] },
+  "S6-4": { pre:  [["steel", "These moon crystals are what's pulling the sea up. Smash them, recruit.", "reef"]] },
+  "S6-5": { pre:  [["pip", "Whirlpool! Whirlpool! Bail faster, faster, faster!", "reef"]] },
+  "S6-6": { pre:  [["narr", "Deep in the trench, a soft light glows. It looks friendly. It isn't.", "reef"], ["boss", "Come closer, little spark. Closer. Closer…"], ["pip", "Nope! I know that trick!"]],
+            post: [["pip", "The sea's going down! The coral towns are coming back up!", "reef"], ["steel", "Good. Now we need a way up to that moon."]] },
+  "S7-1": { pre:  [["steel", "The forge has gone cold. Squat to pump the bellows and get that fire roaring.", "forge"]] },
+  "S7-2": { pre:  [["narr", "The Baron's goons broke the lava channels. A river of lava is heading for the village!", "forge"]],
+            post: [["pip", "It's cooling into rock! You stopped a volcano with your legs!"]] },
+  "S7-3": { pre:  [["narr", "A rhino made of rock and lava stamps in front of the forge door.", "forge"], ["boss", "Snort. Hot, hot, hot. Nobody touches the Baron's chains."]],
+            post: [["boss", "Hiss… so… cold…", "forge"]] },
+  "S7-4": { pre:  [["pip", "A gate of black glass! I can see my reflection. I look great, by the way.", "forge"]] },
+  "S7-5": { pre:  [["steel", "Lava river. One bridge. No stopping. Go.", "forge"]] },
+  "S7-6": { pre:  [["narr", "In the heart of the forge, an ogre hammers chains as thick as tree trunks.", "forge"], ["boss", "More chains for the Baron! Pull the moon down! Crush them flat!"], ["pip", "Hey! Leave the moon alone!"]],
+            post: [["boss", "My hammer… my toe… my everything…", "forge"], ["steel", "The forge is ours. Build the balloon, recruit. We're going to the moon."]] },
+  "S8-1": { pre:  [["steel", "Iron balloon, forge fire, and your legs. Every squat takes us higher. Liftoff!", "moon"], ["pip", "I've never been to the moon! Is it made of cheese? Please be cheese."]],
+            post: [["pip", "It's not cheese. It's iron. I'm so disappointed.", "moon"]] },
+  "S8-2": { pre:  [["narr", "Steps wind up the side of the Iron Moon. Every one is heavier than the last.", "moon"]] },
+  "S8-3": { pre:  [["narr", "Silver wings unfold across the stars. A moth as big as a ship guards the fortress.", "moon"], ["boss", "Flutter, flutter. The Baron's light is mine. Go away."]],
+            post: [["boss", "Flutter… the engine… is inside…", "moon"]] },
+  "S8-4": { pre:  [["baron", "Don't touch my engine! It's taken me years to make everything this heavy!", "moon"], ["pip", "Break the crystals! Break them all!"]],
+            post: [["baron", "My engine! My beautiful engine!", "moon"]] },
+  "S8-5": { pre:  [["narr", "The Baron tips his fortress tower towards the world below. It's falling!", "moon"], ["steel", "Push it back up, recruit. Don't you dare stop!"]] },
+  "S8-6": { pre:  [["baron", "Everything falls, little spark. Rocks fall. Seas fall. Heroes fall. Why stand up?", "moon"], ["steel", "Because every time we fall, we stand back up."], ["pip", "That's literally what a squat is!"]],
+            post: [["baron", "No! I'm the one who makes things fall! Not meeeee!", "moon"], ["pip", "Bye bye, Baron! Have fun in space!"]] },
 });
 const CH_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT"];
-const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream", "farm", "bog", "steps", "mire"];
-const PART_WORDS = ["ONE", "TWO", "THREE"];
+const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream", "farm", "bog", "steps", "mire", "canyon", "reef", "forge", "moon"];
+const PART_WORDS = ["ONE", "TWO", "THREE", "FOUR"];
 const partOf = m => CHAPTERS[m.ch].part;
 const partFirst = pi => CAMP_LIST.find(m => partOf(m) === pi), partLast = pi => CAMP_LIST.findLast(m => partOf(m) === pi);
-const partLine = pi => pi === 2 ? `The squat campaign. ${PARTS[pi].name}.` : `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
-const endLine = pi => pi === 0 ? "End of part one." : "The end.";
+const partLine = pi => pi === 2 ? `The squat campaign. ${PARTS[pi].name}.` : pi === 3 ? `Squat campaign, part two. ${PARTS[pi].name}.` : `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
+const endLine = pi => pi === 0 || pi === 2 ? "End of part one." : "The end.";
 const storySeen = id => !!(store.storySeen || {})[id];
 const markSeen = id => { store.storySeen ||= {}; store.storySeen[id] = 1; save(); };
 function storySteps(m, when) {
   const s = [], L = l => ({ who: l[0], text: l[1], bg: l[2] });
-  const pi = partOf(m), P2 = ["", "2", "3"][pi];
+  const pi = partOf(m), P2 = ["", "2", "3", "4"][pi];
   if (when === "pre") {
-    if (m === partFirst(pi)) s.push({ part: pi, bg: ["beacon", "coast", "farm"][pi] }, ...STORY["prologue" + P2].map(L));
+    if (m === partFirst(pi)) s.push({ part: pi, bg: ["beacon", "coast", "farm", "moon"][pi] }, ...STORY["prologue" + P2].map(L));
     if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...STORY["chapter" + P2][m.ch - PARTS[pi].chs[0]].map(L));
     s.push(...(STORY.m[m.id]?.pre || []).map(L));
   } else {
@@ -3242,6 +3398,7 @@ function castOf(who, ctx) {
   if (who === "vex") { const id = ctx.boss === 13 ? "vex2" : "vex", a = bossArt(id); return { name: "Vex", color: THEMES[id].aura, face: a, actor: a, voice: { pitch: 0.75, rate: 1.08 } }; }
   if (who === "vexr") return { name: "Vex", color: "#ffc861", face: bossArt("vexgood"), voice: { pitch: 0.75, rate: 1.05 } };
   if (who === "king") { const a = bossArt("king"); return { name: "The Hollow King", color: THEMES.king.aura, face: a, actor: a, voice: { pitch: 0.3, rate: 0.85 } }; }
+  if (who === "baron") { const a = bossArt("baron"); return { name: "Baron Gravity", color: THEMES.baron.aura, face: a, actor: a, voice: { pitch: 0.8, rate: 0.9 } }; }
   if (who === "quag") { const a = bossArt("quag"); return { name: "Queen Quagmire", color: THEMES.quag.aura, face: a, actor: a, voice: { pitch: 1.2, rate: 0.9 } }; }
   if (who === "eye") return { name: "The Eye", color: "#c06bff", face: bossArt("void"), voice: { pitch: 0.1, rate: 0.82 } };
   if (who === "pip") return { name: "Pip", color: "#ff9a3d", face: pipSvg("pf"), pip: true, voice: { pitch: 1.8, rate: 1.15 } };
@@ -3431,6 +3588,48 @@ function cineBg(loc) {
        ${[[180, 700], [1420, 690], [420, 760], [1180, 770]].map(([x, y]) => `<path d="M${x - 30} ${y} L${x - 6} ${y - 150} L${x + 4} ${y - 60} L${x + 22} ${y - 120} L${x + 32} ${y}Z" fill="#b06ae0" opacity=".85"/><path d="M${x - 6} ${y - 150} L${x + 4} ${y - 60} L${x - 4} ${y}" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none"/>`).join("")}
        ${cbFog(rnd, "#8a4aa8", .2, 660)}`);
   }
+  // ----- squat campaign part 2 backdrops -----
+  if (loc === "canyon") {   // red-rock canyon at dusk, a huge iron moon hanging low, boulders tumbling
+    const mesa = (x, w, h, c) => `<path d="M${x} 900 V${900 - h} q8 -14 ${w * .2} -16 H${x + w * .8} q${w * .2} 2 ${w * .2} 16 V900Z" fill="${c}"/>`;
+    return wrap(sky("skca", [[0, "#2a1a3a"], [.5, "#c8503a"], [1, "#ffb060"]]) + glow("moca", "#c8d0e8"),
+      `<rect width="1600" height="900" fill="url(#skca)"/><circle cx="420" cy="200" r="260" fill="url(#moca)" opacity=".5"/>
+       <circle cx="420" cy="200" r="130" fill="#7a8098"/><circle cx="420" cy="200" r="130" fill="none" stroke="#4a4e62" stroke-width="10"/>${[[380, 160, 22], [470, 230, 30], [440, 140, 12], [360, 250, 16]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#5a6078"/>`).join("")}
+       ${mesa(-40, 420, 430, "#8a3a22")}${mesa(1180, 480, 480, "#8a3a22")}${mesa(300, 300, 300, "#a8502a")}${mesa(980, 320, 340, "#a8502a")}
+       <path d="M-20 760 Q400 700 800 740 T1620 730 V920 H-20Z" fill="#d88a4a"/><path d="M-20 820 Q500 780 900 810 T1620 800 V920 H-20Z" fill="#c8743a"/>
+       ${Array.from({ length: 6 }, () => `<g class="cb-float" style="animation-delay:${(rnd() * 3).toFixed(1)}s"><circle cx="${(200 + rnd() * 1200) | 0}" cy="${(320 + rnd() * 280) | 0}" r="${(10 + rnd() * 22) | 0}" fill="#6a2a14"/></g>`).join("")}
+       ${Array.from({ length: 5 }, () => { const x = (rnd() * 1600) | 0; return `<g transform="translate(${x} ${790 + ((rnd() * 60) | 0)})"><rect x="-8" y="-70" width="16" height="70" rx="8" fill="#3a7a3a"/><path d="M-8 -40 H-24 V-60 M8 -30 H22 V-52" stroke="#3a7a3a" stroke-width="10" fill="none" stroke-linecap="round"/></g>`; }).join("")}`);
+  }
+  if (loc === "reef") {   // underwater coral town, light rays from above, bubbles
+    return wrap(sky("skre", [[0, "#3ac8d8"], [.4, "#127a9a"], [1, "#062a4a"]]),
+      `<rect width="1600" height="900" fill="url(#skre)"/>
+       <g opacity=".22">${Array.from({ length: 7 }, (_, i) => `<path d="M${120 + i * 220} -20 L${40 + i * 220} 900 L${200 + i * 220} 900 L${180 + i * 220} -20Z" fill="#cfffff"/>`).join("")}</g>
+       ${[[200, 640, 1], [1300, 620, 1.2], [760, 680, .8]].map(([x, y, s]) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-70 220 V-20 Q-70 -80 0 -110 Q70 -80 70 -20 V220Z" fill="#e8a8c8"/><circle cy="-30" r="22" fill="#2a4a6a"/><rect x="-18" y="40" width="36" height="60" rx="18" fill="#2a4a6a"/><path d="M-70 -20 Q0 -60 70 -20" stroke="#ffd0e8" stroke-width="8" fill="none"/></g>`).join("")}
+       <path d="M-20 820 Q400 780 800 810 T1620 800 V920 H-20Z" fill="#c8b07a"/>
+       ${Array.from({ length: 12 }, () => { const x = (rnd() * 1600) | 0, c = ["#ff7a8a", "#ffb03a", "#b07aff", "#3ae0a0"][(rnd() * 4) | 0]; return `<g transform="translate(${x} ${830 + ((rnd() * 40) | 0)})"><path d="M0 0 C-10 -40 -30 -50 -26 -80 M0 0 C4 -50 20 -60 16 -100 M0 0 C14 -30 34 -40 40 -66" stroke="${c}" stroke-width="10" fill="none" stroke-linecap="round"/></g>`; }).join("")}
+       ${Array.from({ length: 18 }, () => `<circle class="cb-float" style="animation-delay:${(rnd() * 3).toFixed(1)}s" cx="${(rnd() * 1600) | 0}" cy="${(100 + rnd() * 700) | 0}" r="${(3 + rnd() * 9) | 0}" fill="none" stroke="#cfffff" stroke-width="2.5" opacity=".7"/>`).join("")}
+       ${[[300, 300], [1200, 220]].map(([x, y]) => `<g class="cb-drift" transform="translate(${x} ${y})"><path d="M0 0 C20 -16 50 -16 66 0 C50 16 20 16 0 0Z M66 0 L84 -12 V12Z" fill="#ffb03a"/><circle cx="14" cy="-2" r="3" fill="#1a1a1a"/></g>`).join("")}`);
+  }
+  if (loc === "forge") {   // volcano forge: lava rivers, chains, anvil glow
+    return wrap(sky("skfo", [[0, "#1a0806"], [.6, "#4a120a"], [1, "#8a2a0a"]]) + glow("lafo", "#ff7a1a"),
+      `<rect width="1600" height="900" fill="url(#skfo)"/>
+       <path d="M300 900 L700 200 Q800 160 900 200 L1300 900Z" fill="#2a1410"/><path d="M700 200 Q800 230 900 200 L860 260 Q800 280 740 260Z" fill="#ff7a1a"/>
+       <circle cx="800" cy="220" r="260" fill="url(#lafo)" opacity=".6"/>
+       <path d="M790 250 C770 400 840 520 780 700 C760 780 800 840 790 900" stroke="#ff8a1a" stroke-width="40" fill="none"/><path d="M790 250 C770 400 840 520 780 700 C760 780 800 840 790 900" stroke="#ffe08a" stroke-width="12" fill="none"/>
+       <path d="M-20 700 L260 640 L520 700 V920 H-20Z M1100 700 L1380 630 L1620 690 V920 H1100Z" fill="#1a0a08"/>
+       ${[[180, 0], [1440, 0]].map(([x]) => `<g>${Array.from({ length: 9 }, (_, i) => `<ellipse cx="${x}" cy="${40 + i * 56}" rx="18" ry="30" fill="none" stroke="#5a5054" stroke-width="10" transform="rotate(${i % 2 ? 90 : 0} ${x} ${40 + i * 56})"/>`).join("")}</g>`).join("")}
+       <g transform="translate(1250 640)"><path d="M-110 -40 H110 L80 0 H40 V60 H70 V80 H-70 V60 H-40 V0 H-80Z" fill="#3a3238"/><path d="M-110 -40 H110" stroke="#ff8a1a" stroke-width="5" opacity=".7"/></g>
+       ${Array.from({ length: 16 }, () => `<circle class="cb-float" style="animation-delay:${(rnd() * 3).toFixed(1)}s" cx="${(rnd() * 1600) | 0}" cy="${(200 + rnd() * 600) | 0}" r="${(2 + rnd() * 4) | 0}" fill="#ffb03a"/>`).join("")}`);
+  }
+  if (loc === "moon") {   // dark sky, the cratered Iron Moon with the Baron's fortress, the world far below
+    return wrap(sky("skmo", [[0, "#05040f"], [.7, "#1a1840"], [1, "#2a2a5a"]]) + glow("gmo", "#a88aff"),
+      `<rect width="1600" height="900" fill="url(#skmo)"/>${cbStars(rnd, 90, 900)}
+       <path d="M-200 1100 Q800 760 1800 1100Z" fill="#3a6aa8"/><path d="M-200 1100 Q800 780 1800 1100" stroke="#8ac8ff" stroke-width="8" fill="none" opacity=".6"/>
+       <circle cx="1000" cy="300" r="380" fill="url(#gmo)" opacity=".35"/>
+       <circle cx="1000" cy="330" r="240" fill="#6a7088"/><circle cx="1000" cy="330" r="240" fill="none" stroke="#3a3e52" stroke-width="14"/>
+       ${[[920, 260, 40], [1110, 380, 56], [1060, 250, 24], [900, 420, 30], [1150, 280, 18]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#4a4e64"/><circle cx="${x - r * .2}" cy="${y - r * .2}" r="${r * .7}" fill="#565a72"/>`).join("")}
+       <g transform="translate(1000 96)"><rect x="-60" y="-70" width="120" height="80" fill="#22263a"/>${[-60, -24, 12, 48].map(x => `<rect x="${x}" y="-86" width="12" height="18" fill="#22263a"/>`).join("")}<rect x="-14" y="-150" width="28" height="80" fill="#2a2e44"/><path d="M-22 -150 L0 -190 L22 -150Z" fill="#7a5aff"/><circle cy="-30" r="12" fill="#b8a8ff" class="cb-blink"/></g>
+       ${Array.from({ length: 5 }, () => `<circle class="cb-float" style="animation-delay:${(rnd() * 3).toFixed(1)}s" cx="${(rnd() * 600) | 0}" cy="${(200 + rnd() * 400) | 0}" r="${(8 + rnd() * 16) | 0}" fill="#5a5e76"/>`).join("")}`);
+  }
   if (loc === "storm") {
     const bolt = (x, d) => `<path class="cb-bolt" style="animation-delay:${d}s" d="M${x} 120 l-40 160 h40 l-60 190 l120 -230 h-46 l46 -120Z" fill="#e8f4ff" filter="drop-shadow(0 0 20px #9fd8ff)"/>`;
     return wrap(sky("skst", [[0, "#05080f"], [.6, "#1a2636"], [1, "#2a3a48"]]),
@@ -3488,7 +3687,7 @@ function cineBg(loc) {
   }
   return wrap("", `<rect width="1600" height="900" fill="#05060a"/>`);
 }
-const BG_FX = { farm: "", bog: "firefly", steps: "snow", mire: "ash", beacon: "spark", dawn: "spark", dark: "ash", camp: "", campLit: "spark", campFog: "", woods: "firefly", lake: "snow", peaks: "ember", lava: "ember", void: "", eye: "",
+const BG_FX = { canyon: "", reef: "firefly", forge: "ember", moon: "spark", farm: "", bog: "firefly", steps: "snow", mire: "ash", beacon: "spark", dawn: "spark", dark: "ash", camp: "", campLit: "spark", campFog: "", woods: "firefly", lake: "snow", peaks: "ember", lava: "ember", void: "", eye: "",
   coast: "", storm: "rain", gears: "spark", sky: "", dream: "zzz", throne: "zzz" };
 function cineFx(type) {
   if (!type) return "";
@@ -3500,7 +3699,8 @@ function cineFx(type) {
 // ---------- cutscene music: a slow detuned pad per chapter ----------
 const CINE_CHORDS = [[130.8, 196, 329.6], [110, 164.8, 261.6], [73.4, 110, 174.6], [65.4, 92.5, 155.6],
   [146.8, 220, 349.2], [110, 146.8, 233.1], [98, 146.8, 246.9, 293.7], [77.8, 116.5, 185, 233.1],
-  [130.8, 164.8, 246.9], [98, 123.5, 185], [146.8, 185, 293.7], [69.3, 103.8, 164.8]];
+  [130.8, 164.8, 246.9], [98, 123.5, 185], [146.8, 185, 293.7], [69.3, 103.8, 164.8],
+  [110, 138.6, 207.7], [98, 146.8, 196], [87.3, 130.8, 207.7], [73.4, 110, 185]];
 const CINE_FINALE = [130.8, 196, 246.9, 329.6];
 const cineMusic = {
   nodes: null,
@@ -3629,13 +3829,17 @@ function playCine(steps, ctx = {}) {
       setBg(s.bg);
       el.classList.remove("titling", "narrating", "talking");
       if (s.title != null || s.end != null || s.part != null) {
-        const c = CHAPTERS[s.title] || {}, pc = ["#ffc21a", "#ff5fa8", "#b8e04a"][s.part] || "#ffc21a";
-        q(".cine-title").innerHTML = s.end === 2
-          ? `<small>THE SQUAT CAMPAIGN</small><b style="--c:#b8e04a">THE END</b><i style="--c:#b8e04a"></i><em>Queen Quagmire is sunk and the land has risen again. Arms and legs, legend. Keep squatting.</em>`
+        const c = CHAPTERS[s.title] || {}, pc = PART_COLORS[s.part] || "#ffc21a";
+        q(".cine-title").innerHTML = s.end === 3
+          ? `<small>THE SQUAT CAMPAIGN</small><b style="--c:#7ad8ff">THE END</b><i style="--c:#7ad8ff"></i><em>Baron Gravity is lost in space and the Iron Moon is gone. Nothing can keep you down now, legend. Keep squatting.</em>`
+          : s.end === 2
+          ? `<small>END OF SQUAT PART ONE</small><b style="--c:#b8e04a">${PARTS[2].name}</b><i style="--c:#b8e04a"></i><em>But something up in the sky is pulling the world down… 🔓 Squat Part Two: ${PARTS[3].name} is now open on the map.</em>`
           : s.end != null
           ? (s.end === 0
             ? `<small>END OF PART ONE</small><b style="--c:#ffc21a">${PARTS[s.end].name}</b><i></i><em>But someone else wants the world asleep… 🔓 Part Two: ${PARTS[s.end + 1].name} is now open on the map.</em>`
             : `<small>THANKS FOR PLAYING</small><b style="--c:#ff5fa8">THE END</b><i style="--c:#ff5fa8"></i><em>The Hollow King is beaten and the whole world is awake. Keep doing your push-ups, legend.</em>`)
+          : s.part === 3
+          ? `<small>SQUAT CAMPAIGN · PART TWO</small><b style="--c:${pc}">${PARTS[3].name}</b><i style="--c:${pc}"></i>`
           : s.part === 2
           ? `<small>THE SQUAT CAMPAIGN</small><b style="--c:${pc}">${PARTS[2].name}</b><i style="--c:${pc}"></i>`
           : s.part != null
@@ -3746,14 +3950,16 @@ function sceneSvg(sc) {
       const bg = { barn: `<rect width="300" height="220" fill="#e89a6a"/><circle cx="240" cy="70" r="26" fill="#fff0c8"/><path d="M0 150 Q150 135 300 150 V220 H0Z" fill="#6a8a3a"/>`,
         hut: `<rect width="300" height="220" fill="#1e3a2e"/><circle cx="60" cy="50" r="18" fill="#e8f4d8" opacity=".8"/><path d="M30 150 C26 90 34 60 30 20 M270 150 C274 90 266 60 270 30" stroke="#16241a" stroke-width="8"/>`,
         pillar: `<rect width="300" height="220" fill="#1a0e26"/><rect y="0" width="300" height="34" fill="#3a2250"/>${[30, 80, 140, 200, 260].map(x => `<path d="M${x - 14} 34 L${x} 70 L${x + 14} 34Z" fill="#3a2250"/>`).join("")}`,
+        ship: `<rect width="300" height="220" fill="#127a9a"/><g opacity=".2">${[40, 130, 220].map(x => `<path d="M${x} 0 L${x - 30} 220 H${x + 30} L${x + 20} 0Z" fill="#cfffff"/>`).join("")}</g>${[30, 70, 250, 270].map((x, i) => `<path d="M${x} 180 C${x - 6} 150 ${x + 8} 130 ${x} 100" stroke="${["#ff7a8a", "#ffb03a", "#b07aff", "#3ae0a0"][i]}" stroke-width="7" fill="none" stroke-linecap="round"/>`).join("")}`,
         city: `<rect width="300" height="220" fill="#22103a"/>${cbStars(rnd, 20, 90)}` }[v];
-      const mud = v === "barn" ? "#6a6a72" : v === "hut" ? "#2a4a2a" : "#3a2250", mudTop = v === "barn" ? "#8a8a94" : v === "hut" ? "#4a7a3a" : "#5a3a7a";
+      const mud = v === "ship" ? "#c8b07a" : v === "barn" ? "#6a6a72" : v === "hut" ? "#2a4a2a" : "#3a2250", mudTop = v === "ship" ? "#e8d8a8" : v === "barn" ? "#8a8a94" : v === "hut" ? "#4a7a3a" : "#5a3a7a";
       let obj;
       if (v === "barn") obj = `<path d="M100 196 V120 L150 86 L200 120 V196Z" fill="#a8322a"/><path d="M100 120 L150 86 L200 120" stroke="#e8e0d0" stroke-width="6" fill="none"/><rect x="132" y="146" width="36" height="50" fill="#6a1a14"/><path d="M132 146 L168 196 M168 146 L132 196" stroke="#e8e0d0" stroke-width="4"/><rect x="141" y="104" width="18" height="14" fill="#3a0a08"/>`;
       if (v === "hut") obj = `<path d="M96 140 V108 L150 76 L204 108 V140Z" fill="#6a5a3a"/><path d="M86 112 L150 70 L214 112" stroke="#4a7a3a" stroke-width="12" fill="none"/><rect x="140" y="114" width="20" height="26" fill="#1a1a10"/><rect x="176" y="112" width="16" height="12" fill="#c8ff6a" opacity=".8"/>${[106, 136, 164, 194].map(x => `<rect x="${x - 3}" y="140" width="6" height="60" fill="#3a2a1a"/>`).join("")}`;
+      if (v === "ship") obj = `<g transform="translate(0 -48)"><path d="M70 150 H230 L208 196 H92Z" fill="#7a4a2a" stroke="#3a2010" stroke-width="3"/><path d="M76 160 H224" stroke="#a86a3a" stroke-width="4"/>${[110, 150, 190].map(x => `<circle cx="${x}" cy="176" r="7" fill="#ffe08a" stroke="#3a2010" stroke-width="2"/>`).join("")}<rect x="146" y="70" width="6" height="80" fill="#5a3a1a"/><path d="M152 76 L200 120 H152Z" fill="#e8e0d0" opacity=".85"/><path d="M146 84 L108 126 H146Z" fill="#e8e0d0" opacity=".7"/></g>`;
       if (v === "pillar") obj = `<rect x="122" y="40" width="56" height="160" fill="#6a5a80"/><rect x="114" y="40" width="72" height="14" fill="#8a7aa0"/><rect x="114" y="186" width="72" height="14" fill="#8a7aa0"/><path d="M138 54 V186 M162 54 V186" stroke="#4a3a60" stroke-width="4"/>`;
       if (v === "city") obj = [[60, 90, 34], [104, 60, 30], [150, 40, 40], [198, 70, 30], [240, 100, 34]].map(([x, h, w], i) => `<rect x="${x - w / 2}" y="${200 - h - 60}" width="${w}" height="${h + 60}" fill="${i % 2 ? "#5a3a7a" : "#6a4a8a"}"/>${Array.from({ length: 4 }, (_, r) => `<rect x="${x - w / 4}" y="${200 - h - 50 + r * 18}" width="${w / 2}" height="8" fill="#ffd27a" style="opacity:calc(var(--p) * 1.4 - ${r * .2})"/>`).join("")}`).join("") + `<path d="M150 ${100} L150 74 L162 82" stroke="#ff7ae0" stroke-width="3" fill="#ff7ae0"/>`;
-      const drop = v === "pillar" ? 115 : v === "city" ? 110 : 90;
+      const drop = v === "ship" ? 150 : v === "pillar" ? 115 : v === "city" ? 110 : 90;
       const roof = v === "pillar" ? `<g ${tf("translateY(calc((1 - var(--p)) * 30px + var(--d) * 14px))")}><rect width="300" height="40" fill="#2a1a3a"/></g>` : "";
       return W(`${bg}${roof}<g class="ms-bob" style="animation-duration:3s"><g ${tf(`translateY(calc((1 - var(--p)) * ${drop}px + var(--d) * 16px))`)}>${obj}</g></g>
         <path d="M0 176 Q75 166 150 176 T300 174 V220 H0Z" fill="${mud}"/><path d="M0 176 Q75 166 150 176 T300 174" stroke="${mudTop}" stroke-width="4" fill="none"/>
@@ -3766,6 +3972,18 @@ function sceneSvg(sc) {
         ${st}<rect x="278" y="14" width="3" height="20" fill="#ddd"/><path d="M281 16 L298 22 L281 28Z" fill="#ffc21a"/>
         <g ${tf("translate(calc(var(--p) * 236px), calc(var(--p) * -138px + var(--d) * 12px))")}><g transform="translate(34 174)"><circle cy="-30" r="7" fill="#d9a47a"/><rect x="-6" y="-23" width="12" height="16" rx="4" fill="#4a5a8a"/><path d="M-4 -7 L-8 6 M4 -7 L8 6" stroke="#2a2a3a" stroke-width="4" stroke-linecap="round"/></g>
         ${msPip(52, 150, .26)}</g>`);
+    }
+    case "balloon": {   // squat campaign part 2: an iron-cloth balloon lifts off; each squat heats it
+      const moon = sc.v === "moon";
+      const bg = moon ? `<rect width="300" height="220" fill="#0a0a22"/>${cbStars(rnd, 30, 220)}<circle cx="232" cy="40" r="46" fill="#6a7088"/><circle cx="216" cy="30" r="10" fill="#4a4e64"/><circle cx="248" cy="56" r="14" fill="#4a4e64"/><path d="M-20 240 Q150 170 320 240Z" fill="#3a6aa8"/>`
+        : `<rect width="300" height="220" fill="#e8844a"/><circle cx="70" cy="50" r="30" fill="#8a90a8"/><path d="M0 220 V120 H60 V140 H100 V220Z M300 220 V110 H240 V150 H210 V220Z" fill="#8a3a22"/><rect y="196" width="300" height="24" fill="#c8743a"/>`;
+      return W(`${bg}<g ${tf("translateY(calc((1 - var(--p)) * 100px + var(--d) * 8px))")}><g class="ms-bob" style="animation-duration:2.6s">
+        <path d="M150 24 C110 24 96 54 100 80 C104 104 128 118 140 130 H160 C172 118 196 104 200 80 C204 54 190 24 150 24Z" fill="#5a6078" stroke="#2a2e40" stroke-width="3"/>
+        <path d="M150 24 C136 40 132 90 140 130 M150 24 C164 40 168 90 160 130 M102 70 H198" stroke="#8a90a8" stroke-width="3" fill="none"/>
+        <path d="M140 130 L136 150 M160 130 L164 150" stroke="#3a2a1a" stroke-width="2"/>
+        <g style="opacity:calc(.4 + var(--p) * .6)"><g transform="translate(150 140) scale(.42)">${msFlame()}</g></g>
+        <rect x="132" y="150" width="36" height="22" rx="3" fill="#8a5a2a" stroke="#4a2a10" stroke-width="2"/>
+        <circle cx="142" cy="146" r="5" fill="#d9a47a"/>${msPip(160, 146, .16)}</g></g>`);
     }
     case "douse":
       return W(`<rect width="300" height="220" fill="#1b1626"/><rect y="194" width="300" height="26" fill="#22301c"/>
@@ -3940,7 +4158,7 @@ function sceneSvg(sc) {
   }
   return W("");
 }
-const HALF_QUIP = { rise: "It's coming up! Keep squatting!", steps: "Halfway up the steps!", flame: "It's catching! Keep going!", gate: "Halfway down!", crack: "It's cracking!", douse: "It's shrinking!", lift: "It's moving! Keep lifting!", cart: "Halfway there!", climb: "Halfway up!", bridge: "Keep the stones coming!", pull: "We're pulling away!", shield: "The shield's holding!",
+const HALF_QUIP = { balloon: "We're lifting off! Keep squatting!", rise: "It's coming up! Keep squatting!", steps: "Halfway up the steps!", flame: "It's catching! Keep going!", gate: "Halfway down!", crack: "It's cracking!", douse: "It's shrinking!", lift: "It's moving! Keep lifting!", cart: "Halfway there!", climb: "Halfway up!", bridge: "Keep the stones coming!", pull: "We're pulling away!", shield: "The shield's holding!",
   boat: "We're staying afloat! Keep bailing!", lighthouse: "The lamp's warming up!", anchor: "It's coming loose!", sail: "The sail's filling up!", gears: "It's turning! Keep pushing!", conveyor: "We're catching up!", core: "It's cooling down!", balloon: "We're lifting off!", windmill: "Keep it spinning!", charge: "Half charged!", wake: "People are waking up!" };
 const DANGER_QUIP = { timed: "Faster! We're running out of time!", nobreak: "Don't stop now!", endure: "Almost out of time. Push!" };
 let quipTimer = null;
@@ -4121,6 +4339,38 @@ function mapSvg(pi = 0) {
     g += `<g transform="translate(590,${y0 + 120})"><path d="M-50,50 V-30 Q-50,-60 -26,-70 L-16,-44 L0,-80 L16,-44 L26,-70 Q50,-60 50,-30 V50Z" fill="#3a2250"/><path d="M-34,50 V-10 Q0,-26 34,-10 V50Z" fill="#5a3a7a"/><circle cy="-50" r="7" fill="#ff7ae0"/></g>`;
   }
   }
+  if (pi === 3) {
+  // --- Squat 5: Sunscorch Canyon (sand, mesas, cacti, boulders) ---
+  { const [y0, y1] = band(12);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gCanyon)"/>`;
+    for (let yy = y0 + 30; yy < y1; yy += 60) g += `<path d="M0,${yy} Q175,${yy - 12} 350,${yy} T700,${yy}" stroke="#e8a060" stroke-width="5" fill="none" opacity=".35"/>`;
+    g += place(6, y0, y1, 70, (x, y, r) => { const w = 40 + r() * 40, h = 40 + r() * 50; return `<path d="M${x - w},${y + 20} V${y - h} q6,-8 14,-8 H${x + w - 14} q8,0 14,8 V${y + 20}Z" fill="#a8502a"/><path d="M${x - w},${y - h + 14} H${x + w}" stroke="#c8683a" stroke-width="4"/>`; });
+    g += place(10, y0, y1, 34, (x, y) => `<g transform="translate(${x},${y})"><rect x="-6" y="-34" width="12" height="40" rx="6" fill="#3a7a3a"/><path d="M-6,-16 H-16 V-28 M6,-10 H15 V-24" stroke="#3a7a3a" stroke-width="7" fill="none" stroke-linecap="round"/></g>`);
+    g += place(10, y0, y1, 24, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${6 + r() * 10}" fill="#6a2a14" opacity=".8"/>`);
+  }
+  // --- Squat 6: The Drowned Reef (deep water, coral, bubbles, fish) ---
+  { const [y0, y1] = band(13);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gReef)"/>`;
+    g += place(16, y0, y1, 36, (x, y, r) => { const c = ["#ff7a8a", "#ffb03a", "#b07aff", "#3ae0a0"][(r() * 4) | 0]; return `<g transform="translate(${x},${y})"><path d="M0,10 C-4,-10 -14,-14 -12,-30 M0,10 C2,-14 10,-18 8,-36 M0,10 C8,-4 18,-8 20,-22" stroke="${c}" stroke-width="5" fill="none" stroke-linecap="round"/></g>`; });
+    g += place(30, y0, y1, 12, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${2 + r() * 5}" fill="none" stroke="#cfffff" stroke-width="1.5" opacity=".55"/>`);
+    g += place(6, y0, y1, 40, (x, y) => `<g transform="translate(${x},${y})"><path d="M0,0 C10,-8 24,-8 32,0 C24,8 10,8 0,0Z M32,0 L42,-6 V6Z" fill="#ffb03a"/><circle cx="7" cy="-1" r="1.6" fill="#111"/></g>`);
+  }
+  // --- Squat 7: The Magma Forge (black rock, lava cracks, chains) ---
+  { const [y0, y1] = band(14);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gForge)"/>`;
+    g += place(8, y0, y1, 50, (x, y, r) => `<path d="M${x - 40},${y} L${x - 14},${y + 12} L${x},${y - 8} L${x + 22},${y + 8} L${x + 44},${y - 4}" stroke="#ff7a1a" stroke-width="5" fill="none" opacity=".85"/>`);
+    g += place(18, y0, y1, 16, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${2 + r() * 3}" fill="#ffb03a" opacity=".8"/>`);
+    g += place(5, y0, y1, 60, (x, y) => `<g transform="translate(${x},${y})">${[0, 1, 2, 3].map(i => `<ellipse cx="0" cy="${i * 16}" rx="7" ry="11" fill="none" stroke="#5a5054" stroke-width="5" transform="rotate(${i % 2 ? 90 : 0} 0 ${i * 16})"/>`).join("")}</g>`);
+    g += `<g transform="translate(110,${y0 + 140})"><path d="M-60,40 L0,-70 L60,40Z" fill="#2a1410"/><path d="M-12,-48 Q0,-40 12,-48 L6,-60 Q0,-64 -6,-60Z" fill="#ff7a1a"/></g>`;
+  }
+  // --- Squat 8: The Iron Moon (starfield, craters, fortress) ---
+  { const [y0, y1] = band(15);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gMoon)"/>`;
+    g += place(50, y0, y1, 10, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${0.8 + r() * 1.8}" fill="#fff" opacity="${0.4 + r() * 0.6}"/>`);
+    g += place(10, y0, y1, 40, (x, y, r) => { const rr = 12 + r() * 22; return `<circle cx="${x}" cy="${y}" r="${rr}" fill="#4a4e64"/><circle cx="${x - rr * .2}" cy="${y - rr * .2}" r="${rr * .7}" fill="#5a5e76"/>`; });
+    g += `<g transform="translate(590,${y0 + 120})"><rect x="-50" y="-30" width="100" height="70" fill="#22263a"/>${[-50, -18, 14, 40].map(x => `<rect x="${x}" y="-44" width="10" height="16" fill="#22263a"/>`).join("")}<rect x="-12" y="-100" width="24" height="72" fill="#2a2e44"/><path d="M-18,-100 L0,-130 L18,-100Z" fill="#7a5aff"/><circle cy="0" r="9" fill="#b8a8ff"/></g>`;
+  }
+  }
   // soft seams between chapters
   for (let ci = 1; ci < 4; ci++) { const y = MAP_H - ci * BAND; g += `<rect x="0" y="${y - 40}" width="${MAP_W}" height="80" fill="url(#gSeam)"/>`; }
   const roadSvg = `<path d="${road}" stroke="#000" stroke-opacity=".45" stroke-width="40" fill="none" stroke-linecap="round"/>
@@ -4141,6 +4391,10 @@ function mapSvg(pi = 0) {
       <linearGradient id="gBog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e2a20"/><stop offset="1" stop-color="#1e4a34"/></linearGradient>
       <linearGradient id="gSteps" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ac4e8"/><stop offset="1" stop-color="#cfe6f6"/></linearGradient>
       <linearGradient id="gMire" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e0618"/><stop offset="1" stop-color="#2a1440"/></linearGradient>
+      <linearGradient id="gCanyon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8643a"/><stop offset="1" stop-color="#e8a060"/></linearGradient>
+      <linearGradient id="gReef" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#063a5a"/><stop offset="1" stop-color="#127a9a"/></linearGradient>
+      <linearGradient id="gForge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0806"/><stop offset="1" stop-color="#3a1208"/></linearGradient>
+      <linearGradient id="gMoon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05040f"/><stop offset="1" stop-color="#1e1c44"/></linearGradient>
       <linearGradient id="gSeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
     </defs>${g}${roadSvg}<path id="cmapDone" d="" stroke="#ffc21a" stroke-width="8" fill="none" stroke-linecap="round" opacity=".85"/></svg>` };
   return mapSvgCache[pi];
@@ -4203,17 +4457,17 @@ function renderCampaign() {
   const scroller = $("cmapScroll"), keep = scroller ? scroller.scrollTop : null;
   const { svg } = mapSvg(pi);
   const partStars = q => partKs(q).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
-  const tabs = CAMPAIGNS[cs].parts.length < 2 ? "" : PARTS.map((P, q) => CAMPAIGNS[cs].parts.includes(q) && `<button class="cmap-part ${q === pi ? "on" : ""} ${partUnlocked(q) ? "" : "lk"}" data-part="${q}" style="--c:${q ? "#ff5fa8" : "#ffc21a"}"><b>PART ${q + 1}</b><span>${partUnlocked(q) ? "" : "🔒 "}${P.name}</span><i>★ ${partStars(q)}/${partKs(q).length * 3}</i></button>`).filter(Boolean).join("");
+  const tabs = CAMPAIGNS[cs].parts.length < 2 ? "" : PARTS.map((P, q) => CAMPAIGNS[cs].parts.includes(q) && `<button class="cmap-part ${q === pi ? "on" : ""} ${partUnlocked(q) ? "" : "lk"}" data-part="${q}" style="--c:${PART_COLORS[q]}"><b>PART ${partNo(q) + 1}</b><span>${partUnlocked(q) ? "" : "🔒 "}${P.name}</span><i>★ ${partStars(q)}/${partKs(q).length * 3}</i></button>`).filter(Boolean).join("");
   const lastBoss = BOSSES[partLast(pi - 1 >= 0 ? pi - 1 : 0).boss];
   $("campMap").innerHTML = `
     <div class="cmap-scroll" id="cmapScroll"><div class="cmap part-${pi}">${svg}${regions}${nodes}${you}</div></div>
     <div class="cmap-top"><div class="cmap-camps">${CAMPAIGNS.map((C, q) => `<button class="cmap-camp ${q ? "sq" : ""} ${q === cs ? "on" : ""}" data-camp="${q}">${C.icon} ${C.name.replace(" Campaign", "")}</button>`).join("")}</div><span>★ ${campTotal()} / ${cks.length * 3}</span></div>
     ${tabs ? `<div class="cmap-parts">${tabs}</div>` : ""}
     ${!pOpen ? `<div class="cm-brief cm-plock" style="--c:#ff5fa8">
-      <div class="cm-bt">🔒 Part ${pi + 1} · ${PARTS[pi].name}</div>
-      <div class="muted cm-story-line">A new story, 4 new chapters, 24 new missions and 8 new bosses, including a rival who got his strength the easy way.</div>
+      <div class="cm-bt">🔒 Part ${partNo(pi) + 1} · ${PARTS[pi].name}</div>
+      <div class="muted cm-story-line">${PARTS[pi].teaser || ""}</div>
       <div class="cm-goal">⚔ Beat ${lastBoss.name} (mission ${partLast(pi - 1).id}) to unlock it.</div>
-      <div class="cm-btns"><button id="campGo">Back to Part ${pi} ▶</button></div>
+      <div class="cm-btns"><button id="campGo">Back to Part ${partNo(pi)} ▶</button></div>
     </div>` : `<div class="cm-brief" style="--c:${pc}">
       <div class="cm-bt"><span class="cm-num">${pm.id}</span> ${pm.name} ${pst ? `<span class="cm-st">${"★".repeat(pst)}<span style="opacity:.25">${"★".repeat(3 - pst)}</span></span>` : ""}</div>
       ${pm.obj ? `<div class="cm-obj">🎯 ${pm.obj}</div>` : ""}
@@ -4240,7 +4494,7 @@ function renderCampaign() {
 
 function renderCampPanel() {
   const cs = campSet();
-  $("campProg").innerHTML = PARTS.map((P, pi) => !CAMPAIGNS[cs].parts.includes(pi) ? "" : `<div class="cp-part">${pi === 2 ? "🦵 SQUAT CAMPAIGN" : `PART ${pi + 1}`} · ${P.name}</div>` + P.chs.map(ci => { const c = CHAPTERS[ci];
+  $("campProg").innerHTML = PARTS.map((P, pi) => !CAMPAIGNS[cs].parts.includes(pi) ? "" : `<div class="cp-part">${CAMPAIGNS[cs].ex === "squat" ? "🦵 SQUAT " : ""}PART ${partNo(pi) + 1} · ${P.name}</div>` + P.chs.map(ci => { const c = CHAPTERS[ci];
     const ms = CAMP_LIST.filter(m => m.ch === ci), done = ms.filter(m => campStars(m.id)).length, got = ms.reduce((t, m) => t + campStars(m.id), 0);
     return `<div class="cp-row" style="--c:${c.color}"><span>${chapterUnlocked(ci) ? "" : "🔒 "}${chNum(ci)}. ${c.name}</span><span class="muted">${done}/${ms.length} · ★${got}</span>
       <div class="cp-bar"><i style="width:${done / ms.length * 100}%"></i></div></div>`;

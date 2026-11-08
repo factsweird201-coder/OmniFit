@@ -423,6 +423,151 @@ const BOSS_ART = {
     <path d="M70 46 Q66 60 72 70 M130 46 Q134 60 128 70" stroke="#4a2a6a" stroke-width="5" fill="none" stroke-linecap="round"/>
     <g class="blinkfast" fill="#c8a8e8" opacity=".8"><circle cx="30" cy="120" r="4"/><circle cx="24" cy="104" r="2.5"/><circle cx="172" cy="116" r="3.5"/><circle cx="180" cy="100" r="2"/></g>`,
 
+  // ----- Squat campaign part 2: The Heavy Sky -----
+  scorp: u => `
+    <defs>
+      <radialGradient id="${u}b" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#ffb860"/><stop offset=".55" stop-color="#c8641e"/><stop offset="1" stop-color="#5a2408"/></radialGradient>
+      <linearGradient id="${u}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0a0"/><stop offset="1" stop-color="#e88a1a"/></linearGradient>
+    </defs>
+    <ellipse cx="100" cy="186" rx="88" ry="12" fill="#5a3010" opacity=".45"/>
+    <g stroke="#5a2408" stroke-width="5" stroke-linecap="round" fill="none"><path d="M64 160 L38 182 M70 166 L52 190 M136 160 L162 182 M130 166 L148 190 M60 150 L26 168 M140 150 L174 168"/></g>
+    <g class="sway"><path d="M118 140 C150 136 170 108 164 76 C160 52 140 34 118 40" stroke="#5a2408" stroke-width="25" fill="none" stroke-linecap="round"/><path d="M118 140 C150 136 170 108 164 76 C160 52 140 34 118 40" stroke="#e08a3a" stroke-width="19" fill="none" stroke-linecap="round"/>
+    <path d="M118 140 C150 136 170 108 164 76 C160 52 140 34 118 40" stroke="#5a2408" stroke-width="2.5" fill="none" stroke-dasharray="3 13" opacity=".8"/>
+    <path d="M120 40 C108 34 98 40 96 50 C104 46 112 46 118 52Z" fill="url(#${u}s)" stroke="#6a3a08" stroke-width="2.5"/>
+    <circle cx="98" cy="50" r="3" fill="#a8ff3a" class="blinkfast"/></g>
+    <g class="squish"><ellipse cx="100" cy="142" rx="50" ry="34" fill="url(#${u}b)" stroke="#3a1404" stroke-width="3"/>
+    <path d="M62 138 Q100 124 138 138 M66 152 Q100 140 134 152" stroke="#7a3410" stroke-width="3" fill="none" opacity=".7"/>
+    <g class="blink"><circle cx="86" cy="124" r="6" fill="#1a0800"/><circle cx="114" cy="124" r="6" fill="#1a0800"/><circle cx="88" cy="122" r="2" fill="#ffd060"/><circle cx="116" cy="122" r="2" fill="#ffd060"/></g>
+    <path d="M76 114 L94 120 M124 114 L106 120" stroke="#3a1404" stroke-width="4" stroke-linecap="round"/>
+    <path d="M88 140 Q100 148 112 140" stroke="#3a1404" stroke-width="3" fill="none"/></g>
+    <g fill="url(#${u}b)" stroke="#3a1404" stroke-width="3"><path d="M56 132 C34 128 22 110 24 92"/><path d="M144 132 C166 128 178 110 176 92"/>
+    <path d="M30 96 C8 92 4 66 20 56 C30 64 40 66 46 60 C50 76 44 92 30 96Z"/><path d="M170 96 C192 92 196 66 180 56 C170 64 160 66 154 60 C150 76 156 92 170 96Z"/></g>
+    <path d="M20 56 L30 72 M180 56 L170 72" stroke="#3a1404" stroke-width="3"/>`,
+
+  cactus: u => `
+    <defs>
+      <linearGradient id="${u}b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2e6a2a"/><stop offset=".5" stop-color="#6ab84a"/><stop offset="1" stop-color="#2e6a2a"/></linearGradient>
+    </defs>
+    <ellipse cx="100" cy="190" rx="70" ry="9" fill="#8a5a2a" opacity=".5"/>
+    <path d="M70 196 L74 170 H126 L130 196Z" fill="#c8643a" stroke="#6a2a10" stroke-width="3"/><rect x="66" y="164" width="68" height="10" rx="3" fill="#e07a4a" stroke="#6a2a10" stroke-width="3"/>
+    <g class="sway"><path d="M70 120 H40 C30 120 28 112 28 104 V66 C28 56 44 56 44 66 V104 H70Z" fill="url(#${u}b)" stroke="#16380e" stroke-width="3"/></g>
+    <path d="M130 100 H160 C170 100 172 92 172 84 V54 C172 44 156 44 156 54 V84 H130Z" fill="url(#${u}b)" stroke="#16380e" stroke-width="3"/>
+    <g class="squish"><path d="M66 166 V60 C66 26 134 26 134 60 V166Z" fill="url(#${u}b)" stroke="#16380e" stroke-width="3"/>
+    <path d="M84 50 V160 M100 40 V160 M116 50 V160" stroke="#1e4a16" stroke-width="2" opacity=".5"/>
+    <g stroke="#fff6c8" stroke-width="2" stroke-linecap="round">${[[72, 70], [128, 76], [70, 110], [130, 120], [74, 146], [126, 150], [36, 80], [164, 66]].map(([x, y]) => `<path d="M${x} ${y} l-6 -3 M${x} ${y} l-6 3 M${x} ${y} l0 -7"/>`).join("")}</g>
+    <g class="blink"><ellipse cx="86" cy="86" rx="8" ry="9" fill="#fff"/><ellipse cx="114" cy="86" rx="8" ry="9" fill="#fff"/><circle cx="88" cy="88" r="4" fill="#1a0a00"/><circle cx="112" cy="88" r="4" fill="#1a0a00"/></g>
+    <path d="M74 72 L94 80 M126 72 L106 80" stroke="#0e2a08" stroke-width="5" stroke-linecap="round"/>
+    <path d="M82 116 Q100 106 118 116 Q112 128 100 128 Q88 128 82 116Z" fill="#3a1408"/><path d="M88 116 l4 6 4 -6 4 6 4 -6 4 6" stroke="#fff" stroke-width="2.5" fill="none"/>
+    <g transform="translate(100 34)">${[0, 72, 144, 216, 288].map(a => `<ellipse rx="7" ry="12" transform="rotate(${a}) translate(0 -9)" fill="#ff5fa8" stroke="#a82a6a" stroke-width="2"/>`).join("")}<circle r="6" fill="#ffd23a"/></g></g>`,
+
+  crab: u => `
+    <defs>
+      <radialGradient id="${u}b" cx="45%" cy="30%" r="75%"><stop offset="0" stop-color="#ff8a6a"/><stop offset=".55" stop-color="#d8342a"/><stop offset="1" stop-color="#6a0e0a"/></radialGradient>
+    </defs>
+    <ellipse cx="100" cy="188" rx="86" ry="10" fill="#0a3a4a" opacity=".5"/>
+    <g stroke="#6a0e0a" stroke-width="6" stroke-linecap="round" fill="none"><path d="M60 150 L30 176 L22 190 M66 160 L46 186 M140 150 L170 176 L178 190 M134 160 L154 186"/></g>
+    <g class="squish"><path d="M30 130 C30 90 64 74 100 74 C136 74 170 90 170 130 C170 160 138 170 100 170 C62 170 30 160 30 130Z" fill="url(#${u}b)" stroke="#3a0604" stroke-width="3"/>
+    <path d="M44 112 Q100 96 156 112" stroke="#ffb0a0" stroke-width="4" fill="none" opacity=".5"/>
+    ${[56, 80, 120, 144].map((x, i) => `<circle cx="${x}" cy="${132 + (i % 2) * 8}" r="4" fill="#ffd0c0" opacity=".55"/>`).join("")}
+    <path d="M78 76 V50 M122 76 V50" stroke="#6a0e0a" stroke-width="6" stroke-linecap="round"/>
+    <g class="blink"><circle cx="78" cy="46" r="12" fill="#fff" stroke="#3a0604" stroke-width="3"/><circle cx="122" cy="46" r="12" fill="#fff" stroke="#3a0604" stroke-width="3"/><circle cx="80" cy="48" r="6" fill="#0a0a0a"/><circle cx="120" cy="48" r="6" fill="#0a0a0a"/></g>
+    <path d="M64 30 L88 38 M136 30 L112 38" stroke="#3a0604" stroke-width="5" stroke-linecap="round"/>
+    <path d="M82 140 Q100 128 118 140" stroke="#3a0604" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M86 140 l3 -6 3 6 M110 140 l3 -6 3 6" fill="#fff"/></g>
+    <g class="sway"><path d="M36 120 C14 116 6 96 14 78" stroke="url(#${u}b)" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M14 82 C-2 70 0 40 20 30 C24 46 34 54 44 52 C40 36 46 24 56 22 C62 46 48 78 14 82Z" fill="url(#${u}b)" stroke="#3a0604" stroke-width="3"/></g>
+    <path d="M164 120 C186 116 194 96 186 78" stroke="url(#${u}b)" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M186 82 C202 70 200 40 180 30 C176 46 166 54 156 52 C160 36 154 24 144 22 C138 46 152 78 186 82Z" fill="url(#${u}b)" stroke="#3a0604" stroke-width="3"/>
+    <g fill="#bfefff" opacity=".7" class="pulse"><circle cx="150" cy="70" r="5"/><circle cx="160" cy="54" r="3.5"/><circle cx="46" cy="66" r="4"/></g>`,
+
+  angler: u => `
+    <defs>
+      <radialGradient id="${u}b" cx="40%" cy="40%" r="70%"><stop offset="0" stop-color="#4a5a8a"/><stop offset=".6" stop-color="#1e2648"/><stop offset="1" stop-color="#080a1a"/></radialGradient>
+      <radialGradient id="${u}l" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#7affe0"/><stop offset="1" stop-color="#7affe0" stop-opacity="0"/></radialGradient>
+    </defs>
+    <path d="M150 40 C120 10 80 14 70 46" stroke="#2a3460" stroke-width="5" fill="none"/>
+    <g class="pulse"><circle cx="152" cy="42" r="26" fill="url(#${u}l)"/><circle cx="152" cy="42" r="8" fill="#eafff8"/></g>
+    <path d="M168 120 L196 92 L190 128 L198 160 L168 140Z" fill="#2a3460" stroke="#080a1a" stroke-width="3"/>
+    <g class="squish"><path d="M20 110 C20 64 60 44 104 46 C148 48 172 80 172 116 C172 158 140 182 98 182 C56 182 20 156 20 110Z" fill="url(#${u}b)" stroke="#05060f" stroke-width="3"/>
+    <path d="M24 120 C60 112 120 112 168 128 C150 170 120 178 96 178 C60 178 32 156 24 120Z" fill="#0a0a14"/>
+    <path d="M30 122 L40 142 L50 120 L60 146 L72 118 L82 148 L94 117 L106 148 L118 119 L128 146 L140 122 L150 142 L160 126" fill="#f2f0e0" stroke="#8a8a7a" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M40 168 L48 152 L58 172 L70 156 L82 176 L94 158 L106 176 L118 156 L128 172 L138 154" fill="none" stroke="#f2f0e0" stroke-width="5" stroke-linejoin="round"/>
+    <g class="blink"><circle cx="70" cy="86" r="14" fill="#eaffd0"/><circle cx="72" cy="88" r="7" fill="#05060f"/><circle cx="70" cy="84" r="2.5" fill="#fff"/></g>
+    <path d="M52 66 L84 76" stroke="#05060f" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#7affe0" opacity=".6">${[[110, 76], [128, 90], [140, 70], [96, 66]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3"/>`).join("")}</g></g>
+    <g class="pulse" fill="#bfefff" opacity=".5"><circle cx="18" cy="60" r="5"/><circle cx="30" cy="40" r="3.5"/><circle cx="10" cy="30" r="2.5"/></g>`,
+
+  cinder: u => `
+    <defs>
+      <radialGradient id="${u}b" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#5a4a48"/><stop offset=".6" stop-color="#2a1e1e"/><stop offset="1" stop-color="#100808"/></radialGradient>
+      <linearGradient id="${u}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2a0"/><stop offset=".5" stop-color="#ff8a1a"/><stop offset="1" stop-color="#d82a0a"/></linearGradient>
+    </defs>
+    <ellipse cx="100" cy="186" rx="88" ry="12" fill="#ff5a1a" opacity=".35" class="pulse"/>
+    <g fill="url(#${u}b)" stroke="#0a0404" stroke-width="3"><rect x="40" y="148" width="26" height="40" rx="8"/><rect x="134" y="148" width="26" height="40" rx="8"/></g>
+    <g class="squish"><path d="M22 120 C20 78 58 56 104 56 C150 56 182 84 180 124 C178 160 146 172 104 172 C60 172 24 160 22 120Z" fill="url(#${u}b)" stroke="#0a0404" stroke-width="3"/>
+    <g stroke="url(#${u}l)" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#glowF)"><path d="M40 108 L58 120 L52 140 L70 150"/><path d="M150 80 L136 100 L150 116 L140 140"/><path d="M96 66 L104 86 L96 100"/></g>
+    <path d="M38 96 C26 82 22 62 30 42 C40 58 50 70 62 76Z" fill="#c8b8a0" stroke="#3a2a1a" stroke-width="3"/>
+    <path d="M30 42 C26 30 28 20 34 12 C38 24 42 32 44 40" fill="url(#${u}l)" class="flicker"/>
+    <g class="blink"><ellipse cx="72" cy="100" rx="9" ry="6" fill="url(#${u}l)" filter="url(#glowF)"/><ellipse cx="124" cy="96" rx="9" ry="6" fill="url(#${u}l)" filter="url(#glowF)"/></g>
+    <path d="M58 86 L84 96 M138 82 L112 92" stroke="#0a0404" stroke-width="5" stroke-linecap="round"/>
+    <path d="M60 140 Q100 152 140 136" stroke="#0a0404" stroke-width="4" fill="none"/>
+    <g fill="#ff8a1a" opacity=".85"><circle cx="76" cy="160" r="4"/><circle cx="128" cy="158" r="3"/></g></g>
+    <g class="pulse" fill="#ffb03a">${[[160, 40], [176, 60], [150, 22], [20, 150]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3"/>`).join("")}</g>`,
+
+  ogre: u => `
+    <defs>
+      <radialGradient id="${u}b" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#9ab06a"/><stop offset=".55" stop-color="#5a7038"/><stop offset="1" stop-color="#26320e"/></radialGradient>
+      <linearGradient id="${u}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8ccd4"/><stop offset="1" stop-color="#4a4e58"/></linearGradient>
+    </defs>
+    <g class="sway"><rect x="150" y="30" width="12" height="130" rx="4" fill="#6a4a2a" stroke="#2a1808" stroke-width="3"/>
+    <path d="M126 20 H186 V56 H126Z" fill="url(#${u}m)" stroke="#1a1c22" stroke-width="3"/><path d="M126 30 H186" stroke="#fff" stroke-width="2" opacity=".5"/></g>
+    <g class="squish"><path d="M30 196 C26 140 52 112 100 112 C148 112 172 140 168 196Z" fill="url(#${u}b)" stroke="#16200a" stroke-width="3"/>
+    <path d="M44 150 C60 140 80 150 100 146 C120 150 140 140 156 150 V196 H44Z" fill="#6a4a2a" opacity=".9"/><rect x="44" y="160" width="112" height="10" fill="#3a2810"/><rect x="92" y="156" width="16" height="18" rx="2" fill="#c8a040" stroke="#5a4010" stroke-width="2"/>
+    <path d="M50 92 C44 50 70 28 100 28 C130 28 156 50 150 92 C146 124 124 134 100 134 C76 134 54 124 50 92Z" fill="url(#${u}b)" stroke="#16200a" stroke-width="3"/>
+    <path d="M50 70 C36 66 30 54 34 44 C42 52 48 54 54 54Z M150 70 C164 66 170 54 166 44 C158 52 152 54 146 54Z" fill="url(#${u}b)" stroke="#16200a" stroke-width="2.5"/>
+    <path d="M64 70 L92 78 M136 70 L108 78" stroke="#16200a" stroke-width="7" stroke-linecap="round"/>
+    <g class="blink"><circle cx="80" cy="86" r="6" fill="#ffd23a"/><circle cx="120" cy="86" r="6" fill="#ffd23a"/><circle cx="80" cy="87" r="2.5" fill="#1a0a00"/><circle cx="120" cy="87" r="2.5" fill="#1a0a00"/></g>
+    <ellipse cx="100" cy="100" rx="10" ry="7" fill="#4a5a28"/>
+    <path d="M74 114 Q100 124 126 114" stroke="#16200a" stroke-width="4" fill="none"/><path d="M80 116 L84 104 L88 117 M112 117 L116 104 L120 116" fill="#f2f0d8" stroke="#8a8a6a" stroke-width="1.5"/></g>
+    <g fill="#ffb03a" class="blinkfast"><circle cx="134" cy="66" r="3"/><circle cx="182" cy="70" r="2.5"/><circle cx="120" cy="40" r="2"/></g>`,
+
+  moth: u => `
+    <defs>
+      <radialGradient id="${u}w" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#f0f4ff"/><stop offset=".6" stop-color="#a8b4e0"/><stop offset="1" stop-color="#5a6498"/></radialGradient>
+      <radialGradient id="${u}b" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#e8e0d0"/><stop offset="1" stop-color="#8a8070"/></radialGradient>
+    </defs>
+    <g class="sway"><path d="M96 90 C60 30 10 30 8 70 C6 110 50 120 92 112Z" fill="url(#${u}w)" stroke="#3a4070" stroke-width="3"/>
+    <path d="M92 120 C60 124 24 140 30 170 C38 196 76 180 96 134Z" fill="url(#${u}w)" stroke="#3a4070" stroke-width="3"/>
+    <circle cx="44" cy="74" r="14" fill="#5a64a8" opacity=".7"/><circle cx="44" cy="74" r="7" fill="#ffe8a0"/><circle cx="54" cy="156" r="9" fill="#5a64a8" opacity=".6"/></g>
+    <path d="M104 90 C140 30 190 30 192 70 C194 110 150 120 108 112Z" fill="url(#${u}w)" stroke="#3a4070" stroke-width="3"/>
+    <path d="M108 120 C140 124 176 140 170 170 C162 196 124 180 104 134Z" fill="url(#${u}w)" stroke="#3a4070" stroke-width="3"/>
+    <circle cx="156" cy="74" r="14" fill="#5a64a8" opacity=".7"/><circle cx="156" cy="74" r="7" fill="#ffe8a0"/><circle cx="146" cy="156" r="9" fill="#5a64a8" opacity=".6"/>
+    <g class="squish"><ellipse cx="100" cy="128" rx="16" ry="42" fill="url(#${u}b)" stroke="#4a4030" stroke-width="3"/>
+    <path d="M86 116 H114 M86 132 H114 M88 148 H112" stroke="#6a6050" stroke-width="2.5" opacity=".7"/>
+    <circle cx="100" cy="80" r="20" fill="url(#${u}b)" stroke="#4a4030" stroke-width="3"/>
+    <path d="M92 62 C80 40 64 34 54 38 M108 62 C120 40 136 34 146 38" stroke="#4a4030" stroke-width="3" fill="none"/>
+    <g class="blink"><circle cx="91" cy="80" r="7" fill="#1a1a3a"/><circle cx="109" cy="80" r="7" fill="#1a1a3a"/><circle cx="89" cy="78" r="2.5" fill="#bfe0ff"/><circle cx="107" cy="78" r="2.5" fill="#bfe0ff"/></g>
+    <path d="M94 92 Q100 96 106 92" stroke="#4a4030" stroke-width="2.5" fill="none"/></g>
+    <g class="pulse" fill="#fff" opacity=".8">${[[20, 20], [180, 24], [100, 14], [190, 120], [10, 120]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.2"/>`).join("")}</g>`,
+
+  baron: u => `
+    <defs>
+      <radialGradient id="${u}m" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#d8dce8"/><stop offset=".55" stop-color="#6a7088"/><stop offset="1" stop-color="#22263a"/></radialGradient>
+      <linearGradient id="${u}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a6a"/><stop offset="1" stop-color="#140a2a"/></linearGradient>
+      <radialGradient id="${u}g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#b8a8ff"/><stop offset="1" stop-color="#5a3aff" stop-opacity="0"/></radialGradient>
+    </defs>
+    <circle cx="100" cy="110" r="96" fill="url(#${u}g)" opacity=".35" class="pulse"/>
+    <path d="M28 198 C34 140 60 116 100 116 C140 116 166 140 172 198Z" fill="url(#${u}c)" stroke="#0a0614" stroke-width="3"/>
+    <path d="M72 120 L100 170 L128 120" fill="#22263a" stroke="#0a0614" stroke-width="3"/><path d="M90 128 L100 150 L110 128Z" fill="#d8dce8"/>
+    <circle cx="100" cy="164" r="12" fill="url(#${u}m)" stroke="#0a0614" stroke-width="2.5"/><circle cx="100" cy="164" r="5" fill="#b8a8ff" class="pulse"/>
+    <g class="squish"><path d="M62 96 C58 60 76 44 100 44 C124 44 142 60 138 96 C134 120 120 128 100 128 C80 128 66 120 62 96Z" fill="url(#${u}m)" stroke="#0a0614" stroke-width="3"/>
+    <path d="M70 80 L94 86 M130 80 L106 86" stroke="#0a0614" stroke-width="4" stroke-linecap="round"/>
+    <g class="blink"><circle cx="84" cy="94" r="5" fill="#b8a8ff"/><circle cx="116" cy="94" r="12" fill="none" stroke="#e8c050" stroke-width="3"/><circle cx="116" cy="94" r="5" fill="#b8a8ff"/></g>
+    <path d="M128 100 C134 120 132 136 126 150" stroke="#e8c050" stroke-width="1.5" fill="none"/>
+    <path d="M80 112 C88 108 96 112 100 110 C104 112 112 108 120 112 C116 120 108 118 100 116 C92 118 84 120 80 112Z" fill="#22263a"/>
+    <path d="M84 120 Q100 126 116 120" stroke="#0a0614" stroke-width="3" fill="none"/>
+    <path d="M64 50 H136 L130 4 H70Z" fill="#22263a" stroke="#0a0614" stroke-width="3"/><rect x="58" y="44" width="84" height="10" rx="3" fill="#1a1a2a" stroke="#0a0614" stroke-width="2.5"/><rect x="70" y="36" width="60" height="7" fill="#7a5aff"/></g>
+    <g class="sway">${[[22, 70, 13], [178, 60, 10], [30, 150, 9], [172, 150, 12]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#${u}m)" stroke="#0a0614" stroke-width="2.5"/><path d="M${x - r * .5} ${y - r * .2} l${r * .4} ${r * .3}" stroke="#22263a" stroke-width="2"/>`).join("")}</g>`,
 };
 
 
@@ -480,6 +625,14 @@ const THEMES = {
   giant:    { aura: "#7ff0ff", fog: "rgba(40,90,140,.45)" },
   sludge:   { aura: "#c87aff", fog: "rgba(50,35,25,.5)" },
   quag:     { aura: "#ff7ae0", fog: "rgba(50,20,70,.55)" },
+  scorp:    { aura: "#ffb03a", fog: "rgba(120,60,10,.38)" },
+  cactus:   { aura: "#7ae04a", fog: "rgba(90,60,20,.36)" },
+  crab:     { aura: "#ff6a4a", fog: "rgba(10,60,90,.45)" },
+  angler:   { aura: "#7affe0", fog: "rgba(5,15,50,.6)" },
+  cinder:   { aura: "#ff7a1a", fog: "rgba(110,25,5,.45)" },
+  ogre:     { aura: "#c8e05a", fog: "rgba(90,40,10,.42)" },
+  moth:     { aura: "#cfd8ff", fog: "rgba(30,35,80,.5)" },
+  baron:    { aura: "#a88aff", fog: "rgba(25,15,60,.6)" },
 };
 
 // --------------------------- RANK BADGES ---------------------------
