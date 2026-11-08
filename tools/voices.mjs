@@ -23,8 +23,9 @@ export const vhash = s => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i+
 // mission id -> boss index, so "boss" lines get that boss's voice
 const bossOf = {};
 // chapters 9–12 are the separate squat campaign: numbered 1–4 again, mission ids S1-1…
-const chNum = ci => ci < 8 ? ci + 1 : ci - 7,   // squat chapters 8–15 → 1–8
-      missionId = (ci, mi) => `${ci < 8 ? "" : "S"}${chNum(ci)}-${mi + 1}`;
+// chapters 16–19 are the sit-up campaign: 1–4 again, ids U1-1…
+const chNum = ci => ci < 8 ? ci + 1 : ci < 16 ? ci - 7 : ci - 15,   // squat chapters 8–15 → 1–8
+      missionId = (ci, mi) => `${ci < 8 ? "" : ci < 16 ? "S" : "U"}${chNum(ci)}-${mi + 1}`;
 CHAPTERS.forEach((c, ci) => c.missions.forEach((m, mi) => { if (m.type === "boss") bossOf[missionId(ci, mi)] = m.boss; }));
 const lines = new Map();
 const add = (who, text) => lines.set(vhash(who + "|" + text), { who, text });
@@ -33,9 +34,10 @@ addAll(STORY.prologue); STORY.chapter.forEach(a => addAll(a)); addAll(STORY.epil
 addAll(STORY.prologue2); STORY.chapter2.forEach(a => addAll(a)); addAll(STORY.epilogue2);
 addAll(STORY.prologue3); STORY.chapter3.forEach(a => addAll(a)); addAll(STORY.epilogue3);
 addAll(STORY.prologue4); STORY.chapter4.forEach(a => addAll(a)); addAll(STORY.epilogue4);
+addAll(STORY.prologue5); STORY.chapter5.forEach(a => addAll(a)); addAll(STORY.epilogue5);
 Object.entries(STORY.m).forEach(([id, s]) => { addAll(s.pre || [], id); addAll(s.post || [], id); });
 CHAPTERS.forEach((c, ci) => add("title", `Chapter ${chNum(ci)}. ${c.name}.`)); add("title", "The end."); add("title", "End of part one.");
-["Part one. The Great Ember.", "Part two. The Hollow King.", "The squat campaign. The Sinking Lands.", "Squat campaign, part two. The Heavy Sky."].forEach(t => add("title", t));
+["Part one. The Great Ember.", "Part two. The Hollow King.", "The squat campaign. The Sinking Lands.", "Squat campaign, part two. The Heavy Sky.", "The sit-up campaign. The Long Nap."].forEach(t => add("title", t));
 [...Object.values(HALF), ...Object.values(DANGER)].forEach(t => add("pip", t));
 // game announcer ("Set complete…", "Fight!", boss intros): the exact list comes from announcerLines() in index.html
 { const RANKS = grab(/const RANKS = (\[[\s\S]*?\n\]);/, "RANKS"), BOSSES = grab(/const BOSSES = (\[[\s\S]*?\n\]);/, "BOSSES"), SPECIALS = grab(/const SPECIALS = (\{[\s\S]*?\n\});/, "SPECIALS");
@@ -91,6 +93,15 @@ const CAST = {
   boss29: { rate: 0.42, af: `${P(0.62)},lowpass=f=2600,aecho=0.8:0.6:60:0.2` },                                         // Anvil Ogre: big and slow
   boss30: { rate: 0.48, af: `${P(1.12)},chorus=0.6:0.9:30|45:0.3|0.25:0.3|0.4:1.5|2,aecho=0.8:0.7:120:0.25` },           // Moonmoth: airy
   baron:  { rate: 0.46, af: `${P(0.80, 0.97)},aecho=0.8:0.7:90|180:0.3|0.15,acompressor=threshold=-18dB:ratio=3` },       // Baron Gravity: posh, heavy
+  // ----- Sit-up campaign -----
+  boss32: { rate: 0.50, af: `${P(0.92)},lowpass=f=3000,aecho=0.8:0.5:30:0.15` },                                          // Pillow Brute: muffled
+  boss33: { rate: 0.40, af: `${P(0.68)},lowpass=f=2800,aecho=0.8:0.5:50:0.2` },                                           // Snoozebear: slow, sleepy
+  boss34: { rate: 0.42, af: `${P(0.74)},vibrato=f=3:d=0.35,aecho=0.8:0.7:120:0.25` },                                     // Yawnfish: watery yawn
+  boss35: { rate: 0.46, af: `${P(1.06)},chorus=0.6:0.9:30|45:0.3|0.25:0.3|0.4:1.5|2,aecho=0.8:0.7:140:0.25` },            // Fog Heron: airy whisper
+  boss36: { rate: 0.50, af: `${P(0.78)},vibrato=f=16:d=0.2,aecho=0.8:0.5:40:0.15` },                                      // Thunder Ram: bleating
+  boss37: { rate: 0.40, af: `${P(0.64)},aecho=0.8:0.8:200|400:0.3|0.2` },                                                 // Grumblecloud: rumbling
+  boss38: { rate: 0.46, af: `${P(0.80)},flanger=delay=2:depth=3:speed=0.3,aecho=0.8:0.6:90:0.2` },                       // Sand Knight: hollow, sandy
+  slumber: { rate: 0.40, af: `${P(0.86, 0.94)},chorus=0.5:0.9:40|60:0.3|0.25:0.2|0.3:2|1.5,aecho=0.8:0.8:180|360:0.3|0.18` }, // Count Slumber: slow, dreamy
   vex:   { rate: 0.54, af: `${P(1.10, 1.06)},highpass=f=120,aecho=0.8:0.4:28:0.12` },                                    // Vex: cocky rival, cold edge
   vexr:  { rate: 0.50, af: `${P(1.10, 1.03)},highpass=f=110` },                                                          // Vex, back on our side
   tmax:   { rate: 0.58, af: `${P(1.04, 1.04)},highpass=f=80,acompressor=threshold=-20dB:ratio=4:attack=5:release=60` },                      // Coach Max: hyped
@@ -98,7 +109,7 @@ const CAST = {
   tsarge: { rate: 0.54, af: `${P(0.84, 1.02)},highpass=f=70,acompressor=threshold=-16dB:ratio=5:attack=3:release=50,aecho=0.8:0.3:20:0.08` }, // Sarge: gruff, barking
   king:  { rate: 0.40, af: `${P(0.82, 0.94)},chorus=0.5:0.9:50|70:0.3|0.25:0.2|0.3:2|1.5,aecho=0.8:0.8:200|400:0.3|0.18` }, // The Hollow King: slow, syrupy, huge hall
 };
-CAST.boss11 = CAST.vex; CAST.boss13 = { rate: 0.52, af: `${CAST.vex.af},flanger=delay=3:depth=4:speed=0.5,aecho=0.8:0.6:120:0.25` }; CAST.boss15 = CAST.king; CAST.boss23 = CAST.quag; CAST.boss31 = CAST.baron;
+CAST.boss11 = CAST.vex; CAST.boss13 = { rate: 0.52, af: `${CAST.vex.af},flanger=delay=3:depth=4:speed=0.5,aecho=0.8:0.6:120:0.25` }; CAST.boss15 = CAST.king; CAST.boss23 = CAST.quag; CAST.boss31 = CAST.baron; CAST.boss39 = CAST.slumber;
 // what the synthesizer reads (the file name still comes from the original text)
 const speakable = t => t.replace(/Mk-II/g, "Mark Two").replace(/…/g, "...").replace(/!!+/g, "!")
   .replace(/\b[A-Z]{2,}\b/g, w => w[0] + w.slice(1).toLowerCase());

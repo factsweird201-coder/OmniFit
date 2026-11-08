@@ -884,6 +884,15 @@
   .cmap-camp { background: transparent; color: #cfd4de; padding: 5px 11px; font-size: 12.5px; border-radius: 9px; letter-spacing: .5px; }
   .cmap-camp.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a1000; }
   .cmap-camp.sq.on { background: linear-gradient(135deg, #b8e04a, #4fb38a); }
+  .cmap-camp.su.on { background: linear-gradient(135deg, #e0b0ff, #8a5aff); color: #12062a; }
+  .fog-16::before { background: radial-gradient(ellipse 60% 22% at 30% 40%, rgba(255,210,150,.3), transparent), radial-gradient(ellipse 55% 20% at 72% 60%, rgba(255,190,130,.25), transparent); }
+  .fog-17::before { background: radial-gradient(ellipse 70% 25% at 30% 40%, rgba(220,235,255,.35), transparent), radial-gradient(ellipse 60% 22% at 72% 62%, rgba(200,225,255,.3), transparent); }
+  .fog-18::before { background: radial-gradient(ellipse 55% 22% at 30% 40%, rgba(90,90,140,.45), transparent), radial-gradient(ellipse 55% 22% at 70% 60%, rgba(120,110,190,.3), transparent); }
+  .fog-19::before { background: conic-gradient(from 90deg at 50% 45%, rgba(208,123,255,0), rgba(208,123,255,.2), rgba(80,30,140,0), rgba(208,123,255,.16), rgba(208,123,255,0)); animation: voidSpin 60s linear infinite; }
+  .fog-16 .cmap-clouds .cb-back { fill: #8a6a4a; } .fog-16 .cmap-clouds .cb-front { fill: #c8a078; }
+  .fog-17 .cmap-clouds .cb-back { fill: #a8bcd8; } .fog-17 .cmap-clouds .cb-front { fill: #dce8f6; }
+  .fog-18 .cmap-clouds .cb-back { fill: #2a2848; } .fog-18 .cmap-clouds .cb-front { fill: #44426a; }
+  .fog-19 .cmap-clouds .cb-back { fill: #1e0e38; } .fog-19 .cmap-clouds .cb-front { fill: #36205a; }
   .fog-8::before { background: radial-gradient(ellipse 60% 22% at 30% 40%, rgba(150,150,140,.35), transparent), radial-gradient(ellipse 55% 20% at 72% 60%, rgba(130,130,120,.3), transparent); }
   .fog-9::before { background: radial-gradient(ellipse 60% 22% at 30% 35%, rgba(160,200,150,.25), transparent), radial-gradient(ellipse 55% 20% at 70% 60%, rgba(140,190,140,.22), transparent); }
   .fog-10::before { background: radial-gradient(ellipse 60% 20% at 30% 30%, rgba(240,248,255,.3), transparent), radial-gradient(ellipse 55% 18% at 70% 60%, rgba(240,248,255,.26), transparent); }
@@ -1236,6 +1245,7 @@
         <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
         <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
         <li><b>🦵 Squat Campaign:</b> a whole separate campaign done with squats, in two parts: <i>The Sinking Lands</i> and <i>The Heavy Sky</i> (unlocks after Queen Quagmire). 8 chapters, 48 missions and 16 bosses. Switch campaigns with the buttons at the top of the map.</li>
+        <li><b>🛏️ Sit-Up Campaign:</b> <i>The Long Nap</i>. Count Slumber has put the whole world to sleep: 4 chapters, 24 missions and 8 bosses, all done with sit-ups. Lie on your back side-on to the camera so it can see your shoulders and hips. Sit all the way up for crits.</li>
       </ul>
     </div>
     <div class="panel" style="margin-top:18px" id="howHyrox" hidden>
@@ -1444,7 +1454,7 @@
   <linearGradient id="figGold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="200"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#e08a00"/></linearGradient>
 </defs></svg>
 
-<script src="art.js?v=2"></script>
+<script src="art.js?v=3"></script>
 <script src="foods.js?v=1"></script>
 <script type="module">
 import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
@@ -1528,6 +1538,23 @@ const BOSSES = [
     intro: "Moonmoth spreads its silver wings across the sky.", win: "Moonmoth flutters away into the stars!" },
   { id: "baron",  name: "Baron Gravity",    hp: 1000, every: 4.4, windup: 2.1, specials: ["armor", "heal", "rapid", "frenzy", "armor", "rapid"], sq: true,
     intro: "Baron Gravity adjusts his monocle. Everything falls for me. The final fight.", win: "Baron Gravity goes flying off into space! The sky is light again!" },
+  // ----- Sit-up campaign: The Long Nap -----
+  { id: "pillow",   name: "Pillow Brute",     hp: 90,  every: 9,   windup: 3.5, specials: ["armor"], su: true,
+    intro: "The Pillow Brute fluffs itself up. It wants a pillow fight!", win: "The Pillow Brute bursts into feathers!" },
+  { id: "snooze",   name: "Snoozebear",       hp: 130, every: 8.5, windup: 3.3, specials: ["heal"], su: true,
+    intro: "Snoozebear rolls over, grumbling. Five more minutes!", win: "Snoozebear is finally awake, and very sorry!" },
+  { id: "yawnfish", name: "The Yawnfish",     hp: 170, every: 7.5, windup: 3.0, specials: ["frenzy", "heal"], su: true,
+    intro: "The Yawnfish opens its huge mouth. Don't catch the yawn!", win: "The Yawnfish swims off, wide awake!" },
+  { id: "heron",    name: "The Fog Heron",    hp: 210, every: 7.5, windup: 3.0, specials: ["armor", "rapid"], su: true,
+    intro: "The Fog Heron spreads its wings, and the mist rolls in.", win: "The Fog Heron flies away, and the mist goes with it!" },
+  { id: "ram",      name: "Thunder Ram",      hp: 260, every: 7,   windup: 2.8, specials: ["rapid", "armor", "frenzy"], su: true,
+    intro: "Thunder Ram lowers its horns. Lightning crackles!", win: "Thunder Ram trots off with a sore head!" },
+  { id: "cloud",    name: "Grumblecloud",     hp: 310, every: 6.5, windup: 2.7, specials: ["heal", "rapid", "armor"], su: true,
+    intro: "Grumblecloud rumbles. Snore, snore, says the thunder.", win: "Grumblecloud rains itself out. Blue sky!" },
+  { id: "sandman",  name: "The Sand Knight",  hp: 370, every: 6,   windup: 2.6, specials: ["armor", "frenzy", "heal", "rapid"], su: true,
+    intro: "The Sand Knight raises an hourglass. Your eyes feel heavy.", win: "The Sand Knight crumbles into a pile of sand!" },
+  { id: "slumber",  name: "Count Slumber",    hp: 460, every: 5.5, windup: 2.5, specials: ["heal", "armor", "rapid", "frenzy", "heal"], su: true,
+    intro: "Count Slumber yawns. Lie down, little hero. It's bedtime forever. The final fight.", win: "Count Slumber wakes up for the first time in a hundred years! Good morning, world!" },
 ];
 
 const SPECIALS = {
@@ -1610,7 +1637,7 @@ const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1
 const rankIndex = total => RANKS.reduce((i, r, idx) => total >= r.at ? idx : i, 0);
 function streak() {
   const d = new Date();
-  const did = k => (store.days[k] || 0) + (store.sq?.days?.[k] || 0) > 0;   // push-ups or squats both keep the streak
+  const did = k => (store.days[k] || 0) + (store.sq?.days?.[k] || 0) + (store.su?.days?.[k] || 0) > 0;   // push-ups, squats or sit-ups all keep the streak
   if (!did(dayKey(d))) d.setDate(d.getDate() - 1);
   let n = 0;
   while (did(dayKey(d))) { n++; d.setDate(d.getDate() - 1); }
@@ -1691,7 +1718,7 @@ function renderRank() {
   $("rankName").textContent = r.name;
   $("total").textContent = store.total.toLocaleString();
   $("best").textContent = store.best;
-  const pushBosses = BOSSES.filter(b => !b.sq);
+  const pushBosses = BOSSES.filter(b => !b.sq && !b.su);
   $("bossesBeat").textContent = `${pushBosses.filter(b => store.bosses[b.id]?.won).length}/${pushBosses.length}`;
   if (next) {
     $("rankBar").style.width = (store.total - r.at) / (next.at - r.at) * 100 + "%";
@@ -1719,8 +1746,8 @@ function renderRank() {
 const bossUnlocked = idx => idx === 0 || store.bosses[BOSSES[idx - 1].id]?.won;   // only used for the push-up bosses (squat bosses live in the squat campaign)
 const fmtTime = s => s == null ? "" : `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 function renderRoster() {
-  const nextIdx = BOSSES.findIndex(b => !b.sq && !store.bosses[b.id]?.won);
-  $("roster").innerHTML = BOSSES.map((b, idx) => { if (b.sq) return "";
+  const nextIdx = BOSSES.findIndex(b => !b.sq && !b.su && !store.bosses[b.id]?.won);
+  $("roster").innerHTML = BOSSES.map((b, idx) => { if (b.sq || b.su) return "";
     const rec = store.bosses[b.id], open = bossUnlocked(idx);
     const icons = [...new Set(b.specials)].map(s => SPECIALS[s].icon).join(" ");
     const right = !open ? "🔒" : rec?.won ? `${"★".repeat(rec.stars)}<span style="opacity:.25">${"★".repeat(3 - rec.stars)}</span><div class="bs">${fmtTime(rec.bestTime)}</div>` : `<span class="newtag">FIGHT</span>`;
@@ -1732,7 +1759,7 @@ function renderRoster() {
   $("roster").querySelectorAll(".bcard").forEach(el => el.onclick = () => startFight(+el.dataset.idx));
 
   // big boss-select screen in the stage
-  $("bsGrid").innerHTML = BOSSES.map((b, idx) => { if (b.sq) return "";
+  $("bsGrid").innerHTML = BOSSES.map((b, idx) => { if (b.sq || b.su) return "";
     const rec = store.bosses[b.id], open = bossUnlocked(idx);
     const icons = [...new Set(b.specials)].map(s => SPECIALS[s].icon).join(" ");
     const stars = rec?.won ? `${"★".repeat(rec.stars)}<span style="opacity:.25">${"★".repeat(3 - rec.stars)}</span>` : "";
@@ -2089,6 +2116,7 @@ function onRep(depthPct) {
   if (!inMatch() && mode === "hyrox" && HR?.active && !hxRep(depthPct)) return;   // Hyrox: burpees / lunges / warm-up reps don't go on your push-up or squat totals
   if (!inMatch() && CW?.active && CW.phase !== "set") return;   // resting between coach sets   // training only counts after pressing Start on the Training tab
   if (exercise === "squat") return onSquat(depthPct);
+  if (exercise === "situp") return onSitup(depthPct);
   const before = rankIndex(store.total), today = dayKey(), beforeToday = store.days[today] || 0;
   setCount++; store.total++; store.kcal += kcalPerRep();
   lastRepTime = performance.now(); lowSince = 0;
@@ -2126,6 +2154,20 @@ function onSquat(depthPct) {
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
   else { sfx.rep(); coachRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  renderRank();
+}
+// sit-ups (campaign only for now): their own totals, then the same fight / mission handling
+function onSitup(depthPct) {
+  const su = suStore(), today = dayKey();
+  setCount++; su.total++; su.days[today] = (su.days[today] || 0) + 1; store.kcal += kcalPerSitup();
+  lastRepTime = performance.now(); lowSince = 0;
+  if (setCount > su.best) su.best = setCount;
+  save();
+  $("setCount").textContent = setCount;
+  const chip = $("countChip"); chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump");
+  if (F?.active) fightRep(depthPct);
+  else if (M?.active) missionRep(depthPct);
+  else { sfx.rep(); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b88aff", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
 window.__rep = (d = 0.4) => onRep(d);
@@ -2212,7 +2254,7 @@ async function startFight(idx, camp = null) {
   $("stage").classList.add("fighting");
   $("arena").hidden = false;
   $("bossName").textContent = boss.name;
-  $("bossLvl").textContent = boss.sq ? `SQUAT BOSS ${idx - BOSSES.findIndex(b => b.sq) + 1}` : `BOSS ${idx + 1}`;
+  $("bossLvl").textContent = boss.su ? `SIT-UP BOSS ${idx - BOSSES.findIndex(b => b.su) + 1}` : boss.sq ? `SQUAT BOSS ${idx - BOSSES.findIndex(b => b.sq) + 1}` : `BOSS ${idx + 1}`;
   syncExercise();
   $("bossArt").innerHTML = bossArt(boss.id);
   $("bossWrap").className = "boss-wrap intro";
@@ -2301,7 +2343,7 @@ function tick(dt) {
     if (F.nextAttack <= 0) {
       F.state = "windup"; F.windupLeft = windupTime();
       $("bossWrap").classList.add("windup");
-      callout("INCOMING!", exercise === "squat" ? "SQUAT TO PARRY" : "PUSH-UP TO PARRY", "red");
+      callout("INCOMING!", exercise === "squat" ? "SQUAT TO PARRY" : exercise === "situp" ? "SIT-UP TO PARRY" : "PUSH-UP TO PARRY", "red");
       sfx.roar(); say("Incoming! Parry!");
     }
   } else if (F.state === "windup") {
@@ -2438,13 +2480,13 @@ function showResult(f, won, firstWin, time) {
     .map(([k, v]) => `<div><b>${v}</b><span class="muted">${k}</span></div>`).join("");
   $("resSub").textContent = won
     ? (firstWin && hasNext ? `🔓 Unlocked: ${BOSSES[f.idx + 1].name}` : (f.idx + 1 === BOSSES.length ? "You beat every boss. Legend status." : ""))
-    : `It had ${Math.ceil(f.hp)} HP left (${Math.round(f.hp / f.maxHp * 100)}%). Tip: deep reps crit, and ${exercise === "squat" ? "squat" : "push-up"} during the red bar to parry.`;
+    : `It had ${Math.ceil(f.hp)} HP left (${Math.round(f.hp / f.maxHp * 100)}%). Tip: deep reps crit, and ${exercise === "squat" ? "squat" : exercise === "situp" ? "sit-up" : "push-up"} during the red bar to parry.`;
   $("resMain").textContent = won ? (hasNext ? "Next boss ⚔" : "Fight again") : "Retry ⚔";
   $("resMain").onclick = () => { closeResult(); startFight(won && hasNext ? f.idx + 1 : f.idx); };
   $("resBack").textContent = "Back to bosses";
   $("resBack").onclick = () => closeResult();
   if (f.camp) {   // boss fought as a campaign mission: continue the campaign instead
-    const k = CAMP_LIST.findIndex(m => m.id === f.camp), next = CAMP_LIST[k + 1];
+    const k = CAMP_LIST.findIndex(m => m.id === f.camp), next = k + 1 < CAMP_LIST.length && campOfK(k + 1) === campOfK(k) ? CAMP_LIST[k + 1] : null;
     if (won && f.firstClear) $("resSub").textContent = campNextText(CAMP_LIST[k], next);
     $("resMain").textContent = won ? (next ? "Next mission ▶" : "Fight again") : "Retry ⚔";
     $("resMain").onclick = () => { closeResult(); if (won && next) startMission(k + 1); else startFight(f.idx, f.camp); };
@@ -2722,15 +2764,18 @@ let exercise = "push";
 const EX = {
   push:  { one: "push-up", many: "push-ups", Many: "Push-ups", icon: "💪" },
   squat: { one: "squat",   many: "squats",   Many: "Squats",   icon: "🦵" },
+  situp: { one: "sit-up",  many: "sit-ups",  Many: "Sit-ups",  icon: "🛏️" },
   knees: { one: "knee lift", many: "knee lifts", Many: "Knee lifts", icon: "🏃" },
   jacks: { one: "jumping jack", many: "jumping jacks", Many: "Jumping jacks", icon: "⭐" },
   kicks: { one: "butt kick", many: "butt kicks", Many: "Butt kicks", icon: "🦶" },
   skate: { one: "skater", many: "skaters", Many: "Skaters", icon: "⛸️" },
 };
 const exWord = (n, ex = exercise) => n === 1 ? EX[ex].one : EX[ex].many;
+const suStore = () => { store.su ||= {}; store.su.total ||= 0; store.su.best ||= 0; store.su.days ||= {}; return store.su; };
+const kcalPerSitup = () => store.profile ? 0.0045 * store.profile.weightKg : 0;   // rough: ~0.3 kcal per sit-up at 70 kg
 const sqStore = () => { store.sq ||= {}; store.sq.total ||= 0; store.sq.best ||= 0; store.sq.days ||= {}; store.sq.goal ||= 30; return store.sq; };
 const kcalPerSquat = () => store.profile ? 0.0055 * store.profile.weightKg : 0;   // rough: ~0.38 kcal per bodyweight squat at 70 kg
-const burnedOn = d => Math.round((store.days[d] || 0) * kcalPerRep() + (store.sq?.days?.[d] || 0) * kcalPerSquat());
+const burnedOn = d => Math.round((store.days[d] || 0) * kcalPerRep() + (store.sq?.days?.[d] || 0) * kcalPerSquat() + (store.su?.days?.[d] || 0) * kcalPerSitup());
 function wantEx() {
   if (CW?.active) return CW.ex;
   if (HR?.active) return HR.segs[HR.idx]?.ex || "squat";
@@ -2744,7 +2789,7 @@ function syncExercise() {
   const e = wantEx();
   if (e === exercise) return;
   exercise = e;
-  disarm(); topRef = null; smoothDepth = null; gapHist.length = 0; sqReset();
+  disarm(); topRef = null; smoothDepth = null; gapHist.length = 0; sqReset(); suReset();
   renderExUI();
 }
 function setTrainEx(e) {
@@ -2752,12 +2797,12 @@ function setTrainEx(e) {
   if (setCount > 0) endSet(true);
   store.exercise = e; save();
   syncExercise(); renderExUI(); renderRank();
-  if (camReady) { setPhase("READY"); setFeedback(e === "squat" ? "Stand tall, whole body in view" : "Get into push-up position", "warn"); }
+  if (camReady) { setPhase("READY"); setFeedback(e === "squat" ? "Stand tall, whole body in view" : e === "situp" ? "Lie on your back, side-on to the camera" : "Get into push-up position", "warn"); }
 }
 function renderExUI() {
   const te = store.exercise === "squat" ? "squat" : "push";
   document.querySelectorAll(".ex-switch button").forEach(b => b.classList.toggle("on", b.dataset.ex === te));
-  $("angleLbl").textContent = exercise === "knees" ? "Knee lift" : exercise === "jacks" ? "Arms up" : exercise === "kicks" ? "Heel lift" : exercise === "skate" ? "Side shift" : exercise === "squat" ? "Knee °" : "Elbow °";
+  $("angleLbl").textContent = exercise === "knees" ? "Knee lift" : exercise === "jacks" ? "Arms up" : exercise === "kicks" ? "Heel lift" : exercise === "skate" ? "Side shift" : exercise === "squat" ? "Knee °" : exercise === "situp" ? "Torso °" : "Elbow °";
   $("startTip").innerHTML = te === "squat"
     ? "Stand the camera up about 2–3 m away, around hip height, so your whole body from head to feet is in view. Facing it or side-on both work."
     : "Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.";
@@ -2840,10 +2885,38 @@ function squatStep(lm) {
   SQ.lastAt = now; logRep({ ok: true, ...info });
   onRep(Math.min(1, SQ.maxD));
 }
+// ---- sit-ups: camera side-on, you lying on your back. Torso angle: 0° flat on the floor, 90° sitting straight up.
+// A rep is lying down (under 25°), sitting up past 55°, then starting back down; how high you got is the "depth".
+var SU = { down: false, up: false, peak: 0, lastAt: 0, upAt: 0 };
+function suReset() { Object.assign(SU, { down: false, up: false, peak: 0, upAt: 0 }); }
+function situpStep(lm) {
+  const cw = canvas.width || 1, ch = canvas.height || 1, now = performance.now();
+  const P = i => ({ x: lm[i].x * cw, y: lm[i].y * ch, v: vis(lm[i]) });
+  const L = { s: P(11), h: P(23) }, R = { s: P(12), h: P(24) }, S = L.s.v + L.h.v >= R.s.v + R.h.v ? L : R;   // the side nearest the camera
+  if (S.s.v < 0.4 || S.h.v < 0.4) { setFeedback("Lie on your back side-on to the camera so your shoulders and hips show", "bad"); setPhase("READY"); return; }
+  const ang = Math.max(0, Math.atan2(S.h.y - S.s.y, Math.abs(S.s.x - S.h.x)) * 180 / Math.PI);
+  const lift = Math.max(0, Math.min(1, (ang - 15) / 65));
+  $("angleVal").textContent = Math.round(ang) + "°"; $("depthVal").textContent = Math.round(lift * 100) + "%"; $("depthMeter").style.width = lift * 100 + "%";
+  if (!SU.up) {
+    if (ang < 25) SU.down = true;
+    if (SU.down && ang > 55) { SU.up = true; SU.peak = ang; SU.upAt = now; }
+    setPhase(SU.down ? "DOWN" : "READY");
+    setFeedback(!SU.down ? "Lie back down to start" : ang > 35 ? "Up! Keep going!" : "Sit up!", SU.down ? "good" : "warn");
+    return;
+  }
+  SU.peak = Math.max(SU.peak, ang); setPhase("UP"); setFeedback("All the way up!", "good");
+  if (ang > SU.peak - 12 && ang >= 45) return;   // still on the way up
+  SU.up = false; SU.down = false;
+  const depth = +Math.max(0, Math.min(1, (SU.peak - 40) / 45)).toFixed(2), info = { ex: "situp", ms: Math.round(now - SU.upAt), depth, torso: Math.round(SU.peak) };
+  if (now - SU.lastAt < 600) { logRep({ ok: false, reason: "ignored: too quick", ...info }); return; }
+  SU.lastAt = now; logRep({ ok: true, ...info }); onRep(depth);
+  setFeedback(depth >= CRIT ? "Great sit-up! Back down" : "Counted. Sit up higher for a crit", depth >= CRIT ? "good" : "warn");
+}
+
 function detect(lm) {
   syncExercise();
   if (HR?.active && HR.phase === "go" && !HR.segs[HR.idx].cam) return;   // timed Hyrox hold: nothing to count
-  CARDIO.has(exercise) ? cardioStep(lm) : exercise === "squat" ? squatStep(lm) : step(analyse(lm));
+  CARDIO.has(exercise) ? cardioStep(lm) : exercise === "squat" ? squatStep(lm) : exercise === "situp" ? situpStep(lm) : step(analyse(lm));
 }
 
 // ================= CAMERA + MODEL + SKELETON =================
@@ -3009,7 +3082,7 @@ function loop() {
 const MTYPES = {
   reps:    { icon: "💪", goal: m => `Do ${m.n} ${exM(m).many}`,                                 stars: "⭐⭐⭐ under 2.2 s per push-up · ⭐⭐ under 3.2 s" },
   timed:   { icon: "⏱️", goal: m => `${m.n} ${exM(m).many} in ${m.t} seconds`,                    stars: "⭐⭐⭐ with 25% of the time left · ⭐⭐ with 10% left" },
-  deep:    { icon: "🎯", goal: m => exM(m) === EX.squat ? `${m.n} deep squats (thighs to parallel)` : `${m.n} deep push-ups (50%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
+  deep:    { icon: "🎯", goal: m => exM(m) === EX.squat ? `${m.n} deep squats (thighs to parallel)` : exM(m) === EX.situp ? `${m.n} full sit-ups (all the way up)` : `${m.n} deep push-ups (50%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
   nobreak: { icon: "🔗", goal: m => `${m.n} ${exM(m).many} without resting more than 4 seconds`,  stars: "⭐⭐⭐ never resting over 2.5 s · ⭐⭐ never over 3.5 s" },
   endure:  { icon: "🔥", goal: m => `At least ${m.n} ${exM(m).many} in ${m.t} seconds`,           stars: "⭐⭐⭐ at 140% of the goal · ⭐⭐ at 120%" },
   boss:    { icon: "⚔️", goal: m => `Defeat ${BOSSES[m.boss].name}`,                        stars: "⭐ per heart you have left" },
@@ -3162,23 +3235,61 @@ const CHAPTERS = [
       { name: "Hold the Tower",   type: "nobreak", n: 44, story: "The fortress tower is falling on the town below. Push it back up!" },
       { name: "Baron Gravity",    type: "boss",    boss: 31, story: "The Baron himself. The final fight." },
     ] },
+  // ----- Sit-up campaign: The Long Nap -----
+  { name: "Snoozeville", color: "#ffb86b", story: "A whole town fell asleep in the middle of the day, and nobody can wake up.",
+    missions: [
+      { name: "Wake-Up Call",     type: "reps",    n: 12, story: "Everyone in town is fast asleep. Every sit-up rings the big bell." },
+      { name: "Alarm Clock",      type: "timed",   n: 12, t: 45, story: "The town clock stopped at nap time. Wind it up, fast!" },
+      { name: "Pillow Fight",     type: "boss",    boss: 32, story: "A giant pillow is stomping down the high street." },
+      { name: "Bed Head",         type: "deep",    n: 8,  story: "Sit all the way up. Half awake doesn't count." },
+      { name: "Rooster Run",      type: "nobreak", n: 14, story: "The rooster fell asleep. You'll have to crow for him. Don't stop!" },
+      { name: "Five More Minutes", type: "boss",   boss: 33, story: "A huge bear is snoring across the town gate." },
+    ] },
+  { name: "Lake Lullaby", color: "#7ab8ff", locked: "Past the town lies a misty lake. Its water hums a lullaby that puts boats to sleep.", story: "A misty lake that hums everyone to sleep.",
+    missions: [
+      { name: "Misty Shore",      type: "endure",  n: 14, t: 60, story: "Keep Pip glowing through the sleepy mist." },
+      { name: "Drifting Ferry",   type: "timed",   n: 15, t: 50, story: "The ferry captain dozed off, and the ferry is filling with water." },
+      { name: "Big Yawn",         type: "boss",    boss: 34, story: "Something huge is yawning under the water." },
+      { name: "Lullaby Crystals", type: "deep",    n: 10, story: "Crystals under the lake are humming the lullaby. Smash them." },
+      { name: "Raise the Ferry",  type: "nobreak", n: 16, story: "The ferry sank with everyone asleep on board. Lift it!" },
+      { name: "Into the Fog",     type: "boss",    boss: 35, story: "A tall grey bird stands in the middle of the mist." },
+    ] },
+  { name: "The Yawning Peaks", color: "#9a8aff", locked: "Above the lake, storm clouds snore over the mountains. Every rumble makes you sleepier.", story: "Mountains where the thunder snores.",
+    missions: [
+      { name: "Sleepy Slopes",    type: "reps",    n: 20, story: "Climb the mountain path. Every sit-up is a step." },
+      { name: "Snore Storm",      type: "timed",   n: 18, t: 55, story: "The thunder is snoring. Keep the shield up!" },
+      { name: "Head Butt",        type: "boss",    boss: 36, story: "A ram with thunder in its horns blocks the pass." },
+      { name: "Thunder Rock",     type: "deep",    n: 12, story: "A boulder blocks the path. Only full sit-ups crack it." },
+      { name: "Cloud Bridge",     type: "nobreak", n: 20, story: "Build a bridge between the clouds before they drift apart." },
+      { name: "Rain Check",       type: "boss",    boss: 37, story: "The storm cloud itself is grumbling at you." },
+    ] },
+  { name: "Castle Slumber", color: "#d07bff", locked: "At the top of the world sits a castle where it's always bedtime.", story: "Count Slumber's castle, where it's always bedtime.",
+    missions: [
+      { name: "Night Gate",       type: "endure",  n: 22, t: 75, story: "Light the castle torches. The dark makes everyone sleepy." },
+      { name: "Snoring Halls",    type: "timed",   n: 22, t: 60, story: "Run up the castle stairs before the snoring knocks you out." },
+      { name: "Sand in Your Eyes", type: "boss",   boss: 38, story: "A knight made of sand guards the Count's bedroom." },
+      { name: "The Dream Clock",  type: "deep",    n: 14, story: "The Dream Clock keeps the whole world asleep. Smash it!" },
+      { name: "Wake the Kingdom", type: "nobreak", n: 24, story: "Raise the castle drawbridge so the morning sun can get in." },
+      { name: "Count Slumber",    type: "boss",    boss: 39, story: "The Count himself. The final fight." },
+    ] },
 ];
-CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : ci < 8 ? 1 : ci < 12 ? 2 : 3);
+CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : ci < 8 ? 1 : ci < 12 ? 2 : ci < 16 ? 3 : 4);
 const PARTS = [{ name: "The Great Ember", chs: [0, 1, 2, 3] }, { name: "The Hollow King", chs: [4, 5, 6, 7], teaser: "A new story, 4 new chapters, 24 new missions and 8 new bosses, including a rival who got his strength the easy way." },
   { name: "The Sinking Lands", chs: [8, 9, 10, 11] },
-  { name: "The Heavy Sky", chs: [12, 13, 14, 15], teaser: "An iron moon is pulling the world down. A new story, 4 new chapters, 24 new missions and 8 new bosses, and a villain who wants everyone flat on the ground." }];
-const PART_COLORS = ["#ffc21a", "#ff5fa8", "#b8e04a", "#7ad8ff"];
+  { name: "The Heavy Sky", chs: [12, 13, 14, 15], teaser: "An iron moon is pulling the world down. A new story, 4 new chapters, 24 new missions and 8 new bosses, and a villain who wants everyone flat on the ground." },
+  { name: "The Long Nap", chs: [16, 17, 18, 19] }];
+const PART_COLORS = ["#ffc21a", "#ff5fa8", "#b8e04a", "#7ad8ff", "#c08aff"];
 // two separate campaigns share the mission engine: push-ups (parts 1 and 2) and squats (its own 4 chapters, numbered 1–4, ids S1-1…)
-const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2, 3] }];
+const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2, 3] }, { name: "Sit-Up Campaign", icon: "🛏️", ex: "situp", parts: [4] }];
 const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
 const partNo = pi => CAMPAIGNS[campOfPart(pi)].parts.indexOf(pi);   // 0 = part one of its own campaign
-const campSet = () => store.campSet === 1 ? 1 : 0;
+const campSet = () => store.campSet === 1 || store.campSet === 2 ? store.campSet : 0;
 const chEx = ci => CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex;
 const exM = m => EX[chEx(m.ch ?? 0)];
 const mStarsTxt = m => MTYPES[m.type].stars.replace(/push-ups?/g, w => w.endsWith("s") ? exM(m).many : exM(m).one);
 const mIcon = m => m.type === "reps" ? exM(m).icon : MTYPES[m.type].icon;
 const chNum = ci => ci - PARTS[CHAPTERS[ci].part].chs[0] + (CHAPTERS[ci].part % 2 ? 5 : 1);
-const missionId = (ci, mi) => `${CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex === "squat" ? "S" : ""}${chNum(ci)}-${mi + 1}`;
+const missionId = (ci, mi) => `${{ squat: "S", situp: "U" }[CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex] || ""}${chNum(ci)}-${mi + 1}`;
 const CAMP_LIST = CHAPTERS.flatMap((c, ci) => c.missions.map((m, mi) => ({ ...m, ch: ci, mi, id: missionId(ci, mi) })));
 const campOfK = k => campOfPart(CHAPTERS[CAMP_LIST[k].ch].part);
 const campKs = c => CAMP_LIST.flatMap((m, k) => campOfK(k) === c ? [k] : []);
@@ -3189,7 +3300,7 @@ const campUnlocked = k => k === 0 || campOfK(k) !== campOfK(k - 1) || campStars(
 const campTotal = (c = campSet()) => campKs(c).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
 const partUnlocked = pi => chapterUnlocked(PARTS[pi].chs[0]);
-const campNextText = (cur, next) => !next ? (chEx(cur.ch) === "squat" ? "🏆 You sent Baron Gravity flying and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
+const campNextText = (cur, next) => !next ? chEx(cur.ch) === "situp" ? "🏆 You woke up Count Slumber and finished the whole Sit-Up Campaign. Legend!" : (chEx(cur.ch) === "squat" ? "🏆 You sent Baron Gravity flying and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
   : CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part ? `🏁 Part ${PART_WORDS[partNo(CHAPTERS[cur.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[cur.ch].part)].slice(1).toLowerCase()} complete! 🔓 Part ${PART_WORDS[partNo(CHAPTERS[next.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[next.ch].part)].slice(1).toLowerCase()}: ${PARTS[CHAPTERS[next.ch].part].name}`
   : next.ch !== cur.ch ? `🏁 Chapter ${chNum(cur.ch)} complete! 🔓 Chapter ${chNum(next.ch)}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`;
 let campChapter = null, campPick = null, M = null;
@@ -3296,6 +3407,31 @@ const MISSION_STORY = {
   "S8-4": { obj: "Smash the gravity engine's crystals",        scene: { k: "crack", v: "crystal" } },
   "S8-5": { obj: "Push the falling tower back up",             scene: { k: "rise", v: "pillar" } },
   "S8-6": { obj: "Send Baron Gravity flying" },
+  // ----- Sit-up campaign -----
+  "U1-1": { obj: "Light the town's wake-up bonfire",            scene: { k: "flame", v: "brazier" } },
+  "U1-2": { obj: "Raise the town bell tower",                   scene: { k: "rise", v: "pillar" } },
+  "U1-3": { obj: "Flatten the Pillow Brute" },
+  "U1-4": { obj: "Break the sleepy spell on the town gate",     scene: { k: "crack", v: "crystal" } },
+  "U1-5": { obj: "Keep Pip's shield up against the sleep dust", scene: { k: "shield" } },
+  "U1-6": { obj: "Wake up Snoozebear" },
+  "U2-1": { obj: "Keep Pip glowing through the mist",           scene: { k: "flame", v: "pip" } },
+  "U2-2": { obj: "Bail out the drifting ferry",                 scene: { k: "boat" } },
+  "U2-3": { obj: "Get past the Yawnfish" },
+  "U2-4": { obj: "Smash the lullaby crystals",                  scene: { k: "crack", v: "crystal" } },
+  "U2-5": { obj: "Raise the sunken ferry",                      scene: { k: "rise", v: "ship" } },
+  "U2-6": { obj: "Clear the Fog Heron's mist" },
+  "U3-1": { obj: "Climb the Yawning Peaks",                     scene: { k: "steps" } },
+  "U3-2": { obj: "Shield the climbers from the snore storm",    scene: { k: "shield" } },
+  "U3-3": { obj: "Out-butt the Thunder Ram" },
+  "U3-4": { obj: "Crack the thunder rock",                      scene: { k: "crack", v: "rock" } },
+  "U3-5": { obj: "Bridge the gap between the clouds",           scene: { k: "bridge", v: "sky" } },
+  "U3-6": { obj: "Rain out Grumblecloud" },
+  "U4-1": { obj: "Light the castle torches",                    scene: { k: "flame", v: "brazier" } },
+  "U4-2": { obj: "Run up the castle stairs",                    scene: { k: "steps" } },
+  "U4-3": { obj: "Shake off the Sand Knight" },
+  "U4-4": { obj: "Smash the Dream Clock",                       scene: { k: "crack", v: "crystal" } },
+  "U4-5": { obj: "Raise the castle drawbridge",                 scene: { k: "rise", v: "pillar" } },
+  "U4-6": { obj: "Wake up Count Slumber" },
 };
 CAMP_LIST.forEach(m => Object.assign(m, MISSION_STORY[m.id]));
 
@@ -3461,6 +3597,32 @@ const STORY = {
     ["steel", "Two whole campaigns of leg day, recruit. Gravity itself couldn't keep you down."],
     ["pip", "Can we go home now? My legs are tired, and I don't even have legs!"],
   ],
+  // ----- Sit-up campaign: The Long Nap -----
+  prologue5: [
+    ["narr", "One afternoon, a yawn rolls across the land like a wave. Farmers drop their forks. Kids fall asleep on the swings. Nobody wakes up.", "dark"],
+    ["slumber", "Shhh. Lie down, everyone. The world is so much nicer when it's asleep. I am Count Slumber, and it is bedtime. Forever.", "dream"],
+    ["steel", "Everybody's flat on their backs, recruit. So we're going to sit up. Again and again, until the whole world sits up with us.", "camp"],
+    ["pip", "Sit-ups! The opposite of a nap! I'm so ready. Wake up, world!"],
+  ],
+  chapter5: [
+    [ ["narr", "Snoozeville. The whole town fell asleep mid-afternoon. The baker is snoring into his bread.", "farm"],
+      ["pip", "Hellooo? Anybody? Somebody's dog is asleep standing up!"],
+      ["steel", "Every sit-up rings the bell, recruit. Let's give this town an alarm it can't ignore."] ],
+    [ ["narr", "Past the town lies Lake Lullaby. Its water hums a soft song, and every boat on it has drifted off to sleep.", "lake"],
+      ["pip", "La la la… wait, that song is really nice… so cozy…"],
+      ["steel", "Pip! Wake up! Sit-ups, recruit. Keep that spark awake."] ],
+    [ ["narr", "Above the lake rise the Yawning Peaks, where the storm clouds snore, and every rumble of thunder makes you sleepier.", "storm"],
+      ["steel", "Big climb, big storm. Strong core keeps you standing in the wind."],
+      ["pip", "I'm not scared of thunder. Thunder's scared of me. Mostly."] ],
+    [ ["narr", "At the top of the world sits Castle Slumber. Inside, it's always bedtime, and the Count never, ever gets up.", "dream"],
+      ["slumber", "You climbed all this way? You must be exhausted. Come in. The beds are very soft."],
+      ["pip", "No thank you! We're here to wake you up, mister!"] ],
+  ],
+  epilogue5: [
+    ["narr", "With the Dream Clock smashed, the sun pours into Castle Slumber. All over the land, people sit up in bed, stretch, and wonder why they're so hungry.", "dawn"],
+    ["steel", "Thousands of sit-ups, recruit. You woke up the whole world. Now that's a strong core."],
+    ["pip", "And now? Now I think I'll have a nap. Just a little one. Kidding!"],
+  ],
 };
 Object.assign(STORY.m, {
   "5-1": { pre:  [["steel", "We borrowed a fishing boat, and it leaks. Every push-up bails out a bucket.", "coast"], ["pip", "Stop for too long and we sink! No pressure!"]],
@@ -3592,21 +3754,57 @@ Object.assign(STORY.m, {
   "S8-5": { pre:  [["narr", "The Baron tips his fortress tower towards the world below. It's falling!", "moon"], ["steel", "Push it back up, recruit. Don't you dare stop!"]] },
   "S8-6": { pre:  [["baron", "Everything falls, little spark. Rocks fall. Seas fall. Heroes fall. Why stand up?", "moon"], ["steel", "Because every time we fall, we stand back up."], ["pip", "That's literally what a squat is!"]],
             post: [["baron", "No! I'm the one who makes things fall! Not meeeee!", "moon"], ["pip", "Bye bye, Baron! Have fun in space!"]] },
+  // ----- Sit-up campaign -----
+  "U1-1": { pre:  [["steel", "Down on your back, recruit, side-on to the camera. Every sit-up rings the town bell.", "farm"], ["pip", "Ding dong! Wake up, Snoozeville!"]],
+            post: [["pip", "A window opened! Someone yawned! It's working!", "farm"]] },
+  "U1-2": { pre:  [["narr", "The town clock stopped at exactly nap time. Its hands won't move.", "farm"], ["steel", "Then we wind it ourselves. Quick, before the town drifts off again."]] },
+  "U1-3": { pre:  [["narr", "A pillow as big as a house stomps down the high street, feathers flying.", "farm"], ["boss", "Pillow fight! Pillow fight! Whoever loses has to go to sleep!"]],
+            post: [["boss", "Pfff… the Count… made me so fluffy…", "farm"], ["pip", "Feathers everywhere! It's snowing pillows!"]] },
+  "U1-4": { pre:  [["steel", "No half sit-ups, recruit. All the way up, or it doesn't count.", "farm"]] },
+  "U1-5": { pre:  [["pip", "The rooster's asleep! Who's going to wake the farm? Oh. Us. It's us.", "farm"]] },
+  "U1-6": { pre:  [["narr", "A huge bear lies across the town gate, snoring so hard the trees shake.", "farm"], ["boss", "Mmmph. Five more minutes. Five more years."]],
+            post: [["boss", "Oh! I'm awake! Sorry about the snoring. The lake is humming again. That's what got me.", "farm"], ["steel", "Then we go to the lake."]] },
+  "U2-1": { pre:  [["pip", "This mist is so cozy… keep me glowing, or I'll fall asleep!", "lake"]] },
+  "U2-2": { pre:  [["narr", "The ferry captain dozed off at the wheel. The ferry is drifting and filling with water.", "lake"], ["steel", "Bail it out, recruit. Every sit-up is a bucket."]] },
+  "U2-3": { pre:  [["narr", "The water bulges. A fish with a mouth like a cave rises up and yawns.", "lake"], ["boss", "Hwaaaah. Go on. Yawn with me. You know you want to."]],
+            post: [["boss", "Hwah? I'm… awake? That feels weird. Nice weird.", "lake"]] },
+  "U2-4": { pre:  [["steel", "Those crystals under the lake are humming the lullaby. Full sit-ups smash them.", "lake"]] },
+  "U2-5": { pre:  [["pip", "The ferry sank with everyone asleep on board! Lift it, lift it!", "lake"]],
+            post: [["pip", "They're up! And still asleep. But they're up!", "lake"]] },
+  "U2-6": { pre:  [["narr", "A tall grey bird stands in the middle of the lake. Mist pours off its wings.", "lake"], ["boss", "Hush. Quiet. Still. The Count likes it still."]],
+            post: [["boss", "The mist… is lifting… the storm will stop you…", "lake"], ["steel", "Storms don't stop us. Up the mountain."]] },
+  "U3-1": { pre:  [["steel", "Long climb. Every sit-up is a step. Don't look at the top, look at the next one.", "storm"]] },
+  "U3-2": { pre:  [["narr", "The thunder rumbles like a giant snore. Each rumble makes your eyes heavier.", "storm"], ["pip", "Shield up! Keep the snore out!"]] },
+  "U3-3": { pre:  [["narr", "A ram with lightning crackling between its horns blocks the mountain pass.", "storm"], ["boss", "Baaa! Nobody climbs my mountain! Go back to bed!"]],
+            post: [["boss", "Baaa… my head… that's a hard core you've got there…", "storm"]] },
+  "U3-4": { pre:  [["steel", "A boulder the size of a barn. Full sit-ups only, recruit. Crack it!", "storm"]] },
+  "U3-5": { pre:  [["pip", "The clouds are drifting apart! Build the bridge before they float away!", "storm"]] },
+  "U3-6": { pre:  [["narr", "The biggest cloud on the mountain turns around. It has a face, and it's grumpy.", "storm"], ["boss", "Rumble rumble. Snore snore. Who's making all that noise?"]],
+            post: [["boss", "Drip… drip… fine. I'm all rained out. The castle's up there.", "storm"], ["pip", "Blue sky! I can see the castle!"]] },
+  "U4-1": { pre:  [["narr", "Castle Slumber is pitch dark inside. The dark makes your eyelids droop.", "dream"], ["steel", "Light the torches, recruit. Keep moving."]] },
+  "U4-2": { pre:  [["pip", "The snoring in these halls is so loud! Up the stairs, quick!", "dream"]] },
+  "U4-3": { pre:  [["narr", "A knight made of sand blocks the Count's bedroom. It lifts a glowing hourglass.", "dream"], ["boss", "Sleep, little hero. Sand in your eyes. Sand in your dreams."]],
+            post: [["boss", "Crumbling… crumbling… the Dream Clock… keeps him asleep…", "dream"]] },
+  "U4-4": { pre:  [["slumber", "Not my Dream Clock! It's been ticking for a hundred years!", "dream"], ["pip", "Then it's time it stopped! Smash it!"]],
+            post: [["slumber", "My clock! Oh, I feel so… awake. I hate it!", "dream"]] },
+  "U4-5": { pre:  [["steel", "Raise the drawbridge so the morning sun gets in. Don't stop, recruit!", "dream"]] },
+  "U4-6": { pre:  [["slumber", "Why fight it, little spark? Lie down. Close your eyes. Isn't sleep wonderful?", "dream"], ["steel", "Sleep is wonderful. At night. Then you get up."], ["pip", "Rise and shine, Count!"]],
+            post: [["slumber", "The sun! It's so bright! Oh… oh, actually, good morning! I'd forgotten what mornings looked like.", "dream"], ["pip", "Good morning, world!"]] },
 });
 const CH_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT"];
-const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream", "farm", "bog", "steps", "mire", "canyon", "reef", "forge", "moon"];
-const PART_WORDS = ["ONE", "TWO", "THREE", "FOUR"];
+const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream", "farm", "bog", "steps", "mire", "canyon", "reef", "forge", "moon", "farm", "lake", "storm", "dream"];
+const PART_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE"];
 const partOf = m => CHAPTERS[m.ch].part;
 const partFirst = pi => CAMP_LIST.find(m => partOf(m) === pi), partLast = pi => CAMP_LIST.findLast(m => partOf(m) === pi);
-const partLine = pi => pi === 2 ? `The squat campaign. ${PARTS[pi].name}.` : pi === 3 ? `Squat campaign, part two. ${PARTS[pi].name}.` : `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
+const partLine = pi => pi === 4 ? `The sit-up campaign. ${PARTS[pi].name}.` : pi === 2 ? `The squat campaign. ${PARTS[pi].name}.` : pi === 3 ? `Squat campaign, part two. ${PARTS[pi].name}.` : `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
 const endLine = pi => pi === 0 || pi === 2 ? "End of part one." : "The end.";
 const storySeen = id => !!(store.storySeen || {})[id];
 const markSeen = id => { store.storySeen ||= {}; store.storySeen[id] = 1; save(); };
 function storySteps(m, when) {
   const s = [], L = l => ({ who: l[0], text: l[1], bg: l[2] });
-  const pi = partOf(m), P2 = ["", "2", "3", "4"][pi];
+  const pi = partOf(m), P2 = ["", "2", "3", "4", "5"][pi];
   if (when === "pre") {
-    if (m === partFirst(pi)) s.push({ part: pi, bg: ["beacon", "coast", "farm", "moon"][pi] }, ...STORY["prologue" + P2].map(L));
+    if (m === partFirst(pi)) s.push({ part: pi, bg: ["beacon", "coast", "farm", "moon", "dark"][pi] }, ...STORY["prologue" + P2].map(L));
     if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...STORY["chapter" + P2][m.ch - PARTS[pi].chs[0]].map(L));
     s.push(...(STORY.m[m.id]?.pre || []).map(L));
   } else {
@@ -3645,6 +3843,7 @@ function castOf(who, ctx) {
   if (who === "vexr") return { name: "Vex", color: "#ffc861", face: bossArt("vexgood"), voice: { pitch: 0.75, rate: 1.05 } };
   if (who === "king") { const a = bossArt("king"); return { name: "The Hollow King", color: THEMES.king.aura, face: a, actor: a, voice: { pitch: 0.3, rate: 0.85 } }; }
   if (who === "baron") { const a = bossArt("baron"); return { name: "Baron Gravity", color: THEMES.baron.aura, face: a, actor: a, voice: { pitch: 0.8, rate: 0.9 } }; }
+  if (who === "slumber") { const a = bossArt("slumber"); return { name: "Count Slumber", color: THEMES.slumber.aura, face: a, actor: a, voice: { pitch: 0.7, rate: 0.85 } }; }
   if (who === "quag") { const a = bossArt("quag"); return { name: "Queen Quagmire", color: THEMES.quag.aura, face: a, actor: a, voice: { pitch: 1.2, rate: 0.9 } }; }
   if (who === "eye") return { name: "The Eye", color: "#c06bff", face: bossArt("void"), voice: { pitch: 0.1, rate: 0.82 } };
   if (who === "pip") return { name: "Pip", color: "#ff9a3d", face: pipSvg("pf"), pip: true, voice: { pitch: 1.8, rate: 1.15 } };
@@ -4090,7 +4289,7 @@ function playCine(steps, ctx = {}) {
           : s.part === 2
           ? `<small>THE SQUAT CAMPAIGN</small><b style="--c:${pc}">${PARTS[2].name}</b><i style="--c:${pc}"></i>`
           : s.part != null
-          ? `<small>PART ${PART_WORDS[s.part]}</small><b style="--c:${pc}">${PARTS[s.part].name}</b><i style="--c:${pc}"></i>`
+          ? `<small>${s.part === 4 ? "SIT-UP CAMPAIGN" : `PART ${PART_WORDS[s.part]}`}</small><b style="--c:${pc}">${PARTS[s.part].name}</b><i style="--c:${pc}"></i>`
           : `<small>CHAPTER ${CH_WORDS[chNum(s.title) - 1]}</small><b style="--c:${c.color}">${c.name}</b><i style="--c:${c.color}"></i>`;
         el.classList.toggle("parting", s.part != null);
         el.classList.add("titling"); q(".cine-actor").classList.remove("on"); q(".cine-pip").classList.remove("on"); curActor = null;
@@ -4618,6 +4817,37 @@ function mapSvg(pi = 0) {
     g += `<g transform="translate(590,${y0 + 120})"><rect x="-50" y="-30" width="100" height="70" fill="#22263a"/>${[-50, -18, 14, 40].map(x => `<rect x="${x}" y="-44" width="10" height="16" fill="#22263a"/>`).join("")}<rect x="-12" y="-100" width="24" height="72" fill="#2a2e44"/><path d="M-18,-100 L0,-130 L18,-100Z" fill="#7a5aff"/><circle cy="0" r="9" fill="#b8a8ff"/></g>`;
   }
   }
+  if (pi === 4) {
+  // --- Sit-up 1: Snoozeville (sleepy rooftops, lamp posts, pillows) ---
+  { const [y0, y1] = band(16);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gSnooze)"/>`;
+    g += place(9, y0, y1, 50, (x, y, r) => { const w = 22 + r() * 14; return `<g transform="translate(${x},${y})"><rect x="${-w}" y="-20" width="${2 * w}" height="34" fill="#c89a6a"/><path d="M${-w - 6},-20 L0,${-46} L${w + 6},-20Z" fill="#8a4a3a"/><rect x="-7" y="-6" width="14" height="20" fill="#3a2418"/><rect x="${w - 18}" y="-14" width="10" height="9" fill="${r() < .5 ? "#ffd27a" : "#3a2a4a"}"/></g>`; });
+    g += place(14, y0, y1, 30, (x, y, r) => `<g transform="translate(${x},${y})"><path d="M-14,-6 Q0,-12 14,-6 Q18,0 14,6 Q0,12 -14,6 Q-18,0 -14,-6Z" fill="#f4eefc" stroke="#b8a8e0" stroke-width="2"/></g>`);
+    g += place(10, y0, y1, 24, (x, y) => `<text x="${x}" y="${y}" font-size="18" font-weight="900" fill="#fff" opacity=".6" font-family="sans-serif">z</text>`);
+  }
+  // --- Sit-up 2: Lake Lullaby (misty water, lily pads, reeds) ---
+  { const [y0, y1] = band(17);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gLake)"/>`;
+    g += place(30, y0, y1, 28, (x, y, r) => { const w = 14 + r() * 18; return `<path d="M${x - w},${y} q${w / 2},-6 ${w},0 t${w},0" stroke="#e8f4ff" stroke-opacity="${0.25 + r() * 0.35}" stroke-width="3" fill="none"/>`; });
+    g += place(14, y0, y1, 30, (x, y, r) => { const s = 10 + r() * 10; return `<path d="M${x},${y} m${s},0 a${s},${s * .6} 0 1 1 -2,-4 L${x},${y}Z" fill="#4a9a5a" stroke="#2a6a3a" stroke-width="1.5"/>`; });
+    g += place(8, y0, y1, 30, (x, y) => `<g transform="translate(${x},${y})" stroke="#3a6a4a" stroke-width="3" stroke-linecap="round"><path d="M0,10 V-24 M8,10 V-18 M-8,10 V-14"/><ellipse cx="0" cy="-28" rx="3" ry="7" fill="#6a4a2a" stroke="none"/></g>`);
+  }
+  // --- Sit-up 3: The Yawning Peaks (storm mountains, clouds, lightning) ---
+  { const [y0, y1] = band(18);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gYawn)"/>`;
+    g += place(12, y0 + 20, y1, 70, (x, y, r) => { const w = 40 + r() * 40, h = 50 + r() * 60; return `<g transform="translate(${x},${y})"><path d="M${-w},20 L0,${-h} L${w},20Z" fill="#4a4a6a"/><path d="M0,${-h} L${w * .3},${-h * .55} L0,${-h * .62} L${-w * .3},${-h * .5}Z" fill="#d8d8f0"/></g>`; });
+    g += place(8, y0, y1, 40, (x, y) => `<g transform="translate(${x},${y})" fill="#6a6890"><circle cx="-14" cy="0" r="12"/><circle cx="0" cy="-6" r="15"/><circle cx="15" cy="0" r="11"/></g>`);
+    g += place(5, y0, y1, 40, (x, y) => `<path d="M${x},${y - 20} l-8,16 h8 l-6,16 l16,-22 h-8 l6,-10Z" fill="#ffe23a" opacity=".85"/>`);
+  }
+  // --- Sit-up 4: Castle Slumber (night sky, stars, moon, castle) ---
+  { const [y0, y1] = band(19);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gSlumber)"/>`;
+    g += place(50, y0, y1, 10, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${0.8 + r() * 1.8}" fill="#fff" opacity="${0.4 + r() * 0.6}"/>`);
+    g += place(8, y0, y1, 30, (x, y) => `<text x="${x}" y="${y}" font-size="20" font-weight="900" fill="#e0d0ff" opacity=".5" font-family="sans-serif">Z</text>`);
+    g += `<g transform="translate(590,${y0 + 120})"><rect x="-50" y="-30" width="100" height="70" fill="#2a1450"/>${[-50, -18, 14, 40].map(x => `<rect x="${x}" y="-44" width="10" height="16" fill="#2a1450"/>`).join("")}<rect x="-12" y="-100" width="24" height="72" fill="#3a1a6a"/><path d="M-18,-100 L0,-130 L18,-100Z" fill="#8a5aff"/><rect x="-5" y="-80" width="10" height="12" fill="#ffd27a"/></g>`;
+    g += `<path d="M120,${y0 + 70} a26,26 0 1 0 14,46 a20,20 0 1 1 -14,-46Z" fill="#ffe08a"/>`;
+  }
+  }
   // soft seams between chapters
   for (let ci = 1; ci < 4; ci++) { const y = MAP_H - ci * BAND; g += `<rect x="0" y="${y - 40}" width="${MAP_W}" height="80" fill="url(#gSeam)"/>`; }
   const roadSvg = `<path d="${road}" stroke="#000" stroke-opacity=".45" stroke-width="40" fill="none" stroke-linecap="round"/>
@@ -4642,6 +4872,10 @@ function mapSvg(pi = 0) {
       <linearGradient id="gReef" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#063a5a"/><stop offset="1" stop-color="#127a9a"/></linearGradient>
       <linearGradient id="gForge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0806"/><stop offset="1" stop-color="#3a1208"/></linearGradient>
       <linearGradient id="gMoon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05040f"/><stop offset="1" stop-color="#1e1c44"/></linearGradient>
+      <linearGradient id="gSnooze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a7a4a"/><stop offset="1" stop-color="#9aa86a"/></linearGradient>
+      <linearGradient id="gLake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a6a9a"/><stop offset="1" stop-color="#7aaad0"/></linearGradient>
+      <linearGradient id="gYawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1e3a"/><stop offset="1" stop-color="#3a3a62"/></linearGradient>
+      <linearGradient id="gSlumber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0418"/><stop offset="1" stop-color="#2a1048"/></linearGradient>
       <linearGradient id="gSeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
     </defs>${g}${roadSvg}<path id="cmapDone" d="" stroke="#ffc21a" stroke-width="8" fill="none" stroke-linecap="round" opacity=".85"/></svg>` };
   return mapSvgCache[pi];
@@ -4708,7 +4942,7 @@ function renderCampaign() {
   const lastBoss = BOSSES[partLast(pi - 1 >= 0 ? pi - 1 : 0).boss];
   $("campMap").innerHTML = `
     <div class="cmap-scroll" id="cmapScroll"><div class="cmap part-${pi}">${svg}${regions}${nodes}${you}</div></div>
-    <div class="cmap-top"><div class="cmap-camps">${CAMPAIGNS.map((C, q) => `<button class="cmap-camp ${q ? "sq" : ""} ${q === cs ? "on" : ""}" data-camp="${q}">${C.icon} ${C.name.replace(" Campaign", "")}</button>`).join("")}</div><span>★ ${campTotal()} / ${cks.length * 3}</span></div>
+    <div class="cmap-top"><div class="cmap-camps">${CAMPAIGNS.map((C, q) => `<button class="cmap-camp ${["", "sq", "su"][q]} ${q === cs ? "on" : ""}" data-camp="${q}">${C.icon} ${C.name.replace(" Campaign", "")}</button>`).join("")}</div><span>★ ${campTotal()} / ${cks.length * 3}</span></div>
     ${tabs ? `<div class="cmap-parts">${tabs}</div>` : ""}
     ${!pOpen ? `<div class="cm-brief cm-plock" style="--c:#ff5fa8">
       <div class="cm-bt">🔒 Part ${partNo(pi) + 1} · ${PARTS[pi].name}</div>
@@ -4741,7 +4975,7 @@ function renderCampaign() {
 
 function renderCampPanel() {
   const cs = campSet();
-  $("campProg").innerHTML = PARTS.map((P, pi) => !CAMPAIGNS[cs].parts.includes(pi) ? "" : `<div class="cp-part">${CAMPAIGNS[cs].ex === "squat" ? "🦵 SQUAT " : ""}PART ${partNo(pi) + 1} · ${P.name}</div>` + P.chs.map(ci => { const c = CHAPTERS[ci];
+  $("campProg").innerHTML = PARTS.map((P, pi) => !CAMPAIGNS[cs].parts.includes(pi) ? "" : `<div class="cp-part">${CAMPAIGNS[cs].ex === "squat" ? "🦵 SQUAT " : CAMPAIGNS[cs].ex === "situp" ? "🛏️ SIT-UP " : ""}PART ${partNo(pi) + 1} · ${P.name}</div>` + P.chs.map(ci => { const c = CHAPTERS[ci];
     const ms = CAMP_LIST.filter(m => m.ch === ci), done = ms.filter(m => campStars(m.id)).length, got = ms.reduce((t, m) => t + campStars(m.id), 0);
     return `<div class="cp-row" style="--c:${c.color}"><span>${chapterUnlocked(ci) ? "" : "🔒 "}${chNum(ci)}. ${c.name}</span><span class="muted">${done}/${ms.length} · ★${got}</span>
       <div class="cp-bar"><i style="width:${done / ms.length * 100}%"></i></div></div>`;
@@ -4810,7 +5044,7 @@ function missionRep(depthPct) {
   if (M.state === "countdown") { sfx.rep(); return; }
   if (M.state !== "go") return;
   const now = performance.now();
-  if (M.goal.type === "deep" && depthPct < CRIT) { M.misses++; sfx.clang(); mCallout("TOO SHALLOW", "GO DEEPER", "blue"); missionText(); return; }
+  if (M.goal.type === "deep" && depthPct < CRIT) { M.misses++; sfx.clang(); mCallout(exercise === "situp" ? "TOO LOW" : "TOO SHALLOW", exercise === "situp" ? "SIT ALL THE WAY UP" : "GO DEEPER", "blue"); missionText(); return; }
   if (M.reps) M.maxGap = Math.max(M.maxGap, (now - M.lastRepAt) / 1000);
   M.reps++; M.lastRepAt = now;
   sceneRep();
