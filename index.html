@@ -2045,7 +2045,7 @@ function tick(dt) {
     if (F.nextAttack <= 0) {
       F.state = "windup"; F.windupLeft = windupTime();
       $("bossWrap").classList.add("windup");
-      callout("INCOMING!", "PUSH-UP TO PARRY", "red");
+      callout("INCOMING!", exercise === "squat" ? "SQUAT TO PARRY" : "PUSH-UP TO PARRY", "red");
       sfx.roar(); say("Incoming! Parry!");
     }
   } else if (F.state === "windup") {
