@@ -898,6 +898,7 @@
   .fog-13 .cmap-clouds .cb-back { fill: #0a3a5a; } .fog-13 .cmap-clouds .cb-front { fill: #1a5a7a; }
   .fog-14 .cmap-clouds .cb-back { fill: #2a1410; } .fog-14 .cmap-clouds .cb-front { fill: #4a2418; }
   .fog-15 .cmap-clouds .cb-back { fill: #14123a; } .fog-15 .cmap-clouds .cb-front { fill: #2a2858; }
+  #startOverlay.not-train { display: none; }
 </style>
 </head>
 <body>
@@ -1822,8 +1823,12 @@ function toast(msg) {
 let mode = "train";
 function setMode(m) {
   if (inMatch()) return;
-  if (m !== mode && camReady && !F && !B && !M && !net) { if (setCount > 0) endSet(); else stopCamera(0, "Start camera"); }   // switching tabs: camera off
+  if (m !== mode && camReady && !F && !B && !M && !net) { if (setCount > 0) endSet(false); stopCamera(0, "Start camera"); }   // switching tabs: camera off
+  if (m !== mode) $("setDone").hidden = true;
   mode = m;
+  // each tab is its own screen: the "Ready to train?" start screen only belongs to Training
+  // (Campaign, Boss Battles and 1v1 start the camera from their own buttons)
+  $("startOverlay").classList.toggle("not-train", m !== "train");
   $("tabTrain").classList.toggle("on", m === "train");
   $("tabCamp").classList.toggle("on", m === "campaign");
   $("campPanel").hidden = m !== "campaign";
@@ -1860,6 +1865,7 @@ $("tabFood").onclick = () => setMode("food");
 let setCount = 0, pendingRankUps = [], bestToasted = false;
 
 function onRep(depthPct) {
+  if (!inMatch() && mode !== "train") return;   // e.g. still moving on a result screen or the map: not a training set
   if (exercise === "squat") return onSquat(depthPct);
   const before = rankIndex(store.total), today = dayKey(), beforeToday = store.days[today] || 0;
   setCount++; store.total++; store.kcal += kcalPerRep();
@@ -1919,7 +1925,7 @@ function endSet(showSummary = true) {
   const hadReps = setCount > 0;
   if (setCount > 0) {
     store.sets++; save(); renderRank();
-    if (showSummary && !F && !B) showSetDone(setCount);
+    if (showSummary && !F && !B && !M && mode === "train") showSetDone(setCount);
   }
   setCount = 0; $("setCount").textContent = 0; bestToasted = false;
   $("endBtn").disabled = true;
