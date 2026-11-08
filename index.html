@@ -963,6 +963,7 @@
   .hx-bar .cb-l span:first-child { color: #ffd600; }
   .hx-dots i { width: 9px; height: 6px; } .hx-dots i.run { border-radius: 50%; width: 6px; }
   .hx-r { display: flex; align-items: center; gap: 10px; }
+  .hx-for { font-style: normal; color: var(--muted); font-weight: 400; }
   .hx-clock { display: grid; justify-items: end; line-height: 1; } .hx-clock b { font: 700 28px var(--display); font-variant-numeric: tabular-nums; }
   .hx-clock span { font-size: 11.5px; color: var(--muted); margin-top: 3px; white-space: nowrap; } .hx-clock span.ahead { color: var(--good); } .hx-clock span.behind { color: var(--bad); }
   .hx-flash { position: absolute; left: 50%; top: 46%; z-index: 8; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 4px; text-align: center; pointer-events: none;
@@ -1240,7 +1241,7 @@
     <div class="panel" style="margin-top:18px" id="howHyrox" hidden>
       <h3>How Hyrox at home works</h3>
       <ul class="tips">
-        <li>A real Hyrox race is 8 × 1 km runs, each one followed by a workout station. This version needs no equipment: every run is <b>high knees</b> and every station is a bodyweight swap.</li>
+        <li>A real Hyrox race is 8 × 1 km runs, each one followed by a workout station. This version needs no equipment: each run is a different cardio move the camera counts (high knees, jumping jacks, butt kicks, skaters, squat jumps) and every station is a bodyweight swap.</li>
         <li>Stand the camera up 2–3 m away, around hip height, so your <b>whole body</b> is in view, standing and on the floor.</li>
         <li>Counted parts end when you hit the target. Wall sit, plank and mountain climbers are timed. The clock never stops, so moving fast between parts is part of the race.</li>
         <li>Camera missed something? Press <b>Skip</b>. The race still finishes, but it won't count as a PB.</li>
@@ -1989,8 +1990,8 @@ function announcerLines() {
   L.push("Get ready.", "Ten seconds.", "Set done. Rest.", "Last set. As many as you can. Go!", "Workout complete!");
   for (let m = 2; m <= 6; m++) for (let n = 1; n < m; n++) L.push(`Set ${n} of ${m}. Go!`);
   // Hyrox at home
-  for (let n = 1; n <= 7; n++) L.push(`Run ${n}. High knees. Go!`);
-  L.push("Last run! High knees. Empty the tank!", "Welcome to Hyrox at home. Get ready.", "Race complete!", "New personal best!",
+  L.push("Run 1. High knees. Go!", "Run 2. Jumping jacks. Go!", "Run 3. Butt kicks. Go!", "Run 4. Skaters. Go!", "Run 5. High knees. Go!", "Run 6. Squat jumps. Go!", "Run 7. Jumping jacks. Go!", "Last run! Sprint knees. Empty the tank!");
+  L.push( "Welcome to Hyrox at home. Get ready.", "Race complete!", "New personal best!",
     "Station one. Ski erg. Push-ups. Go!", "Station two. Sled push. Wall sit. Hold it!", "Station three. Sled pull. Plank. Hold it!",
     "Station four. Burpee broad jumps. Burpees. Go!", "Station five. Row. Push-ups. Go!", "Station six. Farmers carry. Mountain climbers. Go!",
     "Station seven. Sandbag lunges. Lunges. Go!", "Final station. Wall balls. Squats. Finish it!");
@@ -2722,6 +2723,9 @@ const EX = {
   push:  { one: "push-up", many: "push-ups", Many: "Push-ups", icon: "💪" },
   squat: { one: "squat",   many: "squats",   Many: "Squats",   icon: "🦵" },
   knees: { one: "knee lift", many: "knee lifts", Many: "Knee lifts", icon: "🏃" },
+  jacks: { one: "jumping jack", many: "jumping jacks", Many: "Jumping jacks", icon: "⭐" },
+  kicks: { one: "butt kick", many: "butt kicks", Many: "Butt kicks", icon: "🦶" },
+  skate: { one: "skater", many: "skaters", Many: "Skaters", icon: "⛸️" },
 };
 const exWord = (n, ex = exercise) => n === 1 ? EX[ex].one : EX[ex].many;
 const sqStore = () => { store.sq ||= {}; store.sq.total ||= 0; store.sq.best ||= 0; store.sq.days ||= {}; store.sq.goal ||= 30; return store.sq; };
@@ -2753,7 +2757,7 @@ function setTrainEx(e) {
 function renderExUI() {
   const te = store.exercise === "squat" ? "squat" : "push";
   document.querySelectorAll(".ex-switch button").forEach(b => b.classList.toggle("on", b.dataset.ex === te));
-  $("angleLbl").textContent = exercise === "knees" ? "Knee lift" : exercise === "squat" ? "Knee °" : "Elbow °";
+  $("angleLbl").textContent = exercise === "knees" ? "Knee lift" : exercise === "jacks" ? "Arms up" : exercise === "kicks" ? "Heel lift" : exercise === "skate" ? "Side shift" : exercise === "squat" ? "Knee °" : "Elbow °";
   $("startTip").innerHTML = te === "squat"
     ? "Stand the camera up about 2–3 m away, around hip height, so your whole body from head to feet is in view. Facing it or side-on both work."
     : "Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.";
@@ -2839,7 +2843,7 @@ function squatStep(lm) {
 function detect(lm) {
   syncExercise();
   if (HR?.active && HR.phase === "go" && !HR.segs[HR.idx].cam) return;   // timed Hyrox hold: nothing to count
-  exercise === "knees" ? kneeStep(lm) : exercise === "squat" ? squatStep(lm) : step(analyse(lm));
+  CARDIO.has(exercise) ? cardioStep(lm) : exercise === "squat" ? squatStep(lm) : step(analyse(lm));
 }
 
 // ================= CAMERA + MODEL + SKELETON =================
@@ -6167,7 +6171,7 @@ var coachInit = true;   // setMode can run during start-up before this point
 window.__coach = { plan: coachPlan, start: coachStart, get W() { return CW; }, store: coachStore, skip: coachSkipRest, setStats };   // test hook
 
 // ================= HYROX AT HOME: 8 runs + 8 stations, no equipment, the clock never stops =================
-// Real Hyrox is 8 × 1 km run, each followed by a workout station. Here every run is high knees (counted by the camera)
+// Real Hyrox is 8 × 1 km run, each followed by a workout station. Here each run is a cardio move counted by the camera
 // and every station is a bodyweight swap: counted on camera where it can see the move, timed where it can't.
 // The "say" lines are pre-recorded: keep them identical to the list in announcerLines().
 const HX_DIVS = {
@@ -6175,7 +6179,18 @@ const HX_DIVS = {
   open: { name: "Open", icon: "🏃", note: "The standard race." },
   pro:  { name: "Pro",  icon: "🔥", note: "More reps, longer holds." },
 };
-const HX_RUN = { lite: 50, open: 80, pro: 120 };
+// each 1 km run is a different camera-counted cardio move ("say" lines are recorded: keep them in announcerLines)
+const HX_RUNS = [
+  { ex: "knees", name: "High knees", icon: "🏃", unit: "knee lifts", t: { lite: 50, open: 80, pro: 120 }, say: "Run 1. High knees. Go!", tip: "Knees up to hip height, pump your arms." },
+  { ex: "jacks", name: "Jumping jacks", icon: "⭐", unit: "jumping jacks", t: { lite: 25, open: 40, pro: 60 }, say: "Run 2. Jumping jacks. Go!", tip: "Hands all the way overhead, feet out wide." },
+  { ex: "kicks", name: "Butt kicks", icon: "🦶", unit: "butt kicks", t: { lite: 50, open: 80, pro: 120 }, say: "Run 3. Butt kicks. Go!", tip: "Heels up to your glutes, stay light on your toes." },
+  { ex: "skate", name: "Skaters", icon: "⛸️", unit: "skaters", t: { lite: 16, open: 24, pro: 36 }, say: "Run 4. Skaters. Go!", tip: "Leap side to side and land on one leg." },
+  { ex: "knees", name: "High knees", icon: "🏃", unit: "knee lifts", t: { lite: 50, open: 80, pro: 120 }, say: "Run 5. High knees. Go!", tip: "Halfway there. Knees up, keep the pace." },
+  { ex: "squat", name: "Squat jumps", icon: "🦘", unit: "squat jumps", t: { lite: 10, open: 15, pro: 22 }, say: "Run 6. Squat jumps. Go!", tip: "Squat down, explode up, land soft." },
+  { ex: "jacks", name: "Jumping jacks", icon: "⭐", unit: "jumping jacks", t: { lite: 25, open: 40, pro: 60 }, say: "Run 7. Jumping jacks. Go!", tip: "Big arms, keep moving." },
+  { ex: "knees", name: "Sprint knees", icon: "⚡", unit: "knee lifts", t: { lite: 60, open: 100, pro: 140 }, say: "Last run! Sprint knees. Empty the tank!", tip: "Last run. As fast as you can!" },
+];
+const CARDIO = new Set(["knees", "jacks", "kicks", "skate"]);
 const HX_STATIONS = [
   { real: "SkiErg", icon: "🎿", name: "Push-ups", ex: "push", cam: true, tally: true, t: { lite: 10, open: 20, pro: 30 }, say: "Station one. Ski erg. Push-ups. Go!", tip: "Chest down, push back up." },
   { real: "Sled Push", icon: "🛷", name: "Wall sit", ex: "squat", cam: false, secs: { lite: 30, open: 45, pro: 60 }, say: "Station two. Sled push. Wall sit. Hold it!", tip: "Back flat on a wall, thighs level with the floor. Hold it!" },
@@ -6189,8 +6204,8 @@ const HX_STATIONS = [
 function hxSegs(div) {
   const out = [];
   HX_STATIONS.forEach((s, i) => {
-    out.push({ kind: "run", n: i + 1, icon: "🏃", real: "1 km run", name: "High knees", ex: "knees", cam: true, tally: false, target: HX_RUN[div],
-      say: i === 7 ? "Last run! High knees. Empty the tank!" : `Run ${i + 1}. High knees. Go!`, tip: "Knees up to hip height, pump your arms." });
+    const r = HX_RUNS[i];
+    out.push({ kind: "run", n: i + 1, icon: r.icon, real: "1 km run", name: r.name, unit: r.unit, ex: r.ex, cam: true, tally: false, target: r.t[div], say: r.say, tip: r.tip });
     out.push({ kind: "station", n: i + 1, icon: s.icon, real: s.real, name: s.name, ex: s.ex, cam: s.cam, tally: !!s.tally, target: s.t?.[div] || 0, secs: s.secs?.[div] || 0, say: s.say, tip: s.tip });
   });
   return out;
@@ -6203,11 +6218,11 @@ const hxStore = () => {
 const hxFmt = s => { s = Math.max(0, Math.round(s)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
 const hxDelta = d => `${d < 0 ? "−" : "+"}${hxFmt(Math.abs(d))}`;
 const hxSegLabel = s => s.kind === "run" ? `RUN ${s.n} / 8` : s.n === 8 ? "FINAL STATION" : `STATION ${s.n} / 8`;
-const hxGoal = s => s.secs ? `${s.secs} s` : `${s.target} ${s.kind === "run" ? "knee lifts" : s.name.toLowerCase()}`;
+const hxGoal = s => s.secs ? `${s.secs} s` : `${s.target} ${s.unit || s.name.toLowerCase()}`;
 
 // ---- high knees: a knee counts when it comes up towards hip height and drops back down ----
 const KN = {};
-function knReset() { Object.assign(KN, { thigh: null, up: [false, false], peak: [0, 0], lastAt: [0, 0] }); }
+function knReset() { Object.assign(KN, { thigh: null, shin: null, up: [false, false], peak: [0, 0], lastAt: [0, 0], arms: false, armsAt: 0, cx: null, side: 0, sideAt: 0 }); }
 knReset();
 function kneeStep(lm) {
   const cw = canvas.width || 1, ch = canvas.height || 1, now = performance.now();
@@ -6229,7 +6244,7 @@ function kneeStep(lm) {
     if (!KN.up[i]) { if (lift > 0.35) { KN.up[i] = true; KN.peak[i] = lift; } }
     else {
       KN.peak[i] = Math.max(KN.peak[i], lift);
-      if (lift < 0.15) { KN.up[i] = false; if (now - KN.lastAt[i] > 180) { KN.lastAt[i] = now; hxKnee(KN.peak[i]); } }
+      if (lift < 0.15) { KN.up[i] = false; if (now - KN.lastAt[i] > 180) { KN.lastAt[i] = now; hxCardio(); } }
     }
   });
   $("angleVal").textContent = Math.round(top * 100) + "%";
@@ -6237,6 +6252,47 @@ function kneeStep(lm) {
   $("depthMeter").style.width = Math.min(100, top * 100) + "%";
   setPhase(top > 0.35 ? "UP" : "RUN");
   setFeedback(top > 0.6 ? "Knees up! Keep going!" : top > 0.35 ? "Higher!" : "Run in place — knees up!", top > 0.35 ? "good" : "warn");
+}
+
+// ---- the other cardio moves ----
+function cardioStep(lm) {
+  if (exercise === "knees") return kneeStep(lm);
+  const cw = canvas.width || 1, ch = canvas.height || 1, now = performance.now();
+  const P = i => ({ x: lm[i].x * cw, y: lm[i].y * ch, v: vis(lm[i]) });
+  const meter = (v, label, good) => { const pc = Math.round(Math.max(0, Math.min(1, v)) * 100); $("angleVal").textContent = pc + "%"; $("depthVal").textContent = pc + "%"; $("depthMeter").style.width = pc + "%"; setPhase(good ? "UP" : "GO"); setFeedback(label, good ? "good" : "warn"); };
+  if (exercise === "jacks") {   // a jack counts when both hands go up above your shoulders and come back down
+    const sh = [P(11), P(12)], wr = [P(15), P(16)].filter(w => w.v > 0.3), hp = [P(23), P(24)];
+    if (sh.some(s => s.v < 0.4) || !wr.length) { setFeedback("Step back so your arms and head are in the picture", "bad"); setPhase("READY"); return; }
+    const shY = (sh[0].y + sh[1].y) / 2, torso = hp.every(x => x.v > 0.3) ? Math.abs((hp[0].y + hp[1].y) / 2 - shY) : 0.25 * ch;
+    const hi = Math.min(...wr.map(w => w.y)), lo = Math.max(...wr.map(w => w.y));
+    const up = lo < shY - 0.2 * torso, down = hi > shY + 0.35 * torso;
+    if (!KN.arms && up) KN.arms = true;
+    else if (KN.arms && down) { KN.arms = false; if (now - KN.armsAt > 300) { KN.armsAt = now; hxCardio(); } }
+    return meter((shY + 0.35 * torso - hi) / (0.75 * torso), up ? "Arms up! Now down!" : KN.arms ? "Bring them down" : "Arms all the way up!", up);
+  }
+  if (exercise === "kicks") {   // a kick counts when a heel comes up behind towards knee height and drops again
+    const legs = [[25, 27], [26, 28]].map(([k, a]) => ({ k: P(k), a: P(a) })), seen = legs.map(L => L.k.v > 0.35 && L.a.v > 0.3);
+    if (!seen.some(Boolean)) { setFeedback("Step back so your feet are in the picture", "bad"); setPhase("READY"); return; }
+    const len = Math.max(...legs.filter((_, i) => seen[i]).map(L => L.a.y - L.k.y));
+    KN.shin = KN.shin == null ? Math.max(len, 0.08 * ch) : Math.max(len, KN.shin * 0.995, 0.05 * ch);
+    let top = 0;
+    legs.forEach((L, i) => {
+      if (!seen[i]) return;
+      const lift = Math.max(0, 1 - (L.a.y - L.k.y) / KN.shin); top = Math.max(top, lift);
+      if (!KN.up[i]) { if (lift > 0.4) KN.up[i] = true; }
+      else if (lift < 0.15) { KN.up[i] = false; if (now - KN.lastAt[i] > 180) { KN.lastAt[i] = now; hxCardio(); } }
+    });
+    return meter(top, top > 0.4 ? "Heels up! Keep going!" : "Kick your heels up behind you", top > 0.4);
+  }
+  if (exercise === "skate") {   // a skater counts each time your hips leap across from one side to the other
+    const a = P(23), b = P(24);
+    if (a.v < 0.4 || b.v < 0.4) { setFeedback("Step back so your hips are in the picture", "bad"); setPhase("READY"); return; }
+    const x = (a.x + b.x) / 2, w = Math.max(Math.abs(a.x - b.x), 0.04 * cw);
+    KN.cx = KN.cx == null ? x : KN.cx * 0.96 + x * 0.04;   // your average spot, follows you slowly
+    const off = (x - KN.cx) / w, side = off > 0.5 ? 1 : off < -0.5 ? -1 : 0;
+    if (side && side !== KN.side) { if (now - KN.sideAt > 250) hxCardio(); KN.side = side; KN.sideAt = now; }
+    return meter(Math.abs(off) / 1.2, side ? "Now leap to the other side!" : "Leap side to side!", !!side);
+  }
 }
 
 // ---- the race ----
@@ -6273,7 +6329,7 @@ function hxNext(skip = false) {
   HR.splits.push(+t.toFixed(1)); HR.counts.push(HR.count); HR.skipped.push(!!(skip && short));
   if (HR.best) { const cum = HR.splits.reduce((a, b) => a + b, 0), bc = HR.best.splits.slice(0, HR.splits.length).reduce((a, b) => a + b, 0); HR.delta = cum - bc; }
   if (HR.idx + 1 >= HR.segs.length) return hxFinish();
-  sfx.rep(); hxGo(HR.idx + 1);
+  sfx.rep(); knReset(); hxGo(HR.idx + 1);
 }
 function hxLoop() {
   if (!HR?.active) { clearInterval(hxTick); return; }
@@ -6298,7 +6354,7 @@ function hxLoop() {
 function hxRep(depthPct) {
   if (!HR?.active || HR.phase !== "go") return false;
   const s = HR.segs[HR.idx];
-  if (!s.cam || s.ex === "knees") return false;
+  if (!s.cam || CARDIO.has(s.ex)) return false;
   HR.count++; HR.reps++;
   if (!s.tally) trRep(depthPct);
   if (!s.tally) { sfx.rep(); $("setCount").textContent = HR.count; const chip = $("countChip"); chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump"); }
@@ -6306,8 +6362,8 @@ function hxRep(depthPct) {
   else hxBarUI();
   return s.tally;
 }
-function hxKnee() {
-  if (!HR?.active || HR.phase !== "go" || HR.segs[HR.idx].ex !== "knees") return;
+function hxCardio() {
+  if (!HR?.active || HR.phase !== "go" || !CARDIO.has(HR.segs[HR.idx].ex)) return;
   HR.count++;
   trRep(0, { knees: true });
   $("setCount").textContent = HR.count;
@@ -6351,13 +6407,13 @@ function hxBarUI() {
   const s = HR.segs[HR.idx], now = performance.now(), going = HR.phase === "go";
   const raceT = going || HR.splits.length ? HR.splits.reduce((a, b) => a + b, 0) + (going ? (now - HR.segStart) / 1000 : 0) : 0;
   $("hxSeg").textContent = going ? `${s.icon} ${hxSegLabel(s)}` : "🏁 HYROX AT HOME";
-  $("hxName").innerHTML = going ? `${s.name}<span class="hx-for"> · for ${s.kind === "station" ? s.real : "the 1 km run"}</span>` : `${HX_DIVS[HR.div].name} · get ready`;
+  $("hxName").innerHTML = going ? `${s.name}<em class="hx-for"> · for ${s.kind === "station" ? s.real : "the 1 km run"}</em>` : `${HX_DIVS[HR.div].name} · get ready`;
   $("hxDots").innerHTML = HR.segs.map((x, i) => `<i class="${x.kind}${i < HR.idx || (i === HR.idx && !going && HR.splits.length > i) ? " done" : i === HR.idx && going ? " on" : ""}"></i>`).join("");
   if (s.secs && going) {
     const left = Math.max(0, Math.ceil(s.secs - (now - HR.segStart) / 1000));
     $("hxNum").textContent = hxFmt(left); $("hxOf").textContent = "hold"; $("hxFill").style.width = Math.min(100, (1 - left / s.secs) * 100) + "%";
   } else {
-    $("hxNum").textContent = going ? HR.count : 0; $("hxOf").textContent = `/ ${s.target} ${s.kind === "run" ? "knee lifts" : s.name.toLowerCase()}`;
+    $("hxNum").textContent = going ? HR.count : 0; $("hxOf").textContent = `/ ${s.target} ${s.unit || s.name.toLowerCase()}`;
     $("hxFill").style.width = going ? Math.min(100, HR.count / s.target * 100) + "%" : "0%";
   }
   $("hxClock").textContent = hxFmt(raceT);
@@ -6373,8 +6429,8 @@ function hxReadyUI() {
   el.querySelector(".cr-t").textContent = on ? "GET READY" : "STARTING CAMERA…";
   el.querySelector(".cr-n").textContent = on ? left : "…";
   el.querySelector(".cr-ring").style.setProperty("--k", on ? left / 10 : 1);
-  el.querySelector(".cr-next").textContent = `First: ${s.icon} Run 1 · ${s.target} high knees`;
-  el.querySelector(".cr-cue").textContent = "Stand 2–3 m back so your whole body is in view, standing and on the floor. Check your knees show up on the skeleton.";
+  el.querySelector(".cr-next").textContent = `First: ${s.icon} Run 1 · ${hxGoal(s)}`;
+  el.querySelector(".cr-cue").textContent = "Stand 2–3 m back so your whole body is in view, standing and on the floor. Check your arms, knees and feet show up on the skeleton.";
   $("hxStartNow").hidden = !on;
   hxBarUI();
 }
@@ -6387,7 +6443,7 @@ function renderHyrox() {
     <div class="hx-divs">${Object.entries(HX_DIVS).map(([k, d]) => `<button class="hx-div${k === div ? " on" : ""}" data-div="${k}"><b>${d.icon} ${d.name}</b><span>${d.note}</span><em>${h.best[k] ? `PB ${hxFmt(h.best[k].total)}` : "no race yet"}</em></button>`).join("")}</div>
     <div class="hx-course">${HX_STATIONS.map((_, i) => { const r = segs[i * 2], s = segs[i * 2 + 1];
       const pb = j => best ? `<i>${hxFmt(best.splits[j])}</i>` : "";
-      return `<div class="hx-row"><span class="hx-n">${i + 1}</span><span class="hx-run">🏃 ${r.target} high knees${pb(i * 2)}</span><span class="hx-st">${s.icon} <b>${s.name}</b> ${s.secs ? `${s.secs} s` : `× ${s.target}`}<small>${s.real}</small>${pb(i * 2 + 1)}</span></div>`; }).join("")}</div>
+      return `<div class="hx-row"><span class="hx-n">${i + 1}</span><span class="hx-run">${r.icon} ${hxGoal(r)}${pb(i * 2)}</span><span class="hx-st">${s.icon} <b>${s.name}</b> ${s.secs ? `${s.secs} s` : `× ${s.target}`}<small>${s.real}</small>${pb(i * 2 + 1)}</span></div>`; }).join("")}</div>
     <div class="hx-go"><button id="hxGo">▶ Start ${HX_DIVS[div].name} race</button><div class="muted" id="hxStatus">${best ? `Your ${HX_DIVS[div].name} PB: <b>${hxFmt(best.total)}</b>` : "Your first race sets your PB."}</div></div>`;
   lob.querySelectorAll(".hx-div").forEach(b => b.onclick = () => { if (HR?.active) return; h.div = b.dataset.div; save(); renderHyrox(); });
   $("hxGo").onclick = () => hxStart(h.div);
@@ -6419,7 +6475,7 @@ function showHxReport(r) {
     <h2>${r.pb ? "🏆 NEW PERSONAL BEST" : "RACE COMPLETE"}</h2>
     <div class="big">${hxFmt(r.total)}</div>
     <div class="muted">Hyrox at home · ${HX_DIVS[r.div].icon} ${HX_DIVS[r.div].name}${best ? ` · PB ${hxFmt(best.total)} (${hxDelta(r.total - best.total)})` : ""}</div>
-    <div class="result-stats"><div><b>${hxFmt(sum(runs))}</b>Runs</div><div><b>${hxFmt(sum(sts))}</b>Stations</div><div><b>${r.counts.filter((_, i) => segs[i].kind === "run").reduce((a, b) => a + b, 0)}</b>Knee lifts</div><div><b>${r.reps}</b>Reps</div></div>
+    <div class="result-stats"><div><b>${hxFmt(sum(runs))}</b>Runs</div><div><b>${hxFmt(sum(sts))}</b>Stations</div><div><b>${r.counts.filter((_, i) => segs[i].kind === "run").reduce((a, b) => a + b, 0)}</b>Run reps</div><div><b>${r.reps}</b>Reps</div></div>
     <table class="co-table hx-table"><thead><tr><th></th><th>🏃 Run</th><th>Station</th><th>Time</th></tr></thead><tbody>${[0, 1, 2, 3, 4, 5, 6, 7].map(row).join("")}</tbody></table>
     <div class="co-verdict">${tips.join(" ")}</div>
     <div class="row"><button id="hxAgain">Race again</button><button class="ghost" id="hxOk">Done</button></div>`;
@@ -6616,7 +6672,7 @@ function trHear(e) {
 // slowing down mid-set
 setInterval(() => {
   if (!trWatching() || !lastRepTime) return;
-  const inSet = HR?.active ? HR.segs[HR.idx].cam && HR.segs[HR.idx].ex !== "knees" && HR.count >= 3 : CW?.active ? CW.phase === "set" && CW.cur.times.length >= 3 : setCount >= 3;
+  const inSet = HR?.active ? HR.segs[HR.idx].cam && !CARDIO.has(HR.segs[HR.idx].ex) && HR.count >= 3 : CW?.active ? CW.phase === "set" && CW.cur.times.length >= 3 : setCount >= 3;
   if (!inSet) return;
   const g = trSet.gaps.slice(-5), med = g.length ? [...g].sort((a, b) => a - b)[g.length >> 1] : 1500;
   const quiet = performance.now() - lastRepTime;
