@@ -749,6 +749,25 @@
     .vs-row .vs { font-size: 24px; } .pcard .bdg { width: 44px; height: 44px; } .pcard .fn { font-size: 15px; }
   }
   /* ---------- meal plan ---------- */
+  /* ---- stretch tab ---- */
+  .st-panel { min-width: 0; } .st-head { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+  .st-head h3 { margin: 0 0 4px; } .st-stats { display: flex; gap: 8px; } .st-stats div { display: grid; text-align: center; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid var(--line2); min-width: 64px; }
+  .st-stats b { font: 700 22px var(--display); } .st-stats span { font-size: 11px; color: var(--muted); }
+  .st-done { margin-top: 12px; padding: 9px 12px; border-radius: 10px; background: rgba(47,212,122,.12); border: 1px solid rgba(47,212,122,.5); font-size: 14px; }
+  .st-sec { margin: 18px 0 8px; font: 700 13px var(--display); letter-spacing: 1.5px; text-transform: uppercase; } .st-sec .muted { text-transform: none; letter-spacing: 0; font: 400 13px var(--body, inherit); }
+  .st-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+  .st-card { --c: var(--accent); width: 100%; display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 12px; align-items: center; text-align: left; padding: 12px 14px; border-radius: 16px;
+    background: color-mix(in srgb, var(--c) 8%, rgba(255,255,255,.02)); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); color: var(--text, #fff); }
+  .st-card:hover { border-color: var(--c); } .st-card.big { padding: 16px 18px; background: color-mix(in srgb, var(--c) 16%, rgba(255,255,255,.02)); border-color: var(--c); box-shadow: 0 0 22px color-mix(in srgb, var(--c) 25%, transparent); }
+  .st-ic { font-size: 32px; text-align: center; } .st-card.big .st-ic { font-size: 40px; }
+  .st-txt { display: grid; gap: 2px; min-width: 0; } .st-txt b { font: 700 16px var(--display); } .st-card.big .st-txt b { font-size: 20px; } .st-txt small { font-size: 12.5px; color: var(--muted); font-weight: 400; }
+  .st-row { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; } .st-row i { font-style: normal; font-size: 15px; }
+  .st-go { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #111; font-size: 14px; }
+  .st-tips { margin-top: 18px; }
+  .st-play, .st-end { text-align: center; } .st-play h2, .st-end h2 { font: 700 18px var(--display); letter-spacing: 2px; color: var(--c); margin: 0; }
+  .st-play .cr-ring { margin: 14px auto 6px; } .st-play .rec-how { max-width: 460px; margin: 10px auto; } .st-play .row, .st-end .row { justify-content: center; margin-top: 14px; }
+  .st-end .big { margin: 12px 0; } .st-end .tr-quote { max-width: 480px; margin: 0 auto; text-align: left; }
+  @media (max-width: 600px) { .st-stats div { padding: 6px 8px; min-width: 0; } .st-stats b { font-size: 18px; } .st-grid { grid-template-columns: 1fr; } .st-row i { font-size: 13px; } }
   #foodView { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; } #foodView > .panel { min-width: 0; }
   .fd-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .fd-head button:not(.ghost) { padding: 8px 14px; font-size: 13px; }
@@ -881,6 +900,7 @@
   .ex-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
   #sqStats { margin-top: 8px; } #sqStats:empty { display: none; }
   .ex-switch button { white-space: nowrap; }
+  .ex-row { flex-wrap: wrap; } .ex-row .ex-switch button { padding: 6px 10px; font-size: 12.5px; }
   @media (max-width: 600px) { .ex-switch button, .overlay .ex-switch button { padding: 8px 11px; font-size: 13px; } .ex-row { flex-wrap: wrap; } }
   .cmap-top .cmap-camps { display: flex; gap: 4px; background: rgba(0,0,0,.45); border: 1px solid var(--line2); border-radius: 12px; padding: 3px; }
   .cmap-camp { background: transparent; color: #cfd4de; padding: 5px 11px; font-size: 12.5px; border-radius: 9px; letter-spacing: .5px; }
@@ -1068,6 +1088,7 @@
     <button id="tabBoss"><i class="tl-ic">⚔ </i><span class="tl-lg">Boss Battles</span><span class="tl-sm">Bosses</span></button>
     <button id="tabHyrox"><i class="tl-ic">🏁 </i>Hyrox</button>
     <button id="tabPvp"><i class="tl-ic">🥊 </i>1v1</button>
+    <button id="tabStretch"><i class="tl-ic">🧘 </i>Stretch</button>
     <button id="tabFood"><i class="tl-ic">🍽 </i><span class="tl-lg">Meal Plan</span><span class="tl-sm">Meals</span></button>
   </div>
   <div style="display:flex;gap:8px">
@@ -1195,6 +1216,7 @@
       </div>
     </div>
 
+    <div id="stretchView" hidden></div>
     <div id="foodView" hidden>
       <div class="panel" id="fdNoProf" hidden>
         <h3>Meal plan</h3>
@@ -2096,8 +2118,12 @@ function setMode(m) {
   $("howPvp").hidden = m !== "pvp";
   $("pvpLobby").hidden = m !== "pvp" || !!B;
   if (m === "pvp") { renderLobby(); renderPvpPanel(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+  $("tabStretch").classList.toggle("on", m === "stretch");
+  $("stretchView").hidden = m !== "stretch";
+  if (m !== "stretch" && typeof stretchInit !== "undefined" && ST) stFinish(false);
+  if (m === "stretch" && typeof stretchInit !== "undefined") renderStretch();
   $("tabFood").classList.toggle("on", m === "food");
-  $("stage").hidden = m === "food";
+  $("stage").hidden = m === "food" || m === "stretch";
   $("foodView").hidden = m !== "food";
   $("fdTargets").hidden = $("fdMicros").hidden = m !== "food";
   if (m === "food") { foodDay = dayKey(); renderFood(); }
@@ -2115,6 +2141,7 @@ $("tabBoss").onclick = () => setMode("boss");
 $("tabPvp").onclick = () => setMode("pvp");
 $("tabHyrox").onclick = () => setMode("hyrox");
 $("tabFood").onclick = () => setMode("food");
+$("tabStretch").onclick = () => setMode("stretch");
 
 // ================= REPS =================
 let setCount = 0, pendingRankUps = [], bestToasted = false;
@@ -6959,6 +6986,18 @@ const STRETCHES = [
   { id: "glute", name: "Figure-four glute stretch", g: "legs", icon: "🍑", secs: 30, sides: true, how: "Lying on your back, cross one ankle over the other knee and pull both legs towards you.", say: "Glute stretch. Ankle over knee, and pull your legs in." },
   { id: "calf", name: "Calf stretch", g: "legs", icon: "🧱", secs: 30, sides: true, how: "Hands on a wall, one leg back with the heel down and the knee straight.", say: "Calf stretch. Back heel down, knee straight." },
   { id: "squat", name: "Deep squat hold", g: "legs", icon: "🪑", secs: 40, how: "Sit into a deep squat, heels down, elbows pushing your knees out. Breathe.", say: "Deep squat hold. Heels down, chest up, breathe." },
+  { id: "neck", name: "Neck side stretch", g: "neck", icon: "🙆", secs: 30, sides: true, how: "Sit or stand tall. Drop one ear towards your shoulder and let the other shoulder sink down.", say: "Neck stretch. Ear towards your shoulder, and let the other shoulder drop." },
+  { id: "circles", name: "Arm circles", g: "warm", icon: "🔄", secs: 30, how: "Arms out to the sides. Small circles forwards, getting bigger. Halfway through, go backwards.", say: "Arm circles. Start small and get bigger." },
+  { id: "xshoulder", name: "Cross-body shoulder stretch", g: "shoulder", icon: "🤷", secs: 30, sides: true, how: "Bring one arm straight across your chest and hug it in with the other arm, just above the elbow.", say: "Shoulder stretch. Pull your arm across your chest." },
+  { id: "upperback", name: "Upper back stretch", g: "shoulder", icon: "🤗", secs: 30, how: "Clasp your hands in front, push them away and round your upper back like you're hugging a big ball.", say: "Upper back stretch. Push your hands away and round your back." },
+  { id: "sidebend", name: "Standing side bend", g: "core", icon: "🌙", secs: 30, sides: true, how: "Feet hip-width apart. Reach one arm overhead and lean the other way. Keep your hips still.", say: "Side bend. Reach up and over, hips still." },
+  { id: "cobra", name: "Cobra", g: "core", icon: "🐍", secs: 30, how: "Lie face down, hands under your shoulders. Gently press your chest up and keep your hips on the floor.", say: "Cobra. Press your chest up gently, hips stay down." },
+  { id: "kneehug", name: "Knees to chest", g: "back", icon: "🫂", secs: 40, how: "Lie on your back and hug both knees into your chest. Rock gently side to side.", say: "Knees to chest. Hug them in and rock gently." },
+  { id: "twist", name: "Lying spinal twist", g: "back", icon: "🌀", secs: 30, sides: true, how: "Lie on your back, drop both bent knees to one side and look the other way. Keep both shoulders down.", say: "Spinal twist. Knees to one side, look the other way." },
+  { id: "wgs", name: "Lunge with a twist", g: "hips", icon: "🌍", secs: 30, sides: true, how: "Step into a deep lunge, put the opposite hand on the floor and reach your other arm up to the ceiling.", say: "Lunge with a twist. Deep lunge, and reach up to the ceiling." },
+  { id: "butterfly", name: "Butterfly stretch", g: "hips", icon: "🦋", secs: 40, how: "Sit tall with the soles of your feet together. Let your knees drop and lean forward a little.", say: "Butterfly stretch. Feet together, let your knees drop." },
+  { id: "downdog", name: "Downward dog", g: "hips", icon: "🐕", secs: 40, how: "Hands and feet on the floor, hips up high in an upside-down V. Press your heels towards the floor.", say: "Downward dog. Hips up high, heels down." },
+  { id: "legswall", name: "Legs up the wall", g: "back", icon: "🧱", secs: 60, how: "Lie on your back with your legs resting straight up a wall. Close your eyes and breathe slowly.", say: "Legs up the wall. Close your eyes and breathe slowly." },
   { id: "breathe", name: "Box breathing", g: "core", icon: "🌬", secs: 48, how: "Breathe in for 4, hold for 4, out for 4, hold for 4. Let your heart rate settle.", say: "Box breathing. In for four, hold for four, out for four, hold for four." },
 ];
 const DAY_TYPES = {
@@ -7267,6 +7306,135 @@ function recTime() {   // only the clock changes between stretches, so the butto
 const trQuote = text => `<div class="tr-quote"><span class="tr-face" style="--c:${trT().color}">${TRAINER_ART[trStore().id]}</span><div>${text}</div></div>`;
 var trainerInit = true;
 window.__trainer = { schedule: () => trSchedule(), analyze: () => trAnalyze(), ready: () => trReadiness(), rec: () => recStart(), say: trainer, rep: trRep, hear: trHear, msg: trMessage, store: trStore, get set() { return trSet; }, dbg: () => ({ watching: trWatching(), ann: !!(annCur && !annCur.paused && !annCur.ended), annSrc: annCur?.src?.slice(-14), since: Math.round(performance.now() - trLastAt), last: { ...trLast } }) };   // test hook
+
+// ================= STRETCH TAB =================
+// Guided stretch routines (the same stretch list as the trainer's recovery session, read out in your trainer's voice).
+// A finished routine logs its minutes, keeps a stretch streak, and counts as a recovery day for the trainer.
+const ROUTINES = [
+  { id: "morning", icon: "🌅", name: "Morning wake-up",  sub: "Loosen up after sleep",        c: "#ffb86b", list: ["catcow", "neck", "circles", "sidebend", "wgs", "ham", "breathe"] },
+  { id: "push",    icon: "💪", name: "After push-ups",   sub: "Chest, shoulders, arms",       c: "#ffc21a", list: ["wrist", "chest", "tricep", "xshoulder", "thread", "upperback", "childs"] },
+  { id: "squat",   icon: "🦵", name: "After squats",     sub: "Quads, hips, hamstrings",      c: "#b8e04a", list: ["quad", "hip", "ham", "glute", "calf", "butterfly", "squat"] },
+  { id: "situp",   icon: "🛏️", name: "After sit-ups",    sub: "Abs and lower back",           c: "#c08aff", list: ["cobra", "kneehug", "twist", "catcow", "sidebend", "childs"] },
+  { id: "full",    icon: "🧍", name: "Full body",        sub: "Head to toe",                  c: "#3ad6c0", list: ["catcow", "neck", "chest", "xshoulder", "wgs", "quad", "hip", "ham", "glute", "twist", "childs", "breathe"] },
+  { id: "desk",    icon: "💻", name: "Desk reset",       sub: "Neck and back, no floor needed", c: "#7ab8ff", list: ["neck", "xshoulder", "upperback", "chest", "sidebend", "wrist", "ham"] },
+  { id: "hyrox",   icon: "🏁", name: "Hyrox cool-down",  sub: "After a race",                 c: "#ff7a4a", list: ["calf", "quad", "hip", "ham", "glute", "chest", "downdog", "breathe"] },
+  { id: "bed",     icon: "🌙", name: "Before bed",       sub: "Slow and calm",                c: "#8a7aff", list: ["childs", "kneehug", "twist", "glute", "butterfly", "legswall", "breathe"] },
+];
+let ST = null;   // the routine that's playing
+const stStore = () => { store.stretch ||= {}; store.stretch.days ||= {}; store.stretch.n ||= 0; return store.stretch; };
+const stOf = id => STRETCHES.find(s => s.id === id);
+const stList = r => r.list.map(stOf).filter(Boolean);
+const stSecs = r => sum(stList(r).map(s => s.secs * (s.sides ? 2 : 1)));
+const stMin = secs => Math.max(1, Math.round(secs / 60));
+function stStreak() {
+  const d = stStore().days; let n = 0;
+  for (let i = d[dayKey()] ? 0 : 1; i < 400; i++) { if (d[kAgo(i)]) n++; else break; }
+  return n;
+}
+// what to stretch today: whatever you trained most today or yesterday, otherwise by time of day
+function stPick() {
+  const hr = new Date().getHours(), load = k => ({ push: store.days[k] || 0, squat: store.sq?.days?.[k] || 0, situp: store.su?.days?.[k] || 0, hyrox: (store.hyrox?.hist || []).filter(h => h.d === k).length });
+  for (const k of [dayKey(), kAgo(1)]) {
+    const L = load(k);
+    if (L.hyrox) return { id: "hyrox", why: k === dayKey() ? "You raced Hyrox today." : "You raced Hyrox yesterday." };
+    const [ex, n] = Object.entries(L).filter(([e]) => e !== "hyrox").sort((a, b) => b[1] - a[1])[0];
+    if (n >= 10) return { id: ex, why: `You did ${n} ${EX[ex].many} ${k === dayKey() ? "today" : "yesterday"}.` };
+  }
+  return hr < 11 ? { id: "morning", why: "Good morning. Start the day loose." } : hr >= 20 ? { id: "bed", why: "It's getting late. Wind down before sleep." } : { id: "full", why: "A quick head-to-toe session." };
+}
+function renderStretch() {
+  const el = $("stretchView"); if (!el || ST) return;
+  const S = stStore(), pick = stPick(), P = ROUTINES.find(r => r.id === pick.id);
+  const week = sum(Array.from({ length: 7 }, (_, i) => S.days[kAgo(i)] || 0)), streak = stStreak(), today = S.days[dayKey()] || 0;
+  const card = (r, big) => `<button class="st-card ${big ? "big" : ""}" data-r="${r.id}" style="--c:${r.c}">
+      <span class="st-ic">${r.icon}</span><span class="st-txt"><b>${r.name}</b><small>${r.sub} · ${stMin(stSecs(r))} min</small>
+      <span class="st-row">${stList(r).map(s => `<i title="${s.name}">${s.icon}</i>`).join("")}</span></span><span class="st-go">▶</span></button>`;
+  el.innerHTML = `<div class="panel st-panel">
+      <div class="st-head"><div><h3>🧘 Stretch &amp; mobility</h3><span class="muted">Guided routines with a timer and your trainer's voice. No camera needed.</span></div>
+        <div class="st-stats"><div><b>${streak}</b><span>day streak</span></div><div><b>${Math.round(week / 60)}</b><span>min this week</span></div><div><b>${S.n}</b><span>${S.n === 1 ? "session" : "sessions"}</span></div></div></div>
+      ${today ? `<div class="st-done">✅ You stretched for ${stMin(today)} min today.</div>` : ""}
+      <div class="st-sec">Recommended for you <span class="muted">· ${pick.why}</span></div>
+      ${card(P, true)}
+      <div class="st-sec">All routines</div>
+      <div class="st-grid">${ROUTINES.filter(r => r.id !== P.id).map(r => card(r)).join("")}</div>
+      <ul class="tips st-tips"><li>Stretch until you feel a gentle pull, never pain. Breathe slowly and don't bounce.</li>
+        <li>Stretches marked <b>each side</b> run twice: your trainer tells you when to switch.</li>
+        <li>Finishing a routine keeps your stretch streak and counts as a recovery day for your trainer.</li></ul>
+    </div>`;
+  el.querySelectorAll(".st-card").forEach(b => b.onclick = () => stStart(b.dataset.r));
+}
+function stStart(id) {
+  if (ST || inMatch()) return;
+  const r = ROUTINES.find(x => x.id === id);
+  ST = { r, list: stList(r), i: 0, side: 0, until: 0, paused: 0, startedAt: Date.now(), done: 0, secs: 0 };
+  stUI(); clearInterval(stStart.t); stStart.t = setInterval(stTick, 250);
+  setTimeout(() => ST && !ST.until && stGo(0), 1800);
+}
+function stGo(i, side = 0) {
+  const s = ST.list[i]; ST.i = i; ST.side = side; ST.until = performance.now() + s.secs * 1000; ST.lastTick = 0; ST.paused = 0;
+  if (typeof trainerInit !== "undefined") { if (side === 0) trSpeak(s.say); else trSpeak(TRAINER_LINES[trStore().id].recSwitch[0]); }
+  stUI();
+}
+function stTick() {
+  if (!ST) { clearInterval(stStart.t); return; }
+  if (!ST.until || ST.paused) return stTime();
+  const left = Math.ceil((ST.until - performance.now()) / 1000);
+  if (left <= 3 && left > 0 && ST.lastTick !== left) { ST.lastTick = left; sfx.tick(); }
+  if (left <= 0) stNext(true); else stTime();
+}
+function stNext(full) {
+  const s = ST.list[ST.i];
+  ST.secs += full ? s.secs : Math.max(0, s.secs - stLeft());
+  if (s.sides && ST.side === 0) return stGo(ST.i, 1);
+  ST.done++;
+  if (ST.i + 1 >= ST.list.length) return stFinish(true);
+  sfx.rep(); stGo(ST.i + 1);
+}
+function stFinish(complete) {
+  const r = ST; ST = null; clearInterval(stStart.t);
+  if (r.until && !complete) r.secs += Math.max(0, r.list[r.i].secs - Math.ceil((r.until - (r.paused || performance.now())) / 1000));
+  const ok = complete || r.done >= Math.ceil(r.list.length * 0.7);
+  const S = stStore();
+  if (r.secs >= 20) { S.days[dayKey()] = (S.days[dayKey()] || 0) + Math.round(r.secs); const keys = Object.keys(S.days).sort(); while (keys.length > 400) delete S.days[keys.shift()]; }
+  if (ok) { S.n++; S.last = r.r.id;
+    if (typeof trainerInit !== "undefined") { const t = trStore(); t.rec ||= {}; t.rec[dayKey()] = 1; } }
+  save();
+  const mins = stMin(r.secs), quote = ok ? `${r.done} stretches, ${mins} min. ${stStreak() > 1 ? `That's a ${stStreak()}-day stretch streak!` : "Come back tomorrow to start a streak."}` : "Stopped early. Even a couple of minutes helps.";
+  $("stretchView").innerHTML = `<div class="panel st-panel st-end" style="--c:${r.r.c}"><h2>${ok ? "STRETCH DONE" : "STRETCH STOPPED"}</h2>
+    <div class="big">${r.r.icon} ${mins} min</div>
+    ${typeof trainerInit !== "undefined" ? trQuote(quote) : `<p>${quote}</p>`}
+    <div class="row"><button id="stOk">Done</button></div></div>`;
+  $("stOk").onclick = () => renderStretch();
+  if (ok) { if (typeof trainerInit !== "undefined") trSpeak(TRAINER_LINES[trStore().id].recDone[0]); confetti(60); sfx.fanfare(); }
+  renderRank();
+}
+const stLeft = () => { const s = ST.list[ST.i]; return ST.until ? Math.max(0, Math.ceil((ST.until - (ST.paused || performance.now())) / 1000)) : s.secs; };
+function stUI() {
+  if (!ST) return;
+  const s = ST.list[ST.i], next = ST.list[ST.i + 1], total = stSecs(ST.r);
+  $("stretchView").innerHTML = `<div class="panel st-panel st-play" style="--c:${ST.r.c}">
+    <h2>${ST.r.icon} ${ST.r.name.toUpperCase()}</h2>
+    <div class="rec-dots">${ST.list.map((x, i) => `<i class="${i < ST.i ? "done" : i === ST.i ? "on" : ""}"></i>`).join("")}</div>
+    <div class="rec-ic">${s.icon}</div>
+    <div class="big rec-n">${s.name}</div>
+    ${s.sides ? `<div class="rec-side">${ST.side ? "Other side" : "First side"}</div>` : ""}
+    <div class="cr-ring rec-ring" style="--k:1"><div class="cr-n">…</div></div>
+    <p class="muted rec-how">${s.how}</p>
+    <div class="muted rec-next">${ST.until ? "" : "Get into position… "}${next ? `Next: ${next.icon} ${next.name}` : "Last one"} · ${ST.i + 1} of ${ST.list.length} · about ${stMin(total)} min</div>
+    <div class="row"><button class="ghost" id="stPause">${ST.paused ? "▶ Resume" : "⏸ Pause"}</button><button id="stSkip">${ST.until ? "Skip ▶" : "Start now ▶"}</button><button class="ghost" id="stStop">Stop</button></div></div>`;
+  $("stPause").onclick = () => { if (!ST.until) return; if (ST.paused) { ST.until += performance.now() - ST.paused; ST.paused = 0; } else ST.paused = performance.now(); stUI(); };
+  $("stSkip").onclick = () => { if (!ST.until) return stGo(0); stNext(false); };
+  $("stStop").onclick = () => stFinish(false);
+  stTime();
+}
+function stTime() {
+  if (!ST) return;
+  const c = $("stretchView"), s = ST.list[ST.i], left = stLeft();
+  c.querySelector(".cr-n").textContent = ST.until ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "…";
+  c.querySelector(".rec-ring").style.setProperty("--k", ST.until ? left / s.secs : 1);
+}
+var stretchInit = true;
+window.__stretch = { get ST() { return ST; }, start: stStart, next: () => ST && stNext(true), stop: () => ST && stFinish(false), routines: ROUTINES, pick: stPick, store: stStore };
 
 renderExUI(); renderRank(); renderCoach(); renderHyrox(); $("coachPanel").hidden = mode !== "train";
 </script>
