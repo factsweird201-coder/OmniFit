@@ -963,7 +963,7 @@
   .co-done { background: rgba(47,212,122,.1); border: 1px solid rgba(47,212,122,.35); border-radius: 12px; padding: 9px 12px; font-size: 13.5px; margin-bottom: 10px; }
   .co-plan { display: grid; gap: 6px; } .co-day { font: 700 20px var(--display); } .co-sets b { font-size: 17px; } .co-cue { font-size: 13.5px; }
   .co-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-  .co-trend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .co-trend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
   .co-trend > div { background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; display: grid; gap: 2px; font-size: 12px; color: var(--muted); }
   .co-trend b { font: 700 22px var(--display); color: var(--text); }
   .co-dots { display: flex; gap: 4px; align-items: center; min-height: 10px; } .co-dots i { width: 9px; height: 9px; border-radius: 50%; background: #8a8f9c; }
@@ -1054,7 +1054,7 @@
   }
 
   .tr-sec { font: 700 11px var(--display); letter-spacing: 2px; color: var(--muted); margin: 14px 0 6px; text-transform: uppercase; }
-  .tr-ready { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tr-ready { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .tr-rd { background: rgba(255,255,255,.03); border: 1px solid var(--line2); border-radius: 12px; padding: 8px 10px; display: grid; grid-template-columns: 1fr auto; gap: 4px; align-items: baseline; }
   .tr-rd span { font-size: 12px; color: var(--muted); } .tr-rd b { font: 700 17px var(--display); }
   .tr-rdbar { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; } .tr-rdbar i { display: block; height: 100%; border-radius: 3px; }
@@ -1062,13 +1062,13 @@
   .tr-day { display: grid; justify-items: center; gap: 2px; padding: 7px 2px; border-radius: 10px; background: rgba(255,255,255,.03); border: 1px solid var(--line2); text-align: center; }
   .tr-day span { font: 700 10px var(--display); letter-spacing: .5px; color: var(--muted); } .tr-day i { font-style: normal; font-size: 18px; line-height: 1.2; } .tr-day b { font-size: 10.5px; font-weight: 600; }
   .tr-day.today { box-shadow: 0 0 0 2px var(--accent) inset; } .tr-day.done { background: rgba(47,212,122,.14); border-color: rgba(47,212,122,.5); } .tr-day.done i { color: var(--good); }
-  .tr-day.recovery b { color: #3ad6c0; } .tr-day.rest { opacity: .75; } .tr-day.hyrox b { color: #ffd600; }
+  .tr-day.recovery b { color: #3ad6c0; } .tr-day.rest { opacity: .75; } .tr-day.hyrox b { color: #ffd600; } .tr-day.situp b { color: #c08aff; }
   .tr-insl { display: grid; gap: 6px; }
   .tr-ins { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,.03); border-left: 3px solid #7ad8ff; font-size: 13.5px; line-height: 1.4; }
   .tr-ins.good { border-left-color: var(--good); } .tr-ins.warn { border-left-color: var(--accent); } .tr-ins.bad { border-left-color: var(--bad); background: rgba(255,77,94,.07); }
   .tr-full { margin: 10px 0 12px; } .tr-full summary { cursor: pointer; font-size: 13px; color: var(--muted); padding: 4px 0; }
   .tr-full .tr-ins { margin-top: 6px; }
-  .tr-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0; }
+  .tr-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 8px 0; }
   .tr-stats div { background: rgba(255,255,255,.03); border: 1px solid var(--line2); border-radius: 10px; padding: 7px 8px; font-size: 11.5px; color: var(--muted); } .tr-stats b { display: block; font: 700 17px var(--display); color: var(--text, #fff); }
   .tr-why { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.45; }
   .tr-recgo { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: -2px 0 4px; } .tr-recgo span { font-size: 12.5px; }
@@ -1078,8 +1078,8 @@
   .rec-ic { font-size: 50px; margin-top: 6px; } .rec-n { font-size: 28px !important; } .rec-side { color: #3ad6c0; font: 700 12px var(--display); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
   .rec-ring { margin: 14px auto 10px; } .rec-how { max-width: 360px; margin: 0 auto; line-height: 1.45; font-size: 14px; } .rec-next { font-size: 12.5px; margin-top: 8px; }
   @media (max-width: 600px) {
-    .tr-ready { gap: 5px; } .tr-rd { padding: 6px 7px; } .tr-rd span { font-size: 11px; } .tr-week2 { gap: 3px; } .tr-day { padding: 6px 1px; } .tr-day b { font-size: 9px; } .tr-day i { font-size: 16px; }
-    .tr-stats { grid-template-columns: repeat(2, 1fr); }
+    .tr-ready { gap: 5px; grid-template-columns: repeat(2, 1fr); } .tr-rd { padding: 6px 7px; } .tr-rd span { font-size: 11px; } .tr-week2 { gap: 3px; } .tr-day { padding: 6px 1px; } .tr-day b { font-size: 9px; } .tr-day i { font-size: 16px; }
+    .tr-stats { grid-template-columns: repeat(3, 1fr); }
   }
 </style>
 </head>
@@ -1248,7 +1248,7 @@
       <div id="trainerBox"></div>
       <div class="co-head"><h3>Today's workout</h3><span class="muted" id="coachGoal"></span></div>
       <div id="coachBody"></div>
-      <div class="muted co-how">Your trainer alternates push days and squat days. It watches every rep (how many, how deep, how fast, and where you slowed down) and moves your next target up, holds it, or eases off.</div>
+      <div class="muted co-how">Your trainer rotates push days, squat days and sit-up days. It watches every rep (how many, how deep, how fast, and where you slowed down) and moves your next target up, holds it, or eases off.</div>
     </div>
     <div class="panel" style="margin-top:18px" id="howTrain">
       <h3>How it counts</h3>
@@ -2210,7 +2210,7 @@ function onSitup(depthPct) {
   const chip = $("countChip"); chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump");
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
-  else { sfx.rep(); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b88aff", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  else { sfx.rep(); coachRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b88aff", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
 window.__rep = (d = 0.4) => onRep(d);
@@ -6234,20 +6234,24 @@ const COACH_STYLE = {
   tone:     { sets: 3, rest: 60,  mult: 1.0,  cue: "Smooth, steady reps with full range every time." },
   strength: { sets: 5, rest: 120, mult: 0.65, cue: "Fewer reps, all deep. Pause for a moment at the bottom of each one." },
 };
-const COACH_START = { push: { l0: 5, l1: 8, l2: 14, l3: 22 }, squat: { l0: 10, l1: 14, l2: 20, l3: 28 } };
+const COACH_START = { push: { l0: 5, l1: 8, l2: 14, l3: 22 }, squat: { l0: 10, l1: 14, l2: 20, l3: 28 }, situp: { l0: 6, l1: 10, l2: 15, l3: 22 } };
+const COACH_EX = ["push", "squat", "situp"];
+const coachEx = ex => COACH_EX.includes(ex) ? ex : "push";
+const coachAfter = ex => COACH_EX[(COACH_EX.indexOf(coachEx(ex)) + 1) % 3];
+const exDay = ex => ({ push: "Push day", squat: "Squat day", situp: "Sit-up day" })[coachEx(ex)];
 const coachStore = () => { store.coach ||= {}; store.coach.hist ||= []; store.coach.next ||= "push"; return store.coach; };
 const coachStyle = () => COACH_STYLE[store.profile?.goal] || COACH_STYLE.tone;
 function coachBase(ex) {
   const c = coachStore();
   if (!c[ex]?.base) {   // first time: start from the profile level, or from your best set if you have one
-    const lvl = store.profile?.level || "l1", best = ex === "squat" ? store.sq?.best || 0 : store.best || 0;
+    const lvl = store.profile?.level || "l1", best = ex === "squat" ? store.sq?.best || 0 : ex === "situp" ? store.su?.best || 0 : store.best || 0;
     c[ex] = { base: best >= 5 ? Math.max(3, Math.min(60, Math.round(best * 0.6))) : COACH_START[ex][lvl] || COACH_START[ex].l1 };
   }
   return c[ex].base;
 }
 const coachTarget = ex => Math.max(2, Math.round(coachBase(ex) * coachStyle().mult));
 const coachDoneToday = () => coachStore().hist.some(h => h.d === dayKey() && !h.stopped);
-function coachPlan(ex = (typeof trainerInit !== "undefined" && trTodayEx()) || coachStore().next) { const st = coachStyle(); return { ex, sets: st.sets, target: coachTarget(ex), rest: st.rest, cue: st.cue }; }
+function coachPlan(ex = (typeof trainerInit !== "undefined" && trTodayEx()) || coachStore().next) { ex = coachEx(ex); const st = coachStyle(); return { ex, sets: st.sets, target: coachTarget(ex), rest: st.rest, cue: st.cue }; }
 
 // ---------- reading the reps ----------
 const median = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[s.length >> 1]; };
@@ -6285,7 +6289,7 @@ function coachPhase(ph, secs = 0) {
   CW.phase = ph; CW.until = performance.now() + secs * 1000; CW.said10 = false; CW.lastTick = 0;
   if (ph === "set") {
     CW.cur = { target: CW.target, last: CW.idx === CW.sets - 1, times: [], depths: [] };
-    disarm(); sqReset();
+    disarm(); sqReset(); suReset();
     const last = CW.cur.last;
     say(last ? "Last set. As many as you can. Go!" : `Set ${CW.idx + 1} of ${CW.sets}. Go!`); sfx.go();
     if (last) trainer("lastSet", { prio: 2, delay: 2400 });
@@ -6361,7 +6365,7 @@ function coachFinish(stopped) {
     else if (tired) verdict = "Every set done, but you slowed down early. Same target next time to make it feel easy.";
     else if (extra >= 3 && depth >= 0.4) { nb = base + step * 2; verdict = `Strong! You smashed the last set (+${extra}). Big jump next time.`; }
     else { nb = base + step; verdict = "Every set done with good form. Moving you up."; }
-    c[ex] = { base: nb }; c.next = ex === "push" ? "squat" : "push";
+    c[ex] = { base: nb }; c.next = coachAfter(ex);
   }
   // one coaching tip from how the reps looked, matched to your goal
   if (!stopped && reps >= 4) {
@@ -6384,7 +6388,7 @@ function coachBarUI() {
   if (!CW?.active) return;
   const E = EX[CW.ex], c = CW.cur, n = c && CW.phase === "set" ? c.times.length : 0, t = c?.target ?? CW.target;
   const last = CW.phase === "set" ? c.last : CW.idx === CW.sets - 1;
-  $("cbDay").textContent = `${E.icon} ${CW.ex === "squat" ? "SQUAT" : "PUSH"} DAY`;
+  $("cbDay").textContent = `${E.icon} ${exDay(CW.ex).toUpperCase()}`;
   $("cbSet").textContent = CW.phase === "set" ? `SET ${CW.idx + 1} / ${CW.sets}${last ? " · LAST" : ""}` : CW.phase === "rest" ? `REST · NEXT SET ${CW.idx + 1} / ${CW.sets}` : "GET READY";
   $("cbReps").textContent = n;
   $("cbTarget").textContent = last ? `/ ${t}+ ${E.many}` : `/ ${t} ${E.many}`;
@@ -6412,18 +6416,18 @@ function renderCoach() {
   if (!store.profile) { el.innerHTML = `<p class="muted">Set up your profile first, so the coach can build a plan that fits your level and goal.</p>`; return; }
   const c = coachStore(), st = coachStyle(), g = GOALS[store.profile.goal] || GOALS.tone;
   $("coachGoal").textContent = `${g.icon} ${g.name} plan`;
-  const p = coachPlan(), E = EX[p.ex], other = p.ex === "push" ? "squat" : "push";
+  const p = coachPlan(), E = EX[p.ex], other = coachAfter(p.ex);
   const doneToday = coachDoneToday(), last = c.hist.filter(h => !h.stopped).slice(-1)[0];
   const trend = ex => { const h = c.hist.filter(x => x.ex === ex && !x.stopped).slice(-6); return h.length ? h.map(x => `<i class="${x.to > x.from ? "up" : x.to < x.from ? "down" : ""}" title="${x.d}: ${x.sets.map(s => s[1]).join(", ")}"></i>`).join("") : `<span class="muted">no workouts yet</span>`; };
   el.innerHTML = `
-    ${doneToday ? `<div class="co-done">✅ Today's workout is done${last ? ` · ${last.sets.reduce((t, s) => t + s[1], 0)} ${EX[last.ex].many}, depth ${Math.round(last.depth * 100)}%` : ""}. Come back tomorrow for ${E.icon} ${p.ex === "squat" ? "squat" : "push"} day.</div>` : ""}
+    ${doneToday ? `<div class="co-done">✅ Today's workout is done${last ? ` · ${last.sets.reduce((t, s) => t + s[1], 0)} ${EX[last.ex].many}, depth ${Math.round(last.depth * 100)}%` : ""}. Come back tomorrow for ${E.icon} ${exDay(p.ex).toLowerCase()}.</div>` : ""}
     <div class="co-plan">
-      <div class="co-day">${E.icon} ${doneToday ? "Next: " : typeof trainerInit !== "undefined" && !trTodayEx() ? "If you train anyway: " : "Today: "}${p.ex === "squat" ? "Squat day" : "Push day"}</div>
+      <div class="co-day">${E.icon} ${doneToday ? "Next: " : typeof trainerInit !== "undefined" && !trTodayEx() ? "If you train anyway: " : "Today: "}${exDay(p.ex)}</div>
       <div class="co-sets"><b>${p.sets} sets × ${p.target}</b> ${E.many} <span class="muted">· last set: as many as you can · rest ${p.rest} s</span></div>
       <div class="muted co-cue">💡 ${p.cue}</div>
-      <div class="co-btns"><button id="coachGo">▶ ${doneToday ? "Do another workout" : "Start workout"}</button><button class="ghost" id="coachSwap">Swap to ${other === "squat" ? "🦵 squats" : "💪 push-ups"}</button></div>
+      <div class="co-btns"><button id="coachGo">▶ ${doneToday ? "Do another workout" : "Start workout"}</button><button class="ghost" id="coachSwap">Swap to ${EX[other].icon} ${EX[other].many}</button></div>
     </div>
-    <div class="co-trend"><div><span>💪 Push-up target</span><b>${coachTarget("push")}</b><span class="co-dots">${trend("push")}</span></div><div><span>🦵 Squat target</span><b>${coachTarget("squat")}</b><span class="co-dots">${trend("squat")}</span></div></div>`;
+    <div class="co-trend"><div><span>💪 Push-up target</span><b>${coachTarget("push")}</b><span class="co-dots">${trend("push")}</span></div><div><span>🦵 Squat target</span><b>${coachTarget("squat")}</b><span class="co-dots">${trend("squat")}</span></div><div><span>🛏️ Sit-up target</span><b>${coachTarget("situp")}</b><span class="co-dots">${trend("situp")}</span></div></div>`;
   $("coachGo").onclick = () => coachStart(p.ex);
   $("coachSwap").onclick = () => { if (CW?.active) return; c.next = other; c.swapDay = dayKey(); save(); renderCoach(); };
 }
@@ -6437,10 +6441,10 @@ function showCoachReport(r) {
   };
   m.querySelector(".card").innerHTML = `
     <h2>${r.stopped ? "WORKOUT STOPPED" : "WORKOUT COMPLETE"}</h2>
-    <div class="big">${E.icon} ${r.ex === "squat" ? "Squat" : "Push"} day</div>
+    <div class="big">${E.icon} ${exDay(r.ex)}</div>
     <div class="result-stats"><div><b>${r.reps}</b>${E.Many}</div><div><b>${Math.round(r.depth * 100)}%</b>Avg depth</div><div><b>${r.reps ? Math.round(r.deep / r.reps * 100) : 0}%</b>Deep reps</div><div><b>${Math.floor(r.secs / 60)}:${String(r.secs % 60).padStart(2, "0")}</b>Time</div></div>
     <table class="co-table"><thead><tr><th>Set</th><th>Reps</th><th>Depth</th><th>Pace</th><th></th></tr></thead><tbody>${r.sets.map((s, i) => row(s, r.stats[i], i)).join("")}</tbody></table>
-    <div class="co-verdict">${r.to > r.from ? "📈" : r.to < r.from ? "📉" : "➡️"} ${r.verdict}${r.stopped ? "" : `<b>Next ${r.ex === "squat" ? "squat" : "push"} day: ${coachStyle().sets} × ${r.to}${r.to !== r.from ? ` (was ${r.from})` : ""}</b>`}</div>
+    <div class="co-verdict">${r.to > r.from ? "📈" : r.to < r.from ? "📉" : "➡️"} ${r.verdict}${r.stopped ? "" : `<b>Next ${exDay(r.ex).toLowerCase()}: ${coachStyle().sets} × ${r.to}${r.to !== r.from ? ` (was ${r.from})` : ""}</b>`}</div>
     <div class="row"><button id="coachOk">Done</button></div>`;
   m.classList.add("show");
   { const v = m.querySelector(".co-verdict"); v.innerHTML = trQuote(v.innerHTML); }
@@ -7007,7 +7011,7 @@ const STRETCHES = [
   { id: "breathe", name: "Box breathing", g: "core", icon: "🌬", secs: 48, how: "Breathe in for 4, hold for 4, out for 4, hold for 4. Let your heart rate settle.", say: "Box breathing. In for four, hold for four, out for four, hold for four." },
 ];
 const DAY_TYPES = {
-  push: { icon: "💪", name: "Push day", hard: true }, squat: { icon: "🦵", name: "Squat day", hard: true }, hyrox: { icon: "🏁", name: "Hyrox race", hard: true },
+  push: { icon: "💪", name: "Push day", hard: true }, squat: { icon: "🦵", name: "Squat day", hard: true }, situp: { icon: "🛏️", name: "Sit-up day", hard: true }, hyrox: { icon: "🏁", name: "Hyrox race", hard: true },
   recovery: { icon: "🧘", name: "Recovery", hard: false }, rest: { icon: "😴", name: "Rest", hard: false },
 };
 const kAgo = n => { const x = new Date(); x.setDate(x.getDate() - n); return dayKey(x); };
@@ -7018,19 +7022,19 @@ const med = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - 
 // training load on a day, per muscle group (Hyrox races count as a big full-body day)
 function trLoad(k) {
   const hx = (store.hyrox?.hist || []).filter(h => h.d === k).length;
-  const push = store.days[k] || 0, sq = store.sq?.days?.[k] || 0;
-  return { upper: push + hx * 40, legs: sq + hx * 80, push, sq, hx };
+  const push = store.days[k] || 0, sq = store.sq?.days?.[k] || 0, su = store.su?.days?.[k] || 0;
+  return { upper: push + hx * 40, legs: sq + hx * 80, core: su + hx * 20, push, sq, su, hx };
 }
-const trDidHard = k => { const L = trLoad(k); return L.push >= 10 || L.sq >= 10 || L.hx > 0; };
+const trDidHard = k => { const L = trLoad(k); return L.push >= 10 || L.sq >= 10 || L.su >= 10 || L.hx > 0; };
 const trRecDone = k => !!trStore().rec?.[k];
 // how recovered each group is, 5–100%. Fatigue decays over a few days; "normal" = your own typical training day.
 function trReadiness() {
   const slow = store.profile?.goal === "strength";
   const W = slow ? [1, 0.7, 0.4, 0.2, 0.08] : [1, 0.6, 0.3, 0.12, 0.04];
   const out = {};
-  for (const g of ["upper", "legs"]) {
+  for (const g of ["upper", "legs", "core"]) {
     const days = Array.from({ length: 28 }, (_, i) => trLoad(kAgo(i))[g]).filter(v => v > 0);
-    const typical = Math.max(g === "upper" ? 20 : 25, med(days) || 0);
+    const typical = Math.max(g === "upper" ? 20 : g === "core" ? 15 : 25, med(days) || 0);
     let fat = 0; W.forEach((w, a) => fat += trLoad(kAgo(a))[g] * w);
     out[g] = Math.round(Math.max(5, Math.min(100, 100 - 40 * Math.pow(fat / typical, 0.8) + (trRecDone(kAgo(0)) || trRecDone(kAgo(1)) ? 8 : 0))));
   }
@@ -7043,8 +7047,8 @@ function trReadiness() {
 function trSchedule() {
   const goal = store.profile?.goal || "tone", G = WEEK_GOAL[goal] || 3, maxRow = goal === "cut" ? 3 : 2, gap = goal === "strength" ? 3 : 2;
   const R = trReadiness(), hxFan = (store.hyrox?.hist || []).length > 0;
-  const since = g => { for (let i = 1; i < 30; i++) { const L = trLoad(kAgo(i)); if ((g === "upper" ? L.push >= 10 || L.hx : L.sq >= 10 || L.hx)) return i; } return 30; };
-  let sU = since("upper"), sL = since("legs"), row = R.row, hxIn = 99;
+  const since = g => { for (let i = 1; i < 30; i++) { const L = trLoad(kAgo(i)); if ((g === "upper" ? L.push >= 10 || L.hx : g === "core" ? L.su >= 10 || L.hx : L.sq >= 10 || L.hx)) return i; } return 30; };
+  let sU = since("upper"), sL = since("legs"), sC = since("core"), row = R.row, hxIn = 99;
   for (let i = 1; i < 7; i++) if ((store.hyrox?.hist || []).some(h => h.d === kAgo(i))) { hxIn = i; break; }
   // rolling week: any 7 days in a row hold at most G hard days (what you did counts, then what's planned)
   const seq = Array.from({ length: 6 }, (_, i) => trDidHard(kAgo(6 - i)));
@@ -7052,32 +7056,36 @@ function trSchedule() {
   for (let i = 0; i < 7; i++) {
     const k = kAhead(i), L = i === 0 ? trLoad(k) : null;
     let type, why = "", done = false;
-    if (i === 0 && (L.push >= 10 || L.sq >= 10 || L.hx)) {   // today: what you actually did
-      type = L.hx ? "hyrox" : L.push >= L.sq ? "push" : "squat"; done = true; why = "Done today.";
+    if (i === 0 && (L.push >= 10 || L.sq >= 10 || L.su >= 10 || L.hx)) {   // today: what you actually did
+      type = L.hx ? "hyrox" : L.push >= L.sq && L.push >= L.su ? "push" : L.sq >= L.su ? "squat" : "situp"; done = true; why = "Done today.";
     } else if (i === 0 && trRecDone(k)) { type = "recovery"; done = true; why = "Recovery done."; }
     else {
-      const okU = sU >= gap && (i > 0 || R.upper >= 60), okL = sL >= gap && (i > 0 || R.legs >= 60);
+      const okU = sU >= gap && (i > 0 || R.upper >= 60), okL = sL >= gap && (i > 0 || R.legs >= 60), okC = sC >= gap && (i > 0 || R.core >= 60);
       const tooMany = row >= maxRow || (i === 0 && R.overall < 45);
       const room = G - seq.slice(-6).filter(Boolean).length;
-      if (room > 0 && !tooMany && (okU || okL)) {
+      if (room > 0 && !tooMany && (okU || okL || okC)) {
+        // the muscle group that's waited longest goes next; ties follow push → squat → sit-up
+        const prev = [...plan].reverse().find(p => COACH_EX.includes(p.type))?.type;
+        const order = prev ? [1, 2, 3].map(n => COACH_EX[(COACH_EX.indexOf(prev) + n) % 3]) : COACH_EX;
+        const cand = [["push", okU, sU, R.upper], ["squat", okL, sL, R.legs], ["situp", okC, sC, R.core]].filter(c => c[1])
+          .sort((a, b) => b[2] - a[2] || (i === 0 ? b[3] - a[3] : 0) || order.indexOf(a[0]) - order.indexOf(b[0]));
         if (hxFan && okU && okL && hxIn > 6 && (goal === "cut" || goal === "tone") && i >= 2 && room >= 2 && sU >= 3 && sL >= 3) type = "hyrox";
-        else if (okU && okL) type = sU > sL ? "push" : sL > sU ? "squat" : (i === 0 ? (R.upper >= R.legs ? "push" : "squat") : (plan[i - 1]?.type === "push" ? "squat" : "push"));
-        else type = okU ? "push" : "squat";
-        if (i === 0 && swapped && (swapped === "push" ? okU || R.upper >= 50 : okL || R.legs >= 50)) type = swapped;
+        else type = cand[0][0];
+        if (i === 0 && swapped && ({ push: okU || R.upper >= 50, squat: okL || R.legs >= 50, situp: okC || R.core >= 50 })[swapped]) type = swapped;
       } else type = seq[seq.length - 1] || row >= maxRow || plan.filter(p => p.type === "recovery").length < 2 ? "recovery" : "rest";
-      if (i === 0) why = type === "push" ? `Upper body ${R.upper}% ready.` : type === "squat" ? `Legs ${R.legs}% ready.` : type === "hyrox" ? "Both fresh: race day." :
-        row >= maxRow ? `${row} hard days in a row: recover today.` : R.overall < 45 ? `Overall readiness ${R.overall}%: recover today.` : !okU && !okL ? "Both muscle groups still recovering." : "You've hit this week's workouts.";
+      if (i === 0) why = type === "push" ? `Upper body ${R.upper}% ready.` : type === "squat" ? `Legs ${R.legs}% ready.` : type === "situp" ? `Core ${R.core}% ready.` : type === "hyrox" ? "Both fresh: race day." :
+        row >= maxRow ? `${row} hard days in a row: recover today.` : R.overall < 45 ? `Overall readiness ${R.overall}%: recover today.` : !okU && !okL && !okC ? "Every muscle group is still recovering." : "You've hit this week's workouts.";
     }
     const D = DAY_TYPES[type];
     seq.push(D.hard);
-    if (D.hard) { row++; if (type !== "squat") sU = 0; if (type !== "push") sL = 0; if (type === "hyrox") hxIn = 0; }
+    if (D.hard) { row++; if (type === "push" || type === "hyrox") sU = 0; if (type === "squat" || type === "hyrox") sL = 0; if (type === "situp" || type === "hyrox") sC = 0; if (type === "hyrox") hxIn = 0; }
     else row = 0;
-    sU++; sL++; hxIn++;
+    sU++; sL++; sC++; hxIn++;
     plan.push({ k, type, done, why, label: i === 0 ? "Today" : i === 1 ? "Tmrw" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date(Date.now() + i * 864e5).getDay()] });
   }
   return plan;
 }
-const trTodayEx = () => { const t = trSchedule()[0]; return t.type === "push" || t.type === "squat" ? t.type : null; };
+const trTodayEx = () => { const t = trSchedule()[0]; return COACH_EX.includes(t.type) ? t.type : null; };
 
 // ---------- insights ----------
 function trAnalyze() {
@@ -7086,12 +7094,14 @@ function trAnalyze() {
   const wk = (from, n, f) => sum(Array.from({ length: n }, (_, i) => f(kAgo(from + i))));
   const p7 = wk(0, 7, k => store.days[k] || 0), s7 = wk(0, 7, k => store.sq?.days?.[k] || 0);
   const pPrev = wk(7, 7, k => store.days[k] || 0), sPrev = wk(7, 7, k => store.sq?.days?.[k] || 0);
-  const v7 = p7 + s7, vPrev = pPrev + sPrev;
-  const S = { p7, s7, workouts7: Array.from({ length: 7 }, (_, i) => trDidHard(kAgo(i))).filter(Boolean).length };
+  const u7 = wk(0, 7, k => store.su?.days?.[k] || 0), uPrev = wk(7, 7, k => store.su?.days?.[k] || 0);
+  const v7 = p7 + s7 + u7, vPrev = pPrev + sPrev + uPrev;
+  const S = { p7, s7, u7, workouts7: Array.from({ length: 7 }, (_, i) => trDidHard(kAgo(i))).filter(Boolean).length };
   // readiness
   if (R.row >= 5) add("bad", "🛑", `You've trained ${R.row} days in a row. Muscles grow while you rest, so take a recovery day.`, 10);
   else if (R.upper < 50) add("warn", "💪", `Your upper body is still recovering (${R.upper}%). Give it a day before more push-ups.`);
   else if (R.legs < 50) add("warn", "🦵", `Your legs are still recovering (${R.legs}%). Go easy on squats today.`);
+  else if (R.core < 50) add("warn", "🛏️", `Your core is still recovering (${R.core}%). Give it a day before more sit-ups.`);
   // volume
   if (vPrev >= 40 && v7 > vPrev * 1.5) add("warn", "📈", `Your volume jumped ${Math.round((v7 / vPrev - 1) * 100)}% this week (${v7} reps vs ${vPrev}). Big jumps raise the risk of injury, so keep next week about the same.`, 5);
   else if (vPrev >= 50 && v7 < vPrev * 0.6) add("info", "📉", `You did ${Math.round((1 - v7 / vPrev) * 100)}% fewer reps this week than last (${v7} vs ${vPrev}).`);
@@ -7100,6 +7110,7 @@ function trAnalyze() {
   const p14 = p7 + pPrev, s14 = s7 + sPrev;
   if (p14 >= 60 && s14 < p14 * 0.35) add("warn", "⚖️", `Your legs are falling behind: ${p14} push-ups but only ${s14} squats in 2 weeks. Your schedule adds more squat days.`, 3);
   else if (s14 >= 60 && p14 < s14 * 0.35) add("warn", "⚖️", `Your upper body is falling behind: ${s14} squats but only ${p14} push-ups in 2 weeks.`, 3);
+  else if (p14 + s14 >= 100 && u7 + uPrev < 15) add("info", "🛏️", `You've barely trained your core: ${u7 + uPrev} sit-ups in 2 weeks. Your schedule adds sit-up days.`, 2);
   // form, from the rep log (last 300 reps the tracker saw)
   const log = repLog.slice(-200), okReps = log.filter(e => e.ok && e.ms), shallow = log.filter(e => !e.ok && /lower/.test(e.reason || "")).length;
   if (okReps.length + shallow >= 30) {
@@ -7122,11 +7133,11 @@ function trAnalyze() {
     if (b && a < b - 0.06) add("warn", "📉", `Your depth is slipping: ${Math.round(a * 100)}% in your last 3 workouts, down from ${Math.round(b * 100)}%. That can mean you're tired, so sleep and recovery matter this week.`, 2);
     else if (b && a > b + 0.06) add("good", "📈", `Your depth is improving: ${Math.round(a * 100)}% in your last 3 workouts, up from ${Math.round(b * 100)}%.`);
   }
-  for (const ex of ["push", "squat"]) {
+  for (const ex of COACH_EX) {
     const h = H.filter(x => x.ex === ex);
     if (h.length >= 3) {
       const first = h[0].from, now = coachTarget(ex);
-      if (now > first) add("good", ex === "push" ? "💪" : "🦵", `Your ${ex === "push" ? "push-up" : "squat"} target has gone from ${first} to ${now} (+${Math.round((now / first - 1) * 100)}%) over ${h.length} workouts.`);
+      if (now > first) add("good", EX[ex].icon, `Your ${EX[ex].one} target has gone from ${first} to ${now} (+${Math.round((now / first - 1) * 100)}%) over ${h.length} workouts.`);
       const extras = h.slice(-3).map(x => { const l = x.sets[x.sets.length - 1]; return l ? l[1] - l[0] : 0; });
       if (mean(extras) <= -2) add("warn", "🪫", `You've missed your last-set target in recent ${ex} workouts. You may be under-recovered, so your schedule adds a recovery day.`, 3);
       const misses = h.slice(-3).filter(x => x.to < x.from).length;
@@ -7166,7 +7177,7 @@ function trAnalyze() {
     const slowest = hx.map(r => { let mi = -1, mt = -1; r.splits.forEach((t, i) => { if (i % 2 && t > mt) { mt = t; mi = i; } }); return (mi - 1) / 2; });
     const counts = {}; slowest.forEach(i => counts[i] = (counts[i] || 0) + 1);
     const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-    if (top && top[1] >= 2) { const st = HX_STATIONS[top[0]]; add("info", "🏁", `${st.icon} ${st.name} was your slowest Hyrox station in ${top[1]} of ${hx.length} races. Practise it on push or squat days.`); }
+    if (top && top[1] >= 2) { const st = HX_STATIONS[top[0]]; add("info", "🏁", `${st.icon} ${st.name} was your slowest Hyrox station in ${top[1]} of ${hx.length} races. Practise it on your training days.`); }
   }
   ins.sort((a, b) => b.prio - a.prio);
   return { ins, R, S };
@@ -7202,13 +7213,13 @@ function renderTrainer() {
     <div class="tr-bubble" style="--c:${T.color}">${esc(trMessage(A, plan))}</div>
     ${!today.done && (today.type === "recovery" || today.type === "rest") ? `<div class="tr-recgo"><button id="trRecGo">🧘 Start recovery session</button><span class="muted">7–8 min of stretches picked for what's sore</span></div>` : ""}
     <div class="tr-sec">Recovery</div>
-    <div class="tr-ready">${bar("💪", "Upper body", R.upper)}${bar("🦵", "Legs", R.legs)}${bar("⚡", "Overall", R.overall)}</div>
+    <div class="tr-ready">${bar("💪", "Upper body", R.upper)}${bar("🦵", "Legs", R.legs)}${bar("🛏️", "Core", R.core)}${bar("⚡", "Overall", R.overall)}</div>
     <div class="tr-sec">Your next 7 days</div>
     <div class="tr-week2">${plan.map(card).join("")}</div>
     <div class="tr-sec">What I'm seeing</div>
     <div class="tr-insl">${A.ins.slice(0, 3).map(insRow).join("") || `<p class="muted">Train a few times and I'll start spotting patterns.</p>`}</div>
     <details class="tr-full" ${renderTrainer.full ? "open" : ""}><summary>Full analysis (${A.ins.length} notes)</summary>
-      <div class="tr-stats"><div><b>${S.p7}</b>push-ups, 7 days</div><div><b>${S.s7}</b>squats, 7 days</div><div><b>${S.workouts7}</b>workouts, 7 days</div><div><b>${S.perWk != null ? S.perWk.toFixed(1) : "–"}</b>workouts a week</div>
+      <div class="tr-stats"><div><b>${S.p7}</b>push-ups, 7 days</div><div><b>${S.s7}</b>squats, 7 days</div><div><b>${S.u7}</b>sit-ups, 7 days</div><div><b>${S.workouts7}</b>workouts, 7 days</div><div><b>${S.perWk != null ? S.perWk.toFixed(1) : "–"}</b>workouts a week</div>
         <div><b>${S.depth != null ? Math.round(S.depth * 100) + "%" : "–"}</b>avg depth</div><div><b>${S.deepPct != null ? Math.round(S.deepPct * 100) + "%" : "–"}</b>deep reps</div><div><b>${S.tempo ? S.tempo.toFixed(1) + " s" : "–"}</b>per rep</div><div><b>${S.prot != null ? Math.round(S.prot) + " g" : "–"}</b>protein a day</div></div>
       ${A.ins.slice(3).map(insRow).join("")}
       <div class="tr-why">${plan.filter(p => !p.done).slice(0, 1).map(p => `<b>Why today is ${DAY_TYPES[p.type].name.toLowerCase()}:</b> ${p.why || ""}`).join("")} I won't plan the same muscles two days running, and I add recovery days after ${store.profile.goal === "cut" ? 3 : 2} hard days.</div>
@@ -7233,10 +7244,10 @@ function trSpeak(text) {
   trCur = a; try { a.currentTime = 0; } catch {} a.play().catch(() => tts(text, T.tts));
 }
 function recRoutine() {
-  const R = trReadiness(), focus = R.upper < R.legs ? "upper" : R.legs < R.upper ? "legs" : "both";
+  const R = trReadiness(), focus = R.core < R.upper && R.core < R.legs ? "core" : R.upper < R.legs ? "upper" : R.legs < R.upper ? "legs" : "both";
   const U = STRETCHES.filter(s => s.g === "upper"), L = STRETCHES.filter(s => s.g === "legs"), core = id => STRETCHES.find(s => s.id === id);
-  const pick = (arr, n) => arr.slice(0, n);
-  const mid = focus === "upper" ? [...pick(U, 4), ...pick(L, 2)] : focus === "legs" ? [...pick(L, 5), ...pick(U, 1)] : [...pick(U, 3), ...pick(L, 3)];
+  const pick = (arr, n) => arr.slice(0, n), C = ["cobra", "kneehug", "twist", "sidebend"].map(core).filter(Boolean);
+  const mid = focus === "core" ? [...C, ...pick(L, 2)] : focus === "upper" ? [...pick(U, 4), ...pick(L, 2)] : focus === "legs" ? [...pick(L, 5), ...pick(U, 1)] : [...pick(U, 3), ...pick(L, 3)];
   return { focus, list: [core("catcow"), ...mid, core("breathe")] };
 }
 function recStart() {
@@ -7288,7 +7299,7 @@ function recUI() {
   const next = REC.list[REC.i + 1];
   const total = sum(REC.list.map(x => x.secs * (x.sides ? 2 : 1)));
   $("recModal").querySelector(".card").innerHTML = `
-    ${stickDemo(s.id)}<h2>🧘 RECOVERY · ${REC.focus === "upper" ? "UPPER BODY FOCUS" : REC.focus === "legs" ? "LEG FOCUS" : "FULL BODY"}</h2>
+    ${stickDemo(s.id)}<h2>🧘 RECOVERY · ${REC.focus === "upper" ? "UPPER BODY FOCUS" : REC.focus === "core" ? "CORE FOCUS" : REC.focus === "legs" ? "LEG FOCUS" : "FULL BODY"}</h2>
     <div class="rec-dots">${REC.list.map((x, i) => `<i class="${i < REC.i ? "done" : i === REC.i ? "on" : ""}"></i>`).join("")}</div>
     <div class="rec-ic">${s.icon}</div>
     <div class="big rec-n">${s.name}</div>
