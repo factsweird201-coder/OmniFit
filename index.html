@@ -764,6 +764,12 @@
   .st-row { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; } .st-row i { font-style: normal; font-size: 15px; }
   .st-go { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #111; font-size: 14px; }
   .st-tips { margin-top: 18px; }
+  .st-play, #recModal .card { position: relative; }
+  .sk-box { position: absolute; top: 14px; right: 14px; width: 170px; padding: 6px 6px 2px; border-radius: 16px; background: rgba(255,255,255,.04); border: 1px solid color-mix(in srgb, var(--c, #3ad6c0) 45%, transparent); }
+  .sk-box > span { display: block; font: 700 10px var(--display); letter-spacing: 2px; color: var(--c, #3ad6c0); text-align: left; padding-left: 4px; }
+  .sk { width: 100%; display: block; } .sk polyline { fill: none; stroke: #f2f4f8; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; }
+  .sk circle { fill: #f2f4f8; } .sk .sk-far polyline { stroke: #f2f4f8; opacity: .45; } .sk .sk-prop { stroke: rgba(255,255,255,.22); stroke-width: 2.5; stroke-linecap: round; }
+  @media (max-width: 760px) { .sk-box { position: static; margin: 8px auto 0; width: 150px; } .st-play .rec-ic, #recModal .rec-ic { display: none; } }
   .st-play, .st-end { text-align: center; } .st-play h2, .st-end h2 { font: 700 18px var(--display); letter-spacing: 2px; color: var(--c); margin: 0; }
   .st-play .cr-ring { margin: 14px auto 6px; } .st-play .rec-how { max-width: 460px; margin: 10px auto; } .st-play .row, .st-end .row { justify-content: center; margin-top: 14px; }
   .st-end .big { margin: 12px 0; } .st-end .tr-quote { max-width: 480px; margin: 0 auto; text-align: left; }
@@ -7282,7 +7288,7 @@ function recUI() {
   const next = REC.list[REC.i + 1];
   const total = sum(REC.list.map(x => x.secs * (x.sides ? 2 : 1)));
   $("recModal").querySelector(".card").innerHTML = `
-    <h2>🧘 RECOVERY · ${REC.focus === "upper" ? "UPPER BODY FOCUS" : REC.focus === "legs" ? "LEG FOCUS" : "FULL BODY"}</h2>
+    ${stickDemo(s.id)}<h2>🧘 RECOVERY · ${REC.focus === "upper" ? "UPPER BODY FOCUS" : REC.focus === "legs" ? "LEG FOCUS" : "FULL BODY"}</h2>
     <div class="rec-dots">${REC.list.map((x, i) => `<i class="${i < REC.i ? "done" : i === REC.i ? "on" : ""}"></i>`).join("")}</div>
     <div class="rec-ic">${s.icon}</div>
     <div class="big rec-n">${s.name}</div>
@@ -7306,6 +7312,70 @@ function recTime() {   // only the clock changes between stretches, so the butto
 const trQuote = text => `<div class="tr-quote"><span class="tr-face" style="--c:${trT().color}">${TRAINER_ART[trStore().id]}</span><div>${text}</div></div>`;
 var trainerInit = true;
 window.__trainer = { schedule: () => trSchedule(), analyze: () => trAnalyze(), ready: () => trReadiness(), rec: () => recStart(), say: trainer, rep: trRep, hear: trHear, msg: trMessage, store: trStore, get set() { return trSet; }, dbg: () => ({ watching: trWatching(), ann: !!(annCur && !annCur.paused && !annCur.ended), annSrc: annCur?.src?.slice(-14), since: Math.round(performance.now() - trLastAt), last: { ...trLast } }) };   // test hook
+
+// ---------- stickman demos: an animated stick figure for every stretch ----------
+// Joints in a 100×100 box (floor at y 92): h head, n neck/shoulders, m middle of the back, p hips,
+// le/lh far elbow/hand, re/rh near elbow/hand, lk/lf far knee/foot, rk/rf near knee/foot. Each stretch loops through its poses.
+const STAND = { h: [50, 13], n: [50, 24], p: [50, 52], le: [46, 38], lh: [45, 51], re: [54, 38], rh: [55, 51], lk: [48, 72], lf: [47, 92], rk: [52, 72], rf: [53, 92] };
+const SP_ = (base, ch) => ({ ...base, ...ch });
+const ALL4 = { h: [74, 50], n: [66, 54], m: [50, 52], p: [34, 54], le: [65, 72], lh: [64, 90], re: [67, 72], rh: [66, 90], lk: [33, 90], lf: [14, 90], rk: [35, 90], rf: [16, 90] };
+const BACK = { h: [16, 84], n: [26, 86], m: [40, 87], p: [54, 87], le: [34, 90], lh: [42, 91], re: [36, 90], rh: [44, 91], lk: [62, 70], lf: [72, 86], rk: [64, 70], rf: [74, 86] };
+const SIT = { h: [50, 46], n: [50, 57], p: [50, 84], le: [38, 70], lh: [33, 83], re: [62, 70], rh: [67, 83], lk: [33, 86], lf: [47, 90], rk: [67, 86], rf: [53, 90] };
+const STICK = {
+  catcow:   { p: [SP_(ALL4, { m: [50, 44], h: [72, 62] }), SP_(ALL4, { m: [50, 60], h: [76, 44] })], dur: 5 },
+  childs:   { p: [{ h: [70, 86], n: [62, 82], m: [47, 76], p: [32, 78], le: [75, 86], lh: [90, 89], re: [77, 87], rh: [92, 90], lk: [49, 89], lf: [28, 91], rk: [51, 89], rf: [30, 91] },
+                  { h: [70, 85], n: [62, 81], m: [47, 73], p: [32, 77], le: [75, 85], lh: [90, 89], re: [77, 86], rh: [92, 90], lk: [49, 89], lf: [28, 91], rk: [51, 89], rf: [30, 91] }], dur: 5 },
+  chest:    { p: [SP_(STAND, { re: [40, 24], rh: [36, 10] }), SP_(STAND, { h: [56, 14], n: [55, 25], re: [42, 25], rh: [36, 10], rk: [56, 72], rf: [58, 92] })], prop: "wall:35", dur: 4 },
+  tricep:   { p: [SP_(STAND, { re: [57, 6], rh: [51, 22], le: [42, 14], lh: [55, 7] }), SP_(STAND, { re: [55, 5], rh: [49, 26], le: [41, 13], lh: [53, 6] })], dur: 3 },
+  thread:   { p: [ALL4, SP_(ALL4, { h: [70, 80], n: [62, 72], m: [48, 60], re: [52, 80], rh: [36, 88] })], dur: 5 },
+  wrist:    { p: [SP_(STAND, { re: [64, 30], rh: [78, 31], le: [60, 38], lh: [79, 27] }), SP_(STAND, { re: [64, 30], rh: [78, 31], le: [61, 37], lh: [77, 24] })], dur: 3 },
+  quad:     { p: [SP_(STAND, { rk: [51, 72], rf: [40, 58], re: [46, 40], rh: [41, 57], lh: [64, 36], le: [58, 32] }), SP_(STAND, { rk: [52, 73], rf: [39, 56], re: [45, 40], rh: [40, 55], lh: [64, 34], le: [58, 31] })], dur: 3 },
+  hip:      { p: [{ h: [48, 22], n: [48, 33], p: [48, 64], le: [46, 48], lh: [56, 60], re: [50, 48], rh: [58, 62], lk: [66, 70], lf: [68, 92], rk: [36, 90], rf: [20, 91] },
+                  { h: [54, 24], n: [54, 35], p: [55, 67], le: [52, 50], lh: [62, 62], re: [56, 50], rh: [64, 64], lk: [70, 72], lf: [72, 92], rk: [38, 90], rf: [22, 91] }], dur: 4 },
+  ham:      { p: [SP_(STAND, { rk: [60, 72], rf: [72, 90], lk: [46, 72], lf: [44, 92] }),
+                  { h: [72, 30], n: [64, 34], p: [48, 52], le: [62, 48], lh: [60, 62], re: [64, 48], rh: [63, 64], lk: [46, 72], lf: [44, 92], rk: [60, 72], rf: [72, 90] }], dur: 4 },
+  glute:    { p: [SP_(BACK, { lk: [60, 62], lf: [74, 72], rk: [70, 76], rf: [60, 64], re: [46, 74], rh: [58, 66], le: [44, 76], lh: [56, 68] }),
+                  SP_(BACK, { lk: [56, 60], lf: [70, 66], rk: [66, 72], rf: [56, 62], re: [42, 72], rh: [54, 64], le: [40, 74], lh: [52, 66] })], dur: 4 },
+  calf:     { p: [{ h: [70, 24], n: [64, 32], p: [50, 54], le: [74, 30], lh: [86, 30], re: [75, 32], rh: [86, 32], lk: [60, 72], lf: [62, 92], rk: [40, 73], rf: [30, 92] },
+                  { h: [72, 25], n: [66, 33], p: [53, 56], le: [76, 31], lh: [86, 30], re: [77, 33], rh: [86, 32], lk: [63, 73], lf: [62, 92], rk: [42, 74], rf: [30, 92] }], prop: "wall:88", dur: 4 },
+  squat:    { p: [{ h: [52, 42], n: [50, 52], p: [42, 78], le: [56, 64], lh: [58, 58], re: [60, 64], rh: [60, 58], lk: [62, 70], lf: [56, 92], rk: [64, 71], rf: [58, 92] },
+                  { h: [53, 41], n: [51, 51], p: [42, 79], le: [57, 63], lh: [59, 57], re: [61, 63], rh: [61, 57], lk: [63, 70], lf: [56, 92], rk: [65, 71], rf: [58, 92] }], dur: 4 },
+  breathe:  { p: [SIT, SP_(SIT, { h: [50, 42], n: [50, 53], le: [38, 68], re: [62, 68] })], dur: 8 },
+  neck:     { p: [STAND, SP_(STAND, { h: [42, 16] }), STAND, SP_(STAND, { h: [58, 16] })], dur: 6 },
+  circles:  { p: [SP_(STAND, { le: [34, 22], lh: [18, 18], re: [66, 22], rh: [82, 18] }), SP_(STAND, { le: [34, 25], lh: [21, 24], re: [66, 25], rh: [79, 24] }),
+                  SP_(STAND, { le: [34, 26], lh: [17, 30], re: [66, 26], rh: [83, 30] }), SP_(STAND, { le: [34, 24], lh: [13, 24], re: [66, 24], rh: [87, 24] })], dur: 1.6, ease: false },
+  xshoulder:{ p: [SP_(STAND, { re: [38, 30], rh: [26, 33], le: [44, 42], lh: [40, 31] }), SP_(STAND, { re: [37, 29], rh: [24, 31], le: [45, 41], lh: [41, 29] })], dur: 3 },
+  upperback:{ p: [SP_(STAND, { le: [62, 34], lh: [76, 36], re: [63, 35], rh: [77, 37] }), SP_(STAND, { h: [60, 20], n: [54, 27], m: [46, 38], le: [66, 36], lh: [82, 40], re: [67, 37], rh: [83, 41] })], dur: 4 },
+  sidebend: { p: [SP_(STAND, { re: [58, 14], rh: [60, 2] }), SP_(STAND, { h: [38, 18], n: [42, 27], m: [46, 40], re: [44, 12], rh: [28, 6], le: [38, 40], lh: [44, 52] })], dur: 4 },
+  cobra:    { p: [{ h: [80, 85], n: [70, 88], p: [42, 89], le: [64, 82], lh: [68, 90], re: [66, 82], rh: [70, 90], lk: [24, 90], lf: [8, 89], rk: [26, 91], rf: [10, 90] },
+                  { h: [74, 54], n: [66, 64], m: [56, 78], p: [42, 88], le: [65, 77], lh: [66, 90], re: [67, 77], rh: [68, 90], lk: [24, 90], lf: [8, 89], rk: [26, 91], rf: [10, 90] }], dur: 4 },
+  kneehug:  { p: [SP_(BACK, { lk: [54, 64], lf: [66, 74], rk: [56, 64], rf: [68, 74], le: [42, 76], lh: [54, 66], re: [44, 76], rh: [56, 66] }),
+                  SP_(BACK, { h: [18, 82], lk: [50, 62], lf: [62, 70], rk: [52, 62], rf: [64, 70], le: [40, 74], lh: [50, 64], re: [42, 74], rh: [52, 64] })], dur: 3 },
+  twist:    { p: [SP_(BACK, { lk: [56, 64], lf: [70, 80], rk: [58, 64], rf: [72, 80], le: [16, 92], lh: [6, 92], re: [36, 80], rh: [40, 72] }),
+                  SP_(BACK, { lk: [66, 80], lf: [76, 90], rk: [68, 82], rf: [78, 91], h: [14, 82], le: [16, 92], lh: [6, 92], re: [36, 80], rh: [40, 72] })], dur: 5 },
+  wgs:      { p: [{ h: [70, 46], n: [62, 52], p: [46, 70], le: [64, 72], lh: [66, 91], re: [64, 72], rh: [62, 88], lk: [66, 72], lf: [68, 92], rk: [32, 84], rf: [14, 90] },
+                  { h: [70, 44], n: [62, 52], p: [46, 70], le: [64, 72], lh: [66, 91], re: [62, 36], rh: [62, 18], lk: [66, 72], lf: [68, 92], rk: [32, 84], rf: [14, 90] }], dur: 4 },
+  butterfly:{ p: [SP_(SIT, { lk: [28, 80], lf: [47, 90], rk: [72, 80], rf: [53, 90], le: [40, 74], lh: [48, 88], re: [60, 74], rh: [52, 88] }),
+                  SP_(SIT, { h: [50, 54], n: [50, 63], lk: [26, 84], lf: [47, 90], rk: [74, 84], rf: [53, 90], le: [40, 78], lh: [48, 88], re: [60, 78], rh: [52, 88] })], dur: 5 },
+  downdog:  { p: [{ h: [76, 80], n: [70, 72], p: [50, 46], le: [74, 81], lh: [80, 90], re: [76, 81], rh: [82, 90], lk: [36, 69], lf: [24, 90], rk: [38, 69], rf: [26, 90] },
+                  { h: [76, 80], n: [70, 72], p: [49, 44], le: [74, 81], lh: [80, 90], re: [76, 81], rh: [82, 90], lk: [35, 68], lf: [22, 92], rk: [37, 68], rf: [24, 92] }], dur: 4 },
+  legswall: { p: [{ h: [24, 86], n: [34, 88], p: [64, 88], le: [40, 91], lh: [48, 92], re: [26, 91], rh: [16, 92], lk: [66, 66], lf: [68, 44], rk: [67, 66], rf: [69, 44] },
+                  { h: [24, 85], n: [34, 87], p: [64, 88], le: [40, 91], lh: [48, 92], re: [26, 91], rh: [16, 92], lk: [66, 66], lf: [68, 44], rk: [67, 66], rf: [69, 44] }], prop: "wall:72", dur: 8 },
+};
+function stickSvg(id) {
+  const d = STICK[id]; if (!d) return "";
+  const P = d.p.map(q => ({ m: [(q.n[0] + q.p[0]) / 2, (q.n[1] + q.p[1]) / 2], ...q }));
+  const n = P.length, loop = [...P, P[0]], kt = loop.map((_, i) => (i / n).toFixed(3)).join(";");
+  const ease = d.ease === false ? 'calcMode="linear"' : `calcMode="spline" keySplines="${Array(n).fill(".45 0 .55 1").join(";")}"`;
+  const an = (attr, vals) => n < 2 ? "" : `<animate attributeName="${attr}" values="${vals.join(";")}" keyTimes="${kt}" ${ease} dur="${d.dur || 4}s" repeatCount="indefinite"/>`;
+  const line = (keys, cls) => { const pts = q => keys.map(k => q[k].join(",")).join(" "); return `<polyline class="${cls}" points="${pts(P[0])}">${an("points", loop.map(pts))}</polyline>`; };
+  const wall = d.prop?.startsWith("wall:") ? `<line x1="${+d.prop.slice(5)}" y1="4" x2="${+d.prop.slice(5)}" y2="93" class="sk-prop"/>` : "";
+  return `<svg viewBox="0 0 100 100" class="sk" aria-hidden="true"><line x1="2" y1="93.5" x2="98" y2="93.5" class="sk-prop"/>${wall}
+    <g class="sk-far">${line(["n", "le", "lh"], "")}${line(["p", "lk", "lf"], "")}</g>
+    ${line(["n", "m", "p"], "")}${line(["p", "rk", "rf"], "")}${line(["n", "re", "rh"], "")}
+    <circle r="6.5" cx="${P[0].h[0]}" cy="${P[0].h[1]}">${an("cx", loop.map(q => q.h[0]))}${an("cy", loop.map(q => q.h[1]))}</circle></svg>`;
+}
+const stickDemo = id => STICK[id] ? `<div class="sk-box"><span>EXAMPLE</span>${stickSvg(id)}</div>` : "";
 
 // ================= STRETCH TAB =================
 // Guided stretch routines (the same stretch list as the trainer's recovery session, read out in your trainer's voice).
@@ -7412,7 +7482,7 @@ const stLeft = () => { const s = ST.list[ST.i]; return ST.until ? Math.max(0, Ma
 function stUI() {
   if (!ST) return;
   const s = ST.list[ST.i], next = ST.list[ST.i + 1], total = stSecs(ST.r);
-  $("stretchView").innerHTML = `<div class="panel st-panel st-play" style="--c:${ST.r.c}">
+  $("stretchView").innerHTML = `<div class="panel st-panel st-play" style="--c:${ST.r.c}">${stickDemo(s.id)}
     <h2>${ST.r.icon} ${ST.r.name.toUpperCase()}</h2>
     <div class="rec-dots">${ST.list.map((x, i) => `<i class="${i < ST.i ? "done" : i === ST.i ? "on" : ""}"></i>`).join("")}</div>
     <div class="rec-ic">${s.icon}</div>
@@ -7434,7 +7504,7 @@ function stTime() {
   c.querySelector(".rec-ring").style.setProperty("--k", ST.until ? left / s.secs : 1);
 }
 var stretchInit = true;
-window.__stretch = { get ST() { return ST; }, start: stStart, next: () => ST && stNext(true), stop: () => ST && stFinish(false), routines: ROUTINES, pick: stPick, store: stStore };
+window.__stretch = { stick: stickSvg, sticks: STICK, get ST() { return ST; }, start: stStart, next: () => ST && stNext(true), stop: () => ST && stFinish(false), routines: ROUTINES, pick: stPick, store: stStore };
 
 renderExUI(); renderRank(); renderCoach(); renderHyrox(); $("coachPanel").hidden = mode !== "train";
 </script>
