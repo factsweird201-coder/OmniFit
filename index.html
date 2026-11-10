@@ -7197,7 +7197,7 @@ window.__stretch = { stick: stickSvg, sticks: STICK, get ST() { return ST; }, st
 // every device you sign in on in sync. Plain REST calls, no SDK. Nothing on a device is ever thrown away: signing in
 // MERGES this device's progress with the account's (highest totals, best stars, fastest times, every log entry), and
 // keeps a copy of what was on the device first in localStorage (KEY + ".preSync"). Signing out keeps local progress.
-const CLOUD = { apiKey: "", projectId: "" };   // Firebase web config. These two values are public by design; leave blank to hide sign-in.
+const CLOUD = { apiKey: "AIzaSyA1WZhXOV3lLwm4jODNRW9VPFTn4AH1MbY", projectId: "omnifit-1fc13" };   // Firebase web config. These two values are public by design; leave blank to hide sign-in.
 const ACCT_KEY = KEY + ".account";
 const cloudCfg = (() => {
   let c = { ...CLOUD, auth: "https://identitytoolkit.googleapis.com/v1", token: "https://securetoken.googleapis.com/v1/token", db: null };
