@@ -1131,6 +1131,18 @@
     .cmap-camp { flex: 1; min-width: 0; padding: 6px 2px; font-size: 12px; letter-spacing: 0; white-space: nowrap; }
     .cmap-top > span { white-space: nowrap; font-size: 12px; }
     .cmap-parts { top: 58px; }
+    /* fold-up panels: tap the top row to open; the mode's own panel comes first */
+    .panel.fold > :first-child { cursor: pointer; position: relative; padding-right: 30px; -webkit-tap-highlight-color: transparent; }
+    .panel.fold > :first-child::after { content: "▾"; position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--muted); transition: transform .2s; }
+    .panel.fold.open > :first-child::after { transform: translateY(-50%) rotate(180deg); }
+    .panel.fold:not(.open) > :not(:first-child) { display: none !important; }
+    .panel.fold:not(.open) { padding-top: 14px; padding-bottom: 14px; }
+    .panel.fold:not(.open) > h3:first-child { margin: 0; }
+    section > .panel.fold { margin-top: 12px !important; }
+    .side { gap: 12px; }
+    #campPanel, #hxPanel, #pvpPanel, #fdTargets { order: -1; }
+    #rosterPanel { display: none !important; } /* the arena's own boss grid does this on phones */
+    .co-how { display: none; }
   }
 </style>
 </head>
@@ -1379,7 +1391,7 @@
   <aside class="side">
     <div class="panel" id="fdTargets" hidden></div>
     <div class="panel" id="fdMicros" hidden></div>
-    <div class="panel">
+    <div class="panel" id="rankPanel">
       <div class="rank-now">
         <div class="rank-badge" id="rankBadge"></div>
         <div>
@@ -1416,7 +1428,7 @@
       <button class="erase-btn" id="resetBtn">Erase all progress…</button>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="dailyPanel">
       <div class="daily-head">
         <div><div class="muted">Day streak</div><div class="streak"><span class="flame">🔥</span><span id="streak">0</span></div></div>
         <div style="text-align:right"><div class="muted">Today</div><div class="num" style="font-weight:700;font-size:22px"><span id="todayCount">0</span><span class="muted" style="font-size:16px"> / <span id="goalVal">50</span></span></div></div>
@@ -2238,6 +2250,22 @@ document.querySelectorAll("#botNav button, #battleSub button").forEach(b => b.on
 });
 $("fsEnd").onclick = () => endSet(true);
 $("fsMute").onclick = () => $("muteBtn").click();
+// phone: info panels fold up so the page isn't one long scroll (tap the top row)
+{ const FOLD = { howTrain: 0, howCamp: 0, howHyrox: 0, howBoss: 0, howPvp: 0, rankPanel: 0, profilePanel: 0, dailyPanel: 1, ladderPanel: 0, fdTargets: 1, fdMicros: 0 };
+  const phone = matchMedia("(max-width: 700px)");
+  Object.entries(FOLD).forEach(([id, def]) => {
+    const el = $(id); if (!el) return;
+    el.classList.add("fold");
+    el.classList.toggle("open", (store.folds || {})[id] ?? !!def);
+    el.addEventListener("click", e => {
+      if (!phone.matches) return;
+      const head = el.firstElementChild;
+      if (!head || !head.contains(e.target) || e.target.closest("button, input, a, select, summary")) return;
+      const open = el.classList.toggle("open");
+      (store.folds ||= {})[id] = open; save();
+    });
+  });
+}
 phoneNav();
 $("tabTrain").onclick = () => setMode("train");
 $("tabCamp").onclick = () => setMode("campaign");
