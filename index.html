@@ -1110,6 +1110,64 @@
   .acct-card .erase-btn { display: block; margin: 16px auto 0; }
   .acct-stats { display: block; margin-top: 12px; text-align: center; padding: 11px; border-radius: 10px; border: 1px solid var(--line2); color: var(--accent); font-weight: 700; text-decoration: none; }
 
+
+  /* ---------- v2 refinements: depth, hierarchy, data-first numbers ---------- */
+  :root { --panel: #16181d; --panel-solid: #16181d; --raised: #1f2229; --line: rgba(255,255,255,.075); }
+  .panel { box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 0 rgba(0,0,0,.45), 0 12px 28px -18px rgba(0,0,0,.7); }
+  .num, .stats b, .streak, .chip b, ol.ladder li .n, .cb-num b, .hx-clock b, .cr-n, .setdone .n { font-variant-numeric: tabular-nums; }
+  .eyebrow, .rank-now .muted, .daily-head .muted:not(.num .muted), .ex-row > .muted { font: 600 11px/1.4 var(--body); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+  .daily-head .num .muted { font: 600 16px var(--display); text-transform: none; letter-spacing: 0; }
+
+  button:not([class]):not(:disabled):not(.tabs button):not(.botnav button):not(.battle-sub button):not(.seg button):not(.cmap-camps button), .overlay > button { box-shadow: inset 0 1px 0 rgba(255,255,255,.3), inset 0 -1px 0 rgba(0,0,0,.14), 0 1px 2px rgba(0,0,0,.35); }
+  button:hover:not(:disabled) { filter: brightness(1.06); }
+  button:active:not(:disabled) { transform: translateY(1px); }
+
+  /* stat strip: one well split by hairlines instead of three boxes */
+  .stats { gap: 0; background: var(--well); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .stats div { background: none; border-radius: 0; padding: 12px 6px 10px; }
+  .stats div + div { border-left: 1px solid var(--line); }
+  .stats b { font-size: 25px; }
+  .stats span { display: block; margin-top: 3px; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+
+  .rank-name { font-size: 30px; letter-spacing: .01em; }
+  #rankNext { font-size: 13px; }
+  .streak { font-size: 30px; gap: 8px; }
+  .streak .flame .ic { width: 22px; height: 22px; color: #ff8a3d; fill: rgba(255,138,61,.2); stroke-width: 1.8; }
+  .daily-head .num { font: 700 30px/1.2 var(--display) !important; }
+  .bar { height: 6px; }
+
+  ol.ladder { gap: 1px; }
+  ol.ladder li { padding: 7px 10px; }
+  ol.ladder li.cur { background: rgba(255,194,26,.07); box-shadow: inset 2px 0 0 var(--accent); border-radius: 3px 8px 8px 3px; }
+  ol.ladder li .n { color: var(--muted); }
+  ol.ladder li.got .n { color: var(--text); }
+
+  /* camera HUD */
+  .chip { background: rgba(12,13,16,.74); border-color: rgba(255,255,255,.1); }
+  .chip span { font-weight: 600; letter-spacing: .08em; }
+
+  /* start screen: a setup diagram instead of empty space */
+  .overlay { gap: 14px; }
+  .setup-art { width: min(360px, 86%); margin: 4px 0 -2px; }
+  .setup-art svg { display: none; width: 100%; height: auto; overflow: visible; }
+  .overlay[data-ex="push"] .sa-push, .overlay[data-ex="squat"] .sa-squat, .overlay[data-ex="situp"] .sa-situp { display: block; }
+  .setup-art .fig { fill: none; stroke: #d5d9e1; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+  .setup-art .head { fill: #d5d9e1; }
+  .setup-art .floor { stroke: rgba(255,255,255,.16); stroke-width: 1.5; stroke-linecap: round; }
+  .setup-art .dev { fill: var(--accent); }
+  .setup-art .stand { stroke: rgba(255,255,255,.35); stroke-width: 2; stroke-linecap: round; fill: none; }
+  .setup-art .sight { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 2 5; stroke-linecap: round; fill: none; opacity: .75; }
+  .setup-art text { font: 600 10px var(--body); fill: var(--muted); letter-spacing: .1em; }
+  .overlay > .muted { font-size: 14px; line-height: 1.55; }
+
+  @media (min-width: 701px) {
+    header { padding-top: 0; padding-bottom: 0; min-height: 58px; }
+    header .tabs { align-self: stretch; gap: 6px; }
+    header .tabs button { border-radius: 0; padding: 0 10px; min-height: 58px; background: none; box-shadow: none; }
+    header .tabs button.on { background: none; color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+  }
+  .botnav button { position: relative; }
+  .botnav button.on::before { content: ""; position: absolute; top: -6px; left: 50%; width: 22px; height: 2px; margin-left: -11px; background: var(--accent); border-radius: 0 0 2px 2px; }
 </style>
 </head>
 <body>
@@ -1233,9 +1291,14 @@
         <div class="arena-ctrls"><button id="mQuit">Quit mission</button></div>
       </div>
 
-      <div class="overlay" id="startOverlay">
+      <div class="overlay" id="startOverlay" data-ex="push">
         <div class="t">Ready to train?</div>
         <div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">Push-ups</button><button data-ex="squat">Squats</button><button data-ex="situp">Sit-ups</button></div>
+<div class="setup-art" aria-hidden="true">
+          <svg class="sa-push" viewBox="0 0 240 92"><line class="floor" x1="6" y1="82" x2="234" y2="82"/><rect class="dev" x="20" y="64" width="11" height="18" rx="2.5"/><path class="sight" d="M33 70 L118 60"/><text x="62" y="56">≈ 2 M</text><circle class="head" cx="129" cy="53" r="6.5"/><path class="fig" d="M138 58 L219 80 M138 58 L140 81"/></svg>
+          <svg class="sa-squat" viewBox="0 0 240 92"><line class="floor" x1="6" y1="82" x2="234" y2="82"/><path class="stand" d="M25 58 L25 82 M25 72 L17 82 M25 72 L33 82"/><rect class="dev" x="19.5" y="40" width="11" height="18" rx="2.5"/><path class="sight" d="M32 48 L138 42"/><text x="66" y="36">2–3 M</text><circle class="head" cx="163" cy="21" r="6.5"/><path class="fig" d="M162 29 L156 51 L180 56 L176 81 M161 35 L186 41"/></svg>
+          <svg class="sa-situp" viewBox="0 0 240 92"><line class="floor" x1="6" y1="82" x2="234" y2="82"/><rect class="dev" x="20" y="64" width="11" height="18" rx="2.5"/><path class="sight" d="M33 70 L118 60"/><text x="54" y="56">SIDE-ON</text><circle class="head" cx="128" cy="47" r="6.5"/><path class="fig" d="M134 54 L155 80 L181 62 L201 81 M139 60 L152 66"/></svg>
+        </div>
         <div class="muted" style="max-width:420px"><span id="startTip">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.</span> Your training video never leaves your device.<!--web-only--> The app only counts anonymous visits with a random ID: no cookies, no personal info.<!--/web-only--></div>
         <button id="startBtn">Start camera</button>
         <div class="muted" id="loadMsg"></div>
@@ -1367,7 +1430,7 @@
 
     <div class="panel" id="dailyPanel">
       <div class="daily-head">
-        <div><div class="muted">Day streak</div><div class="streak"><span class="flame">🔥</span><span id="streak">0</span></div></div>
+        <div><div class="muted">Day streak</div><div class="streak"><span class="flame"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c.8 3.6 5 5.400 5 10.200A5 5 0 0 1 7 13.300c0-2.300 1.300-3.900 2.400-4.900.2 1.500.9 2.600 1.900 3.100.5-3-.9-5.700.7-8.500z"/></svg></span><span id="streak">0</span></div></div>
         <div style="text-align:right"><div class="muted">Today</div><div class="num" style="font-weight:700;font-size:22px"><span id="todayCount">0</span><span class="muted" style="font-size:16px"> / <span id="goalVal">50</span></span></div></div>
       </div>
       <div class="bar green"><div id="dailyBar"></div></div>
@@ -2908,6 +2971,7 @@ function setTrainEx(e) {
 function renderExUI() {
   const te = trainEx();
   document.querySelectorAll(".ex-switch button").forEach(b => b.classList.toggle("on", b.dataset.ex === te));
+  $("startOverlay").dataset.ex = te;
   $("angleLbl").textContent = exercise === "knees" ? "Knee lift" : exercise === "jacks" ? "Arms up" : exercise === "kicks" ? "Heel lift" : exercise === "skate" ? "Side shift" : exercise === "squat" ? "Knee °" : exercise === "situp" ? "Torso °" : "Elbow °";
   $("startTip").innerHTML = te === "situp"
     ? "Put your device on the floor about 2–3 m to your side, so it sees you side-on while you lie on your back: shoulders and hips in view."
