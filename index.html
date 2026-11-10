@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-title" content="OmniFit">
 <meta property="og:type" content="website">
 <meta property="og:title" content="OmniFit — all-in-one fitness 💪">
-<meta property="og:description" content="Count reps with your camera, play story campaigns, fight bosses, race Hyrox, stretch, plan meals and take on friends in live 1v1 battles.">
+<meta property="og:description" content="Count reps with your camera, play story campaigns, fight bosses, race Hyrox, stretch and plan meals.">
 <meta property="og:url" content="https://factsweird201-coder.github.io/push-up-ranks/">
 <meta property="og:image" content="https://factsweird201-coder.github.io/push-up-ranks/og.png">
 <meta property="og:image:width" content="1200">
@@ -516,60 +516,17 @@
   .toast { position: fixed; left: 50%; top: 20px; transform: translateX(-50%); background: linear-gradient(135deg, #2a2208, #141822); border: 1px solid var(--accent); border-radius: 14px; padding: 12px 20px; font-family: var(--display); font-weight: 700; letter-spacing: .5px; z-index: 40; animation: toastIn .45s cubic-bezier(.2,1.6,.4,1); box-shadow: 0 10px 40px rgba(0,0,0,.5), 0 0 30px rgba(255,194,26,.2); }
   @keyframes toastIn { from { transform: translate(-50%, -30px); opacity: 0; } }
 
-  /* ---------- 1v1 battles ---------- */
-  .pvp { position: absolute; inset: 0; z-index: 9; overflow: auto; padding: 22px; display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: 14px; text-align: center;
-    background: radial-gradient(ellipse at 15% 0%, rgba(74,168,255,.20), transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(255,77,94,.18), transparent 55%), linear-gradient(180deg, #0b0e16, #05070b); }
-  .pvp-title { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 3.4vw, 34px); letter-spacing: 3px; }
-  .pvp-title em { font-style: normal; color: var(--blue); }
-  .pvp-row { display: flex; gap: 12px; align-items: stretch; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 640px; }
-  .pvp-box { flex: 1 1 230px; background: rgba(0,0,0,.35); border: 1px solid var(--line2); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
-  .pvp-box h4 { margin: 0; font-family: var(--display); letter-spacing: 2px; font-size: 12px; color: var(--muted); }
-  .pvp input { width: 100%; background: rgba(0,0,0,.45); border: 1px solid var(--line2); color: var(--text); border-radius: 12px; padding: 10px 12px; font: 600 16px var(--display); text-align: center; letter-spacing: 1px; user-select: text; outline: none; }
-  .pvp input:focus { border-color: var(--blue); }
-  .pvp input.code { font-size: 24px; letter-spacing: 8px; text-transform: uppercase; }
-  .pvp input.big-code { background: transparent; border: 0; padding: 0; max-width: 380px; font-size: clamp(40px, 8vw, 64px); font-weight: 700; letter-spacing: 12px; color: var(--blue); text-shadow: 0 0 30px rgba(74,168,255,.5); }
   .fighter { display: flex; align-items: center; gap: 12px; text-align: left; }
-  .fighter .bdg, .pcard .bdg { width: 56px; height: 56px; flex: none; }
-  .fighter .bdg svg, .pcard .bdg svg { width: 100%; height: 100%; }
+  .fighter .bdg { width: 56px; height: 56px; flex: none; }
+  .fighter .bdg svg { width: 100%; height: 100%; }
   .fighter .fn { font-family: var(--display); font-weight: 700; font-size: 19px; }
   .seg { display: flex; background: rgba(0,0,0,.4); border: 1px solid var(--line2); border-radius: 12px; padding: 3px; width: 100%; }
   .seg button { flex: 1; background: transparent; color: var(--muted); padding: 8px 6px; font-size: 13px; border-radius: 9px; }
   .seg button.on { background: linear-gradient(135deg, var(--blue), #2a6fd6); color: #fff; }
   .seg button:disabled { opacity: 1; cursor: default; }
-  .vs-row { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 12px; align-items: center; width: 100%; max-width: 640px; }
-  .vs-row .vs { font-family: var(--display); font-weight: 700; font-style: italic; font-size: 34px; color: var(--bad); text-shadow: 0 0 20px rgba(255,77,94,.6); }
-  .pcard { background: rgba(0,0,0,.4); border: 1px solid var(--line2); border-radius: 18px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
-  .pcard .fn { font-family: var(--display); font-weight: 700; font-size: 18px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .pcard .rd { font-family: var(--display); font-size: 12px; letter-spacing: 2px; color: var(--muted); margin-top: 4px; }
-  .pcard .rd.ok { color: var(--good); }
-  .pcard.me { border-color: rgba(74,168,255,.5); } .pcard.them { border-color: rgba(255,77,94,.5); }
   .spin { width: 16px; height: 16px; border-radius: 50%; border: 3px solid rgba(255,255,255,.15); border-top-color: var(--blue); animation: spin .9s linear infinite; display: inline-block; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .pvp-err { color: var(--bad); font-size: 13px; min-height: 18px; max-width: 520px; }
-  .duel-top { position: absolute; left: 16px; right: 16px; top: 14px; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 12px; align-items: center; background: linear-gradient(180deg, rgba(8,10,16,.86), rgba(8,10,16,.62)); backdrop-filter: blur(8px); border: 1px solid var(--line2); border-radius: 16px; padding: 10px 14px; }
-  .duel-side { min-width: 0; }
-  .duel-side .nm { font-family: var(--display); font-weight: 700; font-size: 15px; letter-spacing: 1px; display: flex; gap: 8px; align-items: center; white-space: nowrap; overflow: hidden; }
-  .duel-side .nm .bdg { width: 24px; height: 24px; flex: none; } .duel-side .nm .bdg svg { width: 100%; height: 100%; }
-  .duel-side.them .nm { flex-direction: row-reverse; }
-  .duel-side .hpbar { margin-top: 6px; }
-  .duel-side.me .hpbar .fill { background: linear-gradient(180deg, #8ccfff, #2a7de0 60%, #1a4f9a); }
-  .duel-side.them .hpbar .fill, .duel-side.them .hpbar .lag { inset: 0 0 0 auto; }
-  .duel-side .reps { font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-top: 4px; font-family: var(--display); }
-  .duel-side.them .reps { text-align: right; }
-  .duel-clock { font-family: var(--display); font-weight: 700; font-size: 26px; min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
-  .duel-clock.low { color: var(--bad); animation: pulseTag .8s infinite; }
-  .opp-cam { position: absolute; right: 16px; bottom: 60px; width: clamp(150px, 34%, 320px); aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: radial-gradient(ellipse at 50% 60%, rgba(255,77,94,.2), rgba(0,0,0,.85)); border: 1px solid rgba(255,77,94,.55); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
-  .opp-cam canvas { position: relative; width: 100%; height: 100%; display: block; }
-  .opp-cam video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); display: none; }
-  .opp-cam.has-video video { display: block; }
-  .opp-cam.has-video canvas { display: none; }
   .vidopt { display: flex; gap: 10px; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; }
-  .pvp .vidopt input { width: 18px; height: 18px; accent-color: var(--blue); }
-  .opp-cam .tag { position: absolute; left: 8px; top: 6px; right: 8px; font: 700 11px var(--display); letter-spacing: 1.5px; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; }
-  .opp-cam .tag i { width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--bad); box-shadow: 0 0 8px var(--bad); animation: pulseTag 1.2s infinite; }
-  .opp-cam.hit { animation: shake .35s; }
-  .emotes { position: absolute; left: 16px; bottom: 60px; display: flex; flex-direction: column; gap: 6px; }
-  .emotes button { background: rgba(0,0,0,.55); border: 1px solid var(--line2); padding: 5px 8px; font-size: 20px; border-radius: 12px; line-height: 1.2; }
   .lost { position: absolute; left: 50%; top: 118px; transform: translateX(-50%); z-index: 6; background: rgba(60,10,16,.85); border: 1px solid var(--bad); color: #ffd0d4; border-radius: 12px; padding: 8px 14px; font: 700 13px var(--display); letter-spacing: .5px; white-space: nowrap; animation: pulseTag 1.2s infinite; }
   .emote-pop { position: absolute; font-size: 54px; pointer-events: none; animation: float 1.6s ease-out forwards; z-index: 5; }
   .sv-name { display: block; margin: 18px auto 0; width: min(320px, 100%); background: rgba(0,0,0,.4); border: 1px solid var(--line2); color: var(--text); border-radius: 12px; padding: 12px; font: 600 18px var(--display); text-align: center; outline: none; user-select: text; }
@@ -730,23 +687,18 @@
     .stage.in-mission .hud, .stage.in-mission .phase { top: 124px; }
     main { padding: 10px; gap: 12px; }
     .stage { aspect-ratio: auto; height: calc(100svh - 150px); min-height: 500px; max-height: 780px; border-radius: 16px; }
-    .pvp-box { padding: 12px; gap: 8px; } .pvp { gap: 10px; }
     .chip { padding: 6px 9px; min-width: 56px; border-radius: 11px; } .chip b { font-size: 22px; }
     .hud { left: 8px; top: 8px; gap: 6px; } .phase { right: 8px; top: 8px; }
     .stage.fighting .hud, .stage.fighting .phase { top: 98px; }
-    .boss-top, .duel-top { left: 8px; right: 8px; top: 8px; padding: 8px 10px; gap: 8px; }
+    .boss-top { left: 8px; right: 8px; top: 8px; padding: 8px 10px; gap: 8px; }
     .boss-name { font-size: 15px; }
-    .duel-clock { font-size: 19px; min-width: 46px; } .duel-side .nm { font-size: 13px; }
     .feedback { font-size: 13px; white-space: normal; text-align: center; width: calc(100% - 16px); bottom: 10px; }
     .stage.fighting .feedback { left: 8px; bottom: 10px; width: auto; max-width: 55%; text-align: left; }
-    .opp-cam { right: 8px; bottom: 52px; width: 42%; }
-    .emotes { left: 8px; bottom: 52px; } .emotes button { font-size: 17px; padding: 3px 6px; }
     .arena-ctrls { right: 8px; bottom: 8px; }
     .combo { left: 8px; top: 170px; font-size: 24px; }
-    .bossselect, .pvp { padding: 14px; }
+    .bossselect { padding: 14px; }
     .bs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .modal .big { font-size: 28px; } .modal .art-big { width: 150px; height: 150px; }
-    .vs-row .vs { font-size: 24px; } .pcard .bdg { width: 44px; height: 44px; } .pcard .fn { font-size: 15px; }
   }
   /* ---------- meal plan ---------- */
   /* ---- stretch tab ---- */
@@ -1140,10 +1092,30 @@
     .panel.fold:not(.open) > h3:first-child { margin: 0; }
     section > .panel.fold { margin-top: 12px !important; }
     .side { gap: 12px; }
-    #campPanel, #hxPanel, #pvpPanel, #fdTargets { order: -1; }
+    #campPanel, #hxPanel, #fdTargets { order: -1; }
     #rosterPanel { display: none !important; } /* the arena's own boss grid does this on phones */
     .co-how { display: none; }
   }
+  /* ---- account / sign-in ---- */
+  .acct-btn { width: 40px; height: 40px; padding: 0; display: grid; place-items: center; border-radius: 50%; font-size: 17px; }
+  .acct-btn.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a1000; border-color: transparent; }
+  .acct-btn b { font: 700 16px var(--display); }
+  .acct-card { max-width: 420px; width: min(420px, calc(100vw - 32px)); box-sizing: border-box; text-align: left; padding: 26px 22px 22px; background: linear-gradient(180deg, #151926, #0d1018); border: 1px solid var(--line2); border-radius: 22px; box-shadow: 0 24px 80px rgba(0,0,0,.6); }
+  .acct-card h2 { text-align: center; }
+  .acct-x { position: absolute; right: 12px; top: 12px; width: 36px; height: 36px; padding: 0; border-radius: 50%; }
+  .acct-p { font-size: 14px; line-height: 1.5; margin: 6px 0 14px; text-align: center; }
+  .acct-form { display: grid; gap: 10px; }
+  .acct-form input { width: 100%; box-sizing: border-box; background: rgba(0,0,0,.35); border: 1px solid var(--line2); border-radius: 12px; color: var(--text); padding: 13px 14px; font: 600 16px var(--display); outline: none; user-select: text; }
+  .acct-form input:focus { border-color: var(--accent); }
+  .acct-form button { padding: 14px; font-size: 16px; }
+  .acct-err { min-height: 18px; font-size: 13.5px; color: var(--bad); }
+  .acct-alt { margin-top: 14px; text-align: center; font-size: 14px; color: var(--muted); }
+  .linkbtn { background: none; box-shadow: none; border: 0; padding: 0; color: var(--accent); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+  .acct-who { display: flex; gap: 12px; align-items: center; margin: 12px 0 4px; } .acct-who b { word-break: break-all; }
+  .acct-av { width: 46px; height: 46px; flex: none; border-radius: 50%; display: grid; place-items: center; font: 700 20px var(--display); color: #1a1000; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .acct-row { display: flex; gap: 10px; } .acct-row button { flex: 1; }
+  .acct-card .erase-btn { display: block; margin: 16px auto 0; }
+  @media (max-width: 700px) { .acct-btn { width: 34px; height: 34px; font-size: 15px; } }
 </style>
 </head>
 <body>
@@ -1156,12 +1128,12 @@
     <button id="tabCamp"><i class="tl-ic">🗺 </i>Campaign</button>
     <button id="tabBoss"><i class="tl-ic">⚔ </i><span class="tl-lg">Boss Battles</span><span class="tl-sm">Bosses</span></button>
     <button id="tabHyrox"><i class="tl-ic">🏁 </i>Hyrox</button>
-    <button id="tabPvp"><i class="tl-ic">🥊 </i>1v1</button>
     <button id="tabStretch"><i class="tl-ic">🧘 </i>Stretch</button>
     <button id="tabFood"><i class="tl-ic">🍽 </i><span class="tl-lg">Meal Plan</span><span class="tl-sm">Meals</span></button>
   </div>
   <div style="display:flex;gap:8px;align-items:center">
     <span class="hdr-rank" id="hdrRank"></span>
+    <button class="ghost acct-btn" id="acctBtn" title="Sign in" hidden>👤</button>
     <button class="ghost" id="muteBtn" title="Sound & voice">🔊</button>
     <button class="ghost" id="endBtn" disabled>End set</button>
   </div>
@@ -1175,7 +1147,7 @@
 </nav>
 
 <main>
-  <div class="battle-sub" id="battleSub" role="group" aria-label="Battle"><button data-go="boss">⚔️ Bosses</button><button data-go="hyrox">🏁 Hyrox</button><button data-go="pvp">🥊 1v1</button></div>
+  <div class="battle-sub" id="battleSub" role="group" aria-label="Battle"><button data-go="boss">⚔️ Bosses</button><button data-go="hyrox">🏁 Hyrox</button></div>
   <section>
     <div class="stage" id="stage">
       <video id="video" playsinline muted></video>
@@ -1265,24 +1237,6 @@
         <div class="mscene" id="mScene" hidden><div class="ms-quip" id="mQuip"></div><div class="ms-art" id="mSceneArt"></div><div class="ms-lbl" id="mSceneLbl"></div></div>
         <div class="callout" id="mCallout"></div>
         <div class="arena-ctrls"><button id="mQuit">Quit mission</button></div>
-      </div>
-      <div class="pvp" id="pvpLobby" hidden></div>
-      <div class="arena" id="duel" hidden>
-        <div class="duel-top">
-          <div class="duel-side me"><div class="nm"><span class="bdg" id="dMeBdg"></span><span id="dMeName">You</span></div>
-            <div class="hpbar" id="dMeBar"><div class="lag" id="dMeLag"></div><div class="fill" id="dMeFill"></div><div class="ticks"></div><div class="txt" id="dMeTxt"></div></div>
-            <div class="reps" id="dMeReps"></div></div>
-          <div class="duel-clock" id="dClock">VS</div>
-          <div class="duel-side them"><div class="nm"><span class="bdg" id="dThemBdg"></span><span id="dThemName">…</span></div>
-            <div class="hpbar" id="dThemBar"><div class="lag" id="dThemLag"></div><div class="fill" id="dThemFill"></div><div class="ticks"></div><div class="txt" id="dThemTxt"></div></div>
-            <div class="reps" id="dThemReps"></div></div>
-        </div>
-        <div class="lost" id="dLost" hidden></div>
-        <div class="callout" id="dCallout"></div>
-        <div class="combo" id="dCombo"></div>
-        <div class="opp-cam" id="oppCam"><video id="oppVideo" playsinline autoplay muted></video><canvas id="oppCanvas" width="320" height="240"></canvas><div class="tag"><i></i><span id="oppTag">OPPONENT</span></div></div>
-        <div class="emotes" id="emotes"></div>
-        <div class="arena-ctrls"><button id="duelVid"></button><button id="duelLeave">Leave battle</button></div>
       </div>
 
       <div class="overlay" id="startOverlay">
@@ -1376,16 +1330,6 @@
         <li>Beat a boss to unlock the next. Finish with all 3 hearts for ⭐⭐⭐.</li>
       </ul>
     </div>
-    <div class="panel" style="margin-top:18px" id="howPvp" hidden>
-      <h3>How 1v1 battles work</h3>
-      <ul class="tips">
-        <li><b>Create a battle</b> and send the 5-letter code (or invite link) to a friend. They open 1v1, type the code and hit <b>Join</b>.</li>
-        <li>You see each other live. Video goes straight between your two devices — never uploaded or recorded. Untick <b>Show my camera</b> to share only a stick figure.</li>
-        <li><b>Every push-up hits your opponent</b> for 10. Deep reps (50%+) crit for 1.5×. Reps within 3 s of each other build a combo bonus.</li>
-        <li><b>Knockout:</b> first to drain 200 HP wins (3 min cap). <b>60s Blitz:</b> most damage in a minute wins.</li>
-        <li>Same push-up checks as training — sitting down or waving your arms doesn't score.</li>
-      </ul>
-    </div>
   </section>
 
   <aside class="side">
@@ -1458,10 +1402,6 @@
       <h3>Bosses</h3><span class="muted">Pick a fight</span>
       <div class="roster" id="roster"></div>
     </div>
-    <div class="panel" id="pvpPanel" hidden>
-      <h3>1v1 record</h3><span class="muted">Online battles</span>
-      <div class="stats"><div><b id="pvW">0</b><span class="muted">Wins</span></div><div><b id="pvL">0</b><span class="muted">Losses</span></div><div><b id="pvD">0</b><span class="muted">Draws</span></div></div>
-    </div>
   </aside>
 </main>
 
@@ -1496,6 +1436,7 @@
 <div class="modal" id="hxModal"><div class="card coach-card hx-card"></div></div>
 <div class="modal" id="recModal"><div class="card coach-card rec-card"></div></div>
 <div class="modal" id="coachModal"><div class="card coach-card"></div></div>
+<div class="modal" id="acctModal"><div class="card coach-card acct-card" id="acctCard"></div></div>
 
 <div class="fsheet" id="fSheet"><div class="fs-card" id="fsCard" role="dialog" aria-label="Food"></div></div>
 
@@ -1509,7 +1450,7 @@
       <h2 class="sv-q">Welcome, recruit.</h2>
       <p class="sv-sub">Four quick questions so we can set your daily goal, estimate the calories you burn, track your progress and tune the bosses to your level.</p>
       <input class="sv-name" id="svName" maxlength="16" placeholder="Your fighter name" aria-label="Fighter name">
-      <div class="muted" style="margin-top:6px">Shown to opponents in 1v1 battles</div>
+      <div class="muted" style="margin-top:6px">What your trainer calls you</div>
       <button class="ghost sv-restore" id="svRestore" hidden>↩ Undo — bring back my old progress</button>
     </div>
 
@@ -1748,7 +1689,17 @@ const bossHp = b => Math.max(40, Math.round(b.hp * (LEVELS[store.profile?.level]
 const toUnit = (kg, unit) => unit === "kg" ? kg : kg / KG_PER_LB;
 const fmtW = (kg, unit = store.profile?.unit || "lb") => `${(Math.round(toUnit(kg, unit) * 10) / 10).toLocaleString()} ${unit}`;
 const round5 = n => Math.max(10, Math.round(n / 5) * 5);
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch {} };
+// save() stamps store.updatedAt only when something really changed (cloud sync uses it to tell which copy is newer)
+let lastSer = null, onSaved = null;
+const serNoStamp = () => { const u = store.updatedAt; store.updatedAt = 0; const s = JSON.stringify(store); store.updatedAt = u; return s; };
+const markSaved = () => { lastSer = serNoStamp(); };
+const save = () => {
+  try {
+    if (lastSer !== null) { const s = serNoStamp(); if (s !== lastSer) { lastSer = s; store.updatedAt = Date.now(); } }
+    localStorage.setItem(KEY, JSON.stringify(store));
+  } catch {}
+  onSaved?.();
+};
 // One-time: the campaign got its story, so anyone who already played it starts the campaign over to see the story from
 // the beginning. Only campaign stars are cleared (kept in campaignBeforeStory); push-ups, rank and boss records stay.
 const STORY_VER = 1;
@@ -1935,7 +1886,6 @@ $("svRestore").onclick = () => {
   $("survey").classList.remove("show");
   renderRank(); renderRoster(); renderProfile();
   toast("↩ Progress restored");
-  maybeAutoJoin();
 };
 document.addEventListener("keydown", e => { if (e.key === "Escape" && sv.editing && $("survey").classList.contains("show")) $("survey").classList.remove("show"); });
 
@@ -2022,7 +1972,6 @@ function finishSurvey() {
   if (coachInit) renderCoach();
   say(sv.editing ? "Profile updated." : `Plan locked in. ${store.goal} push-ups a day. Let's go!`);
   toast(sv.editing ? "✅ Profile updated" : `🎯 Daily goal set to ${store.goal}`);
-  maybeAutoJoin();
   foodRefresh();
 }
 
@@ -2195,7 +2144,7 @@ function setMode(m) {
   if (m !== mode) $("setDone").hidden = true;
   mode = m;
   // each tab is its own screen: the "Ready to train?" start screen only belongs to Training
-  // (Campaign, Boss Battles and 1v1 start the camera from their own buttons)
+  // (Campaign and Boss Battles start the camera from their own buttons)
   $("startOverlay").classList.toggle("not-train", m !== "train");
   $("tabTrain").classList.toggle("on", m === "train");
   $("tabCamp").classList.toggle("on", m === "campaign");
@@ -2206,15 +2155,10 @@ function setMode(m) {
   if (m === "campaign") { renderCampaign(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" });
     if (campReset) { campReset = false; toast("📜 The campaign has a story now! It restarted so you can play it from the beginning."); } }
   $("tabBoss").classList.toggle("on", m === "boss");
-  $("tabPvp").classList.toggle("on", m === "pvp");
   $("tabHyrox").classList.toggle("on", m === "hyrox");
   $("hxLobby").hidden = m !== "hyrox" || !!HR?.active;
   $("hxPanel").hidden = $("howHyrox").hidden = m !== "hyrox";
   if (m === "hyrox" && typeof hxInit !== "undefined") { renderHyrox(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
-  $("pvpPanel").hidden = m !== "pvp";
-  $("howPvp").hidden = m !== "pvp";
-  $("pvpLobby").hidden = m !== "pvp" || !!B;
-  if (m === "pvp") { renderLobby(); renderPvpPanel(); $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
   $("tabStretch").classList.toggle("on", m === "stretch");
   $("stretchView").hidden = m !== "stretch";
   if (m !== "stretch" && typeof stretchInit !== "undefined" && ST) stFinish(false);
@@ -2233,9 +2177,9 @@ function setMode(m) {
   if (m === "boss") { renderRoster(); $("bsStatus").textContent = "Beat a boss to unlock the next one."; $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
   phoneNav();
 }
-// phone layout: bottom tab bar (Bosses, Hyrox and 1v1 share the Battle tab) and the full-screen set controls
+// phone layout: bottom tab bar (Bosses and Hyrox share the Battle tab) and the full-screen set controls
 function phoneNav() {
-  const BATTLE = ["boss", "hyrox", "pvp"];
+  const BATTLE = ["boss", "hyrox"];
   document.body.dataset.mode = mode;
   if (BATTLE.includes(mode)) { store.lastBattle = mode; }
   document.querySelectorAll("#botNav button").forEach(b => b.classList.toggle("on", b.dataset.go === mode || (b.dataset.go === "battle" && BATTLE.includes(mode))));
@@ -2243,7 +2187,7 @@ function phoneNav() {
   document.querySelectorAll("#battleSub button").forEach(b => b.classList.toggle("on", b.dataset.go === mode));
 }
 document.querySelectorAll("#botNav button, #battleSub button").forEach(b => b.onclick = () => {
-  const BATTLE = ["boss", "hyrox", "pvp"];
+  const BATTLE = ["boss", "hyrox"];
   const go = b.dataset.go === "battle" ? (BATTLE.includes(mode) ? mode : store.lastBattle || "boss") : b.dataset.go;
   if (go === mode) { scrollTo({ top: 0, behavior: "smooth" }); return; }
   setMode(go); if (mode === go) scrollTo({ top: 0 });
@@ -2251,7 +2195,7 @@ document.querySelectorAll("#botNav button, #battleSub button").forEach(b => b.on
 $("fsEnd").onclick = () => endSet(true);
 $("fsMute").onclick = () => $("muteBtn").click();
 // phone: info panels fold up so the page isn't one long scroll (tap the top row)
-{ const FOLD = { howTrain: 0, howCamp: 0, howHyrox: 0, howBoss: 0, howPvp: 0, rankPanel: 0, profilePanel: 0, dailyPanel: 1, ladderPanel: 0, fdTargets: 1, fdMicros: 0 };
+{ const FOLD = { howTrain: 0, howCamp: 0, howHyrox: 0, howBoss: 0, rankPanel: 0, profilePanel: 0, dailyPanel: 1, ladderPanel: 0, fdTargets: 1, fdMicros: 0 };
   const phone = matchMedia("(max-width: 700px)");
   Object.entries(FOLD).forEach(([id, def]) => {
     const el = $(id); if (!el) return;
@@ -2270,7 +2214,6 @@ phoneNav();
 $("tabTrain").onclick = () => setMode("train");
 $("tabCamp").onclick = () => setMode("campaign");
 $("tabBoss").onclick = () => setMode("boss");
-$("tabPvp").onclick = () => setMode("pvp");
 $("tabHyrox").onclick = () => setMode("hyrox");
 $("tabFood").onclick = () => setMode("food");
 $("tabStretch").onclick = () => setMode("stretch");
@@ -2296,7 +2239,6 @@ function onRep(depthPct) {
   if (beforeToday < store.goal && beforeToday + 1 >= store.goal) { toast("✅ Daily goal complete!"); confetti(90); if (!inMatch()) say("Daily goal complete!"); }
 
   if (F?.active) fightRep(depthPct);
-  else if (B?.active) battleRep(depthPct);
   else if (M?.active) missionRep(depthPct);
   else {
     sfx.rep(); coachRep(depthPct); trRep(depthPct);
@@ -2305,7 +2247,7 @@ function onRep(depthPct) {
   }
   renderRank();
   const after = rankIndex(store.total);
-  if (after > before) { if (F || B || M || CW?.active || HR?.active) pendingRankUps.push(after); else showRankUp(after); }
+  if (after > before) { if (F || M || CW?.active || HR?.active) pendingRankUps.push(after); else showRankUp(after); }
 }
 // squats: their own totals (no rank-ups), then the same fight / mission / training handling
 function onSquat(depthPct) {
@@ -2340,7 +2282,7 @@ function onSitup(depthPct) {
   renderRank();
 }
 window.__rep = (d = 0.4) => onRep(d);
-window.__feed = lm => { detect(lm); if (B) sendPose(lm); };   // test hook: push one pose frame through the detector
+window.__feed = lm => { detect(lm); };   // test hook: push one pose frame through the detector
 
 function showRankUp(i) {
   const r = RANKS[i];
@@ -2360,12 +2302,12 @@ function endSet(showSummary = true) {
   const hadReps = setCount > 0;
   if (setCount > 0) {
     store.sets++; save(); renderRank();
-    if (showSummary && !F && !B && !M && mode === "train") showSetDone(setCount);
+    if (showSummary && !F && !M && mode === "train") showSetDone(setCount);
   }
   setCount = 0; $("setCount").textContent = 0; bestToasted = false;
   $("endBtn").disabled = true;
   lastRepTime = 0; lowSince = 0;
-  if (showSummary && !F && !B && !M) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
+  if (showSummary && !F && !M) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
 }
 function showSetDone(n) {
   const side = exercise === "squat" ? sqStore() : exercise === "situp" ? suStore() : null;
@@ -2392,7 +2334,7 @@ $("resetBtn").onclick = () => {
   if (!confirm(`Erase ALL your progress?\n\nYour rank, ${store.total.toLocaleString()} push-ups, streak, bosses beaten and profile will be deleted.`)) return;
   if (!confirm("Are you sure? This starts you over from zero.")) return;
   try { localStorage.setItem(BACKUP_KEY, JSON.stringify(store)); } catch {}
-  store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: store.muted, profile: null, weights: [], kcal: 0, pvp: { w: 0, l: 0, d: 0 }, name: "", campaign: {} };
+  store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: store.muted, profile: null, weights: [], kcal: 0, name: "", campaign: {}, resetAt: Date.now() };
   setCount = 0; save(); $("setCount").textContent = 0; renderRank(); renderRoster(); openSurvey(false);
 };
 
@@ -2445,7 +2387,7 @@ async function startFight(idx, camp = null) {
 }
 
 function callout(text, sub, cls = "") {
-  const c = $(B ? "dCallout" : "callout");
+  const c = $("callout");
   c.dataset.w = "";
   c.className = "callout " + cls;
   c.innerHTML = text ? `${text}${sub ? `<small>${sub}</small>` : ""}` : "";
@@ -2815,7 +2757,7 @@ function analyse(lm) {
 function rejectRep(reason, info) {
   logRep({ ok: false, reason, ...info });
   setFeedback("Not counted — " + reason, "bad");
-  if ((F?.active && F.state !== "countdown") || B?.state === "fight") callout("NOT COUNTED", reason.toUpperCase(), "red");
+  if ((F?.active && F.state !== "countdown")) callout("NOT COUNTED", reason.toUpperCase(), "red");
   phase = "up"; rep = null;
 
 }
@@ -2951,7 +2893,7 @@ function wantEx() {
   if (HR?.active) return HR.segs[HR.idx]?.ex || "squat";
   if (M) return chEx(M.m.ch);
   if (F) return F.camp ? chEx(CAMP_LIST.find(m => m.id === F.camp)?.ch ?? 0) : "push";
-  if (B || mode === "pvp" || mode === "boss") return "push";
+  if (mode === "boss") return "push";
   if (mode === "campaign") return CAMPAIGNS[campSet()].ex;
   return trainEx();
 }
@@ -3198,16 +3140,16 @@ $("startBtn").onclick = () => { if (mode !== "train" || inMatch()) return; train
 
 // Turn the camera off (light goes out) and show the start button again for the next set.
 let overlayTimer = 0, idleTimer = 0;
-// After a mission, boss fight or 1v1 ends: if nothing else starts within a moment, turn the camera off.
+// After a mission or boss fight ends: if nothing else starts within a moment, turn the camera off.
 // (The short wait means "Next mission" / "Rematch" keeps the camera running instead of restarting it.)
 // Result screen left open: don't keep the camera light on forever (Next mission / Retry just starts it again).
 function resultCameraTimeout() {
   clearTimeout(idleTimer);
-  idleTimer = setTimeout(() => { if ($("resultModal").classList.contains("show") && !F?.active && !M?.active && !B) stopCamera(0, "Start camera"); }, 20000);
+  idleTimer = setTimeout(() => { if ($("resultModal").classList.contains("show") && !F?.active && !M?.active) stopCamera(0, "Start camera"); }, 20000);
 }
 function cameraIdle(delay = 1500) {
   clearTimeout(idleTimer);
-  idleTimer = setTimeout(() => { if (camReady && !F && !B && !M && !net) stopCamera(0, "Start camera"); }, delay);
+  idleTimer = setTimeout(() => { if (camReady && !F && !M) stopCamera(0, "Start camera"); }, delay);
 }
 function stopCamera(overlayDelay = 0, label = "Start next set") {
   clearTimeout(idleTimer); trainArmed = false;
@@ -3245,7 +3187,7 @@ function loop() {
     catch (e) { console.error(e); setFeedback("Tracker error: " + e.message, "bad"); requestAnimationFrame(loop); return; }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const lm = r.landmarks?.[0];
-    if (lm) { drawSkeleton(lm); detect(lm); if (B) sendPose(lm); }
+    if (lm) { drawSkeleton(lm); detect(lm); }
     else { setFeedback("Step into frame", "bad"); checkAutoEnd(true); }
   }
   requestAnimationFrame(loop);
@@ -5482,575 +5424,9 @@ function leaveMission() {
 window.__camp = { list: CAMP_LIST, get M() { return M; }, get F() { return F; } };   // test hook
 $("mQuit").onclick = () => { if (!M) return; try { speechSynthesis.cancel(); } catch {} endSet(false); leaveMission(); renderRank(); flushRankUps(); };
 
-// ================= 1v1 BATTLES (peer-to-peer, no server of our own) =================
-// Two players connect directly with WebRTC via the free PeerJS broker. Each side counts its own reps
-// with the same verified detector; the host keeps the official score. Only rep events and a 12-point
-// stick figure are sent — never video.
-const PEER_PREFIX = "pushupranks-v1-";
-const PUBLIC_URL = "https://factsweird201-coder.github.io/push-up-ranks/";   // the hosted web address, so invite links made in the Mac app open in a browser
-const DUEL_MODES = {
-  ko:    { name: "Knockout",  ds: "First to drain 200 HP wins · 3 minute cap", hp: 200, dur: 180 },
-  blitz: { name: "60s Blitz", ds: "Most damage in 60 seconds wins",           hp: 0,   dur: 60 },
-};
-const EMOTES = ["💪", "🔥", "😤", "😂"];
-store.pvp ||= { w: 0, l: 0, d: 0 };
-const shareVid = () => store.shareVideo !== false;
-let net = null, B = null, pendingJoin = null, lastPoseSent = 0, lastEmote = 0;
-let lobby = { view: "home", err: "", busy: "" };
-const inMatch = () => !!(F?.active || B?.active || M?.active);
+// (1v1 battles were removed in Nov 2026; store.pvp is left alone so old records aren't lost)
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const clampInt = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.round(+v || 0)));
-const cleanName = s => String(s ?? "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 16) || "Player";
-const myName = () => cleanName(store.name);
-const other = r => (r === "host" ? "guest" : "host");
-const recStr = r => `${r.w || 0}W · ${r.l || 0}L${r.d ? ` · ${r.d}D` : ""}`;
-const pair = o => ({ host: clampInt(o?.host, 0, 1e6), guest: clampInt(o?.guest, 0, 1e6) });
-
-function loadPeerLib() {
-  if (window.Peer) return Promise.resolve();
-  return new Promise((res, rej) => {
-    const s = document.createElement("script");
-    s.src = "https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js";
-    s.onload = res; s.onerror = () => rej(new Error("Couldn't load the battle network — check your internet."));
-    document.head.appendChild(s);
-  });
-}
-const CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-const makeCode = () => Array.from({ length: 5 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join("");
-const cleanCode = s => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 5);
-function inviteUrl(code) {
-  const base = PUBLIC_URL || (location.protocol === "https:" && location.hostname !== "pushup-ranks.app" ? location.origin + location.pathname : "");
-  return base ? `${base}?battle=${code}` : "";
-}
-function send(m) { if (window.__netMute) return; try { if (net?.conn?.open) net.conn.send(m); } catch (e) { console.warn("send failed", e); } }   // __netMute: test hook to simulate a dropped phone
-const helloMsg = () => ({ t: "hello", v: 1, vid: shareVid(), name: myName(), rank: rankIndex(store.total), total: store.total, w: store.pvp.w, l: store.pvp.l, d: store.pvp.d });
-const netErr = e => ["network", "server-error", "socket-error", "socket-closed"].includes(e.type)
-  ? "Couldn't reach the battle server — check your internet and try again."
-  : e.type === "browser-incompatible" ? "This browser doesn't support online battles." : "Connection problem: " + (e.message || e.type);
-
-// ---------- connecting ----------
-async function hostBattle() {
-  leaveNet();
-  lobby = { view: "hosting", err: "", busy: "Creating your battle room…" }; renderLobby();
-  try { await loadPeerLib(); } catch (e) { return lobbyError(e.message); }
-  const myNet = net = { role: "host", code: makeCode(), mode: "ko", them: null, meReady: false, themReady: false };
-  const open = () => {
-    const peer = myNet.peer = new Peer(PEER_PREFIX + myNet.code);
-    peer.on("open", () => { if (net === myNet) { lobby.busy = ""; renderLobby(); } });
-    peer.on("connection", c => {
-      if (net !== myNet) return c.close();
-      if (myNet.conn) { c.on("open", () => { c.send({ t: "full" }); setTimeout(() => c.close(), 500); }); return; }
-      attachConn(c);
-      setTimeout(() => {   // they found us but the direct link never opened (strict network) — keep hosting
-        if (net === myNet && myNet.conn === c && !myNet.connected) {
-          try { c.close(); } catch {}
-          myNet.conn = null;
-          lobby.err = "Someone tried to join but your devices couldn't connect directly. This happens on some networks (often mobile data or school/work Wi-Fi) — try both on home Wi-Fi.";
-          renderLobby();
-        }
-      }, 15000);
-    });
-    peer.on("error", e => {
-      if (net !== myNet) return;
-      if (e.type === "unavailable-id") { peer.destroy(); myNet.code = makeCode(); return open(); }
-      if (!myNet.connected) lobbyError(netErr(e));
-    });
-    peer.on("disconnected", () => { if (net === myNet && !myNet.connected && !peer.destroyed) peer.reconnect(); });
-  };
-  open();
-}
-
-async function joinBattle(raw) {
-  const code = cleanCode(raw);
-  if (code.length !== 5) { lobby.err = "Battle codes are 5 characters."; return renderLobby(); }
-  leaveNet();
-  lobby = { view: "joining", err: "", busy: "", code }; renderLobby();
-  try { await loadPeerLib(); } catch (e) { return lobbyError(e.message, code); }
-  const myNet = net = { role: "guest", code, mode: "ko", them: null, meReady: false, themReady: false };
-  const peer = myNet.peer = new Peer();
-  peer.on("call", call => { if (net !== myNet || myNet.call) return call.close(); call.answer(myOutStream()); attachCall(call); });
-  const timer = setTimeout(() => {
-    if (net !== myNet || myNet.connected) return;
-    lobbyError(myNet.peerOpen
-      ? "Found the battle but couldn't connect to your friend's device. This happens on some networks (often mobile data or school/work Wi-Fi) — try both on home Wi-Fi, then join again."
-      : "Couldn't reach the battle server — check your internet and try again.", code);
-  }, 15000);
-  peer.on("open", () => { if (net === myNet) { myNet.peerOpen = true; attachConn(peer.connect(PEER_PREFIX + code, { reliable: true })); } });
-  peer.on("error", e => {
-    if (net !== myNet || myNet.connected) return;
-    clearTimeout(timer);
-    lobbyError(e.type === "peer-unavailable" ? `No battle found with code ${code}. Check the code with your friend.` : netErr(e), code);
-  });
-}
-
-function attachConn(c) {
-  const myNet = net; myNet.conn = c;
-  c.on("open", () => {
-    if (net !== myNet) return;
-    myNet.connected = true; myNet.lastMsgAt = performance.now();
-    send(helloMsg());
-    if (myNet.role === "host") send({ t: "settings", mode: myNet.mode });
-    lobby = { view: "room", err: "", busy: "" };
-    if (mode !== "pvp") setMode("pvp"); else renderLobby();
-  });
-  c.on("data", m => { if (net === myNet) { myNet.lastMsgAt = performance.now(); onNetMsg(m); } });
-  c.on("close", () => { if (net === myNet) onConnClose(); });
-  c.on("error", e => console.warn("battle connection", e));
-}
-
-function lobbyError(msg, code) { leaveNet(); lobby = { view: "home", err: msg, busy: "", code }; renderLobby(); }
-
-function leaveNet() {
-  const n = net; net = null;
-  if (n) {
-    try { n.conn?.open && n.conn.send({ t: "bye" }); } catch {}
-    setTimeout(() => { try { n.call?.close(); n.conn?.close(); n.peer?.destroy(); } catch {} }, 200);
-  }
-  if (B) exitDuelArena();
-  cameraIdle();
-}
-
-function onConnClose() {
-  if (!net) return;
-  const them = net.them?.name || "Your opponent";
-  if (B && (B.state === "fight" || B.state === "countdown")) onDuelEnd({ winner: net.role, reason: "forfeit" });
-  else if (!$("resultModal").classList.contains("show")) exitDuelArena();
-  toast(`👋 ${them} left the battle`);
-  const n = net; net = null;
-  setTimeout(() => { try { n.peer?.destroy(); } catch {} }, 200);
-  lobby = { view: "home", err: "", busy: "" }; renderLobby();
-}
-
-function onNetMsg(m) {
-  if (!m || typeof m !== "object") return;
-  const n = net;
-  switch (m.t) {
-    case "hello": {
-      const first = !n.them;
-      n.them = { name: cleanName(m.name), rank: clampInt(m.rank, 0, RANKS.length - 1), total: clampInt(m.total, 0, 1e7), w: clampInt(m.w, 0, 1e6), l: clampInt(m.l, 0, 1e6), d: clampInt(m.d, 0, 1e6) };
-      n.themVid = m.vid !== false;
-      if (first) { toast(`⚔ ${n.them.name} joined the battle!`); sfx.go(); }
-      renderLobby(); renderDuel(); break;
-    }
-    case "settings": if (n.role === "guest" && DUEL_MODES[m.mode]) { n.mode = m.mode; renderLobby(); } break;
-    case "ready":
-      n.themReady = !!m.v; if (m.v) n.themInArena = true; renderLobby(); renderDuel(); maybeCall();
-      if (n.themReady && B?.state === "waiting") toast(`✔ ${n.them?.name || "Opponent"} is ready`);
-      maybeStart(); break;
-    case "start": if (n.role === "guest" && B && DUEL_MODES[m.mode]) startDuelCountdown(m.mode); break;
-    case "hit":   if (n.role === "host") applyHit("guest", m.dmg, !!m.crit); break;
-    case "state": if (n.role === "guest") onDuelState(m); break;
-    case "end":   if (n.role === "guest") onDuelEnd(m); break;
-    case "pose":
-      if (Array.isArray(m.p) && m.p.length === JOINTS.length * 3) { n.oppPose = m.p.map(v => +v || 0); n.oppAspect = Math.max(0.3, Math.min(3, +m.a || 4 / 3)); n.oppPoseAt = performance.now(); }
-      break;
-    case "emote": if (EMOTES.includes(m.e)) showEmote(m.e, false); break;
-    case "vid":   n.themVid = !!m.v; renderOppVideo(); break;
-    case "full":  lobbyError("That battle already has two players."); break;
-    case "bye":   onConnClose(); break;
-    case "ping":  break;
-  }
-}
-
-// ---------- the match ----------
-async function enterDuelArena() {
-  if (!net?.connected || lobby.busy) return;
-  if (!window.__duelNoCam) {
-    if (!camReady) { lobby.busy = "Starting camera and body tracker…"; lobby.err = ""; renderLobby(); }
-    const ok = await ensureCamera();
-    lobby.busy = "";
-    if (!ok) { lobby.err = "Camera didn't start: " + $("loadMsg").textContent.replace("Couldn't start: ", ""); return renderLobby(); }
-  }
-  if (!net?.connected) return;
-  endSet(false);
-  B = { active: true, state: "waiting", mode: net.mode, maxHp: 0, hp: pair(), reps: pair(), dmg: pair(), crits: pair(), combo: 0, lastRepAt: 0, lastHitAt: { host: 0, guest: 0 }, endAt: 0 };
-  $("pvpLobby").hidden = true; $("duel").hidden = false;
-  document.documentElement.style.setProperty("--aura", "#4aa8ff");
-  document.documentElement.style.setProperty("--fog", "rgba(20,60,140,.35)");
-  $("stage").classList.add("fighting");
-  $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" });
-  net.meReady = true; send({ t: "ready", v: true });
-  renderDuel(); maybeStart(); maybeCall();
-}
-
-function maybeStart() {
-  if (net?.role !== "host" || B?.state !== "waiting" || !net.meReady || !net.themReady) return;
-  send({ t: "start", mode: net.mode });
-  startDuelCountdown(net.mode);
-}
-
-async function startDuelCountdown(m) {
-  const M = DUEL_MODES[m], myB = B;
-  Object.assign(B, { active: true, state: "countdown", mode: m, maxHp: M.hp, hp: { host: M.hp, guest: M.hp }, reps: pair(), dmg: pair(), crits: pair(), combo: 0, lastRepAt: 0, lastHitAt: { host: 0, guest: 0 }, endAt: 0 });
-  net.meReady = net.themReady = false;
-  $("dCombo").innerHTML = "";
-  renderDuel();
-  callout(`${esc(myName())} <span style="opacity:.6">vs</span> ${esc(net.them?.name || "?")}`, M.name.toUpperCase(), "blue");
-  say(`${M.name}. Get into position.`);
-  await wait(2400);
-  for (const k of [3, 2, 1]) { if (B !== myB || B.state !== "countdown") return; callout(String(k), null, "gold"); sfx.tick(); await wait(800); }
-  if (B !== myB || B.state !== "countdown") return;
-  B.state = "fight"; B.endAt = performance.now() + M.dur * 1000;
-  callout("FIGHT!", null, "red"); sfx.go(); say("Fight!");
-  setTimeout(() => B === myB && $("dCallout").textContent === "FIGHT!" && callout(""), 900);
-  renderDuel();
-}
-
-function battleRep(depthPct) {
-  if (!B || B.state !== "fight") { sfx.rep(); return; }
-  const now = performance.now();
-  B.combo = now - B.lastRepAt < 3000 ? B.combo + 1 : 1; B.lastRepAt = now;
-  const crit = depthPct >= CRIT;
-  let dmg = 10 + Math.min(B.combo - 1, 5) * 2;
-  if (crit) dmg *= 1.5;
-  dmg = Math.round(dmg);
-  // instant feedback on our side; the host confirms the score
-  const cam = $("oppCam"), [x, y] = centerOf(cam);
-  if (crit) { sfx.crit(); burst(x, y, { n: 44, colors: ["#ffc21a", "#fff2a8", "#ff8a00"], speed: 10, size: 4 }); ring(x, y, "#ffc21a", 170, 7, 0.45); flashStage(); callout("CRITICAL!", null, "gold"); }
-  else { sfx.hit(); burst(x, y, { n: 22, colors: ["#ffffff", "#ff4d5e"], speed: 8, size: 3.5 }); ring(x, y, "rgba(255,255,255,.8)", 110, 4, 0.3); }
-  duelFloat(crit ? `${dmg}!` : String(dmg), crit ? "crit" : "", cam);
-  cam.classList.remove("hit"); void cam.offsetWidth; cam.classList.add("hit");
-  const c = $("dCombo");
-  c.innerHTML = B.combo >= 2 ? `${B.combo}× <small>COMBO</small>` : "";
-  c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
-  if (B.combo === 5) say("Five combo!"); else if (B.combo === 10) say("Ten combo! Unstoppable!");
-  if (net?.role === "host") applyHit("host", dmg, crit); else send({ t: "hit", dmg, crit });
-}
-
-function applyHit(by, dmg, crit) {          // host only: the official scorekeeper
-  if (!B || B.state !== "fight") return;
-  const now = performance.now();
-  if (now - B.lastHitAt[by] < 350) return;  // faster than any real push-up — ignore
-  B.lastHitAt[by] = now;
-  dmg = clampInt(dmg, 0, 30);
-  const target = other(by);
-  if (B.maxHp) B.hp[target] = Math.max(0, B.hp[target] - dmg);
-  B.reps[by]++; B.dmg[by] += dmg; if (crit) B.crits[by]++;
-  const st = { t: "state", hp: B.hp, reps: B.reps, dmg: B.dmg, crits: B.crits, by, d: dmg, c: !!crit };
-  send(st); onDuelState(st);
-  if (B.maxHp && B.hp[target] <= 0) finishDuel(by, "ko");
-}
-
-function onDuelState(s) {
-  if (!B || !net) return;
-  for (const k of ["hp", "reps", "dmg", "crits"]) if (s[k]) B[k] = pair(s[k]);
-  if (s.by && s.by !== net.role && s.d > 0) {   // the opponent landed a rep on us
-    const st = $("stage"); st.classList.add("hurt"); setTimeout(() => st.classList.remove("hurt"), 260);
-    duelFloat(`-${clampInt(s.d, 0, 99)}`, s.c ? "crit" : "", $("dMeBar"));
-    tone(160, 0.12, "square", 0.08, 90);
-  }
-  renderDuel();
-}
-
-function finishDuel(winner, reason) {
-  if (!B || B.state === "over") return;
-  const m = { t: "end", winner, reason, hp: B.hp, reps: B.reps, dmg: B.dmg, crits: B.crits };
-  send(m); onDuelEnd(m);
-}
-
-setInterval(() => {
-  if (!B || B.state !== "fight") return;
-  const left = Math.max(0, (B.endAt - performance.now()) / 1000);
-  $("dClock").textContent = fmtTime(Math.ceil(left));
-  $("dClock").classList.toggle("low", left <= 10);
-  if (B.combo && performance.now() - B.lastRepAt > 3000) { B.combo = 0; $("dCombo").innerHTML = ""; }
-  if (left <= 0 && net?.role === "host") { const d = B.dmg.host - B.dmg.guest; finishDuel(d > 0 ? "host" : d < 0 ? "guest" : "draw", "time"); }
-}, 200);
-
-function onDuelEnd(m) {
-  if (!B || B.state === "over") return;
-  for (const k of ["hp", "reps", "dmg", "crits"]) if (m[k]) B[k] = pair(m[k]);
-  B.state = "over"; B.active = false;
-  const me = net?.role || "host", res = m.winner === "draw" ? "draw" : m.winner === me ? "win" : "loss";
-  store.pvp[res === "win" ? "w" : res === "loss" ? "l" : "d"]++; save();
-  const them = net?.them?.name || "Your opponent";
-  $("dClock").classList.remove("low");
-  renderDuel(); renderPvpPanel(); endSet(false); renderRank();
-  if (res === "win") {
-    callout(m.reason === "ko" ? "K.O.!" : "VICTORY!", null, "gold"); sfx.boom(); flashStage(); setTimeout(() => sfx.victory(), 400);
-    const [x, y] = centerOf($("oppCam"));
-    for (let k = 0; k < 3; k++) setTimeout(() => { burst(x, y, { n: 50, colors: ["#ffc21a", "#fff", "#ff4d5e"], speed: 12, size: 5, life: 1.1 }); ring(x, y, "#ffc21a", 240, 9, 0.6); }, k * 180);
-    say(m.reason === "forfeit" ? `${them} left. You win!` : `You beat ${them}!`);
-  } else if (res === "loss") { callout(m.reason === "ko" ? "K.O.!" : "DEFEAT", null, "red"); sfx.defeat(); say(`${them} wins this one.`); }
-  else { callout("DRAW!", null, "gold"); sfx.fanfare(); say("It's a draw!"); }
-  setTimeout(() => showDuelResult(res, m.reason, them, me), m.reason === "forfeit" ? 700 : 1800);
-}
-
-function showDuelResult(res, reason, them, me) {
-  if (!B) return;
-  const op = other(me);
-  $("resTitle").textContent = res === "win" ? "VICTORY" : res === "loss" ? "DEFEAT" : "DRAW";
-  $("resTitle").style.color = res === "loss" ? "var(--bad)" : "var(--accent)";
-  $("resRays").className = "rays" + (res === "loss" ? " red" : "");
-  $("resArt").innerHTML = rankBadge(res === "loss" ? (net?.them?.rank ?? 0) : rankIndex(store.total));
-  $("resArt").className = "art-big";
-  $("resStamp").hidden = true;
-  $("resBig").textContent = res === "win" ? `You beat ${them}!` : res === "loss" ? `${them} wins` : "Dead even!";
-  $("resStars").innerHTML = "";
-  $("resStats").innerHTML = [["Your push-ups", B.reps[me]], ["Damage", B.dmg[me]], ["Crits", B.crits[me]], [`${esc(them)}'s push-ups`, B.reps[op]]]
-    .map(([k, v]) => `<div><b>${v}</b><span class="muted">${k}</span></div>`).join("");
-  $("resSub").textContent = (reason === "ko" ? "Knockout. " : reason === "forfeit" ? `${them} left the battle. ` : `Time's up — ${B.dmg[me]} vs ${B.dmg[op]} damage. `) + `Your 1v1 record: ${recStr(store.pvp)}`;
-  $("resMain").textContent = "Rematch ⚔";
-  $("resMain").onclick = () => {
-    $("resultModal").classList.remove("show");
-    if (!net?.connected) { toast("Your opponent has left"); exitDuelArena(); lobby = { view: "home", err: "", busy: "" }; return renderLobby(); }
-    B.active = true; B.state = "waiting"; net.meReady = true; send({ t: "ready", v: true });
-    renderDuel(); maybeStart();
-  };
-  $("resBack").textContent = "Leave";
-  $("resBack").onclick = () => { $("resultModal").classList.remove("show"); leaveNet(); lobby = { view: "home", err: "", busy: "" }; renderLobby(); };
-  $("resultModal").classList.add("show"); resultCameraTimeout();
-  if (res === "win") confetti(200);
-}
-
-// ---------- live video between the two players ----------
-let blackStream = null;
-function myOutStream() {
-  if (shareVid() && video.srcObject) return video.srcObject;
-  if (!blackStream) { const c = document.createElement("canvas"); c.width = c.height = 16; c.getContext("2d").fillRect(0, 0, 16, 16); blackStream = c.captureStream(1); }
-  return blackStream;   // placeholder so the link still works both ways
-}
-function maybeCall() {          // the host sets up the video link once both players have their camera on
-  if (net?.role !== "host" || net.call || !B || !net.themInArena || !net.conn?.peer || !net.peer) return;
-  try { attachCall(net.peer.call(net.conn.peer, myOutStream())); } catch (e) { console.warn("video call failed", e); }
-}
-function attachCall(call) {
-  if (!call) return;
-  const myNet = net; myNet.call = call;
-  call.on("stream", s => { if (net !== myNet) return; const v = $("oppVideo"); v.srcObject = s; v.play().catch(() => {}); renderOppVideo(); });
-  call.on("close", () => { if (net === myNet) { myNet.call = null; $("oppVideo").srcObject = null; renderOppVideo(); } });
-  call.on("error", e => console.warn("video", e));
-}
-function renderOppVideo() {
-  const on = !!(net?.themVid && $("oppVideo").srcObject);
-  $("oppCam").classList.toggle("has-video", on);
-  $("duelVid").textContent = shareVid() ? "📹 Camera on" : "📹 Camera off";
-}
-function setShareVid(v) {
-  store.shareVideo = v; save();
-  send({ t: "vid", v });
-  const track = myOutStream().getVideoTracks()[0];
-  try { net?.call?.peerConnection?.getSenders().find(s => s.track?.kind === "video")?.replaceTrack(track); } catch (e) { console.warn(e); }
-  renderOppVideo(); renderLobby();
-}
-$("duelVid").onclick = () => setShareVid(!shareVid());
-
-function exitDuelArena() {
-  $("oppVideo").srcObject = null; $("oppCam").classList.remove("has-video");
-  $("dCallout").innerHTML = ""; $("dCallout").dataset.w = ""; $("dCombo").innerHTML = "";
-  B = null;
-  $("duel").hidden = true; $("stage").classList.remove("fighting");
-  if (mode === "pvp") $("pvpLobby").hidden = false;
-  flushRankUps();
-}
-
-$("duelLeave").onclick = () => {
-  if (B && (B.state === "fight" || B.state === "countdown")) { store.pvp.l++; save(); renderPvpPanel(); }
-  leaveNet(); lobby = { view: "home", err: "", busy: "" }; renderLobby();
-};
-
-// ---------- battle visuals ----------
-function renderDuel() {
-  if (!B || !net) return;
-  const me = net.role, op = other(me), t = net.them;
-  $("dMeName").textContent = myName();
-  $("dThemName").textContent = t?.name || "…";
-  const myRank = rankIndex(store.total), theirRank = t?.rank ?? 0;
-  if ($("dMeBdg").dataset.i !== String(myRank)) { $("dMeBdg").innerHTML = rankBadge(myRank); $("dMeBdg").dataset.i = myRank; }
-  if ($("dThemBdg").dataset.i !== String(theirRank)) { $("dThemBdg").innerHTML = rankBadge(theirRank); $("dThemBdg").dataset.i = theirRank; }
-  const bar = (who, el, ready) => {
-    let pct, txt;
-    if (B.state === "waiting") { pct = 100; txt = ready ? "READY" : "GETTING READY…"; }
-    else if (B.maxHp) { pct = B.hp[who] / B.maxHp * 100; txt = `${B.hp[who]} / ${B.maxHp}`; }
-    else { pct = B.dmg[who] / Math.max(100, B.dmg.host, B.dmg.guest) * 100; txt = `${B.dmg[who]} DMG`; }
-    $(`d${el}Fill`).style.width = pct + "%";
-    setTimeout(() => $(`d${el}Lag`).style.width = pct + "%", 350);
-    $(`d${el}Txt`).textContent = txt;
-  };
-  bar(me, "Me", net.meReady || B.state === "waiting"); bar(op, "Them", net.themReady);
-  $("dMeReps").textContent = `${B.reps[me]} push-up${B.reps[me] === 1 ? "" : "s"}`;
-  $("dThemReps").textContent = `${B.reps[op]} push-up${B.reps[op] === 1 ? "" : "s"}`;
-  $("oppTag").textContent = (t?.name || "Opponent").toUpperCase();
-  renderOppVideo();
-  if (B.state === "waiting") {
-    $("dClock").textContent = "VS"; $("dClock").classList.remove("low");
-    const want = net.themReady ? "" : `WAITING<small>for ${esc(t?.name || "your opponent")} to get ready</small>`;
-    if ($("dCallout").dataset.w !== want) { $("dCallout").dataset.w = want; $("dCallout").className = "callout"; $("dCallout").innerHTML = want; }
-  } else if (B.state === "countdown") $("dClock").textContent = fmtTime(DUEL_MODES[B.mode].dur);
-}
-
-function duelFloat(text, kind, target) {
-  const el = document.createElement("div");
-  el.className = "dmg " + kind; el.textContent = text;
-  const r = target.getBoundingClientRect(), st = $("stage").getBoundingClientRect();
-  el.style.left = (r.left - st.left + r.width * (0.2 + Math.random() * 0.4)) + "px";
-  el.style.top = (r.top - st.top + Math.min(r.height * 0.2, 30)) + "px";
-  $("stage").appendChild(el);
-  setTimeout(() => el.remove(), 1050);
-}
-
-function showEmote(e, mine) {
-  const el = document.createElement("div");
-  el.className = "emote-pop"; el.textContent = e;
-  const anchor = mine ? $("emotes") : $("oppCam");
-  const r = anchor.getBoundingClientRect(), st = $("stage").getBoundingClientRect();
-  el.style.left = (r.left - st.left + (mine ? r.width + 6 : r.width / 2 - 27)) + "px";
-  el.style.top = (r.top - st.top - (mine ? 0 : 40)) + "px";
-  $("stage").appendChild(el);
-  tone(mine ? 900 : 700, 0.08, "triangle", 0.1);
-  setTimeout(() => el.remove(), 1600);
-}
-$("emotes").innerHTML = EMOTES.map(e => `<button data-e="${e}" aria-label="Send ${e}">${e}</button>`).join("");
-$("emotes").querySelectorAll("button").forEach(b => b.onclick = () => {
-  if (!net?.connected || performance.now() - lastEmote < 1000) return;
-  lastEmote = performance.now();
-  send({ t: "emote", e: b.dataset.e }); showEmote(b.dataset.e, true);
-});
-
-function sendPose(lm) {
-  if (!net?.connected) return;
-  const now = performance.now();
-  if (now - lastPoseSent < 90) return;
-  lastPoseSent = now;
-  send({ t: "pose", a: +(canvas.width / canvas.height).toFixed(3), p: JOINTS.flatMap(j => [+(1 - lm[j].x).toFixed(3), +lm[j].y.toFixed(3), vis(lm[j]) > 0.3 ? 1 : 0]) });
-}
-
-const oppCtx = $("oppCanvas").getContext("2d");
-function drawOpp() {
-  requestAnimationFrame(drawOpp);
-  if (!B || $("duel").hidden) return;
-  const cv = $("oppCanvas"), W = cv.width, H = cv.height;
-  oppCtx.clearRect(0, 0, W, H);
-  const p = net?.oppPose;
-  if (!p || performance.now() - net.oppPoseAt > 1500) {
-    oppCtx.fillStyle = "rgba(255,255,255,.55)"; oppCtx.font = "600 18px system-ui"; oppCtx.textAlign = "center";
-    oppCtx.fillText(net?.connected ? "Waiting for their camera…" : "Disconnected", W / 2, H / 2 + 6);
-    return;
-  }
-  // zoom to fit their body (smoothed so it doesn't jitter), keeping their camera's proportions
-  const a = net.oppAspect, raw = JOINTS.map((j, i) => ({ j, x: p[i * 3] * a, y: p[i * 3 + 1], v: p[i * 3 + 2] }));
-  const seen = raw.filter(q => q.v);
-  if (seen.length >= 2) {
-    const xs = seen.map(q => q.x), ys = seen.map(q => q.y);
-    const bw = Math.max(0.15, Math.max(...xs) - Math.min(...xs)), bh = Math.max(0.15, Math.max(...ys) - Math.min(...ys));
-    const t = { s: Math.min(W * 0.8 / bw, H * 0.72 / bh), cx: (Math.max(...xs) + Math.min(...xs)) / 2, cy: (Math.max(...ys) + Math.min(...ys)) / 2 };
-    const v = net.oppView ||= t;
-    for (const k of ["s", "cx", "cy"]) v[k] += (t[k] - v[k]) * 0.12;
-  }
-  const v = net.oppView || { s: H, cx: a / 2, cy: 0.5 }, pt = {};
-  raw.forEach(q => pt[q.j] = { x: W / 2 + (q.x - v.cx) * v.s, y: H / 2 + 8 + (q.y - v.cy) * v.s, v: q.v });
-  oppCtx.lineCap = "round";
-  for (const [lw, col, blur] of [[9, "rgba(255,77,94,.55)", 16], [3, "#ffd0d4", 0]]) {
-    oppCtx.save(); oppCtx.strokeStyle = col; oppCtx.lineWidth = lw; oppCtx.shadowColor = "#ff4d5e"; oppCtx.shadowBlur = blur;
-    oppCtx.beginPath();
-    for (const [a1, b1] of BONES) { const A = pt[a1], Bp = pt[b1]; if (!A?.v || !Bp?.v) continue; oppCtx.moveTo(A.x, A.y); oppCtx.lineTo(Bp.x, Bp.y); }
-    oppCtx.stroke(); oppCtx.restore();
-  }
-  oppCtx.fillStyle = "#fff";
-  for (const j of JOINTS) { const q = pt[j]; if (!q.v) continue; oppCtx.beginPath(); oppCtx.arc(q.x, q.y, 4, 0, Math.PI * 2); oppCtx.fill(); }
-}
-requestAnimationFrame(drawOpp);
-
-// ---------- lobby ----------
-function pcard(cls, name, rank, total, rec, ready) {
-  return `<div class="pcard ${cls}"><span class="bdg">${rankBadge(rank)}</span><div class="fn">${esc(name)}</div>
-    <div class="muted">${RANKS[rank].name} · ${total.toLocaleString()} lifetime</div><div class="muted">${recStr(rec)}</div>
-    <div class="rd ${ready ? "ok" : ""}">${ready ? "✔ READY" : cls === "me" ? "NOT READY" : "GETTING READY…"}</div></div>`;
-}
-async function copyText(text, msg) {
-  try { await navigator.clipboard.writeText(text); toast("📋 " + msg); }
-  catch { const i = $("pvLink") || $("pvCodeBig"); if (i?.select) { i.select(); document.execCommand("copy"); toast("📋 " + msg); } else toast(text); }
-}
-function renderLobby() {
-  const el = $("pvpLobby"), r = rankIndex(store.total);
-  const cancel = () => { leaveNet(); lobby = { view: "home", err: "", busy: "" }; renderLobby(); };
-  if (lobby.view === "home") {
-    el.innerHTML = `
-      <div class="pvp-title">1V1 <em>BATTLE</em></div>
-      <div class="muted" style="max-width:470px">Challenge a friend anywhere. You each do push-ups on your own camera — every rep hits them, deep reps crit.</div>
-      <div class="pvp-row"><div class="pvp-box">
-        <h4>YOUR FIGHTER</h4>
-        <div class="fighter"><span class="bdg">${rankBadge(r)}</span><div><div class="fn" id="pvFn">${esc(myName())}</div><div class="muted">${RANKS[r].name} · ${recStr(store.pvp)}</div></div></div>
-        <input id="pvName" maxlength="16" placeholder="Your fighter name" value="${esc(store.name || "")}" aria-label="Fighter name">
-      </div></div>
-      <div class="pvp-row">
-        <div class="pvp-box"><h4>START A BATTLE</h4><div class="muted" style="flex:1">Get a code to send to a friend.</div><button id="pvHost" style="width:100%">Create battle</button></div>
-        <div class="pvp-box"><h4>JOIN A BATTLE</h4><input id="pvCode" class="code" maxlength="5" placeholder="CODE" value="${esc(lobby.code || "")}" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Battle code"><button id="pvJoin" style="width:100%">Join</button></div>
-      </div>
-      <div class="pvp-err">${esc(lobby.err || "")}</div>`;
-    $("pvName").oninput = e => { store.name = e.target.value.slice(0, 16); save(); $("pvFn").textContent = myName(); };
-    $("pvHost").onclick = () => hostBattle();
-    $("pvJoin").onclick = () => joinBattle($("pvCode").value);
-    $("pvCode").oninput = e => { e.target.value = cleanCode(e.target.value); lobby.code = e.target.value; };
-    $("pvCode").onkeydown = e => { if (e.key === "Enter") $("pvJoin").click(); };
-  } else if (lobby.view === "hosting") {
-    const code = net?.code, link = code ? inviteUrl(code) : "";
-    el.innerHTML = lobby.busy
-      ? `<div class="pvp-title">CREATING <em>ROOM</em></div><div><span class="spin"></span> <span class="muted">${esc(lobby.busy)}</span></div><button class="ghost" id="pvCancel">Cancel</button>`
-      : `<div class="pvp-title">YOUR <em>BATTLE</em></div><div class="muted">Send this code to your friend — they pick 1v1 → Join</div>
-        <input id="pvCodeBig" class="big-code" readonly value="${code}" aria-label="Battle code">
-        ${link ? `<input id="pvLink" readonly value="${esc(link)}" style="max-width:420px;font-size:13px" aria-label="Invite link">` : ""}
-        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">${link && navigator.share ? `<button id="pvShare">Share invite</button><button class="ghost" id="pvCopy">Copy link</button>` : `<button id="pvCopy">${link ? "Copy invite link" : "Copy code"}</button>`}<button class="ghost" id="pvCancel">Cancel</button></div>
-        <div><span class="spin"></span> <span class="muted">Waiting for your opponent to join…</span></div>`;
-    $("pvCancel").onclick = cancel;
-    if ($("pvCopy")) $("pvCopy").onclick = () => copyText(link || code, link ? "Invite link copied" : "Code copied");
-    if ($("pvShare")) $("pvShare").onclick = () => navigator.share({ title: "OmniFit battle", text: `Battle me in push-ups 💪 Code: ${code}`, url: link }).catch(() => {});
-  } else if (lobby.view === "joining") {
-    el.innerHTML = `<div class="pvp-title">JOINING <em>${esc(lobby.code)}</em></div><div><span class="spin"></span> <span class="muted">Connecting to your opponent…</span></div><button class="ghost" id="pvCancel">Cancel</button>`;
-    $("pvCancel").onclick = cancel;
-  } else if (lobby.view === "room" && net) {
-    const t = net.them, host = net.role === "host";
-    el.innerHTML = `
-      <div class="pvp-title">BATTLE <em>ROOM</em></div>
-      <div class="vs-row">
-        ${pcard("me", myName(), r, store.total, store.pvp, net.meReady)}
-        <div class="vs">VS</div>
-        ${t ? pcard("them", t.name, t.rank, t.total, t, net.themReady) : `<div class="pcard them"><span class="spin"></span><div class="muted">Connecting…</div></div>`}
-      </div>
-      <div class="pvp-box" style="max-width:640px;width:100%;flex:none">
-        <h4>MODE${host ? "" : " · CHOSEN BY HOST"}</h4>
-        <div class="seg">${Object.entries(DUEL_MODES).map(([k, m]) => `<button data-mode="${k}" class="${net.mode === k ? "on" : ""}" ${host ? "" : "disabled"}>${m.name}</button>`).join("")}</div>
-        <div class="muted">${DUEL_MODES[net.mode].ds}</div>
-      </div>
-      <label class="vidopt"><input type="checkbox" id="pvVid" ${shareVid() ? "checked" : ""}> 📹 Show my camera to ${esc(t?.name || "my opponent")}</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button id="pvReady" ${lobby.busy ? "disabled" : ""}>I'm ready — start camera</button><button class="ghost" id="pvLeave">Leave</button></div>
-      <div class="muted">${lobby.busy ? `<span class="spin"></span> ${esc(lobby.busy)}` : "Prop your device on the floor about 2 m away. The fight starts when you're both ready."}</div>
-      <div class="pvp-err">${esc(lobby.err || "")}</div>`;
-    if (host) el.querySelectorAll(".seg button").forEach(b => b.onclick = () => { net.mode = b.dataset.mode; send({ t: "settings", mode: net.mode }); renderLobby(); });
-    $("pvReady").onclick = () => enterDuelArena();
-    $("pvVid").onchange = e => setShareVid(e.target.checked);
-    $("pvLeave").onclick = cancel;
-  }
-}
-function renderPvpPanel() {
-  $("pvW").textContent = store.pvp.w; $("pvL").textContent = store.pvp.l; $("pvD").textContent = store.pvp.d;
-}
-// Heartbeat: a locked phone or dropped signal often doesn't close the link — notice silence instead.
-const LOST_WARN_MS = 6000, LOST_GIVEUP_MS = 25000;
-setInterval(() => { if (net?.connected) send({ t: "ping" }); }, 2000);
-setInterval(() => {
-  if (!net?.connected) { $("dLost").hidden = true; return; }
-  const quiet = performance.now() - (net.lastMsgAt || performance.now());
-  const inArena = !!B && !$("duel").hidden;
-  $("dLost").hidden = !(inArena && quiet > LOST_WARN_MS && B.state !== "over");
-  // mid-fight we give up after 25 s; in the room people may be switching apps to send the code, so wait longer
-  const giveUp = B && (B.state === "fight" || B.state === "countdown") ? LOST_GIVEUP_MS : 90000;
-  if (!$("dLost").hidden) $("dLost").textContent = `📡 Lost connection to ${net.them?.name || "your opponent"}… ${Math.max(0, Math.ceil((giveUp - quiet) / 1000))}s`;
-  if (quiet > giveUp) { console.warn("opponent went silent"); onConnClose(); }
-}, 1000);
-
-function maybeAutoJoin() {
-  if (!pendingJoin || $("survey").classList.contains("show")) return;
-  const code = pendingJoin; pendingJoin = null;
-  try { history.replaceState(null, "", location.pathname); } catch {}
-  setMode("pvp"); joinBattle(code);
-}
-{ const q = new URLSearchParams(location.search).get("battle"); if (q) pendingJoin = cleanCode(q); }
-
-renderRank(); renderRoster(); setMode("train"); renderHearts(); renderPvpPanel();
-if (!store.profile) openSurvey(false);
-maybeAutoJoin();
-{ const pr = cameraProblem(); if (pr) { $("loadMsg").textContent = pr; $("loadMsg").style.color = "var(--bad)"; if (IN_APP) toast("⚠️ Open this page in Safari or Chrome to use your camera"); } }
+const inMatch = () => !!(F?.active || M?.active);
 
 // ================= MEAL PLAN / NUTRITION =================
 // Foods come from foods.js (window.FOOD_ROWS); values are per 100 g. Log: store.food["YYYY-MM-DD"] = [{ f: foodId, g: grams, m: "b"|"l"|"d"|"s" }].
@@ -7815,6 +7191,230 @@ function stTime() {
 }
 var stretchInit = true;
 window.__stretch = { stick: stickSvg, sticks: STICK, get ST() { return ST; }, start: stStart, next: () => ST && stNext(true), stop: () => ST && stFinish(false), routines: ROUTINES, pick: stPick, store: stStore };
+
+// ================= ACCOUNTS & CLOUD SYNC =================
+// Optional sign-in (email + password, Firebase Auth) that backs your progress up to the cloud (Firestore) and keeps
+// every device you sign in on in sync. Plain REST calls, no SDK. Nothing on a device is ever thrown away: signing in
+// MERGES this device's progress with the account's (highest totals, best stars, fastest times, every log entry), and
+// keeps a copy of what was on the device first in localStorage (KEY + ".preSync"). Signing out keeps local progress.
+const CLOUD = { apiKey: "", projectId: "" };   // Firebase web config. These two values are public by design; leave blank to hide sign-in.
+const ACCT_KEY = KEY + ".account";
+const cloudCfg = (() => {
+  let c = { ...CLOUD, auth: "https://identitytoolkit.googleapis.com/v1", token: "https://securetoken.googleapis.com/v1/token", db: null };
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) try { Object.assign(c, JSON.parse(localStorage.getItem("omnifit.cloudTest") || "null") || {}); } catch {}   // test server, local only
+  c.db ||= `https://firestore.googleapis.com/v1/projects/${c.projectId}/databases/(default)/documents`;
+  c.on = !!(c.apiKey && c.projectId);
+  return c;
+})();
+let acct = null; try { acct = JSON.parse(localStorage.getItem(ACCT_KEY) || "null"); } catch {}
+const saveAcct = () => { try { acct ? localStorage.setItem(ACCT_KEY, JSON.stringify(acct)) : localStorage.removeItem(ACCT_KEY); } catch {} };
+let syncState = { busy: false, err: "", at: 0 }, pushTimer = 0;
+
+const AUTH_ERR = {
+  EMAIL_EXISTS: "There's already an account with that email. Tap Sign in instead.",
+  EMAIL_NOT_FOUND: "No account with that email. Tap Create account.",
+  INVALID_PASSWORD: "Wrong password.", INVALID_LOGIN_CREDENTIALS: "Wrong email or password.",
+  INVALID_EMAIL: "That email doesn't look right.", MISSING_PASSWORD: "Type a password.", MISSING_EMAIL: "Type your email.",
+  WEAK_PASSWORD: "Pick a password with at least 6 characters.", USER_DISABLED: "This account has been switched off.",
+  TOO_MANY_ATTEMPTS_TRY_LATER: "Too many tries. Wait a few minutes and try again.",
+  TOKEN_EXPIRED: "Please sign in again.", USER_NOT_FOUND: "Please sign in again.", INVALID_REFRESH_TOKEN: "Please sign in again.",
+};
+const authMsg = code => AUTH_ERR[String(code).split(" ")[0].split(":")[0]] || "Couldn't reach the server. Check your internet and try again.";
+async function authPost(path, body) {
+  const r = await fetch(`${cloudCfg.auth}/accounts:${path}?key=${cloudCfg.apiKey}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error?.message || "NETWORK");
+  return j;
+}
+async function idToken() {
+  if (acct.idToken && acct.exp > Date.now() + 60000) return acct.idToken;
+  const r = await fetch(`${cloudCfg.token}?key=${cloudCfg.apiKey}`, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(acct.refresh)}` });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(j.error?.message || "NETWORK"); e.auth = r.status === 400 || r.status === 401 || r.status === 403; throw e; }
+  Object.assign(acct, { idToken: j.id_token, refresh: j.refresh_token, exp: Date.now() + (+j.expires_in || 3600) * 1000 }); saveAcct();
+  return acct.idToken;
+}
+const docUrl = () => `${cloudCfg.db}/users/${acct.uid}`;
+async function cloudGet() {
+  const r = await fetch(docUrl(), { headers: { Authorization: "Bearer " + await idToken() } });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error("NETWORK " + r.status);
+  const j = await r.json();
+  try { return JSON.parse(j.fields?.data?.stringValue || "null"); } catch { return null; }
+}
+async function cloudPut(obj) {
+  const body = { fields: { data: { stringValue: JSON.stringify(obj) }, updatedAt: { integerValue: String(obj.updatedAt || 0) }, email: { stringValue: acct.email || "" } } };
+  const r = await fetch(docUrl(), { method: "PATCH", keepalive: JSON.stringify(body).length < 60000, headers: { Authorization: "Bearer " + await idToken(), "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error("NETWORK " + r.status);
+}
+
+// ---- merging two copies of your progress: nothing either side earned is lost ----
+const LATEST = new Set(["goal", "muted", "exercise", "profile", "name", "trainer", "folds", "lastBattle", "shareVideo", "next", "div", "base", "nutri", "campSet", "talk", "id", "unit", "level"]);
+const isObj = v => v && typeof v === "object" && !Array.isArray(v);
+const timeOf = v => isObj(v) ? (v.t ?? v.at ?? v.ts ?? v.date ?? v.d ?? null) : null;
+function mergeVal(x, y, key, path, xNewer) {
+  if (x == null) return y ?? x;   // an empty value never wipes out a real one
+  if (y == null) return x;
+  if (LATEST.has(key)) return xNewer ? x : y;
+  if (Array.isArray(x) && Array.isArray(y)) {
+    const seen = new Set(x.map(v => JSON.stringify(v))), out = x.slice();
+    y.forEach(v => { const s = JSON.stringify(v); if (!seen.has(s)) { seen.add(s); out.push(v); } });
+    if (out.length && out.every(v => timeOf(v) != null)) out.sort((a, b) => String(timeOf(a)).localeCompare(String(timeOf(b)), undefined, { numeric: true }));
+    return out;
+  }
+  if (isObj(x) && isObj(y)) {
+    if (/(^|\.)hyrox\.best\.[^.]+$/.test(path) && x.total != null && y.total != null) return x.total <= y.total ? x : y;   // Hyrox PB: the faster race
+    const out = {};
+    new Set([...Object.keys(x), ...Object.keys(y)]).forEach(k => out[k] = mergeVal(x[k], y[k], k, path ? path + "." + k : k, xNewer));
+    return out;
+  }
+  if (typeof x === "number" && typeof y === "number") return /time$/i.test(key) ? Math.min(x, y) : Math.max(x, y);   // best times go down, everything else goes up
+  if (typeof x === "boolean" && typeof y === "boolean") return x || y;
+  return xNewer ? x : y;
+}
+function mergeStores(a, b) {
+  const aNewer = (a.updatedAt || 0) >= (b.updatedAt || 0);
+  if (a.resetAt && a.resetAt > (b.updatedAt || 0)) return { ...a };   // erased on purpose after b was last saved
+  if (b.resetAt && b.resetAt > (a.updatedAt || 0)) return { ...b };
+  const m = mergeVal(a, b, "", "", aNewer);
+  m.updatedAt = Math.max(a.updatedAt || 0, b.updatedAt || 0, Date.now());
+  return m;
+}
+const hasProgress = s => !!(s && ((s.total || 0) + (s.sq?.total || 0) + (s.su?.total || 0) > 0 || Object.keys(s.campaign || {}).length || Object.keys(s.bosses || {}).length || s.profile || Object.keys(s.food || {}).length));
+
+// ---- sync ----
+const busyNow = () => inMatch() || document.body.classList.contains("cam-live") || !!(CW?.active || HR?.active);
+function adopt(obj, note) {   // replace this device's copy and reload so every screen shows it
+  if (JSON.stringify({ ...obj, updatedAt: 0 }) === JSON.stringify({ ...store, updatedAt: 0 })) {   // same progress: no reload needed
+    store.updatedAt = obj.updatedAt; try { localStorage.setItem(KEY, JSON.stringify(store)); } catch {}
+    acct.syncedAt = acct.localAt = obj.updatedAt || 0; saveAcct(); return false;
+  }
+  try { localStorage.setItem(KEY, JSON.stringify(obj)); } catch { return false; }
+  acct.syncedAt = acct.localAt = obj.updatedAt || 0; saveAcct();
+  try { if (note) sessionStorage.setItem("omnifit.syncNote", note); } catch {}
+  location.reload();
+  return true;
+}
+async function syncNow({ first = false, quiet = false } = {}) {
+  if (!cloudCfg.on || !acct || syncState.busy) return;
+  if (!first && busyNow()) { schedulePush(15000); return; }   // never reload mid-workout; try again shortly
+  syncState.busy = true; syncState.err = ""; renderAcct();
+  try {
+    const cloud = await cloudGet();
+    const local = JSON.parse(JSON.stringify(store));
+    local.updatedAt ||= Date.now();
+    const localChanged = (store.updatedAt || 0) > (acct.localAt || 0);
+    const cloudChanged = !!cloud && (cloud.updatedAt || 0) > (acct.syncedAt || 0);
+    if (!cloud) {
+      await cloudPut(local); acct.syncedAt = local.updatedAt; acct.localAt = store.updatedAt || 0;
+      if (first) toast("☁️ Signed in. Your progress is backed up");
+    } else if (first && !hasProgress(local)) {
+      adopt(cloud, "☁️ Signed in. Progress loaded from your account");
+    } else if (first || (localChanged && cloudChanged)) {
+      try { localStorage.setItem(KEY + ".preSync", JSON.stringify(local)); } catch {}
+      const merged = mergeStores(local, cloud);
+      await cloudPut(merged);
+      if (!adopt(merged, first ? "☁️ Signed in. This device's progress was added to your account" : "")) { if (first) toast("☁️ Signed in. Progress synced"); }
+    } else if (cloudChanged) {
+      adopt(cloud, "");
+    } else if (localChanged) {
+      await cloudPut(local); acct.syncedAt = local.updatedAt; acct.localAt = store.updatedAt || 0;
+    }
+    saveAcct(); syncState.at = Date.now();
+  } catch (e) {
+    if (e.auth) { acct = null; saveAcct(); toast("Signed out. Please sign in again"); }
+    else syncState.err = quiet ? "" : "Couldn't sync. It'll try again when you're back online.";
+  }
+  syncState.busy = false; renderAcct();
+}
+function schedulePush(ms = 4000) { clearTimeout(pushTimer); if (acct && cloudCfg.on) pushTimer = setTimeout(() => syncNow({ quiet: true }), ms); }
+onSaved = () => { if (acct && (store.updatedAt || 0) > (acct.localAt || 0)) schedulePush(); };
+document.addEventListener("visibilitychange", () => {
+  if (!acct || !cloudCfg.on) return;
+  if (document.hidden) { if ((store.updatedAt || 0) > (acct.localAt || 0)) { clearTimeout(pushTimer); syncNow({ quiet: true }); } }
+  else syncNow({ quiet: true });
+});
+
+// ---- account window ----
+let acctView = "in";   // "in" (sign in) | "up" (create account)
+function renderAcct() {
+  $("acctBtn").hidden = !cloudCfg.on;
+  $("acctBtn").classList.toggle("on", !!acct);
+  $("acctBtn").innerHTML = acct ? `<b>${esc((acct.email || "?")[0].toUpperCase())}</b>` : "👤";
+  $("acctBtn").title = acct ? "Account: " + acct.email : "Sign in";
+  const c = $("acctCard"); if (!c || !$("acctModal").classList.contains("show")) return;
+  if (acct) {
+    const ago = syncState.at ? Math.max(0, Math.round((Date.now() - syncState.at) / 60000)) : null;
+    c.innerHTML = `<button class="ghost acct-x" data-a="close" aria-label="Close">✕</button>
+      <h2>ACCOUNT</h2>
+      <div class="acct-who"><span class="acct-av">${esc((acct.email || "?")[0].toUpperCase())}</span><div><b>${esc(acct.email)}</b>
+        <div class="muted">${syncState.busy ? "Syncing…" : syncState.err ? `<span style="color:var(--bad)">${esc(syncState.err)}</span>` : ago == null ? "Backed up to your account" : `✓ Synced ${ago < 1 ? "just now" : ago + " min ago"}`}</div></div></div>
+      <p class="muted acct-p">Sign in with this email on your phone, laptop or the Mac app and your progress follows you.</p>
+      <div class="acct-row"><button data-a="sync" ${syncState.busy ? "disabled" : ""}>Sync now</button><button class="ghost" data-a="out">Sign out</button></div>
+      <button class="erase-btn" data-a="del">Delete my account…</button>`;
+  } else {
+    const up = acctView === "up";
+    c.innerHTML = `<button class="ghost acct-x" data-a="close" aria-label="Close">✕</button>
+      <h2>${up ? "CREATE ACCOUNT" : "SIGN IN"}</h2>
+      <p class="muted acct-p">Back up your progress and use it on all your devices. Nothing on this device gets erased: it's added to your account.</p>
+      <form class="acct-form" autocomplete="on">
+        <input id="acctEmail" type="email" autocomplete="email" placeholder="Email" required>
+        <input id="acctPass" type="password" autocomplete="${up ? "new-password" : "current-password"}" placeholder="${up ? "Password (6+ characters)" : "Password"}" required minlength="6">
+        <div class="acct-err" id="acctErr"></div>
+        <button type="submit" id="acctGo">${up ? "Create account" : "Sign in"}</button>
+      </form>
+      <div class="acct-alt">${up ? `Already have one? <button class="linkbtn" data-a="in">Sign in</button>` : `New here? <button class="linkbtn" data-a="up">Create account</button> · <button class="linkbtn" data-a="reset">Forgot password?</button>`}</div>`;
+    c.querySelector("form").onsubmit = e => { e.preventDefault(); acctSubmit(up); };
+  }
+}
+async function acctSubmit(up) {
+  const email = $("acctEmail").value.trim(), pass = $("acctPass").value, err = $("acctErr"), go = $("acctGo");
+  err.textContent = ""; go.disabled = true; go.textContent = up ? "Creating…" : "Signing in…";
+  try {
+    const j = await authPost(up ? "signUp" : "signInWithPassword", { email, password: pass, returnSecureToken: true });
+    acct = { uid: j.localId, email: j.email || email, idToken: j.idToken, refresh: j.refreshToken, exp: Date.now() + (+j.expiresIn || 3600) * 1000, syncedAt: 0, localAt: 0 };
+    saveAcct(); renderAcct();
+    await syncNow({ first: true });
+    if (!syncState.err) $("acctModal").classList.remove("show");
+  } catch (e) {
+    err.textContent = authMsg(e.message);
+    go.disabled = false; go.textContent = up ? "Create account" : "Sign in";
+  }
+}
+$("acctCard").addEventListener("click", async e => {
+  const a = e.target.closest("[data-a]")?.dataset.a; if (!a) return;
+  if (a === "close") $("acctModal").classList.remove("show");
+  else if (a === "in" || a === "up") { acctView = a; renderAcct(); }
+  else if (a === "reset") {
+    const email = $("acctEmail").value.trim(), err = $("acctErr");
+    if (!email) { err.textContent = "Type your email first, then tap Forgot password."; return; }
+    try { await authPost("sendOobCode", { requestType: "PASSWORD_RESET", email }); err.style.color = "var(--good)"; err.textContent = "Check your email for a link to reset your password."; }
+    catch (x) { err.style.color = ""; err.textContent = authMsg(x.message); }
+  }
+  else if (a === "sync") syncNow();
+  else if (a === "out") {
+    if (!confirm("Sign out?\n\nYour progress stays on this device. It just stops syncing.")) return;
+    if ((store.updatedAt || 0) > (acct.localAt || 0)) await syncNow({ quiet: true });
+    acct = null; saveAcct(); clearTimeout(pushTimer); renderAcct(); toast("Signed out. Your progress is still here");
+  }
+  else if (a === "del") {
+    if (!confirm(`Delete your account (${acct.email})?\n\nYour cloud backup is deleted. The progress on this device stays.`)) return;
+    if (!confirm("Are you sure? This can't be undone.")) return;
+    try {
+      const t = await idToken();
+      await fetch(docUrl(), { method: "DELETE", headers: { Authorization: "Bearer " + t } });
+      await authPost("delete", { idToken: t });
+      acct = null; saveAcct(); renderAcct(); $("acctModal").classList.remove("show"); toast("Account deleted. Your progress is still on this device");
+    } catch (x) { syncState.err = authMsg(x.message) === AUTH_ERR.TOKEN_EXPIRED ? "Sign out and back in, then try again." : "Couldn't delete right now. Try again."; renderAcct(); }
+  }
+});
+$("acctBtn").onclick = () => { $("acctModal").classList.add("show"); renderAcct(); if (!acct) setTimeout(() => $("acctEmail")?.focus(), 50); };
+$("acctModal").addEventListener("click", e => { if (e.target.id === "acctModal") $("acctModal").classList.remove("show"); });
+window.__cloud = { mergeStores, syncNow, get acct() { return acct; }, cfg: cloudCfg };   // test hook
+markSaved(); renderAcct();
+try { const n = sessionStorage.getItem("omnifit.syncNote"); if (n) { sessionStorage.removeItem("omnifit.syncNote"); setTimeout(() => toast(n), 600); } } catch {}
+if (acct && cloudCfg.on) setTimeout(() => syncNow({ quiet: true }), 1200);
 
 renderExUI(); renderRank(); renderCoach(); renderHyrox(); $("coachPanel").hidden = mode !== "train";
 </script>

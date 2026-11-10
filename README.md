@@ -1,6 +1,6 @@
 # OmniFit 💪
 
-All-in-one fitness app: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Hyrox races, stretching, a personal trainer, meal plans and online 1v1 battles.
+All-in-one fitness app: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Hyrox races, stretching, a personal trainer, meal plans, and an optional account that syncs your progress across devices.
 
 (Formerly Push-Up Ranks.)
 
@@ -11,10 +11,13 @@ All-in-one fitness app: camera rep counting for push-ups, squats and sit-ups, st
 - Your progress is saved in your browser.
 - Pose tracking runs locally with MediaPipe. In training your video never leaves your device.
 
-## 1v1 battles
-Open the **1v1** tab, create a battle and send the 5-letter code or invite link to a friend.
-You each do push-ups on your own camera, and every rep damages your opponent.
-Players connect directly (WebRTC via PeerJS) and see each other live; video goes straight between the two devices and is never uploaded or recorded. Untick "Show my camera" to share only a stick figure.
+## Accounts & sync
+Signing in is optional. The 👤 button in the header shows up once `CLOUD` in `index.html` has a Firebase `apiKey` and `projectId`.
+- Email + password sign-in (Firebase Auth), with the progress stored as one document per user in Firestore (`users/{uid}`). It uses plain REST calls, with no SDK.
+- Signing in **merges** this device's progress with the account's copy, so nothing gets lost: highest totals and best stars, fastest times, and every logged entry. Before merging, the device's copy is saved to `localStorage["pushupRanks.v1.preSync"]`.
+- After that, changes upload a few seconds after they happen and download when the app opens. It never reloads mid-workout.
+- Signing out keeps the progress on the device. "Delete my account" removes the cloud copy and the login. The device's progress stays.
+- The security rules are in `firestore.rules`: each user can only read and write their own document.
 
 ## Mac app
 `mac/build.sh` builds a native Mac app wrapper (`mac/build/Push-Up Ranks.app` and a shareable zip).
