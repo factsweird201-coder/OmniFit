@@ -2,3 +2,5 @@ mac/build/
 .claude/
 .DS_Store
 tools/.tmp/
+tools/tts/node_modules/
+tools/tts/package-lock.json

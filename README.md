@@ -22,6 +22,13 @@ Signing in is optional. The 👤 button in the header shows up once `CLOUD` in `
 ## Return stats
 Each install gets a random ID, with no name, email or device info. Once a day the app records an "opened" mark, and the first time you train that day a "worked out" mark, in `pings/{id}_{day}_{o|w}`. Anyone can add a well-formed mark. Nobody can read, change or delete one except the owner account. **https://factsweird201-coder.github.io/push-up-ranks/stats.html** shows installs, daily use, and how many people come back the next day, in their first week, after a week and after a month. When you're signed in as the owner, the account window links to it.
 
+## Voices
+The voice lines in `voice/` are recorded with [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M), an open-source voice model under the Apache-2.0 licence, so it's fine for commercial use. It runs locally through `kokoro-js`. Each character has its own Kokoro voice, plus light ffmpeg effects for the monsters.
+- First time: `cd tools/tts && npm install`
+- Record new or changed lines: `node tools/voices.mjs`. Re-record everything with `--all`.
+
+Any line without a recording is read out by the device's own built-in voice.
+
 ## Mac app
 `mac/build.sh` builds a native Mac app wrapper (`mac/build/Push-Up Ranks.app` and a shareable zip).
 The app isn't notarized, so the first time you open it, go to System Settings → Privacy & Security → Open Anyway.

@@ -1,0 +1,6 @@
+{
+  "name": "omnifit-voice-tools",
+  "private": true,
+  "description": "Kokoro-82M text-to-speech (Apache-2.0) for recording OmniFit's voice lines: see tools/voices.mjs",
+  "dependencies": { "kokoro-js": "1.2.1" }
+}

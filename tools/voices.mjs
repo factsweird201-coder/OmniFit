@@ -1,15 +1,18 @@
-// Records every campaign story line as an audio file in voice/ (run on a Mac: node tools/voices.mjs).
-// One premium macOS voice plays the whole cast; ffmpeg effects give each character its own sound.
+// Records every voice line as an audio file in voice/ (node tools/voices.mjs; add --all to re-record everything).
+// Voices come from Kokoro-82M (open-source, Apache-2.0 licence, fine for a paid app), run locally with kokoro-js:
+//   cd tools/tts && npm install      (first time only; the ~330 MB model downloads on the first run)
+// Each character gets its own Kokoro voice, plus light ffmpeg effects for the monsters.
+// Optional: --shard=0/3 records every 3rd line, so three copies can run side by side (fast, but it works the Mac hard).
+// To resume a stopped re-record: --since=<time in ms it started>. Gentle mode: nice -n 19 with ORT threads limited.
 // Files are named by a hash of speaker + line, the same hash the game uses (vhash in index.html), so editing
 // a line just records a new file. Lines that already have a file are skipped; files no longer used are deleted.
-import { readFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
-import { execFileSync } from "node:child_process";
+import { readFileSync, existsSync, mkdirSync, readdirSync, unlinkSync, statSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "voice"), TMP = join(ROOT, "tools", ".tmp");
-const VOICE = "com.apple.voice.premium.en-GB.Malcolm";   // "Jamie (Premium)"
 mkdirSync(OUT, { recursive: true }); mkdirSync(TMP, { recursive: true });
 
 const html = readFileSync(join(ROOT, "index.html"), "utf8");
@@ -52,7 +55,8 @@ CHAPTERS.forEach((c, ci) => add("title", `Chapter ${chNum(ci)}. ${c.name}.`)); a
   Object.keys(TL).forEach(id => ST.forEach(s => add("t" + id, s.say))); }
 
 // pitch shift by factor k while keeping (or nudging) the speed
-const P = (k, tempo = 1) => `asetrate=${Math.round(22050 * k)},aresample=44100,atempo=${(tempo / k).toFixed(4)}`;
+// (Kokoro outputs 24 kHz; shifts are softened to 65% of the old values so voices stay clear and natural)
+const P = (k, tempo = 1) => { const m = 1 - (1 - k) * 0.65; return `asetrate=${Math.round(24000 * m)},aresample=44100,atempo=${(tempo / m).toFixed(4)}`; };
 const EYE = { rate: 0.44, af: `${P(0.7)},chorus=0.6:0.9:45|60:0.35|0.3:0.25|0.4:2|1.3,aecho=0.8:0.8:260|520:0.35|0.2` };
 const CAST = {
   ann:   { rate: 0.54, af: "aresample=44100,highpass=f=60,acompressor=threshold=-20dB:ratio=3:attack=5:release=80,aecho=0.8:0.4:30:0.06" },   // game announcer: clear and punchy
@@ -114,26 +118,56 @@ const CAST = {
   vex:   { rate: 0.54, af: `${P(1.10, 1.06)},highpass=f=120,aecho=0.8:0.4:28:0.12` },                                    // Vex: cocky rival, cold edge
   vexr:  { rate: 0.50, af: `${P(1.10, 1.03)},highpass=f=110` },                                                          // Vex, back on our side
   tmax:   { rate: 0.58, af: `${P(1.04, 1.04)},highpass=f=80,acompressor=threshold=-20dB:ratio=4:attack=5:release=60` },                      // Coach Max: hyped
-  tsam:   { voice: "com.apple.voice.compact.en-US.Samantha", rate: 0.48, af: "aresample=44100,highpass=f=70,acompressor=threshold=-20dB:ratio=2" }, // Coach Sam: calm
+  tsam:   { rate: 0.48, af: "aresample=44100,highpass=f=70,acompressor=threshold=-20dB:ratio=2" }, // Coach Sam: calm
   tsarge: { rate: 0.54, af: `${P(0.84, 1.02)},highpass=f=70,acompressor=threshold=-16dB:ratio=5:attack=3:release=50,aecho=0.8:0.3:20:0.08` }, // Sarge: gruff, barking
   king:  { rate: 0.40, af: `${P(0.82, 0.94)},chorus=0.5:0.9:50|70:0.3|0.25:0.2|0.3:2|1.5,aecho=0.8:0.8:200|400:0.3|0.18` }, // The Hollow King: slow, syrupy, huge hall
 };
 CAST.boss11 = CAST.vex; CAST.boss13 = { rate: 0.52, af: `${CAST.vex.af},flanger=delay=3:depth=4:speed=0.5,aecho=0.8:0.6:120:0.25` }; CAST.boss15 = CAST.king; CAST.boss23 = CAST.quag; CAST.boss31 = CAST.baron; CAST.boss39 = CAST.slumber; CAST.boss47 = CAST.comfy;
+// Kokoro voice per speaker (best-rated voices for the characters with the most lines)
+const KV = { narr: "bm_george", title: "bm_fable", ann: "am_michael", steel: "am_fenrir", pip: "af_bella", eye: "bm_fable",
+  vex: "am_puck", vexr: "am_puck", king: "bm_george", quag: "bf_emma", baron: "bm_fable", slumber: "bm_lewis", comfy: "af_nicole",
+  tmax: "am_puck", tsam: "af_heart", tsarge: "am_michael",
+  boss19: "af_kore", boss30: "af_aoede", boss35: "af_nicole", boss42: "af_sarah" };   // Moss Witch, Moonmoth, Fog Heron, Big Slipper
+Object.assign(KV, { boss11: KV.vex, boss13: KV.vex, boss15: KV.king, boss23: KV.quag, boss31: KV.baron, boss39: KV.slumber, boss47: KV.comfy });   // story characters you fight
+const MONSTER = ["am_fenrir", "am_michael", "bm_george", "am_puck", "bm_fable", "am_onyx"];
+const kvoice = who => KV[who] || (/^boss(\d+)$/.test(who) ? MONSTER[+who.slice(4) % MONSTER.length] : "bm_george");
+const kspeed = c => Math.min(1.2, Math.max(0.8, (c.rate || 0.5) / 0.5));
+// pip used to be the narrator's voice pitched way up; with a real high voice it only needs a nudge
+CAST.pip = { rate: 0.55, af: `${P(1.15, 1.05)},highpass=f=120` };
+CAST.tsarge = { ...CAST.tsarge, af: `${P(0.9, 1.02)},highpass=f=70,acompressor=threshold=-16dB:ratio=5:attack=3:release=50,aecho=0.8:0.3:20:0.08` };
+for (const who of ["quag", "comfy", "boss19", "boss30", "boss35", "boss42"])   // female voices: drop the old pitch-up, keep the echo/chorus
+  CAST[who] = { ...CAST[who], af: CAST[who].af.replace(/^asetrate=\d+,aresample=44100,atempo=[\d.]+/, "aresample=44100") };
+CAST.boss23 = CAST.quag; CAST.boss47 = CAST.comfy;
+
 // what the synthesizer reads (the file name still comes from the original text)
 const speakable = t => t.replace(/Mk-II/g, "Mark Two").replace(/…/g, "...").replace(/!!+/g, "!")
   .replace(/\b[A-Z]{2,}\b/g, w => w[0] + w.slice(1).toLowerCase());
 
 const keep = new Set([...lines.keys()].map(h => h + ".m4a"));
-let made = 0;
+const ALL = process.argv.includes("--all");
+const SINCE = +(process.argv.find(a => a.startsWith("--since="))?.slice(8) || 0);   // resume a re-record: redo only files older than this time (ms)
+const [shard, shards] = (process.argv.find(a => a.startsWith("--shard="))?.slice(8) || "0/1").split("/").map(Number);
+const KOKORO = process.env.KOKORO_JS || join(ROOT, "tools", "tts", "node_modules", "kokoro-js", "dist", "kokoro.js");
+const { KokoroTTS } = await import(KOKORO);
+const THREADS = +(process.env.KOKORO_THREADS || 0);   // e.g. 3 to keep the Mac cool
+const tts = await KokoroTTS.from_pretrained("onnx-community/Kokoro-82M-v1.0-ONNX", { dtype: "fp32", device: "cpu",
+  ...(THREADS ? { session_options: { intraOpNumThreads: THREADS, interOpNumThreads: 1 } } : {}) });
+let made = 0, idx = -1;
 for (const [h, { who, text }] of lines) {
+  if (++idx % shards !== shard) continue;
   const out = join(OUT, h + ".m4a");
-  if (existsSync(out)) continue;
-  const c = CAST[who] || CAST.narr, raw = join(TMP, h + ".caf");
-  execFileSync(join(TMP, "tts"), [c.voice || VOICE, String(c.rate), "1.0", raw, speakable(text)], { stdio: "pipe" });
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", raw, "-af", `${c.af},loudnorm=I=-16:TP=-1.5:LRA=11`, "-ar", "44100", "-ac", "1", "-c:a", "aac", "-b:a", "40k", "-movflags", "+faststart", out]);
+  if (existsSync(out) && !ALL && !(SINCE && statSync(out).mtimeMs < SINCE)) continue;
+  const c = CAST[who] || CAST.narr, raw = join(TMP, h + ".wav");
+  await (await tts.generate(speakable(text), { voice: kvoice(who), speed: kspeed(c) })).save(raw);
+  // the low-bitrate AAC encoder can overshoot the limiter, so check the encoded peak and redo quieter if it clips
+  for (let lim = 0.7; ; lim *= 0.8) {
+    execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", raw, "-af", `${c.af},loudnorm=I=-16:TP=-1.5:LRA=11,alimiter=limit=${lim.toFixed(3)}:level=false`, "-ar", "44100", "-ac", "1", "-c:a", "aac", "-b:a", "40k", "-movflags", "+faststart", out]);
+    const peak = +(/max_volume: (-?[\d.]+) dB/.exec(spawnSync("ffmpeg", ["-hide_banner", "-i", out, "-af", "volumedetect", "-f", "null", "-"], { encoding: "utf8" }).stderr) || [0, 0])[1];
+    if (peak <= -1 || lim < 0.35) break;
+  }
   unlinkSync(raw); made++;
   process.stdout.write(`${who.padEnd(6)} ${text.slice(0, 60)}\n`);
 }
 let removed = 0;
-for (const f of readdirSync(OUT)) if (f.endsWith(".m4a") && !keep.has(f)) { unlinkSync(join(OUT, f)); removed++; }
+if (shards === 1) for (const f of readdirSync(OUT)) if (f.endsWith(".m4a") && !keep.has(f)) { unlinkSync(join(OUT, f)); removed++; }
 console.log(`${lines.size} lines · ${made} recorded · ${removed} removed`);
