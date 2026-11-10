@@ -1,8 +1,8 @@
 #!/bin/zsh
-# Builds "Push-Up Ranks.app" from main.swift + ../index.html
+# Builds "OmniFit.app" from main.swift + ../index.html
 set -e
 cd "$(dirname "$0")"
-APP="build/Push-Up Ranks.app"
+APP="build/OmniFit.app"
 rm -rf build && mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
 # universal binary so it runs on Apple Silicon and Intel Macs
@@ -40,8 +40,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-  <key>CFBundleName</key><string>Push-Up Ranks</string>
-  <key>CFBundleDisplayName</key><string>Push-Up Ranks</string>
+  <key>CFBundleName</key><string>OmniFit</string>
+  <key>CFBundleDisplayName</key><string>OmniFit</string>
   <key>CFBundleIdentifier</key><string>com.owen.pushupranks</string>
   <key>CFBundleExecutable</key><string>PushUpRanks</string>
   <key>CFBundleIconFile</key><string>AppIcon</string>
@@ -51,12 +51,12 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
   <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>LSApplicationCategoryType</key><string>public.app-category.healthcare-fitness</string>
   <key>NSHighResolutionCapable</key><true/>
-  <key>NSCameraUsageDescription</key><string>Push-Up Ranks uses your camera to count your push-ups. Video stays on your Mac.</string>
+  <key>NSCameraUsageDescription</key><string>OmniFit uses your camera to count your reps. Video stays on your Mac.</string>
 </dict></plist>
 PLIST
 
 codesign --force --deep --sign - "$APP"
 # zip to send to friends
-ditto -c -k --keepParent "$APP" "build/Push-Up-Ranks-Mac.zip"
+ditto -c -k --keepParent "$APP" "build/OmniFit-Mac.zip"
 echo "Built: $PWD/$APP"
-echo "Share: $PWD/build/Push-Up-Ranks-Mac.zip"
+echo "Share: $PWD/build/OmniFit-Mac.zip"

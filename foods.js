@@ -1,4 +1,4 @@
-// Push-Up Ranks food list. Values are per 100 g, approximate, based on typical USDA figures.
+// OmniFit food list. Values are per 100 g, approximate, based on typical USDA figures.
 // Row: name | emoji | category | serving label | serving grams |
 //      kcal, protein g, carbs g, fat g, fiber g, sugar g, sodium mg, potassium mg, calcium mg, iron mg,
 //      magnesium mg, zinc mg, vitamin A µg, vitamin C mg, vitamin D µg, vitamin B12 µg | diet | planner roles

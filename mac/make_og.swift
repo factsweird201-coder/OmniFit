@@ -28,9 +28,9 @@ func text(_ s: String, _ size: CGFloat, _ weight: NSFont.Weight, _ color: NSColo
     (s as NSString).draw(at: NSPoint(x: x, y: y), withAttributes: [.font: NSFont.systemFont(ofSize: size, weight: weight), .foregroundColor: color, .kern: 2])
 }
 let gold = NSColor(red: 1, green: 0.76, blue: 0.1, alpha: 1)
-text("PUSH-UP", 92, .heavy, .white, 460, 345)
-text("RANKS", 92, .heavy, gold, 460, 245)
-text("Count reps with your camera · rank up", 34, .semibold, NSColor(white: 0.85, alpha: 1), 464, 180)
-text("Boss fights · Live 1v1 battles", 34, .semibold, NSColor(white: 0.85, alpha: 1), 464, 132)
+text("OMNI", 92, .heavy, .white, 460, 345)
+text("FIT", 92, .heavy, gold, 460, 245)
+text("All-in-one fitness · camera rep counting", 34, .semibold, NSColor(white: 0.85, alpha: 1), 464, 180)
+text("Campaigns · Hyrox · Stretching · Meals", 34, .semibold, NSColor(white: 0.85, alpha: 1), 464, 132)
 NSGraphicsContext.restoreGraphicsState()
 try! rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: CommandLine.arguments[1]))

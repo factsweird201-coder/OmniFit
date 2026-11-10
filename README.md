@@ -1,6 +1,8 @@
-# Push-Up Ranks 💪
+# OmniFit 💪
 
-Camera push-up counter that ranks you up by lifetime push-ups, with boss fights and online 1v1 battles.
+All-in-one fitness app: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Hyrox races, stretching, a personal trainer, meal plans and online 1v1 battles.
+
+(Formerly Push-Up Ranks.)
 
 **Play:** https://factsweird201-coder.github.io/push-up-ranks/
 

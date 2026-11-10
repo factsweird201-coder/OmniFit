@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Push-Up Ranks</title>
+<title>OmniFit</title>
 <!--web-only-->
-<meta name="description" content="Count push-ups with your camera, rank up, fight bosses and battle your friends live.">
+<meta name="description" content="All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Hyrox, stretching and meal plans.">
 <meta name="theme-color" content="#07090e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -13,10 +13,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Push-Ups">
+<meta name="apple-mobile-web-app-title" content="OmniFit">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Push-Up Ranks — battle me in push-ups 💪">
-<meta property="og:description" content="Count reps with your camera, rank up, fight bosses and take on friends in live 1v1 battles.">
+<meta property="og:title" content="OmniFit — all-in-one fitness 💪">
+<meta property="og:description" content="Count reps with your camera, play story campaigns, fight bosses, race Hyrox, stretch, plan meals and take on friends in live 1v1 battles.">
 <meta property="og:url" content="https://factsweird201-coder.github.io/push-up-ranks/">
 <meta property="og:image" content="https://factsweird201-coder.github.io/push-up-ranks/og.png">
 <meta property="og:image:width" content="1200">
@@ -1095,7 +1095,7 @@
 <canvas id="fx"></canvas>
 <div id="defs"></div>
 <header>
-  <div class="logo"><div class="mark">💪</div><span>PUSH-UP <em>RANKS</em></span></div>
+  <div class="logo"><div class="mark">💪</div><span>OMNI<em>FIT</em></span></div>
   <div class="tabs">
     <button id="tabTrain" class="on"><span class="tl-lg">Training</span><span class="tl-sm">Train</span></button>
     <button id="tabCamp"><i class="tl-ic">🗺 </i>Campaign</button>
@@ -5891,7 +5891,7 @@ function renderLobby() {
         <div><span class="spin"></span> <span class="muted">Waiting for your opponent to join…</span></div>`;
     $("pvCancel").onclick = cancel;
     if ($("pvCopy")) $("pvCopy").onclick = () => copyText(link || code, link ? "Invite link copied" : "Code copied");
-    if ($("pvShare")) $("pvShare").onclick = () => navigator.share({ title: "Push-Up Ranks battle", text: `Battle me in push-ups 💪 Code: ${code}`, url: link }).catch(() => {});
+    if ($("pvShare")) $("pvShare").onclick = () => navigator.share({ title: "OmniFit battle", text: `Battle me in push-ups 💪 Code: ${code}`, url: link }).catch(() => {});
   } else if (lobby.view === "joining") {
     el.innerHTML = `<div class="pvp-title">JOINING <em>${esc(lobby.code)}</em></div><div><span class="spin"></span> <span class="muted">Connecting to your opponent…</span></div><button class="ghost" id="pvCancel">Cancel</button>`;
     $("pvCancel").onclick = cancel;

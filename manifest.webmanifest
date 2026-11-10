@@ -1,7 +1,7 @@
 {
-  "name": "Push-Up Ranks",
-  "short_name": "Push-Ups",
-  "description": "Count push-ups with your camera, rank up, fight bosses and battle friends live.",
+  "name": "OmniFit",
+  "short_name": "OmniFit",
+  "description": "All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Hyrox, stretching and meal plans.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
