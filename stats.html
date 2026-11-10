@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>OmniFit Stats</title>
+<link rel="icon" href="icons/icon-192.png">
+<style>
+  :root { --bg: #0b0d12; --panel: #131722; --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.14); --text: #eef1f7; --muted: #8b93a7; --accent: #ffc21a; --accent2: #ff8a00; --good: #2fd47a; --bad: #ff4d5e; --blue: #4aa8ff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px 16px 40px; }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 22px; letter-spacing: 1px; margin: 0 0 4px; } h1 em { color: var(--accent); font-style: normal; }
+  h2 { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: 28px 0 10px; }
+  .muted { color: var(--muted); font-size: 13.5px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+  .tile b { display: block; font-size: 28px; line-height: 1.1; } .tile span { color: var(--muted); font-size: 12.5px; }
+  .tile.big b { color: var(--accent); }
+  .ret { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .ret .tile b { color: var(--good); }
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: 16px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 9px 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; } th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: .5px; }
+  td.na { color: #4a5063; }
+  .scroll { overflow-x: auto; border-radius: 16px; }
+  .chart { display: flex; align-items: flex-end; gap: 3px; height: 150px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px 12px 26px; position: relative; }
+  .chart .d { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; position: relative; min-width: 0; }
+  .chart .o { width: 100%; background: rgba(74,168,255,.55); border-radius: 3px 3px 0 0; position: relative; }
+  .chart .w { position: absolute; bottom: 0; left: 0; right: 0; background: var(--accent); border-radius: 3px 3px 0 0; }
+  .chart .lb { position: absolute; bottom: -20px; font-size: 10px; color: var(--muted); }
+  .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--muted); margin-top: 8px; } .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  form { display: grid; gap: 10px; max-width: 360px; margin-top: 16px; }
+  input { background: rgba(0,0,0,.35); border: 1px solid var(--line2); border-radius: 12px; color: var(--text); padding: 12px 14px; font-size: 16px; }
+  button { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a1000; border: 0; border-radius: 12px; padding: 12px; font-weight: 700; font-size: 15px; cursor: pointer; }
+  .err { color: var(--bad); min-height: 18px; font-size: 13.5px; }
+  .note { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; font-size: 14px; color: var(--muted); margin-top: 10px; }
+  .note b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>OMNI<em>FIT</em> stats</h1>
+  <div class="muted" id="sub">Anonymous installs and who comes back. Only the owner account can see this.</div>
+  <div id="app"><p class="muted">Loading…</p></div>
+</div>
+<script type="module">
+const CLOUD = { apiKey: "AIzaSyA1WZhXOV3lLwm4jODNRW9VPFTn4AH1MbY", projectId: "omnifit-1fc13" };
+let cfg = { ...CLOUD, auth: "https://identitytoolkit.googleapis.com/v1", token: "https://securetoken.googleapis.com/v1/token", db: null };
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) try { Object.assign(cfg, JSON.parse(localStorage.getItem("omnifit.cloudTest") || "null") || {}); } catch {}
+cfg.db ||= `https://firestore.googleapis.com/v1/projects/${cfg.projectId}/databases/(default)/documents`;
+const $ = id => document.getElementById(id), app = $("app");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+// same sign-in as the app if it's already signed in on this browser; otherwise a sign-in just for this page
+const MAIN = "pushupRanks.v1.account", OWN = "omnifit.statsAuth";
+let acct = null; try { acct = JSON.parse(localStorage.getItem(MAIN) || "null") || JSON.parse(localStorage.getItem(OWN) || "null"); } catch {}
+const keyOf = () => localStorage.getItem(MAIN) && JSON.parse(localStorage.getItem(MAIN)).uid === acct?.uid ? MAIN : OWN;
+
+async function idToken() {
+  if (acct.idToken && acct.exp > Date.now() + 60000) return acct.idToken;
+  const r = await fetch(`${cfg.token}?key=${cfg.apiKey}`, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(acct.refresh)}` });
+  const j = await r.json(); if (!r.ok) throw new Error("SIGNIN");
+  Object.assign(acct, { idToken: j.id_token, refresh: j.refresh_token, exp: Date.now() + (+j.expires_in || 3600) * 1000 });
+  localStorage.setItem(keyOf(), JSON.stringify(acct));
+  return acct.idToken;
+}
+async function loadPings() {
+  const out = []; let last = null;
+  for (let page = 0; page < 40; page++) {
+    const q = { structuredQuery: { from: [{ collectionId: "pings" }], orderBy: [{ field: { fieldPath: "__name__" } }], limit: 5000 } };
+    if (last) q.structuredQuery.startAt = { values: [{ referenceValue: last }], before: false };
+    const r = await fetch(`${cfg.db}:runQuery`, { method: "POST", headers: { Authorization: "Bearer " + await idToken(), "Content-Type": "application/json" }, body: JSON.stringify(q) });
+    const j = await r.json().catch(() => null);
+    const e = Array.isArray(j) ? j.find(x => x.error)?.error : j?.error;   // Firestore streams errors inside the result array
+    if (r.status === 403 || e?.status === "PERMISSION_DENIED" || e?.code === 403) throw new Error("FORBIDDEN");
+    if (!r.ok || e || !Array.isArray(j)) throw new Error("NETWORK");
+    const rows = j.filter(x => x.document);
+    rows.forEach(x => { const f = x.document.fields; out.push({ i: f.i.stringValue, d: f.d.stringValue, f: f.f.stringValue, a: f.a.stringValue, k: f.k.stringValue }); });
+    if (rows.length < 5000) break;
+    last = rows[rows.length - 1].document.name;
+  }
+  return out;
+}
+
+const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const addDays = (k, n) => { const [y, m, d] = k.split("-").map(Number); return dayKey(new Date(y, m - 1, d + n)); };
+const between = (a, b) => { const [y1, m1, d1] = a.split("-").map(Number), [y2, m2, d2] = b.split("-").map(Number); return Math.round((new Date(y2, m2 - 1, d2) - new Date(y1, m1 - 1, d1)) / 864e5); };
+const pct = (n, d) => d ? Math.round(100 * n / d) + "%" : "–";
+
+function render(P) {
+  const today = dayKey();
+  const users = new Map();   // id -> { f, a, days: Set(opened), work: Set }
+  P.forEach(p => {
+    const u = users.get(p.i) || { f: p.f, a: p.a, days: new Set(), work: new Set() };
+    if (p.f < u.f) u.f = p.f;
+    (p.k === "w" ? u.work : u.days).add(p.d); if (p.k === "w") u.days.add(p.d);
+    users.set(p.i, u);
+  });
+  const U = [...users.values()];
+  const activeOn = d => U.filter(u => u.days.has(d)).length;
+  const active7 = U.filter(u => [...u.days].some(d => between(d, today) < 7)).length;
+  const active30 = U.filter(u => [...u.days].some(d => between(d, today) < 30)).length;
+  const workedToday = U.filter(u => u.work.has(today)).length;
+  const newToday = U.filter(u => u.f === today).length;
+  // retention: of installs old enough, how many came back
+  const came = (u, from, to) => [...u.days].some(d => { const n = between(u.f, d); return n >= from && n <= to; });
+  const R = (from, to, minAge) => { const pool = U.filter(u => between(u.f, today) >= minAge); return { n: pool.filter(u => came(u, from, to)).length, of: pool.length }; };
+  const r1 = R(1, 1, 1), rW = R(1, 7, 7), r7 = R(7, 1e9, 7), r30 = R(30, 1e9, 30);
+  const everWorked = U.filter(u => u.work.size).length;
+  const plat = U.reduce((o, u) => (o[u.a] = (o[u.a] || 0) + 1, o), {});
+  // cohorts: last 14 first-days
+  const coh = []; for (let n = 13; n >= 0; n--) { const d = addDays(today, -n); const g = U.filter(u => u.f === d); coh.push({ d, g }); }
+  // daily chart: last 30 days
+  const days = []; for (let n = 29; n >= 0; n--) days.push(addDays(today, -n));
+  const counts = days.map(d => ({ d, o: activeOn(d), w: U.filter(u => u.work.has(d)).length }));
+  const max = Math.max(1, ...counts.map(c => c.o));
+
+  app.innerHTML = `
+    <h2>Right now</h2>
+    <div class="tiles">
+      <div class="tile big"><b>${U.length.toLocaleString()}</b><span>installs ever</span></div>
+      <div class="tile"><b>${activeOn(today)}</b><span>opened today</span></div>
+      <div class="tile"><b>${workedToday}</b><span>trained today</span></div>
+      <div class="tile"><b>${newToday}</b><span>new today</span></div>
+      <div class="tile"><b>${active7}</b><span>active in the last 7 days</span></div>
+      <div class="tile"><b>${active30}</b><span>active in the last 30 days</span></div>
+    </div>
+    <h2>Do people come back?</h2>
+    <div class="ret">
+      <div class="tile"><b>${pct(r1.n, r1.of)}</b><span>came back the next day <br>(${r1.n} of ${r1.of} installs)</span></div>
+      <div class="tile"><b>${pct(rW.n, rW.of)}</b><span>came back in their first week <br>(${rW.n} of ${rW.of} installs at least a week old)</span></div>
+      <div class="tile"><b>${pct(r7.n, r7.of)}</b><span>still using it after a week <br>(${r7.n} of ${r7.of})</span></div>
+      <div class="tile"><b>${pct(r30.n, r30.of)}</b><span>still using it after a month <br>(${r30.n} of ${r30.of})</span></div>
+    </div>
+    <div class="note"><b>Rule of thumb for fitness apps:</b> about 25% coming back the next day and 10% still using it after a month is solid. Above that, it's worth building out and charging for.
+      ${everWorked ? ` ${pct(everWorked, U.length)} of installs have done at least one workout.` : ""}</div>
+    <h2>Last 30 days</h2>
+    <div class="chart">${counts.map((c, i) => `<div class="d" title="${c.d}: ${c.o} opened, ${c.w} trained"><div class="o" style="height:${100 * c.o / max}%"><div class="w" style="height:${c.o ? 100 * c.w / c.o : 0}%"></div></div>${i % 5 === 4 || i === 29 ? `<span class="lb">${c.d.slice(5).replace("-", "/")}</span>` : ""}</div>`).join("")}</div>
+    <div class="legend"><span><i style="background:rgba(74,168,255,.55)"></i>opened the app</span><span><i style="background:var(--accent)"></i>did a workout</span></div>
+    <h2>New installs by day</h2>
+    <div class="scroll"><table>
+      <tr><th>First day</th><th>New</th><th>Next day</th><th>First week</th><th>After a week</th><th>After a month</th></tr>
+      ${coh.slice().reverse().map(g => { const age = between(g.d, today); return `<tr><td>${g.d}</td><td>${g.g.length}</td>
+        ${[[1, 1, 1], [1, 7, 7], [7, 1e9, 7], [30, 1e9, 30]].map(([a, b, min]) => age < min || !g.g.length ? `<td class="na">–</td>` : `<td>${pct(g.g.filter(u => came(u, a, b)).length, g.g.length)}</td>`).join("")}</tr>`; }).join("")}
+    </table></div>
+    <h2>Where people use it</h2>
+    <div class="tiles">${[["web", "🌐 Website"], ["app", "📱 Home-screen app"], ["mac", "💻 Mac app"]].map(([k, n]) => `<div class="tile"><b>${plat[k] || 0}</b><span>${n}</span></div>`).join("")}</div>
+    <p class="muted" style="margin-top:22px">Each install is a random ID with no name, email or device info. Your own devices are counted too. Updated ${new Date().toLocaleString()}.</p>`;
+}
+
+function signInForm(msg = "") {
+  app.innerHTML = `<form id="f"><div class="muted">Sign in with the OmniFit owner account.</div>
+    <input id="em" type="email" autocomplete="email" placeholder="Email" required><input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+    <div class="err" id="er">${esc(msg)}</div><button>Sign in</button></form>`;
+  $("f").onsubmit = async e => {
+    e.preventDefault(); $("er").textContent = "";
+    const r = await fetch(`${cfg.auth}/accounts:signInWithPassword?key=${cfg.apiKey}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: $("em").value.trim(), password: $("pw").value, returnSecureToken: true }) });
+    const j = await r.json();
+    if (!r.ok) { $("er").textContent = /INVALID|NOT_FOUND|PASSWORD/.test(j.error?.message || "") ? "Wrong email or password." : "Couldn't sign in. Try again."; return; }
+    acct = { uid: j.localId, email: j.email, idToken: j.idToken, refresh: j.refreshToken, exp: Date.now() + (+j.expiresIn || 3600) * 1000 };
+    localStorage.setItem(OWN, JSON.stringify(acct)); start();
+  };
+}
+async function start() {
+  if (!acct) return signInForm();
+  app.innerHTML = `<p class="muted">Loading…</p>`;
+  try { render(await loadPings()); }
+  catch (e) {
+    if (e.message === "FORBIDDEN") { localStorage.removeItem(OWN); acct = null; signInForm("That account isn't the owner account."); }
+    else if (e.message === "SIGNIN") { localStorage.removeItem(OWN); acct = null; signInForm("Please sign in again."); }
+    else app.innerHTML = `<p class="err">Couldn't load the stats. Check your internet and refresh.</p>`;
+  }
+}
+window.__stats = { render };
+start();
+</script>
+</body>
+</html>

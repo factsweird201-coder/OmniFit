@@ -5,5 +5,17 @@ service cloud.firestore {
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
+    // anonymous return stats: anyone can add one well-formed "opened"/"worked out" mark (never change or read one);
+    // only the owner account can read them (stats.html)
+    match /pings/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['i', 'd', 'f', 'a', 'k'])
+        && request.resource.data.i is string && request.resource.data.i.size() >= 8 && request.resource.data.i.size() <= 16
+        && request.resource.data.d is string && request.resource.data.d.matches('^20[0-9]{2}-[0-9]{2}-[0-9]{2}$')
+        && request.resource.data.f is string && request.resource.data.f.matches('^20[0-9]{2}-[0-9]{2}-[0-9]{2}$')
+        && request.resource.data.a in ['web', 'mac', 'app']
+        && request.resource.data.k in ['o', 'w']
+        && id == request.resource.data.i + '_' + request.resource.data.d + '_' + request.resource.data.k;
+      allow read: if request.auth != null && request.auth.uid == 'RS1pt3Cor1gMP6rPrbmkSGo0Dv32';
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "OmniFit",
   "short_name": "OmniFit",
-  "description": "All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Hyrox, stretching and meal plans.",
+  "description": "All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Endurance races, stretching and meal plans.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>OmniFit</title>
 <!--web-only-->
-<meta name="description" content="All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Hyrox, stretching and meal plans.">
+<meta name="description" content="All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Endurance races, stretching and meal plans.">
 <meta name="theme-color" content="#07090e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-title" content="OmniFit">
 <meta property="og:type" content="website">
 <meta property="og:title" content="OmniFit — all-in-one fitness 💪">
-<meta property="og:description" content="Count reps with your camera, play story campaigns, fight bosses, race Hyrox, stretch and plan meals.">
+<meta property="og:description" content="Count reps with your camera, play story campaigns, fight bosses, run Endurance races, stretch and plan meals.">
 <meta property="og:url" content="https://factsweird201-coder.github.io/push-up-ranks/">
 <meta property="og:image" content="https://factsweird201-coder.github.io/push-up-ranks/og.png">
 <meta property="og:image:width" content="1200">
@@ -943,7 +943,7 @@
     .co-table { font-size: 12px; } .co-table td, .co-table th { padding: 5px 3px; }
   }
 
-  /* ---- Hyrox at home ---- */
+  /* ---- Endurance ---- */
   .hx-lobby { background: radial-gradient(ellipse at 50% 0%, rgba(255,214,0,.14), transparent 60%), radial-gradient(ellipse at 50% 120%, rgba(255,120,40,.12), transparent 60%), linear-gradient(180deg, #0c0e16, #05060a); }
   .bs-title em.hx-em { color: #ffd600; }
   .hx-divs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 640px; margin: 0 auto 14px; }
@@ -1115,6 +1115,7 @@
   .acct-av { width: 46px; height: 46px; flex: none; border-radius: 50%; display: grid; place-items: center; font: 700 20px var(--display); color: #1a1000; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
   .acct-row { display: flex; gap: 10px; } .acct-row button { flex: 1; }
   .acct-card .erase-btn { display: block; margin: 16px auto 0; }
+  .acct-stats { display: block; margin-top: 12px; text-align: center; padding: 11px; border-radius: 12px; border: 1px solid var(--line2); color: var(--accent); font-weight: 700; text-decoration: none; }
   @media (max-width: 700px) { .acct-btn { width: 34px; height: 34px; font-size: 15px; } }
 </style>
 </head>
@@ -1127,7 +1128,7 @@
     <button id="tabTrain" class="on"><span class="tl-lg">Training</span><span class="tl-sm">Train</span></button>
     <button id="tabCamp"><i class="tl-ic">🗺 </i>Campaign</button>
     <button id="tabBoss"><i class="tl-ic">⚔ </i><span class="tl-lg">Boss Battles</span><span class="tl-sm">Bosses</span></button>
-    <button id="tabHyrox"><i class="tl-ic">🏁 </i>Hyrox</button>
+    <button id="tabHyrox"><i class="tl-ic">🏁 </i>Endurance</button>
     <button id="tabStretch"><i class="tl-ic">🧘 </i>Stretch</button>
     <button id="tabFood"><i class="tl-ic">🍽 </i><span class="tl-lg">Meal Plan</span><span class="tl-sm">Meals</span></button>
   </div>
@@ -1147,7 +1148,7 @@
 </nav>
 
 <main>
-  <div class="battle-sub" id="battleSub" role="group" aria-label="Battle"><button data-go="boss">⚔️ Bosses</button><button data-go="hyrox">🏁 Hyrox</button></div>
+  <div class="battle-sub" id="battleSub" role="group" aria-label="Battle"><button data-go="boss">⚔️ Bosses</button><button data-go="hyrox">🏁 Endurance</button></div>
   <section>
     <div class="stage" id="stage">
       <video id="video" playsinline muted></video>
@@ -1203,7 +1204,7 @@
       </div>
 
       <div class="coach-bar hx-bar" id="hxBar" hidden>
-        <div class="cb-l"><span id="hxSeg">🏁 HYROX AT HOME</span><span id="hxName"></span><span class="cb-dots hx-dots" id="hxDots"></span></div>
+        <div class="cb-l"><span id="hxSeg">🏁 ENDURANCE RACE</span><span id="hxName"></span><span class="cb-dots hx-dots" id="hxDots"></span></div>
         <div class="cb-c"><div class="cb-num"><b id="hxNum">0</b><span id="hxOf"></span></div><div class="cb-bar"><div id="hxFill"></div></div></div>
         <div class="hx-r"><div class="hx-clock"><b id="hxClock">0:00</b><span id="hxDelta"></span></div><div class="cb-r"><button class="ghost" id="hxSkip" title="Camera missed it? Move on (the race won't count as a PB)"><span class="tl-lg">Skip ▶</span><span class="tl-sm">⏭</span></button><button class="ghost" id="hxQuit" title="Quit the race">Quit</button></div></div>
       </div>
@@ -1243,7 +1244,7 @@
         <div class="cam">📷</div>
         <div class="t">READY TO TRAIN?</div>
         <div class="tabs ex-switch" role="group" aria-label="Exercise"><button data-ex="push">💪 Push-ups</button><button data-ex="squat">🦵 Squats</button><button data-ex="situp">🛏️ Sit-ups</button></div>
-        <div class="muted" style="max-width:420px"><span id="startTip">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.</span> Your training video never leaves your device.<!--web-only--> The site only counts anonymous visits (no cookies).<!--/web-only--></div>
+        <div class="muted" style="max-width:420px"><span id="startTip">Put your device on the floor about 2 m away so your shoulders, elbows and hands are in view.</span> Your training video never leaves your device.<!--web-only--> The app only counts anonymous visits with a random ID: no cookies, no personal info.<!--/web-only--></div>
         <button id="startBtn">Start camera</button>
         <div class="muted" id="loadMsg"></div>
       </div>
@@ -1311,9 +1312,9 @@
       </ul>
     </div>
     <div class="panel" style="margin-top:18px" id="howHyrox" hidden>
-      <h3>How Hyrox at home works</h3>
+      <h3>How Endurance races work</h3>
       <ul class="tips">
-        <li>A real Hyrox race is 8 × 1 km runs, each one followed by a workout station. This version needs no equipment: each run is a different cardio move the camera counts (high knees, jumping jacks, butt kicks, skaters, squat jumps) and every station is a bodyweight swap.</li>
+        <li>An Endurance race is 8 runs, each one followed by a workout station, and it needs no equipment: each run is a different cardio move the camera counts (high knees, jumping jacks, butt kicks, skaters, squat jumps) and every station is a bodyweight swap.</li>
         <li>Stand the camera up 2–3 m away, around hip height, so your <b>whole body</b> is in view, standing and on the floor.</li>
         <li>Counted parts end when you hit the target. Wall sit, plank and mountain climbers are timed. The clock never stops, so moving fast between parts is part of the race.</li>
         <li>Camera missed something? Press <b>Skip</b>. The race still finishes, but it won't count as a PB.</li>
@@ -1391,7 +1392,7 @@
       <ol class="ladder" id="ladder"></ol>
     </div>
     <div class="panel" id="hxPanel" hidden>
-      <h3>🏁 Your Hyrox</h3>
+      <h3>🏁 Your Endurance races</h3>
       <div id="hxPanelBody"></div>
     </div>
     <div class="panel" id="campPanel" hidden>
@@ -2092,9 +2093,9 @@ function announcerLines() {
   L.push("Daily squat goal complete!", "Daily sit-up goal complete!");
   L.push("Get ready.", "Ten seconds.", "Set done. Rest.", "Last set. As many as you can. Go!", "Workout complete!");
   for (let m = 2; m <= 6; m++) for (let n = 1; n < m; n++) L.push(`Set ${n} of ${m}. Go!`);
-  // Hyrox at home
+  // Endurance
   L.push("Run 1. High knees. Go!", "Run 2. Jumping jacks. Go!", "Run 3. Butt kicks. Go!", "Run 4. Skaters. Go!", "Run 5. High knees. Go!", "Run 6. Squat jumps. Go!", "Run 7. Jumping jacks. Go!", "Last run! Sprint knees. Empty the tank!");
-  L.push( "Welcome to Hyrox at home. Get ready.", "Race complete!", "New personal best!",
+  L.push( "Welcome to the Endurance race. Get ready.", "Race complete!", "New personal best!",
     "Station one. Push-ups. Go!", "Station two. Wall sit. Hold it!", "Station three. Plank. Hold it!",
     "Station four. Burpees. Go!", "Station five. Push-ups. Go!", "Station six. Mountain climbers. Go!",
     "Station seven. Lunges. Go!", "Final station. Squats. Finish it!");
@@ -2133,7 +2134,7 @@ function toast(msg) {
 // ================= MODES =================
 let mode = "train";
 let CW = null;   // the coach workout in progress (see COACH below)
-let HR = null;   // the Hyrox race in progress (see HYROX below)
+let HR = null;   // the Endurance race in progress (see ENDURANCE below)
 let trainArmed = false;   // set by the Training tab's Start button; cleared when the camera stops or you switch tabs
 function setMode(m) {
   if (inMatch()) return;
@@ -2177,7 +2178,7 @@ function setMode(m) {
   if (m === "boss") { renderRoster(); $("bsStatus").textContent = "Beat a boss to unlock the next one."; $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
   phoneNav();
 }
-// phone layout: bottom tab bar (Bosses and Hyrox share the Battle tab) and the full-screen set controls
+// phone layout: bottom tab bar (Bosses and Endurance share the Battle tab) and the full-screen set controls
 function phoneNav() {
   const BATTLE = ["boss", "hyrox"];
   document.body.dataset.mode = mode;
@@ -2223,7 +2224,7 @@ let setCount = 0, pendingRankUps = [], bestToasted = false;
 
 function onRep(depthPct) {
   if (!inMatch() && !(mode === "train" && trainArmed) && !(mode === "hyrox" && HR?.active)) return;
-  if (!inMatch() && mode === "hyrox" && HR?.active && !hxRep(depthPct)) return;   // Hyrox: burpees / lunges / warm-up reps don't go on your push-up or squat totals
+  if (!inMatch() && mode === "hyrox" && HR?.active && !hxRep(depthPct)) return;   // Endurance: burpees / lunges / warm-up reps don't go on your push-up or squat totals
   if (!inMatch() && CW?.active && CW.phase !== "set") return;   // resting between coach sets   // training only counts after pressing Start on the Training tab
   if (exercise === "squat") return onSquat(depthPct);
   if (exercise === "situp") return onSitup(depthPct);
@@ -3030,7 +3031,7 @@ function situpStep(lm) {
 
 function detect(lm) {
   syncExercise();
-  if (HR?.active && HR.phase === "go" && !HR.segs[HR.idx].cam) return;   // timed Hyrox hold: nothing to count
+  if (HR?.active && HR.phase === "go" && !HR.segs[HR.idx].cam) return;   // timed Endurance hold: nothing to count
   CARDIO.has(exercise) ? cardioStep(lm) : exercise === "squat" ? squatStep(lm) : exercise === "situp" ? situpStep(lm) : step(analyse(lm));
 }
 
@@ -6134,8 +6135,8 @@ $("crMore").onclick = () => coachMoreRest();
 var coachInit = true;   // setMode can run during start-up before this point
 window.__coach = { plan: coachPlan, start: coachStart, get W() { return CW; }, store: coachStore, skip: coachSkipRest, setStats };   // test hook
 
-// ================= HYROX AT HOME: 8 runs + 8 stations, no equipment, the clock never stops =================
-// Real Hyrox is 8 × 1 km run, each followed by a workout station. Here each run is a cardio move counted by the camera
+// ================= ENDURANCE RACE: 8 runs + 8 stations, no equipment, the clock never stops =================
+// An Endurance race is 8 runs, each followed by a workout station. Here each run is a cardio move counted by the camera
 // and every station is a bodyweight swap: counted on camera where it can see the move, timed where it can't.
 // The "say" lines are pre-recorded: keep them identical to the list in announcerLines().
 const HX_DIVS = {
@@ -6272,7 +6273,7 @@ function hxStart(div = hxStore().div) {
   ensureCamera().then(ok => {
     if (!HR?.active) return;
     if (!ok) { const why = $("loadMsg").textContent.replace("Couldn't start: ", ""); hxAbort(); $("hxStatus").innerHTML = `<span style="color:var(--bad)">Camera didn't start: ${why}</span>`; return; }
-    HR.until = performance.now() + 10000; say("Welcome to Hyrox at home. Get ready."); hxReadyUI();
+    HR.until = performance.now() + 10000; say("Welcome to the Endurance race. Get ready."); hxReadyUI();
   });
   clearInterval(hxTick); hxTick = setInterval(hxLoop, 250);
 }
@@ -6370,7 +6371,7 @@ function hxBarUI() {
   if (!HR?.active) return;
   const s = HR.segs[HR.idx], now = performance.now(), going = HR.phase === "go";
   const raceT = going || HR.splits.length ? HR.splits.reduce((a, b) => a + b, 0) + (going ? (now - HR.segStart) / 1000 : 0) : 0;
-  $("hxSeg").textContent = going ? `${s.icon} ${hxSegLabel(s)}` : "🏁 HYROX AT HOME";
+  $("hxSeg").textContent = going ? `${s.icon} ${hxSegLabel(s)}` : "🏁 ENDURANCE RACE";
   $("hxName").innerHTML = going ? s.name : `${HX_DIVS[HR.div].name} · get ready`;
   $("hxDots").innerHTML = HR.segs.map((x, i) => `<i class="${x.kind}${i < HR.idx || (i === HR.idx && !going && HR.splits.length > i) ? " done" : i === HR.idx && going ? " on" : ""}"></i>`).join("");
   if (s.secs && going) {
@@ -6402,7 +6403,7 @@ function renderHyrox() {
   const lob = $("hxLobby"); if (!lob) return;
   const h = hxStore(), div = h.div, segs = hxSegs(div), best = h.best[div];
   lob.innerHTML = `
-    <div class="bs-head"><div class="bs-title">HYROX <em class="hx-em">AT HOME</em></div>
+    <div class="bs-head"><div class="bs-title">ENDURANCE <em class="hx-em">RACE</em></div>
       <div class="muted">8 runs and 8 stations, no equipment. The camera counts your reps and the clock never stops.</div></div>
     <div class="hx-divs">${Object.entries(HX_DIVS).map(([k, d]) => `<button class="hx-div${k === div ? " on" : ""}" data-div="${k}"><b>${d.icon} ${d.name}</b><span>${d.note}</span><em>${h.best[k] ? `PB ${hxFmt(h.best[k].total)}` : "no race yet"}</em></button>`).join("")}</div>
     <div class="hx-course">${HX_STATIONS.map((_, i) => { const r = segs[i * 2], s = segs[i * 2 + 1];
@@ -6438,7 +6439,7 @@ function showHxReport(r) {
   m.querySelector(".card").innerHTML = `
     <h2>${r.pb ? "🏆 NEW PERSONAL BEST" : "RACE COMPLETE"}</h2>
     <div class="big">${hxFmt(r.total)}</div>
-    <div class="muted">Hyrox at home · ${HX_DIVS[r.div].icon} ${HX_DIVS[r.div].name}${best ? ` · PB ${hxFmt(best.total)} (${hxDelta(r.total - best.total)})` : ""}</div>
+    <div class="muted">Endurance · ${HX_DIVS[r.div].icon} ${HX_DIVS[r.div].name}${best ? ` · PB ${hxFmt(best.total)} (${hxDelta(r.total - best.total)})` : ""}</div>
     <div class="result-stats"><div><b>${hxFmt(sum(runs))}</b>Runs</div><div><b>${hxFmt(sum(sts))}</b>Stations</div><div><b>${r.counts.filter((_, i) => segs[i].kind === "run").reduce((a, b) => a + b, 0)}</b>Run reps</div><div><b>${r.reps}</b>Reps</div></div>
     <table class="co-table hx-table"><thead><tr><th></th><th>🏃 Run</th><th>Station</th><th>Time</th></tr></thead><tbody>${[0, 1, 2, 3, 4, 5, 6, 7].map(row).join("")}</tbody></table>
     <div class="co-verdict">${tips.join(" ")}</div>
@@ -6463,7 +6464,7 @@ var hxInit = true;
 window.__hx = { start: hxStart, next: hxNext, get R() { return HR; }, store: hxStore, segs: hxSegs, go: i => hxGo(i), lines: () => HX_STATIONS.map(s => s.say) };   // test hook
 
 // ================= PERSONAL TRAINER: a coach with a face and a voice who watches every rep =================
-// Talks during Training sets, coach workouts and Hyrox races, using what the camera sees: depth, tempo,
+// Talks during Training sets, coach workouts and Endurance races, using what the camera sees: depth, tempo,
 // slowing down, reps left, personal bests. Each trainer has their own recorded voice (tools/voices.mjs records
 // TRAINER_LINES as speakers tmax / tsam / tsarge), a daily check-in and a week view.
 const TRAINERS = {
@@ -6558,7 +6559,7 @@ var trCur = null, trLast = {}, trLastAt = 0, trHideT = 0, trSet = { depths: [], 
 const trAgo = k => trLast[k] == null ? Infinity : performance.now() - trLast[k];   // ms since a cue was last given
 function trStop() { if (trCur) try { trCur.pause(); } catch {} trCur = null; }
 
-// is the trainer watching right now? (Training sets, coach workouts, Hyrox races; never fights, missions or story)
+// is the trainer watching right now? (Training sets, coach workouts, Endurance races; never fights, missions or story)
 const trWatching = () => !inMatch() && !M && camReady && ((mode === "train" && trainArmed) || (mode === "hyrox" && HR?.active && HR.phase === "go"));
 // say one line from a pool. prio 1 = chatter (only when "Talk: lots"), 2 = coaching cue, 3 = always
 function trainer(key, { prio = 1, force = false, delay = 0 } = {}) {
@@ -6657,7 +6658,7 @@ function trHello() {
 
 // ---------- the trainer's brain: reads everything you've logged ----------
 // Muscle readiness (how recovered your upper body and legs are), a 7-day schedule with hard days, recovery days
-// and rest days, and insights from your reps, form, tempo, workouts, Hyrox races, food and weight.
+// and rest days, and insights from your reps, form, tempo, workouts, Endurance races, food and weight.
 const STRETCHES = [
   { id: "catcow", name: "Cat-cow", g: "core", icon: "🐈", secs: 40, how: "On hands and knees, slowly round your back up, then let it dip. Move with your breath.", say: "Cat cow. Round your back, then let it dip. Slow and easy." },
   { id: "childs", name: "Child's pose", g: "upper", icon: "🧎", secs: 45, how: "Knees wide, sit back on your heels, arms long in front. Breathe into your back.", say: "Child's pose. Sit back and breathe slowly." },
@@ -6686,7 +6687,7 @@ const STRETCHES = [
   { id: "breathe", name: "Box breathing", g: "core", icon: "🌬", secs: 48, how: "Breathe in for 4, hold for 4, out for 4, hold for 4. Let your heart rate settle.", say: "Box breathing. In for four, hold for four, out for four, hold for four." },
 ];
 const DAY_TYPES = {
-  push: { icon: "💪", name: "Push day", hard: true }, squat: { icon: "🦵", name: "Squat day", hard: true }, situp: { icon: "🛏️", name: "Sit-up day", hard: true }, hyrox: { icon: "🏁", name: "Hyrox race", hard: true },
+  push: { icon: "💪", name: "Push day", hard: true }, squat: { icon: "🦵", name: "Squat day", hard: true }, situp: { icon: "🛏️", name: "Sit-up day", hard: true }, hyrox: { icon: "🏁", name: "Endurance race", hard: true },
   recovery: { icon: "🧘", name: "Recovery", hard: false }, rest: { icon: "😴", name: "Rest", hard: false },
 };
 const kAgo = n => { const x = new Date(); x.setDate(x.getDate() - n); return dayKey(x); };
@@ -6694,7 +6695,7 @@ const kAhead = n => kAgo(-n);
 const sum = a => a.reduce((x, y) => x + y, 0);
 const mean = a => a.length ? sum(a) / a.length : 0;
 const med = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[s.length >> 1]; };
-// training load on a day, per muscle group (Hyrox races count as a big full-body day)
+// training load on a day, per muscle group (Endurance races count as a big full-body day)
 function trLoad(k) {
   const hx = (store.hyrox?.hist || []).filter(h => h.d === k).length;
   const push = store.days[k] || 0, sq = store.sq?.days?.[k] || 0, su = store.su?.days?.[k] || 0;
@@ -6846,13 +6847,13 @@ function trAnalyze() {
       if (goal === "cut") add(perWeek < -0.2 ? "good" : "warn", "⚖️", perWeek < -0.2 ? `You're losing ${u(-perWeek)} a week. Keep protein high to hold on to muscle.` : `Your weight isn't dropping yet (${u(perWeek)} a week). Tighten your calories a little.`);
     }
   } else add("info", "⚖️", "Log your weight once or twice a week so I can check that your body is moving towards your goal.");
-  // Hyrox
+  // Endurance
   const hx = store.hyrox?.hist || [];
   if (hx.length >= 2) {
     const slowest = hx.map(r => { let mi = -1, mt = -1; r.splits.forEach((t, i) => { if (i % 2 && t > mt) { mt = t; mi = i; } }); return (mi - 1) / 2; });
     const counts = {}; slowest.forEach(i => counts[i] = (counts[i] || 0) + 1);
     const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-    if (top && top[1] >= 2) { const st = HX_STATIONS[top[0]]; add("info", "🏁", `${st.icon} ${st.name} was your slowest Hyrox station in ${top[1]} of ${hx.length} races. Practise it on your training days.`); }
+    if (top && top[1] >= 2) { const st = HX_STATIONS[top[0]]; add("info", "🏁", `${st.icon} ${st.name} was your slowest Endurance station in ${top[1]} of ${hx.length} races. Practise it on your training days.`); }
   }
   ins.sort((a, b) => b.prio - a.prio);
   return { ins, R, S };
@@ -6865,7 +6866,7 @@ function trMessage(A = trAnalyze(), plan = trSchedule()) {
   if (t.done) parts.push(t.type === "recovery" ? "Recovery done today. Good, that's training too." : T.doneToday);
   else if (t.type === "recovery") parts.push(`Today is a recovery day. ${t.why} A 7-minute stretch will help you come back stronger.`);
   else if (t.type === "rest") parts.push("Today is a full rest day. Walk, drink water, and sleep 7–9 hours.");
-  else if (t.type === "hyrox") parts.push("You're fresh, so today is Hyrox race day. Beat your PB!");
+  else if (t.type === "hyrox") parts.push("You're fresh, so today is Endurance race day. Beat your PB!");
   else { const p = coachPlan(t.type); parts.push(`Today: ${D.icon} ${D.name.toLowerCase()}, ${p.sets} × ${p.target}. ${t.why}`); }
   const top = A.ins.find(i => i.tone === "bad" || i.tone === "warn") || A.ins[0];
   if (top) parts.push(top.text);
@@ -7073,7 +7074,7 @@ const ROUTINES = [
   { id: "situp",   icon: "🛏️", name: "After sit-ups",    sub: "Abs and lower back",           c: "#c08aff", list: ["cobra", "kneehug", "twist", "catcow", "sidebend", "childs"] },
   { id: "full",    icon: "🧍", name: "Full body",        sub: "Head to toe",                  c: "#3ad6c0", list: ["catcow", "neck", "chest", "xshoulder", "wgs", "quad", "hip", "ham", "glute", "twist", "childs", "breathe"] },
   { id: "desk",    icon: "💻", name: "Desk reset",       sub: "Neck and back, no floor needed", c: "#7ab8ff", list: ["neck", "xshoulder", "upperback", "chest", "sidebend", "wrist", "ham"] },
-  { id: "hyrox",   icon: "🏁", name: "Hyrox cool-down",  sub: "After a race",                 c: "#ff7a4a", list: ["calf", "quad", "hip", "ham", "glute", "chest", "downdog", "breathe"] },
+  { id: "hyrox",   icon: "🏁", name: "Endurance cool-down",  sub: "After a race",                 c: "#ff7a4a", list: ["calf", "quad", "hip", "ham", "glute", "chest", "downdog", "breathe"] },
   { id: "bed",     icon: "🌙", name: "Before bed",       sub: "Slow and calm",                c: "#8a7aff", list: ["childs", "kneehug", "twist", "glute", "butterfly", "legswall", "breathe"] },
 ];
 let ST = null;   // the routine that's playing
@@ -7092,7 +7093,7 @@ function stPick() {
   const hr = new Date().getHours(), load = k => ({ push: store.days[k] || 0, squat: store.sq?.days?.[k] || 0, situp: store.su?.days?.[k] || 0, hyrox: (store.hyrox?.hist || []).filter(h => h.d === k).length });
   for (const k of [dayKey(), kAgo(1)]) {
     const L = load(k);
-    if (L.hyrox) return { id: "hyrox", why: k === dayKey() ? "You raced Hyrox today." : "You raced Hyrox yesterday." };
+    if (L.hyrox) return { id: "hyrox", why: k === dayKey() ? "You did an Endurance race today." : "You did an Endurance race yesterday." };
     const [ex, n] = Object.entries(L).filter(([e]) => e !== "hyrox").sort((a, b) => b[1] - a[1])[0];
     if (n >= 10) return { id: ex, why: `You did ${n} ${EX[ex].many} ${k === dayKey() ? "today" : "yesterday"}.` };
   }
@@ -7264,7 +7265,7 @@ function mergeVal(x, y, key, path, xNewer) {
     return out;
   }
   if (isObj(x) && isObj(y)) {
-    if (/(^|\.)hyrox\.best\.[^.]+$/.test(path) && x.total != null && y.total != null) return x.total <= y.total ? x : y;   // Hyrox PB: the faster race
+    if (/(^|\.)hyrox\.best\.[^.]+$/.test(path) && x.total != null && y.total != null) return x.total <= y.total ? x : y;   // Endurance PB: the faster race
     const out = {};
     new Set([...Object.keys(x), ...Object.keys(y)]).forEach(k => out[k] = mergeVal(x[k], y[k], k, path ? path + "." + k : k, xNewer));
     return out;
@@ -7352,6 +7353,7 @@ function renderAcct() {
         <div class="muted">${syncState.busy ? "Syncing…" : syncState.err ? `<span style="color:var(--bad)">${esc(syncState.err)}</span>` : ago == null ? "Backed up to your account" : `✓ Synced ${ago < 1 ? "just now" : ago + " min ago"}`}</div></div></div>
       <p class="muted acct-p">Sign in with this email on your phone, laptop or the Mac app and your progress follows you.</p>
       <div class="acct-row"><button data-a="sync" ${syncState.busy ? "disabled" : ""}>Sync now</button><button class="ghost" data-a="out">Sign out</button></div>
+      ${acct.uid === OWNER_UID ? `<a class="acct-stats" href="${STATS_URL}" target="_blank" rel="noopener">📊 App stats: who's coming back</a>` : ""}
       <button class="erase-btn" data-a="del">Delete my account…</button>`;
   } else {
     const up = acctView === "up";
@@ -7411,7 +7413,41 @@ $("acctCard").addEventListener("click", async e => {
 });
 $("acctBtn").onclick = () => { $("acctModal").classList.add("show"); renderAcct(); if (!acct) setTimeout(() => $("acctEmail")?.focus(), 50); };
 $("acctModal").addEventListener("click", e => { if (e.target.id === "acctModal") $("acctModal").classList.remove("show"); });
-window.__cloud = { mergeStores, syncNow, get acct() { return acct; }, cfg: cloudCfg };   // test hook
+// ---- anonymous return stats: is anyone coming back? ----
+// Each install gets a random ID (no name, email or device info). Once per day it writes "opened" (k: "o"), and the first
+// time you train that day "worked out" (k: "w"), to pings/{id}_{day}_{k}. Nobody can read these except the owner
+// account (see firestore.rules), on stats.html.
+const OWNER_UID = "RS1pt3Cor1gMP6rPrbmkSGo0Dv32";
+const STATS_URL = "https://factsweird201-coder.github.io/push-up-ranks/stats.html";
+const STATS_KEY = KEY + ".stats";
+const statsOn = () => cloudCfg.on && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || !!localStorage.getItem("omnifit.cloudTest"));   // never counts local testing
+function statsState() {
+  let s = null; try { s = JSON.parse(localStorage.getItem(STATS_KEY) || "null"); } catch {}
+  if (!s?.i) {
+    const days = [...Object.keys(store.days || {}), ...Object.keys(store.sq?.days || {}), ...Object.keys(store.su?.days || {})].sort();
+    const rnd = crypto.getRandomValues(new Uint8Array(12)), abc = "abcdefghijklmnopqrstuvwxyz0123456789";
+    s = { i: [...rnd].map(b => abc[b % 36]).join(""), f: days[0] && days[0] < dayKey() ? days[0] : dayKey() };   // existing players count from their first workout
+    try { localStorage.setItem(STATS_KEY, JSON.stringify(s)); } catch {}
+  }
+  return s;
+}
+const appKind = () => location.hostname === "pushup-ranks.app" ? "mac" : (matchMedia("(display-mode: standalone)").matches || navigator.standalone) ? "app" : "web";
+const trainedToday = () => { const d = dayKey(); return (store.days?.[d] || 0) + (store.sq?.days?.[d] || 0) + (store.su?.days?.[d] || 0) + (store.stretch?.days?.[d] ? 1 : 0) > 0; };
+let pinging = {};
+async function ping(k) {
+  if (!statsOn() || pinging[k]) return;
+  const s = statsState(), d = dayKey(); if (s[k] === d) return;
+  pinging[k] = true;
+  try {
+    const r = await fetch(`${cloudCfg.db}/pings?documentId=${s.i}_${d}_${k}&key=${cloudCfg.apiKey}`, { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fields: { i: { stringValue: s.i }, d: { stringValue: d }, f: { stringValue: s.f }, a: { stringValue: appKind() }, k: { stringValue: k } } }) });
+    if (r.ok || r.status === 409) { s[k] = d; try { localStorage.setItem(STATS_KEY, JSON.stringify(s)); } catch {} }   // 409: already counted today
+  } catch {}
+  pinging[k] = false;
+}
+{ const prev = onSaved; onSaved = () => { prev?.(); if (trainedToday()) ping("w"); }; }
+setTimeout(() => { ping("o"); if (trainedToday()) ping("w"); }, 2500);
+window.__cloud = { mergeStores, syncNow, ping, get acct() { return acct; }, cfg: cloudCfg };   // test hook
 markSaved(); renderAcct();
 try { const n = sessionStorage.getItem("omnifit.syncNote"); if (n) { sessionStorage.removeItem("omnifit.syncNote"); setTimeout(() => toast(n), 600); } } catch {}
 if (acct && cloudCfg.on) setTimeout(() => syncNow({ quiet: true }), 1200);
