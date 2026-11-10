@@ -1089,6 +1089,49 @@
     .tr-ready { gap: 5px; grid-template-columns: repeat(2, 1fr); } .tr-rd { padding: 6px 7px; } .tr-rd span { font-size: 11px; } .tr-week2 { gap: 3px; } .tr-day { padding: 6px 1px; } .tr-day b { font-size: 9px; } .tr-day i { font-size: 16px; }
     .tr-stats { grid-template-columns: repeat(3, 1fr); }
   }
+
+  /* ---------- phone layout: bottom tab bar + full-screen workout ---------- */
+  .botnav, .battle-sub, .hdr-rank, .fs-ctrl { display: none; }
+  @media (max-width: 700px) {
+    header .tabs, #endBtn { display: none !important; }
+    header { flex-wrap: nowrap; }
+    .hdr-rank { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line2); background: rgba(255,255,255,.04); font: 700 12px var(--display); letter-spacing: .3px; white-space: nowrap; }
+    .hdr-rank b { color: var(--accent); font-weight: 700; }
+    body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+    .botnav { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 14; padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+      background: rgba(8,10,15,.94); border-top: 1px solid var(--line2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .botnav button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0 4px; background: none; box-shadow: none; color: var(--muted); font: 700 11px var(--display); letter-spacing: .3px; border-radius: 12px; }
+    .botnav button i { font-style: normal; font-size: 21px; line-height: 1; filter: grayscale(1) opacity(.6); transition: filter .15s, transform .15s; }
+    .botnav button.on { color: var(--accent); } .botnav button.on i { filter: none; transform: translateY(-1px) scale(1.08); }
+    .botnav button:active { transform: scale(.94); }
+    .battle-sub.show { display: flex; grid-column: 1 / -1; gap: 6px; padding: 4px; border-radius: 14px; background: rgba(0,0,0,.35); border: 1px solid var(--line2); }
+    .battle-sub button { flex: 1; padding: 10px 4px; font-size: 14px; background: transparent; color: var(--muted); box-shadow: none; }
+    .battle-sub button.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a1000; }
+    /* full-screen camera while the camera is on */
+    body.cam-live { overflow: hidden; }
+    body.cam-live .botnav { display: none; }
+    body.cam-live .stage { position: fixed; inset: 0; z-index: 15; height: auto; min-height: 0; max-height: none; aspect-ratio: auto; border-radius: 0; margin: 0;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) .fs-ctrl { display: flex; position: absolute; left: 12px; right: 12px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 6; gap: 10px; }
+    .fs-ctrl button { flex: 1; padding: 15px; font-size: 16px; border-radius: 16px; }
+    .fs-ctrl .ghost { flex: 0 0 56px; background: rgba(8,10,15,.75); }
+    /* giant counter for free training */
+    body.cam-live[data-mode="train"] .stage:not(.coaching) .hud { left: 0; right: 0; top: calc(16% + env(safe-area-inset-top)); justify-content: center; flex-direction: column; align-items: center; gap: 14px; pointer-events: none; }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) #countChip { background: none; border: 0; box-shadow: none; padding: 0; min-width: 0; }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) #countChip b { font-size: min(34vw, 150px); line-height: .9; color: var(--accent); text-shadow: 0 4px 30px rgba(0,0,0,.7); }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) #countChip span { font-size: 13px; letter-spacing: 2px; text-shadow: 0 2px 8px #000; }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) .hud .chip:not(#countChip) { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(150px + env(safe-area-inset-bottom)); width: min(70vw, 300px); background: rgba(8,10,15,.7); }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) .hud .chip:not(#countChip):last-child { display: none; }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) .feedback { left: 12px; right: 12px; bottom: calc(86px + env(safe-area-inset-bottom)); top: auto; transform: none; text-align: center; font-size: 16px; }
+    body.cam-live[data-mode="train"] .stage:not(.coaching) .phase { top: calc(12px + env(safe-area-inset-top)); }
+    body.cam-live .tr-say { bottom: auto; top: calc(12px + env(safe-area-inset-top)); max-width: calc(100% - 110px); }
+    /* campaign switcher: three equal buttons across the top of the map */
+    .cmap-top { left: 8px; right: 8px; gap: 6px; padding: 5px 6px; }
+    .cmap-top .cmap-camps { flex: 1; min-width: 0; }
+    .cmap-camp { flex: 1; min-width: 0; padding: 6px 2px; font-size: 12px; letter-spacing: 0; white-space: nowrap; }
+    .cmap-top > span { white-space: nowrap; font-size: 12px; }
+    .cmap-parts { top: 58px; }
+  }
 </style>
 </head>
 <body>
@@ -1105,13 +1148,22 @@
     <button id="tabStretch"><i class="tl-ic">🧘 </i>Stretch</button>
     <button id="tabFood"><i class="tl-ic">🍽 </i><span class="tl-lg">Meal Plan</span><span class="tl-sm">Meals</span></button>
   </div>
-  <div style="display:flex;gap:8px">
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="hdr-rank" id="hdrRank"></span>
     <button class="ghost" id="muteBtn" title="Sound & voice">🔊</button>
     <button class="ghost" id="endBtn" disabled>End set</button>
   </div>
 </header>
+<nav class="botnav" id="botNav" aria-label="Sections">
+  <button data-go="train"><i>💪</i>Train</button>
+  <button data-go="campaign"><i>🗺️</i>Campaign</button>
+  <button data-go="battle"><i>⚔️</i>Battle</button>
+  <button data-go="stretch"><i>🧘</i>Stretch</button>
+  <button data-go="food"><i>🍽️</i>Food</button>
+</nav>
 
 <main>
+  <div class="battle-sub" id="battleSub" role="group" aria-label="Battle"><button data-go="boss">⚔️ Bosses</button><button data-go="hyrox">🏁 Hyrox</button><button data-go="pvp">🥊 1v1</button></div>
   <section>
     <div class="stage" id="stage">
       <video id="video" playsinline muted></video>
@@ -1119,6 +1171,7 @@
       <canvas id="canvas"></canvas>
       <div class="vignette"></div>
 
+      <div class="fs-ctrl" id="fsCtrl"><button class="ghost" id="fsMute" aria-label="Sound">🔊</button><button id="fsEnd">■ End set</button></div>
       <div class="hud" id="hud" hidden>
         <div class="chip count" id="countChip"><b id="setCount">0</b><span>This set</span></div>
         <div class="chip"><b id="depthVal">–</b><span>Depth</span><div class="depth-meter"><div id="depthMeter"></div></div></div>
@@ -1776,6 +1829,7 @@ function renderRank() {
   const i = rankIndex(store.total), r = RANKS[i], next = RANKS[i + 1];
   if ($("rankBadge").dataset.i !== String(i)) { $("rankBadge").innerHTML = rankBadge(i); $("rankBadge").dataset.i = i; }
   $("rankName").textContent = r.name;
+  $("hdrRank").innerHTML = `🛡️ ${r.name} · <b>${store.total.toLocaleString()}</b>`;
   $("total").textContent = store.total.toLocaleString();
   $("best").textContent = store.best;
   const pushBosses = BOSSES.filter(b => !b.sq && !b.su);
@@ -2106,7 +2160,7 @@ function say(text, v = {}) {
   a.play().catch(fallback);
   setTimeout(() => { if (annCur === a && a.paused && !a.ended && !fell) fallback(); }, 1500);   // slow connection: don't go silent
 }
-const renderMute = () => $("muteBtn").textContent = store.muted ? "🔇" : "🔊";
+const renderMute = () => { $("muteBtn").textContent = $("fsMute").textContent = store.muted ? "🔇" : "🔊"; };
 $("muteBtn").onclick = () => { store.muted = !store.muted; save(); renderMute(); if (store.muted) { try { speechSynthesis.cancel(); } catch {} trStop(); } };
 renderMute();
 
@@ -2165,7 +2219,26 @@ function setMode(m) {
   $("howBoss").hidden = m !== "boss";
   $("bossSelect").hidden = m !== "boss";
   if (m === "boss") { renderRoster(); $("bsStatus").textContent = "Beat a boss to unlock the next one."; $("stage").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+  phoneNav();
 }
+// phone layout: bottom tab bar (Bosses, Hyrox and 1v1 share the Battle tab) and the full-screen set controls
+function phoneNav() {
+  const BATTLE = ["boss", "hyrox", "pvp"];
+  document.body.dataset.mode = mode;
+  if (BATTLE.includes(mode)) { store.lastBattle = mode; }
+  document.querySelectorAll("#botNav button").forEach(b => b.classList.toggle("on", b.dataset.go === mode || (b.dataset.go === "battle" && BATTLE.includes(mode))));
+  $("battleSub").classList.toggle("show", BATTLE.includes(mode));
+  document.querySelectorAll("#battleSub button").forEach(b => b.classList.toggle("on", b.dataset.go === mode));
+}
+document.querySelectorAll("#botNav button, #battleSub button").forEach(b => b.onclick = () => {
+  const BATTLE = ["boss", "hyrox", "pvp"];
+  const go = b.dataset.go === "battle" ? (BATTLE.includes(mode) ? mode : store.lastBattle || "boss") : b.dataset.go;
+  if (go === mode) { scrollTo({ top: 0, behavior: "smooth" }); return; }
+  setMode(go); if (mode === go) scrollTo({ top: 0 });
+});
+$("fsEnd").onclick = () => endSet(true);
+$("fsMute").onclick = () => $("muteBtn").click();
+phoneNav();
 $("tabTrain").onclick = () => setMode("train");
 $("tabCamp").onclick = () => setMode("campaign");
 $("tabBoss").onclick = () => setMode("boss");
@@ -3077,6 +3150,7 @@ function ensureCamera() {
       canvas.width = video.videoWidth; canvas.height = video.videoHeight;
       $("startOverlay").hidden = true;
       ["hud", "phase", "feedback"].forEach(id => $(id).hidden = false);
+      document.body.classList.add("cam-live");
       $("loadMsg").textContent = "";
       keepAwake();
       if (!looping) { looping = true; loop(); }
@@ -3121,6 +3195,7 @@ function stopCamera(overlayDelay = 0, label = "Start next set") {
   disarm(); topRef = null; gapHist.length = 0; smoothDepth = null; smoothAngle = null;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ["hud", "phase", "feedback"].forEach(id => $(id).hidden = true);
+  document.body.classList.remove("cam-live");
   $("startBtn").textContent = label;
   $("startBtn").disabled = false;
   // let the "SET COMPLETE" card show on the dark stage first, then bring back the start button
