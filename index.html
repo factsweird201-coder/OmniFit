@@ -921,6 +921,14 @@
   .fog-17 .cmap-clouds .cb-back { fill: #a8bcd8; } .fog-17 .cmap-clouds .cb-front { fill: #dce8f6; }
   .fog-18 .cmap-clouds .cb-back { fill: #2a2848; } .fog-18 .cmap-clouds .cb-front { fill: #44426a; }
   .fog-19 .cmap-clouds .cb-back { fill: #1e0e38; } .fog-19 .cmap-clouds .cb-front { fill: #36205a; }
+  .fog-20::before { background: radial-gradient(ellipse 60% 22% at 30% 40%, rgba(255,200,80,.3), transparent), radial-gradient(ellipse 55% 20% at 72% 60%, rgba(255,160,60,.25), transparent); }
+  .fog-21::before { background: radial-gradient(ellipse 70% 25% at 30% 40%, rgba(255,230,245,.4), transparent), radial-gradient(ellipse 60% 22% at 72% 62%, rgba(255,200,230,.3), transparent); }
+  .fog-22::before { background: radial-gradient(ellipse 55% 22% at 30% 40%, rgba(60,220,255,.25), transparent), radial-gradient(ellipse 55% 22% at 70% 60%, rgba(120,90,255,.25), transparent); }
+  .fog-23::before { background: conic-gradient(from 90deg at 50% 45%, rgba(255,95,208,0), rgba(255,95,208,.2), rgba(120,30,100,0), rgba(255,95,208,.16), rgba(255,95,208,0)); animation: voidSpin 60s linear infinite; }
+  .fog-20 .cmap-clouds .cb-back { fill: #8a5a1a; } .fog-20 .cmap-clouds .cb-front { fill: #d8a040; }
+  .fog-21 .cmap-clouds .cb-back { fill: #d8a8c8; } .fog-21 .cmap-clouds .cb-front { fill: #fbe4f2; }
+  .fog-22 .cmap-clouds .cb-back { fill: #142a48; } .fog-22 .cmap-clouds .cb-front { fill: #24486e; }
+  .fog-23 .cmap-clouds .cb-back { fill: #3a0e30; } .fog-23 .cmap-clouds .cb-front { fill: #5a1e4a; }
   .fog-8::before { background: radial-gradient(ellipse 60% 22% at 30% 40%, rgba(150,150,140,.35), transparent), radial-gradient(ellipse 55% 20% at 72% 60%, rgba(130,130,120,.3), transparent); }
   .fog-9::before { background: radial-gradient(ellipse 60% 22% at 30% 35%, rgba(160,200,150,.25), transparent), radial-gradient(ellipse 55% 20% at 70% 60%, rgba(140,190,140,.22), transparent); }
   .fog-10::before { background: radial-gradient(ellipse 60% 20% at 30% 30%, rgba(240,248,255,.3), transparent), radial-gradient(ellipse 55% 18% at 70% 60%, rgba(240,248,255,.26), transparent); }
@@ -1280,7 +1288,7 @@
         <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
         <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
         <li><b>🦵 Squat Campaign:</b> a whole separate campaign done with squats, in two parts: <i>The Sinking Lands</i> and <i>The Heavy Sky</i> (unlocks after Queen Quagmire). 8 chapters, 48 missions and 16 bosses. Switch campaigns with the buttons at the top of the map.</li>
-        <li><b>🛏️ Sit-Up Campaign:</b> <i>The Long Nap</i>. Count Slumber has put the whole world to sleep: 4 chapters, 24 missions and 8 bosses, all done with sit-ups. Lie on your back side-on to the camera so it can see your shoulders and hips. Sit all the way up for crits.</li>
+        <li><b>🛏️ Sit-Up Campaign:</b> <i>The Long Nap</i>. Count Slumber has put the whole world to sleep, and in Part Two, <i>The Comfy Kingdom</i>, Queen Comfy wants everyone stuck on the sofa: 8 chapters, 48 missions and 16 bosses, all done with sit-ups. Lie on your back side-on to the camera so it can see your shoulders and hips. Sit all the way up for crits.</li>
       </ul>
     </div>
     <div class="panel" style="margin-top:18px" id="howHyrox" hidden>
@@ -1489,7 +1497,7 @@
   <linearGradient id="figGold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="200"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#e08a00"/></linearGradient>
 </defs></svg>
 
-<script src="art.js?v=3"></script>
+<script src="art.js?v=4"></script>
 <script src="foods.js?v=1"></script>
 <script type="module">
 import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
@@ -1590,6 +1598,23 @@ const BOSSES = [
     intro: "The Sand Knight raises an hourglass. Your eyes feel heavy.", win: "The Sand Knight crumbles into a pile of sand!" },
   { id: "slumber",  name: "Count Slumber",    hp: 460, every: 5.5, windup: 2.5, specials: ["heal", "armor", "rapid", "frenzy", "heal"], su: true,
     intro: "Count Slumber yawns. Lie down, little hero. It's bedtime forever. The final fight.", win: "Count Slumber wakes up for the first time in a hundred years! Good morning, world!" },
+  // ----- Sit-up campaign part two: The Comfy Kingdom -----
+  { id: "crisp",    name: "The Crisp Croc",   hp: 500, every: 5.4, windup: 2.5, specials: ["armor", "rapid"], su: true,
+    intro: "The Crisp Croc snaps its jaws. Crunch, crunch, crunch!", win: "The Crisp Croc crumbles into crumbs!" },
+  { id: "cheese",   name: "Cheddar Blob",     hp: 550, every: 5.3, windup: 2.5, specials: ["heal", "frenzy", "heal"], su: true,
+    intro: "Cheddar Blob wobbles up out of the swamp. It smells terrible.", win: "Cheddar Blob melts into a puddle!" },
+  { id: "slipper",  name: "The Big Slipper",  hp: 600, every: 5.2, windup: 2.4, specials: ["rapid", "armor", "heal"], su: true,
+    intro: "A fluffy slipper the size of a car hops down the slope. It wants to keep your feet cozy. Forever.", win: "The Big Slipper slides away down the mountain!" },
+  { id: "yeti",     name: "The Snuggle Yeti", hp: 650, every: 5.1, windup: 2.4, specials: ["armor", "frenzy", "heal"], su: true,
+    intro: "The Snuggle Yeti opens its arms. It just wants a hug. A very long hug.", win: "The Snuggle Yeti lets go and goes off to make cocoa!" },
+  { id: "remote",   name: "Clicker",          hp: 700, every: 5.0, windup: 2.3, specials: ["rapid", "frenzy", "armor"], su: true,
+    intro: "Clicker beeps. Stay seated. The next episode starts in five seconds.", win: "Clicker's batteries run flat. Click!" },
+  { id: "binge",    name: "The Binge Beast",  hp: 760, every: 4.9, windup: 2.3, specials: ["heal", "rapid", "frenzy", "armor"], su: true,
+    intro: "The Binge Beast flickers on. Just one more episode. And one more. And one more.", win: "The Binge Beast's screen goes black. The end!" },
+  { id: "sofa",     name: "Sofa Golem",       hp: 820, every: 4.8, windup: 2.2, specials: ["armor", "armor", "heal", "rapid", "frenzy"], su: true,
+    intro: "Sofa Golem stands up, cushions and all. Sit down, it rumbles. SIT DOWN.", win: "Sofa Golem falls apart into a pile of cushions!" },
+  { id: "comfy",    name: "Queen Comfy",      hp: 920, every: 4.6, windup: 2.2, specials: ["heal", "armor", "rapid", "frenzy", "armor", "heal"], su: true,
+    intro: "Queen Comfy sinks deeper into her throne. Why get up, darling? Everything you need is right here. The final fight.", win: "Queen Comfy gets up off her throne for the first time in years. Oh! My legs work!" },
 ];
 
 const SPECIALS = {
@@ -3319,15 +3344,53 @@ const CHAPTERS = [
       { name: "Wake the Kingdom", type: "nobreak", n: 24, story: "Raise the castle drawbridge so the morning sun can get in." },
       { name: "Count Slumber",    type: "boss",    boss: 39, story: "The Count himself. The final fight." },
     ] },
+  // ----- Sit-up campaign part two: The Comfy Kingdom -----
+  { name: "Snack Swamp", color: "#ffb03a", story: "A swamp of melted cheese and crisp crumbs, where everyone is stuck lying in the goo.",
+    missions: [
+      { name: "Off the Couch",    type: "reps",    n: 22, story: "Everyone is lying in the swamp eating crisps. Every sit-up pulls one out." },
+      { name: "Crumb Storm",      type: "timed",   n: 22, t: 50, story: "A storm of crisp crumbs is blowing in. Keep the shield up!" },
+      { name: "Crunch Time",      type: "boss",    boss: 40, story: "Something crunchy is swimming through the cheese." },
+      { name: "Cheese Wall",      type: "deep",    n: 14, story: "A wall of hard cheese blocks the path. Only full sit-ups crack it." },
+      { name: "Swamp Rope",       type: "nobreak", n: 24, story: "Build a rope bridge over the deepest goo. Don't stop!" },
+      { name: "Say Cheese",       type: "boss",    boss: 41, story: "The whole swamp is starting to wobble." },
+    ] },
+  { name: "The Slipper Slopes", color: "#ff8ac0", locked: "Past the swamp rise snowy hills where everyone wears fluffy slippers, and slides straight back down.", story: "Snowy hills where everyone slides back to the bottom in fluffy slippers.",
+    missions: [
+      { name: "Cozy Cold",        type: "endure",  n: 24, t: 70, story: "Keep Pip glowing. The cold makes everyone want to curl up." },
+      { name: "Slide Back",       type: "timed",   n: 24, t: 55, story: "The climbers keep sliding back down. Pull them up, quick!" },
+      { name: "The Big Slipper",  type: "boss",    boss: 42, story: "Something huge and fluffy is hopping down the hill." },
+      { name: "Frozen Quilt",     type: "deep",    n: 15, story: "A quilt of ice covers the pass. Full sit-ups only." },
+      { name: "Ski Lift",         type: "nobreak", n: 26, story: "The ski lift is stuck. Crank it to the top without stopping." },
+      { name: "Bear Hug",         type: "boss",    boss: 43, story: "A huge white shape in a blanket is waiting at the top." },
+    ] },
+  { name: "Screenglow City", color: "#3ae0ff", locked: "Beyond the hills lies a city where nobody looks up. Every face is lit by a screen.", story: "A city where nobody looks up from their screen.",
+    missions: [
+      { name: "Look Up!",         type: "reps",    n: 28, story: "Everyone is staring at a screen. Every sit-up makes one person look up." },
+      { name: "Low Battery",      type: "timed",   n: 26, t: 55, story: "The city lights are failing. Power them up before it goes dark!" },
+      { name: "Remote Control",   type: "boss",    boss: 44, story: "A giant remote is clicking its way down the street." },
+      { name: "Signal Towers",    type: "deep",    n: 16, story: "The towers beam the shows into every home. Smash them." },
+      { name: "Power Cut",        type: "nobreak", n: 28, story: "Pull the big lever and switch the screens off. Don't let go!" },
+      { name: "Next Episode",     type: "boss",    boss: 45, story: "The biggest screen in the city just grew legs." },
+    ] },
+  { name: "The Comfy Palace", color: "#ff5fd0", locked: "In the middle of the city stands a palace made of cushions, where Queen Comfy hasn't stood up in years.", story: "Queen Comfy's palace of cushions.",
+    missions: [
+      { name: "Cushion Gate",     type: "endure",  n: 30, t: 80, story: "The gate is made of pillows. Light the torches and keep moving." },
+      { name: "Beanbag Halls",    type: "timed",   n: 30, t: 60, story: "Every hall is full of beanbags. Don't sink in! Run!" },
+      { name: "Couch Crash",      type: "boss",    boss: 46, story: "The Queen's biggest sofa is getting up." },
+      { name: "The Big Recliner", type: "deep",    n: 18, story: "The Big Recliner keeps the whole kingdom lying back. Break it!" },
+      { name: "Stand Up, Kingdom", type: "nobreak", n: 32, story: "Raise the palace flag so the whole kingdom gets up. Don't stop!" },
+      { name: "Queen Comfy",      type: "boss",    boss: 47, story: "The Queen herself. The final fight." },
+    ] },
 ];
-CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : ci < 8 ? 1 : ci < 12 ? 2 : ci < 16 ? 3 : 4);
+CHAPTERS.forEach((c, ci) => c.part = ci < 4 ? 0 : ci < 8 ? 1 : ci < 12 ? 2 : ci < 16 ? 3 : ci < 20 ? 4 : 5);
 const PARTS = [{ name: "The Great Ember", chs: [0, 1, 2, 3] }, { name: "The Hollow King", chs: [4, 5, 6, 7], teaser: "A new story, 4 new chapters, 24 new missions and 8 new bosses, including a rival who got his strength the easy way." },
   { name: "The Sinking Lands", chs: [8, 9, 10, 11] },
   { name: "The Heavy Sky", chs: [12, 13, 14, 15], teaser: "An iron moon is pulling the world down. A new story, 4 new chapters, 24 new missions and 8 new bosses, and a villain who wants everyone flat on the ground." },
-  { name: "The Long Nap", chs: [16, 17, 18, 19] }];
-const PART_COLORS = ["#ffc21a", "#ff5fa8", "#b8e04a", "#7ad8ff", "#c08aff"];
+  { name: "The Long Nap", chs: [16, 17, 18, 19] },
+  { name: "The Comfy Kingdom", chs: [20, 21, 22, 23], teaser: "The world is awake, but now Queen Comfy wants everyone stuck on the sofa. A new story, 4 new chapters, 24 new missions and 8 new bosses." }];
+const PART_COLORS = ["#ffc21a", "#ff5fa8", "#b8e04a", "#7ad8ff", "#c08aff", "#ff8ad8"];
 // two separate campaigns share the mission engine: push-ups (parts 1 and 2) and squats (its own 4 chapters, numbered 1–4, ids S1-1…)
-const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2, 3] }, { name: "Sit-Up Campaign", icon: "🛏️", ex: "situp", parts: [4] }];
+const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2, 3] }, { name: "Sit-Up Campaign", icon: "🛏️", ex: "situp", parts: [4, 5] }];
 const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
 const partNo = pi => CAMPAIGNS[campOfPart(pi)].parts.indexOf(pi);   // 0 = part one of its own campaign
 const campSet = () => store.campSet === 1 || store.campSet === 2 ? store.campSet : 0;
@@ -3351,7 +3414,7 @@ const campUnlocked = k => k === 0 || campOfK(k) !== campOfK(k - 1) || campStars(
 const campTotal = (c = campSet()) => campKs(c).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
 const partUnlocked = pi => chapterUnlocked(PARTS[pi].chs[0]);
-const campNextText = (cur, next) => !next ? chEx(cur.ch) === "situp" ? "🏆 You woke up Count Slumber and finished the whole Sit-Up Campaign. Legend!" : (chEx(cur.ch) === "squat" ? "🏆 You sent Baron Gravity flying and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
+const campNextText = (cur, next) => !next ? chEx(cur.ch) === "situp" ? "🏆 You got Queen Comfy off her throne and finished the whole Sit-Up Campaign. Legend!" : (chEx(cur.ch) === "squat" ? "🏆 You sent Baron Gravity flying and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
   : CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part ? `🏁 Part ${PART_WORDS[partNo(CHAPTERS[cur.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[cur.ch].part)].slice(1).toLowerCase()} complete! 🔓 Part ${PART_WORDS[partNo(CHAPTERS[next.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[next.ch].part)].slice(1).toLowerCase()}: ${PARTS[CHAPTERS[next.ch].part].name}`
   : next.ch !== cur.ch ? `🏁 Chapter ${chNum(cur.ch)} complete! 🔓 Chapter ${chNum(next.ch)}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`;
 let campChapter = null, campPick = null, M = null;
@@ -3483,6 +3546,31 @@ const MISSION_STORY = {
   "U4-4": { obj: "Smash the Dream Clock",                       scene: { k: "crack", v: "crystal" } },
   "U4-5": { obj: "Raise the castle drawbridge",                 scene: { k: "rise", v: "pillar" } },
   "U4-6": { obj: "Wake up Count Slumber" },
+  // ----- Sit-up campaign part two -----
+  "U5-1": { obj: "Pull everyone out of the snack swamp",       scene: { k: "rise", v: "pillar" } },
+  "U5-2": { obj: "Shield the villagers from the crumb storm",  scene: { k: "shield" } },
+  "U5-3": { obj: "Out-crunch the Crisp Croc" },
+  "U5-4": { obj: "Crack the cheese wall",                      scene: { k: "crack", v: "rock" } },
+  "U5-5": { obj: "Bridge the deepest goo",                     scene: { k: "bridge", v: "sky" } },
+  "U5-6": { obj: "Melt Cheddar Blob" },
+  "U6-1": { obj: "Keep Pip glowing in the cold",               scene: { k: "flame", v: "pip" } },
+  "U6-2": { obj: "Climb the slopes before you slide back",     scene: { k: "steps" } },
+  "U6-3": { obj: "Send the Big Slipper sliding" },
+  "U6-4": { obj: "Break the frozen quilt",                     scene: { k: "crack", v: "crystal" } },
+  "U6-5": { obj: "Crank the ski lift to the top",              scene: { k: "rise", v: "pillar" } },
+  "U6-6": { obj: "Get out of the Snuggle Yeti's hug" },
+  "U7-1": { obj: "Light up the city",                          scene: { k: "flame", v: "brazier" } },
+  "U7-2": { obj: "Power the city lights",                      scene: { k: "shield" } },
+  "U7-3": { obj: "Flatten Clicker's batteries" },
+  "U7-4": { obj: "Smash the signal towers",                    scene: { k: "crack", v: "crystal" } },
+  "U7-5": { obj: "Pull the big power lever",                   scene: { k: "rise", v: "pillar" } },
+  "U7-6": { obj: "Switch off the Binge Beast" },
+  "U8-1": { obj: "Light the palace torches",                   scene: { k: "flame", v: "brazier" } },
+  "U8-2": { obj: "Run through the beanbag halls",              scene: { k: "steps" } },
+  "U8-3": { obj: "Knock over Sofa Golem" },
+  "U8-4": { obj: "Break the Big Recliner",                     scene: { k: "crack", v: "rock" } },
+  "U8-5": { obj: "Raise the palace flag",                      scene: { k: "rise", v: "pillar" } },
+  "U8-6": { obj: "Get Queen Comfy off her throne" },
 };
 CAMP_LIST.forEach(m => Object.assign(m, MISSION_STORY[m.id]));
 
@@ -3669,6 +3757,35 @@ const STORY = {
       ["slumber", "You climbed all this way? You must be exhausted. Come in. The beds are very soft."],
       ["pip", "No thank you! We're here to wake you up, mister!"] ],
   ],
+  // ----- Sit-up campaign part two: The Comfy Kingdom -----
+  prologue6: [
+    ["narr", "The world is awake. But everyone is so tired from sleeping a hundred years that they just want to sit on the sofa for a bit.", "dawn"],
+    ["comfy", "Of course you're tired, darlings. Sit down. Put your feet up. Have a snack. I am Queen Comfy, and nobody in my kingdom ever has to get up again.", "throne"],
+    ["slumber", "I know that voice. That's my cousin. She's worse than me. At least I let people dream.", "dawn"],
+    ["steel", "Then we do what we do best, recruit. Sit-ups. Every single one gets somebody off the couch."],
+    ["pip", "Up, up, up! Nobody's melting into a sofa on my watch!"],
+  ],
+  chapter6: [
+    [ ["narr", "Snack Swamp. Once a meadow, now a swamp of melted cheese and crisp crumbs. People lie in it, munching, too comfy to climb out.", "bog"],
+      ["pip", "Ew. Ew! Somebody's using a crisp as a pillow!"],
+      ["steel", "Every sit-up pulls one of them out, recruit. Let's empty this swamp."] ],
+    [ ["narr", "Past the swamp rise the Slipper Slopes. Everyone here wears fluffy slippers, and every time they climb, they slide straight back down.", "steps"],
+      ["slumber", "Slippers are lovely. For indoors. Not for mountains."],
+      ["pip", "Wheee! Wait, no. Not wheee. We're climbing!"] ],
+    [ ["narr", "Beyond the hills lies Screenglow City. Nobody here looks up. Every face is lit blue by a screen.", "gears"],
+      ["steel", "A whole city sitting still. Strong core, recruit. Show them how to get up."],
+      ["pip", "Hello? Excuse me? There's a sky up there! It's really nice!"] ],
+    [ ["narr", "In the middle of the city stands a palace made of cushions. Queen Comfy hasn't stood up in years.", "throne"],
+      ["comfy", "You walked all this way? Darling, your poor legs. Sit. My throne has room for two."],
+      ["pip", "No thank you! We're here to get you up, your majesty!"] ],
+  ],
+  epilogue6: [
+    ["narr", "With the Big Recliner broken and the Queen on her feet, the whole kingdom sits up, stretches, and goes outside for the first time in ages.", "dawn"],
+    ["comfy", "Oh. The grass is so green. Why didn't anybody tell me about outside?", "dawn"],
+    ["slumber", "Welcome to being awake, cousin. It takes a bit of getting used to."],
+    ["steel", "Two kingdoms off their backs, recruit. That's the strongest core in the world."],
+    ["pip", "And I didn't sit down once! Okay, I sat down twice. But I got up!"],
+  ],
   epilogue5: [
     ["narr", "With the Dream Clock smashed, the sun pours into Castle Slumber. All over the land, people sit up in bed, stretch, and wonder why they're so hungry.", "dawn"],
     ["steel", "Thousands of sit-ups, recruit. You woke up the whole world. Now that's a strong core."],
@@ -3841,21 +3958,58 @@ Object.assign(STORY.m, {
   "U4-5": { pre:  [["steel", "Raise the drawbridge so the morning sun gets in. Don't stop, recruit!", "dream"]] },
   "U4-6": { pre:  [["slumber", "Why fight it, little spark? Lie down. Close your eyes. Isn't sleep wonderful?", "dream"], ["steel", "Sleep is wonderful. At night. Then you get up."], ["pip", "Rise and shine, Count!"]],
             post: [["slumber", "The sun! It's so bright! Oh… oh, actually, good morning! I'd forgotten what mornings looked like.", "dream"], ["pip", "Good morning, world!"]] },
+  // ----- Sit-up campaign part two -----
+  "U5-1": { pre:  [["steel", "On your back, recruit, side-on to the camera. Every sit-up pulls someone out of the goo.", "bog"], ["pip", "Grab my hand! Well, I don't have hands. Grab my glow!"]],
+            post: [["pip", "They're out! A bit cheesy, but they're out!", "bog"]] },
+  "U5-2": { pre:  [["narr", "A wind picks up, full of crisp crumbs. It stings your eyes and makes everyone want to lie back down.", "bog"], ["steel", "Shield up, recruit. Keep going."]] },
+  "U5-3": { pre:  [["narr", "Something crunchy is swimming through the cheese. It has a lot of teeth.", "bog"], ["boss", "Crunch crunch! Lie back down and have a snack. Or be a snack!"]],
+            post: [["boss", "Crumbs… I'm all crumbs…", "bog"], ["pip", "Nobody eat that. Seriously."]] },
+  "U5-4": { pre:  [["steel", "A wall of old, hard cheese. Full sit-ups only, recruit. Crack it!", "bog"]] },
+  "U5-5": { pre:  [["pip", "The goo is super deep here! Build the bridge, fast!", "bog"]] },
+  "U5-6": { pre:  [["narr", "The whole swamp wobbles, and a huge orange blob rises out of it.", "bog"], ["boss", "Glorp. Sit. Stay. Get comfy. Glorp."]],
+            post: [["boss", "Melting… the Queen… will keep you… sliding…", "bog"], ["slumber", "Sliding? Ah. The Slipper Slopes. Bring a coat."]] },
+  "U6-1": { pre:  [["pip", "It's so cold up here! Keep me glowing, or I'll curl up in a slipper!", "steps"]] },
+  "U6-2": { pre:  [["narr", "The climbers make it halfway up, then their fluffy slippers slide them all the way back down.", "steps"], ["steel", "Pull them up, recruit. One sit-up, one step."]] },
+  "U6-3": { pre:  [["narr", "A fluffy pink slipper the size of a car hops down the hill. It has ears.", "steps"], ["boss", "So soft! So warm! Put me on and never walk again!"]],
+            post: [["boss", "Wheee… whoops… bye…", "steps"], ["pip", "It's sliding all the way down to the swamp!"]] },
+  "U6-4": { pre:  [["steel", "The pass is under a quilt of ice. Full sit-ups, recruit. Break it!", "steps"]] },
+  "U6-5": { pre:  [["pip", "The ski lift is stuck halfway! Crank it! Don't stop or we roll back!", "steps"]],
+            post: [["pip", "We're at the top! I can see a city! It's all glowing blue!", "steps"]] },
+  "U6-6": { pre:  [["narr", "At the top waits a huge white yeti wrapped in a blanket, holding a mug of cocoa.", "steps"], ["boss", "Hug? Big hug. Long hug. Forever hug."]],
+            post: [["boss", "Okay. Short hug. Short hug is good too. Bye-bye.", "steps"], ["steel", "Down the other side, recruit. To the city."]] },
+  "U7-1": { pre:  [["narr", "Screenglow City is dark except for the screens. Nobody notices you walk in.", "gears"], ["steel", "Light it up, recruit. Give them something real to look at."]] },
+  "U7-2": { pre:  [["pip", "The street lights are going out! Power them up before it's all screens!", "gears"]] },
+  "U7-3": { pre:  [["narr", "A remote control as tall as a lamp post clicks its way down the street.", "gears"], ["boss", "Click. Stay seated. Click. The next episode starts now. Click."]],
+            post: [["boss", "Low… battery… click…", "gears"], ["pip", "It's just a remote now. A really big one."]] },
+  "U7-4": { pre:  [["steel", "Those towers beam the shows into every home. Full sit-ups smash them.", "gears"]] },
+  "U7-5": { pre:  [["slumber", "There's a big lever in the power station. Pull it, and every screen goes off.", "gears"], ["pip", "Don't let go! Keep pulling!"]],
+            post: [["narr", "All over the city, the screens go black. People blink, and look up, and see the sky.", "gears"]] },
+  "U7-6": { pre:  [["narr", "The biggest screen in the city flickers back on. It has legs, and it's walking towards you.", "gears"], ["boss", "Don't go! Just one more episode! It ends on a cliffhanger!"]],
+            post: [["boss", "Previously… on… the Binge Beast…", "gears"], ["pip", "The palace! Over there! It's made of cushions!"]] },
+  "U8-1": { pre:  [["narr", "The Comfy Palace is soft and warm, and the gate is made of pillows. It's very hard not to lie down.", "throne"], ["steel", "Light the torches, recruit. Keep moving."]] },
+  "U8-2": { pre:  [["pip", "Beanbags everywhere! Don't step in one, you'll sink! Run!", "throne"]] },
+  "U8-3": { pre:  [["narr", "The Queen's biggest sofa groans, and stands up on four stubby legs.", "throne"], ["boss", "SIT. DOWN. SIT. DOWN. SIT. DOWN."]],
+            post: [["boss", "Cushions… everywhere… the Recliner… keeps her… lying back…", "throne"]] },
+  "U8-4": { pre:  [["comfy", "Not my Big Recliner! It reclines all the way back!", "throne"], ["pip", "Then it's time it sat up! Break it!"]],
+            post: [["comfy", "My Recliner! Oh, now I'm sitting up straight. I don't like it!", "throne"]] },
+  "U8-5": { pre:  [["steel", "Raise the palace flag, recruit, so the whole kingdom knows it's time to get up. Don't stop!", "throne"]] },
+  "U8-6": { pre:  [["comfy", "Why fight so hard, darling? Lie back. Put your feet up. You've earned it.", "throne"], ["steel", "You earn it by getting up first."], ["pip", "Up you get, your majesty!"]],
+            post: [["comfy", "I'm standing! Oh, my legs! They work! Look at them go!", "throne"], ["pip", "Get up, kingdom!"]] },
 });
 const CH_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT"];
-const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream", "farm", "bog", "steps", "mire", "canyon", "reef", "forge", "moon", "farm", "lake", "storm", "dream"];
-const PART_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE"];
+const CH_BG = ["camp", "woods", "peaks", "void", "coast", "gears", "sky", "dream", "farm", "bog", "steps", "mire", "canyon", "reef", "forge", "moon", "farm", "lake", "storm", "dream", "bog", "steps", "gears", "throne"];
+const PART_WORDS = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX"];
 const partOf = m => CHAPTERS[m.ch].part;
 const partFirst = pi => CAMP_LIST.find(m => partOf(m) === pi), partLast = pi => CAMP_LIST.findLast(m => partOf(m) === pi);
-const partLine = pi => pi === 4 ? `The sit-up campaign. ${PARTS[pi].name}.` : pi === 2 ? `The squat campaign. ${PARTS[pi].name}.` : pi === 3 ? `Squat campaign, part two. ${PARTS[pi].name}.` : `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
-const endLine = pi => pi === 0 || pi === 2 ? "End of part one." : "The end.";
+const partLine = pi => pi === 5 ? `Sit-up campaign, part two. ${PARTS[pi].name}.` : pi === 4 ? `The sit-up campaign. ${PARTS[pi].name}.` : pi === 2 ? `The squat campaign. ${PARTS[pi].name}.` : pi === 3 ? `Squat campaign, part two. ${PARTS[pi].name}.` : `Part ${PART_WORDS[pi].toLowerCase()}. ${PARTS[pi].name}.`;
+const endLine = pi => pi === 0 || pi === 2 || pi === 4 ? "End of part one." : "The end.";
 const storySeen = id => !!(store.storySeen || {})[id];
 const markSeen = id => { store.storySeen ||= {}; store.storySeen[id] = 1; save(); };
 function storySteps(m, when) {
   const s = [], L = l => ({ who: l[0], text: l[1], bg: l[2] });
-  const pi = partOf(m), P2 = ["", "2", "3", "4", "5"][pi];
+  const pi = partOf(m), P2 = ["", "2", "3", "4", "5", "6"][pi];
   if (when === "pre") {
-    if (m === partFirst(pi)) s.push({ part: pi, bg: ["beacon", "coast", "farm", "moon", "dark"][pi] }, ...STORY["prologue" + P2].map(L));
+    if (m === partFirst(pi)) s.push({ part: pi, bg: ["beacon", "coast", "farm", "moon", "dark", "dawn"][pi] }, ...STORY["prologue" + P2].map(L));
     if (m.mi === 0) s.push({ title: m.ch, bg: CH_BG[m.ch] }, ...STORY["chapter" + P2][m.ch - PARTS[pi].chs[0]].map(L));
     s.push(...(STORY.m[m.id]?.pre || []).map(L));
   } else {
@@ -3894,6 +4048,7 @@ function castOf(who, ctx) {
   if (who === "vexr") return { name: "Vex", color: "#ffc861", face: bossArt("vexgood"), voice: { pitch: 0.75, rate: 1.05 } };
   if (who === "king") { const a = bossArt("king"); return { name: "The Hollow King", color: THEMES.king.aura, face: a, actor: a, voice: { pitch: 0.3, rate: 0.85 } }; }
   if (who === "baron") { const a = bossArt("baron"); return { name: "Baron Gravity", color: THEMES.baron.aura, face: a, actor: a, voice: { pitch: 0.8, rate: 0.9 } }; }
+  if (who === "comfy") { const a = bossArt("comfy"); return { name: "Queen Comfy", color: THEMES.comfy.aura, face: a, actor: a, voice: { pitch: 1.15, rate: 0.85 } }; }
   if (who === "slumber") { const a = bossArt("slumber"); return { name: "Count Slumber", color: THEMES.slumber.aura, face: a, actor: a, voice: { pitch: 0.7, rate: 0.85 } }; }
   if (who === "quag") { const a = bossArt("quag"); return { name: "Queen Quagmire", color: THEMES.quag.aura, face: a, actor: a, voice: { pitch: 1.2, rate: 0.9 } }; }
   if (who === "eye") return { name: "The Eye", color: "#c06bff", face: bossArt("void"), voice: { pitch: 0.1, rate: 0.82 } };
@@ -4327,7 +4482,11 @@ function playCine(steps, ctx = {}) {
       el.classList.remove("titling", "narrating", "talking");
       if (s.title != null || s.end != null || s.part != null) {
         const c = CHAPTERS[s.title] || {}, pc = PART_COLORS[s.part] || "#ffc21a";
-        q(".cine-title").innerHTML = s.end === 3
+        q(".cine-title").innerHTML = s.end === 5
+          ? `<small>THE SIT-UP CAMPAIGN</small><b style="--c:#ff8ad8">THE END</b><i style="--c:#ff8ad8"></i><em>Queen Comfy is on her feet and the whole kingdom is off the sofa. Nobody can keep you lying down now, legend. Keep doing your sit-ups.</em>`
+          : s.end === 4
+          ? `<small>END OF SIT-UP PART ONE</small><b style="--c:#c08aff">${PARTS[4].name}</b><i style="--c:#c08aff"></i><em>The world is awake, but someone wants it stuck on the sofa… 🔓 Sit-Up Part Two: ${PARTS[5].name} is now open on the map.</em>`
+          : s.end === 3
           ? `<small>THE SQUAT CAMPAIGN</small><b style="--c:#7ad8ff">THE END</b><i style="--c:#7ad8ff"></i><em>Baron Gravity is lost in space and the Iron Moon is gone. Nothing can keep you down now, legend. Keep squatting.</em>`
           : s.end === 2
           ? `<small>END OF SQUAT PART ONE</small><b style="--c:#b8e04a">${PARTS[2].name}</b><i style="--c:#b8e04a"></i><em>But something up in the sky is pulling the world down… 🔓 Squat Part Two: ${PARTS[3].name} is now open on the map.</em>`
@@ -4335,6 +4494,8 @@ function playCine(steps, ctx = {}) {
           ? (s.end === 0
             ? `<small>END OF PART ONE</small><b style="--c:#ffc21a">${PARTS[s.end].name}</b><i></i><em>But someone else wants the world asleep… 🔓 Part Two: ${PARTS[s.end + 1].name} is now open on the map.</em>`
             : `<small>THANKS FOR PLAYING</small><b style="--c:#ff5fa8">THE END</b><i style="--c:#ff5fa8"></i><em>The Hollow King is beaten and the whole world is awake. Keep doing your push-ups, legend.</em>`)
+          : s.part === 5
+          ? `<small>SIT-UP CAMPAIGN · PART TWO</small><b style="--c:${pc}">${PARTS[5].name}</b><i style="--c:${pc}"></i>`
           : s.part === 3
           ? `<small>SQUAT CAMPAIGN · PART TWO</small><b style="--c:${pc}">${PARTS[3].name}</b><i style="--c:${pc}"></i>`
           : s.part === 2
@@ -4899,6 +5060,37 @@ function mapSvg(pi = 0) {
     g += `<path d="M120,${y0 + 70} a26,26 0 1 0 14,46 a20,20 0 1 1 -14,-46Z" fill="#ffe08a"/>`;
   }
   }
+  if (pi === 5) {
+  // --- Sit-up 5: Snack Swamp (cheese goo, crisps, bubbles) ---
+  { const [y0, y1] = band(20);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gSnack)"/>`;
+    g += place(26, y0, y1, 24, (x, y, r) => `<ellipse cx="${x}" cy="${y}" rx="${16 + r() * 26}" ry="${6 + r() * 6}" fill="#ffc83a" opacity="${0.35 + r() * 0.35}"/>`);
+    g += place(16, y0, y1, 26, (x, y, r) => `<g transform="translate(${x},${y}) rotate(${r() * 360})"><path d="M-12,-6 Q0,-12 12,-6 Q14,0 12,6 Q0,12 -12,6 Q-14,0 -12,-6Z" fill="#f4d060" stroke="#c89a2a" stroke-width="2"/><path d="M-6,-2 Q0,-5 6,-2" stroke="#c89a2a" stroke-width="1.5" fill="none"/></g>`);
+    g += place(18, y0, y1, 16, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${2 + r() * 5}" fill="none" stroke="#fff2b0" stroke-width="2" opacity=".6"/>`);
+    g += place(6, y0, y1, 40, (x, y) => `<g transform="translate(${x},${y})"><rect x="-22" y="-10" width="44" height="18" rx="6" fill="#a83a3a"/><rect x="-26" y="-20" width="12" height="28" rx="5" fill="#8a2a2a"/><rect x="14" y="-20" width="12" height="28" rx="5" fill="#8a2a2a"/><ellipse cx="0" cy="12" rx="34" ry="6" fill="#ffc83a" opacity=".8"/></g>`);
+  }
+  // --- Sit-up 6: The Slipper Slopes (snowy pink hills, slippers, ski lift) ---
+  { const [y0, y1] = band(21);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gSlipper)"/>`;
+    g += place(12, y0 + 20, y1, 70, (x, y, r) => { const w = 50 + r() * 40, h = 40 + r() * 50; return `<path d="M${x - w},${y + 20} Q${x},${y - h * 1.6} ${x + w},${y + 20}Z" fill="#f8e4f0" stroke="#e0b8d0" stroke-width="2"/>`; });
+    g += place(40, y0, y1, 12, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${1.5 + r() * 2.5}" fill="#fff" opacity="${0.5 + r() * 0.5}"/>`);
+    g += place(7, y0, y1, 40, (x, y, r) => `<g transform="translate(${x},${y}) rotate(${-20 + r() * 40})"><path d="M-18,4 C-18,-8 6,-10 16,-4 C22,0 20,8 12,8 H-14Z" fill="#ff9ac8" stroke="#c85a90" stroke-width="2"/><ellipse cx="-4" cy="-6" rx="3" ry="8" fill="#ffd0e6" stroke="#c85a90" stroke-width="1.5" transform="rotate(-20)"/></g>`);
+    g += `<path d="M40,${y0 + 600} L660,${y0 + 120}" stroke="#5a4a5a" stroke-width="3"/>${[0.2, 0.45, 0.7].map(t => `<g transform="translate(${40 + 620 * t},${y0 + 600 - 480 * t})"><path d="M0,0 V14" stroke="#5a4a5a" stroke-width="2"/><rect x="-10" y="14" width="20" height="12" rx="3" fill="#ff5fa8"/></g>`).join("")}`;
+  }
+  // --- Sit-up 7: Screenglow City (dark blocks, glowing windows, antennas) ---
+  { const [y0, y1] = band(22);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gScreen)"/>`;
+    g += place(14, y0 + 40, y1, 60, (x, y, r) => { const w = 20 + r() * 18, h = 50 + r() * 70; let win = ""; for (let yy = -h + 8; yy < -6; yy += 14) for (let xx = -w + 6; xx < w - 8; xx += 12) win += `<rect x="${xx}" y="${yy}" width="6" height="8" fill="${r() < .6 ? "#5ae8ff" : "#1a2a44"}" opacity=".9"/>`; return `<g transform="translate(${x},${y})"><rect x="${-w}" y="${-h}" width="${2 * w}" height="${h + 6}" fill="#142038"/>${win}<path d="M0,${-h} V${-h - 14}" stroke="#3a4a6a" stroke-width="2"/></g>`; });
+    g += place(10, y0, y1, 30, (x, y) => `<g transform="translate(${x},${y})"><rect x="-10" y="-7" width="20" height="14" rx="2" fill="#0a1020" stroke="#5ae8ff" stroke-width="2"/><rect x="-7" y="-4" width="14" height="8" fill="#5ae8ff" opacity=".6"/></g>`);
+  }
+  // --- Sit-up 8: The Comfy Palace (cushion towers, pink night) ---
+  { const [y0, y1] = band(23);
+    g += `<rect x="0" y="${y0}" width="${MAP_W}" height="${BAND}" fill="url(#gComfy)"/>`;
+    g += place(40, y0, y1, 10, (x, y, r) => `<circle cx="${x}" cy="${y}" r="${0.8 + r() * 1.8}" fill="#ffd8f0" opacity="${0.4 + r() * 0.5}"/>`);
+    g += place(12, y0, y1, 34, (x, y, r) => { const w = 14 + r() * 10; return `<path d="M${x - w},${y - w * .6} Q${x},${y - w} ${x + w},${y - w * .6} Q${x + w * 1.2},${y} ${x + w},${y + w * .6} Q${x},${y + w} ${x - w},${y + w * .6} Q${x - w * 1.2},${y} ${x - w},${y - w * .6}Z" fill="${["#ff8ad8", "#ffb0e0", "#c86ab0"][Math.floor(r() * 3)]}" opacity=".7"/>`; });
+    g += `<g transform="translate(590,${y0 + 120})">${[-46, 34].map(x => `<rect x="${x}" y="-70" width="24" height="130" rx="10" fill="#c84aa0"/><circle cx="${x + 12}" cy="-76" r="16" fill="#ff8ad8"/>`).join("")}<rect x="-40" y="-30" width="80" height="90" rx="14" fill="#a83a88"/><path d="M-30,-30 Q0,-60 30,-30Z" fill="#ff5fd0"/><path d="M-14,60 V26 Q0,12 14,26 V60Z" fill="#3a0e30"/><circle cx="0" cy="-50" r="6" fill="#ffd27a"/></g>`;
+  }
+  }
   // soft seams between chapters
   for (let ci = 1; ci < 4; ci++) { const y = MAP_H - ci * BAND; g += `<rect x="0" y="${y - 40}" width="${MAP_W}" height="80" fill="url(#gSeam)"/>`; }
   const roadSvg = `<path d="${road}" stroke="#000" stroke-opacity=".45" stroke-width="40" fill="none" stroke-linecap="round"/>
@@ -4927,6 +5119,10 @@ function mapSvg(pi = 0) {
       <linearGradient id="gLake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a6a9a"/><stop offset="1" stop-color="#7aaad0"/></linearGradient>
       <linearGradient id="gYawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1e3a"/><stop offset="1" stop-color="#3a3a62"/></linearGradient>
       <linearGradient id="gSlumber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0418"/><stop offset="1" stop-color="#2a1048"/></linearGradient>
+      <linearGradient id="gSnack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a4a10"/><stop offset="1" stop-color="#b87a20"/></linearGradient>
+      <linearGradient id="gSlipper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8b8d8"/><stop offset="1" stop-color="#fbe0f0"/></linearGradient>
+      <linearGradient id="gScreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060a18"/><stop offset="1" stop-color="#12203a"/></linearGradient>
+      <linearGradient id="gComfy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e0618"/><stop offset="1" stop-color="#4a1440"/></linearGradient>
       <linearGradient id="gSeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
     </defs>${g}${roadSvg}<path id="cmapDone" d="" stroke="#ffc21a" stroke-width="8" fill="none" stroke-linecap="round" opacity=".85"/></svg>` };
   return mapSvgCache[pi];

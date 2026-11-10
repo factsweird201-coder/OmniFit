@@ -35,9 +35,10 @@ addAll(STORY.prologue2); STORY.chapter2.forEach(a => addAll(a)); addAll(STORY.ep
 addAll(STORY.prologue3); STORY.chapter3.forEach(a => addAll(a)); addAll(STORY.epilogue3);
 addAll(STORY.prologue4); STORY.chapter4.forEach(a => addAll(a)); addAll(STORY.epilogue4);
 addAll(STORY.prologue5); STORY.chapter5.forEach(a => addAll(a)); addAll(STORY.epilogue5);
+addAll(STORY.prologue6); STORY.chapter6.forEach(a => addAll(a)); addAll(STORY.epilogue6);
 Object.entries(STORY.m).forEach(([id, s]) => { addAll(s.pre || [], id); addAll(s.post || [], id); });
 CHAPTERS.forEach((c, ci) => add("title", `Chapter ${chNum(ci)}. ${c.name}.`)); add("title", "The end."); add("title", "End of part one.");
-["Part one. The Great Ember.", "Part two. The Hollow King.", "The squat campaign. The Sinking Lands.", "Squat campaign, part two. The Heavy Sky.", "The sit-up campaign. The Long Nap."].forEach(t => add("title", t));
+["Part one. The Great Ember.", "Part two. The Hollow King.", "The squat campaign. The Sinking Lands.", "Squat campaign, part two. The Heavy Sky.", "The sit-up campaign. The Long Nap.", "Sit-up campaign, part two. The Comfy Kingdom."].forEach(t => add("title", t));
 [...Object.values(HALF), ...Object.values(DANGER)].forEach(t => add("pip", t));
 // game announcer ("Set complete…", "Fight!", boss intros): the exact list comes from announcerLines() in index.html
 { const RANKS = grab(/const RANKS = (\[[\s\S]*?\n\]);/, "RANKS"), BOSSES = grab(/const BOSSES = (\[[\s\S]*?\n\]);/, "BOSSES"), SPECIALS = grab(/const SPECIALS = (\{[\s\S]*?\n\});/, "SPECIALS");
@@ -101,6 +102,14 @@ const CAST = {
   boss36: { rate: 0.50, af: `${P(0.78)},vibrato=f=16:d=0.2,aecho=0.8:0.5:40:0.15` },                                      // Thunder Ram: bleating
   boss37: { rate: 0.40, af: `${P(0.64)},aecho=0.8:0.8:200|400:0.3|0.2` },                                                 // Grumblecloud: rumbling
   boss38: { rate: 0.46, af: `${P(0.80)},flanger=delay=2:depth=3:speed=0.3,aecho=0.8:0.6:90:0.2` },                       // Sand Knight: hollow, sandy
+  boss40: { rate: 0.52, af: `${P(0.80)},vibrato=f=12:d=0.15,aecho=0.8:0.5:40:0.15` },                                     // Crisp Croc: crunchy snap
+  boss41: { rate: 0.40, af: `${P(0.66)},lowpass=f=2400,vibrato=f=4:d=0.4` },                                             // Cheddar Blob: gloopy
+  boss42: { rate: 0.54, af: `${P(1.18)},lowpass=f=3400,aecho=0.8:0.4:30:0.1` },                                          // Big Slipper: soft, squeaky
+  boss43: { rate: 0.44, af: `${P(0.72)},lowpass=f=3000,aecho=0.8:0.6:60:0.2` },                                          // Snuggle Yeti: big and gentle
+  boss44: { rate: 0.50, af: `${P(0.96)},highpass=f=300,lowpass=f=3600,flanger=delay=1:depth=2:speed=2` },                // Clicker: tinny robot
+  boss45: { rate: 0.50, af: `${P(1.02)},highpass=f=250,lowpass=f=4000,aecho=0.8:0.5:50:0.2,tremolo=f=8:d=0.3` },         // Binge Beast: TV speaker
+  boss46: { rate: 0.38, af: `${P(0.60)},lowpass=f=2400,aecho=0.8:0.7:120:0.25` },                                        // Sofa Golem: deep, slow
+  comfy:  { rate: 0.44, af: `${P(1.10, 0.95)},chorus=0.5:0.9:40|60:0.3|0.25:0.2|0.3:2|1.5,aecho=0.8:0.7:120:0.2` },     // Queen Comfy: sweet, syrupy
   slumber: { rate: 0.40, af: `${P(0.86, 0.94)},chorus=0.5:0.9:40|60:0.3|0.25:0.2|0.3:2|1.5,aecho=0.8:0.8:180|360:0.3|0.18` }, // Count Slumber: slow, dreamy
   vex:   { rate: 0.54, af: `${P(1.10, 1.06)},highpass=f=120,aecho=0.8:0.4:28:0.12` },                                    // Vex: cocky rival, cold edge
   vexr:  { rate: 0.50, af: `${P(1.10, 1.03)},highpass=f=110` },                                                          // Vex, back on our side
@@ -109,7 +118,7 @@ const CAST = {
   tsarge: { rate: 0.54, af: `${P(0.84, 1.02)},highpass=f=70,acompressor=threshold=-16dB:ratio=5:attack=3:release=50,aecho=0.8:0.3:20:0.08` }, // Sarge: gruff, barking
   king:  { rate: 0.40, af: `${P(0.82, 0.94)},chorus=0.5:0.9:50|70:0.3|0.25:0.2|0.3:2|1.5,aecho=0.8:0.8:200|400:0.3|0.18` }, // The Hollow King: slow, syrupy, huge hall
 };
-CAST.boss11 = CAST.vex; CAST.boss13 = { rate: 0.52, af: `${CAST.vex.af},flanger=delay=3:depth=4:speed=0.5,aecho=0.8:0.6:120:0.25` }; CAST.boss15 = CAST.king; CAST.boss23 = CAST.quag; CAST.boss31 = CAST.baron; CAST.boss39 = CAST.slumber;
+CAST.boss11 = CAST.vex; CAST.boss13 = { rate: 0.52, af: `${CAST.vex.af},flanger=delay=3:depth=4:speed=0.5,aecho=0.8:0.6:120:0.25` }; CAST.boss15 = CAST.king; CAST.boss23 = CAST.quag; CAST.boss31 = CAST.baron; CAST.boss39 = CAST.slumber; CAST.boss47 = CAST.comfy;
 // what the synthesizer reads (the file name still comes from the original text)
 const speakable = t => t.replace(/Mk-II/g, "Mark Two").replace(/…/g, "...").replace(/!!+/g, "!")
   .replace(/\b[A-Z]{2,}\b/g, w => w[0] + w.slice(1).toLowerCase());
