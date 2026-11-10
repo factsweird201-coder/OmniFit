@@ -144,6 +144,7 @@ const speakable = t => t.replace(/Mk-II/g, "Mark Two").replace(/…/g, "...").re
   .replace(/\b[A-Z]{2,}\b/g, w => w[0] + w.slice(1).toLowerCase());
 
 const keep = new Set([...lines.keys()].map(h => h + ".m4a"));
+if (process.argv.includes("--list")) { console.log(JSON.stringify([...lines].map(([h, l]) => ({ h, ...l, af: (CAST[l.who] || CAST.narr).af, voice: kvoice(l.who), say: speakable(l.text) })))); process.exit(0); }   // dump every line (used by other recorders)
 const ALL = process.argv.includes("--all");
 const SINCE = +(process.argv.find(a => a.startsWith("--since="))?.slice(8) || 0);   // resume a re-record: redo only files older than this time (ms)
 const [shard, shards] = (process.argv.find(a => a.startsWith("--shard="))?.slice(8) || "0/1").split("/").map(Number);
