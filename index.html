@@ -1354,7 +1354,7 @@
       <h3>How it counts</h3>
       <ul class="tips" id="tipsSquat" hidden>
         <li>Stand the camera up 2–3 m away, around hip height, so your whole body is in view — facing it or side-on.</li>
-        <li>Stand tall for a second so it learns your height, then sit back and down. Depth hits <b>50%</b> when your thighs are about parallel to the floor — that's a deep rep.</li>
+        <li>Stand tall for a second so it learns your height, then sit back and down. Depth hits <b>50%</b> when your thighs are about parallel to the floor. <b>40%+</b> counts as a deep rep.</li>
         <li>Squats get their own lifetime total, best set and daily goal. They also power the 🦵 Squat Campaign. Your rank still comes from push-ups.</li>
       </ul>
       <ul class="tips" id="tipsSitup" hidden>
@@ -1364,7 +1364,7 @@
       </ul>
       <ul class="tips" id="tipsPush">
         <li>Works facing the camera or side-on. Hold the top position for a second so it learns your height.</li>
-        <li>Go down until Depth hits ~40% and push back up. Hit <b>50%+</b> for a deep rep.</li>
+        <li>Go down until Depth hits ~30% and push back up. Hit <b>40%+</b> for a deep rep.</li>
         <li>Every push-up counts toward your lifetime total and your rank — in training and in boss fights.</li>
       </ul>
       <details id="logDetails" class="logbox"><summary>Tracking log (for troubleshooting)</summary>
@@ -1376,7 +1376,7 @@
         <li><b>The story:</b> the Great Ember went out and the grey Slump is creeping over the land. Every push-up throws off a spark of Ember, so in every mission your reps power something: light the brazier, drop the gate, push the cart, build the bridge.</li>
         <li><b>Two parts, 8 chapters, 48 missions.</b> Part 1, <i>The Great Ember</i>, takes you from Boot Camp to the Void Eye. Beat it to unlock Part 2, <i>The Hollow King</i>: the coast, the Gearworks, Skyreach, the Dreamless Kingdom, and a rival named Vex. Switch parts with the tabs on the map.</li>
         <li>Finish a mission to unlock the next one; each chapter has two bosses. Story scenes play the first time; tap 📜 Story on the map to watch one again.</li>
-        <li><b>Mission types:</b> 💪 reach a count · ⏱️ beat the clock · 🎯 deep reps only (50%+) · 🔗 no resting over 4 s · 🔥 as many as you can before time runs out · ⚔️ boss fights.</li>
+        <li><b>Mission types:</b> 💪 reach a count · ⏱️ beat the clock · 🎯 deep reps only (40%+) · 🔗 no resting over 4 s · 🔥 as many as you can before time runs out · ⚔️ boss fights.</li>
         <li>Earn up to ⭐⭐⭐ per mission — replay any mission to improve your stars.</li>
         <li>Push-up counts are tuned to the level you picked in your profile. Every push-up still counts toward your rank.</li>
         <li><b>🦵 Squat Campaign:</b> a whole separate campaign done with squats, in two parts: <i>The Sinking Lands</i> and <i>The Heavy Sky</i> (unlocks after Queen Quagmire). 8 chapters, 48 missions and 16 bosses. Switch campaigns with the buttons at the top of the map.</li>
@@ -1396,7 +1396,7 @@
     <div class="panel" style="margin-top:18px" id="howBoss" hidden>
       <h3>How boss fights work</h3>
       <ul class="tips">
-        <li><b>Every push-up hits the boss.</b> Deep reps (50%+) are <span style="color:var(--accent)">critical hits</span> for 1.5× damage.</li>
+        <li><b>Every push-up hits the boss.</b> Deep reps (40%+) are <span style="color:var(--accent)">critical hits</span> for 1.5× damage.</li>
         <li><b>Combo:</b> keep reps within 3 seconds of each other to stack bonus damage.</li>
         <li><b>Attacks:</b> when the boss winds up (red bar), do a push-up before it lands to <b>PARRY</b> for double damage. Miss it and you lose a heart. Lose all 3 and you're defeated.</li>
         <li><b>Specials:</b> 🛡️ Armor — only deep reps hurt. ⚡ Weak point — double damage, go fast! 💚 Regenerating — hit it 3 times to stop it. 🌀 Rapid — attacks come twice as fast.</li>
@@ -2364,9 +2364,9 @@ window.__feed = lm => { detect(lm); };   // test hook: push one pose frame throu
 // Every counted rep in Training gets a grade from what the tracker measured: depth (how far down / up you went)
 // and tempo (how long the rep took). A = clean, B = OK, C = sloppy. The set gets an overall grade and one tip.
 const FORM_RULES = {
-  push:  { a: 0.45, b: 0.33, rush: 550, low: "Get your chest closer to the floor (about 50% depth)." },
-  squat: { a: 0.45, b: 0.33, rush: 600, low: "Sit down until your thighs are parallel to the floor." },
-  situp: { a: 0.48, b: 0.25, rush: 0,   low: "Sit all the way up, chest towards your knees." },
+  push:  { a: 0.38, b: 0.30, rush: 550, low: "Get your chest closer to the floor (about 40% depth)." },
+  squat: { a: 0.38, b: 0.30, rush: 600, low: "Sit down until your thighs are parallel to the floor." },
+  situp: { a: 0.40, b: 0.25, rush: 0,   low: "Sit all the way up, chest towards your knees." },
 };
 let FS = null;   // this set's form: { reps: [{g, why}], cRun }
 function gradeRep(ex, info, depthPct) {
@@ -2475,7 +2475,7 @@ $("resetBtn").onclick = () => {
 
 // ================= BOSS FIGHT =================
 let F = null;
-const CRIT = 0.48;
+const CRIT = 0.40;   // depth for a deep rep / critical hit (was 0.48: too strict)
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const fightPace = () => exercise === "situp" ? 1.4 : 1;   // a sit-up takes longer, so sit-up bosses wind up slower
 const attackEvery = () => F.boss.every * (F.enraged ? 0.7 : 1) * fightPace();
@@ -3336,7 +3336,7 @@ function loop() {
 const MTYPES = {
   reps:    { icon: "💪", goal: m => `Do ${m.n} ${exM(m).many}`,                                 stars: m => `⭐⭐⭐ under ${+(2.2 * mPace(m)).toFixed(1)} s per push-up · ⭐⭐ under ${+(3.2 * mPace(m)).toFixed(1)} s` },
   timed:   { icon: "⏱️", goal: m => `${m.n} ${exM(m).many} in ${m.t} seconds`,                    stars: "⭐⭐⭐ with 25% of the time left · ⭐⭐ with 10% left" },
-  deep:    { icon: "🎯", goal: m => exM(m) === EX.squat ? `${m.n} deep squats (thighs to parallel)` : exM(m) === EX.situp ? `${m.n} full sit-ups (all the way up)` : `${m.n} deep push-ups (50%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
+  deep:    { icon: "🎯", goal: m => exM(m) === EX.squat ? `${m.n} deep squats (thighs to parallel)` : exM(m) === EX.situp ? `${m.n} full sit-ups (all the way up)` : `${m.n} deep push-ups (40%+ depth)`, stars: "⭐⭐⭐ with 1 shallow rep or fewer · ⭐⭐ with 3 or fewer" },
   nobreak: { icon: "🔗", goal: m => `${m.n} ${exM(m).many} without resting more than ${restMax(m)} seconds`,  stars: m => `⭐⭐⭐ never resting over ${+(2.5 * mPace(m)).toFixed(1)} s · ⭐⭐ never over ${+(3.5 * mPace(m)).toFixed(1)} s` },
   endure:  { icon: "🔥", goal: m => `At least ${m.n} ${exM(m).many} in ${m.t} seconds`,           stars: "⭐⭐⭐ at 140% of the goal · ⭐⭐ at 120%" },
   boss:    { icon: "⚔️", goal: m => `Defeat ${BOSSES[m.boss].name}`,                        stars: "⭐ per heart you have left" },
