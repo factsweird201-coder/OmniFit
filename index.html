@@ -1185,6 +1185,45 @@
   .form-sum span { font: 600 14px var(--body); letter-spacing: 0; text-transform: none; color: var(--text); }
   .form-sum b { margin: 0 0 2px; }
   .form-tip { margin-top: 8px; font-size: 13px; color: var(--muted); max-width: 240px; margin-left: auto; margin-right: auto; }
+
+  /* ---------- OmniFit Pro ---------- */
+  .pro-tag { display: inline-block; padding: 2px 6px; border-radius: 5px; background: var(--accent); color: var(--ink); font: 700 10.5px/1.3 var(--body); letter-spacing: .08em; vertical-align: 2px; }
+  .pro-lock::after { content: "PRO"; margin-left: 6px; padding: 1px 4px; border-radius: 4px; background: rgba(255,194,26,.16); color: var(--accent); font: 700 9px/1.3 var(--body); letter-spacing: .06em; vertical-align: 2px; }
+  .botnav button.pro-lock::after { position: absolute; top: 0; left: calc(50% + 10px); margin: 0; font-size: 8px; padding: 1px 3px; }
+  .cmap-part[data-pro="1"]::after { content: "PRO"; margin-left: 5px; font: 700 9px var(--body); letter-spacing: .06em; color: var(--accent); }
+  .cm-pro .cm-bt { display: flex; align-items: center; gap: 8px; justify-content: center; }
+  .pro-food { display: grid; grid-template-columns: 1fr 260px; gap: 22px; align-items: center; padding: 26px; }
+  .pro-food h3 { font-size: 28px; margin: 10px 0 6px; }
+  .pro-food p { margin: 0 0 16px; font-size: 14.5px; line-height: 1.55; max-width: 460px; }
+  .pf-fine { font-size: 12.5px; margin-top: 8px; }
+  .pf-preview { background: var(--well); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 10px; filter: saturate(.9); position: relative; overflow: hidden; }
+  .pf-preview::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, var(--well)); }
+  .pf-ring { width: 108px; height: 108px; margin: 0 auto; border-radius: 50%; display: grid; place-content: center; text-align: center; background: radial-gradient(closest-side, var(--well) 80%, transparent 81%), conic-gradient(var(--accent) 0 64%, rgba(255,255,255,.08) 0); }
+  .pf-ring b { font: 700 24px/1 var(--display); } .pf-ring span { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .pf-bars { display: grid; gap: 6px; } .pf-bars i { display: block; height: 6px; border-radius: 99px; background: linear-gradient(90deg, var(--c) var(--w), rgba(255,255,255,.08) var(--w)); }
+  .pf-meal { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 12.5px; }
+  .pf-meal b { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  @media (max-width: 700px) { .pro-food { grid-template-columns: 1fr; padding: 20px; } .pf-preview { order: -1; } }
+  .pro-card { width: min(420px, calc(100vw - 32px)); box-sizing: border-box; background: var(--panel); border: 1px solid var(--line2); border-radius: 18px; padding: 26px 24px 20px !important; text-align: left !important; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+  .pro-x { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; padding: 0; border-radius: 10px; }
+  .pro-head { display: flex; align-items: center; gap: 12px; }
+  .pro-head .mark { width: 44px; height: 44px; border-radius: 12px; } .pro-head .mark .ic { width: 28px; height: 28px; }
+  .pro-eyebrow { font: 600 11px var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .pro-title { font: 700 28px/1 var(--display); }
+  .pro-price-row { margin-top: 20px; display: flex; align-items: baseline; gap: 6px; }
+  .pro-price-row b { font: 700 46px/1 var(--display); font-variant-numeric: tabular-nums; } .pro-cur { font: 600 14px var(--body); color: var(--muted); }
+  .pro-once { font-size: 13px; margin-top: 4px; }
+  .pro-list { list-style: none; margin: 18px 0; padding: 0; display: grid; gap: 4px; }
+  .pro-list li { display: flex; gap: 12px; padding: 10px; border-radius: 10px; }
+  .pro-list li.hl { background: rgba(255,194,26,.07); box-shadow: inset 0 0 0 1px rgba(255,194,26,.3); }
+  .pro-list .ic { width: 20px; height: 20px; color: var(--good); stroke-width: 2.2; margin-top: 1px; }
+  .pro-list b { display: block; font-size: 14.5px; } .pro-list span { display: block; font-size: 13px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+  .pro-buy { width: 100%; padding: 14px; font-size: 16px; }
+  .pro-links { display: flex; justify-content: center; gap: 8px; margin-top: 12px; color: var(--muted); font-size: 13px; }
+  .pro-link { background: none; color: var(--muted); padding: 0; font: 600 13px var(--body); box-shadow: none !important; text-decoration: underline; text-underline-offset: 3px; }
+  .pro-link:hover { color: var(--text); filter: none; }
+  .pro-fine { font-size: 12px; text-align: center; margin-top: 10px; }
+  .pro-dev { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line2); font-size: 12px; color: var(--muted); text-align: center; }
 </style>
 </head>
 <body>
@@ -1324,6 +1363,21 @@
 
     <div id="stretchView" hidden></div>
     <div id="foodView" hidden>
+      <div class="panel pro-food" id="fdPro" hidden>
+        <div class="pf-copy">
+          <span class="pro-tag">PRO</span>
+          <h3>Eat for your goal</h3>
+          <p class="muted">Calorie and macro targets built from your profile, a food log with 146 everyday foods plus millions of packaged ones online, vitamins and minerals, and a fresh meal plan every day that fits your targets.</p>
+          <button id="fdProBtn">Unlock Pro · <span class="pro-price"></span></button>
+          <div class="muted pf-fine">One payment. No subscription.</div>
+        </div>
+        <div class="pf-preview" aria-hidden="true">
+          <div class="pf-ring"><b>1,240</b><span>kcal left</span></div>
+          <div class="pf-bars"><i style="--w:72%;--c:var(--good)"></i><i style="--w:48%;--c:var(--blue)"></i><i style="--w:60%;--c:var(--purple)"></i></div>
+          <div class="pf-meal"><b>Breakfast</b><span>Greek yogurt · berries · oats</span></div>
+          <div class="pf-meal"><b>Lunch</b><span>Chicken · rice · broccoli</span></div>
+        </div>
+      </div>
       <div class="panel" id="fdNoProf" hidden>
         <h3>Meal plan</h3>
         <p class="muted" style="font-size:14px">Set up your profile first (weight, goal and build), so your calories, macros and micronutrient goals fit you.</p>
@@ -1508,6 +1562,24 @@
 
 <div class="modal" id="hxModal"><div class="card coach-card hx-card"></div></div>
 <div class="modal" id="recModal"><div class="card coach-card rec-card"></div></div>
+<div class="modal" id="proModal" role="dialog" aria-modal="true" aria-labelledby="proTitle">
+  <div class="card pro-card">
+    <button class="ghost pro-x" id="proX" aria-label="Close">✕</button>
+    <div class="pro-head"><div class="logo"><div class="mark"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg></div></div>
+      <div><div class="pro-eyebrow">OmniFit</div><div class="pro-title" id="proTitle">Pro</div></div></div>
+    <div class="pro-price-row"><b class="pro-price"></b><span class="pro-cur"></span></div>
+    <div class="muted pro-once">One-time purchase · no subscription</div>
+    <ul class="pro-list">
+      <li data-k="food"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Meal plan &amp; food tracking</b><span>Calorie and macro targets, food log, vitamins and minerals, and a new meal plan every day.</span></div></li>
+      <li data-k="campaign"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Part 2 of every campaign</b><span>3 new stories, 72 missions and 24 bosses across push-ups, squats and sit-ups.</span></div></li>
+      <li data-k="future"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Future Pro updates</b><span>New Pro features are included at no extra cost.</span></div></li>
+    </ul>
+    <button id="proBuy" class="pro-buy">Unlock for <span class="pro-price"></span></button>
+    <div class="pro-links"><button class="pro-link" id="proRestore">Restore purchase</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
+    <div class="muted pro-fine">Unlocks on every device where you're signed in to OmniFit.</div>
+    <div class="pro-dev" id="proDev" hidden>Preview only · <button class="pro-link" id="proSim">Simulate purchase</button> · <button class="pro-link" id="proUnsim">Remove Pro</button></div>
+  </div>
+</div>
 <div class="modal" id="coachModal"><div class="card coach-card"></div></div>
 <div class="modal" id="acctModal"><div class="card coach-card acct-card" id="acctCard"></div></div>
 
@@ -3574,6 +3646,19 @@ const PART_COLORS = ["#ffc21a", "#ff5fa8", "#b8e04a", "#7ad8ff", "#c08aff", "#ff
 // two separate campaigns share the mission engine: push-ups (parts 1 and 2) and squats (its own 4 chapters, numbered 1–4, ids S1-1…)
 const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2, 3] }, { name: "Sit-Up Campaign", icon: "🛏️", ex: "situp", parts: [4, 5] }];
 const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
+// ---------- OmniFit Pro (paywall) ----------
+// NOT LIVE YET. The paywall only exists for someone who opens the app with ?paywall=1 (remembered on that device;
+// ?paywall=0 turns it off again). For everyone else isPro() is always true, so nothing changes.
+// Pro = a one-time unlock: the whole Food tab + Part 2 of every campaign.
+const PRO = { price: "$9.99", currency: "CAD", checkoutUrl: "" };   // checkoutUrl: a Stripe Payment Link, once it exists
+const PAYWALL = (() => { try {
+  if (/[?&]paywall=1\b/.test(location.search)) localStorage.setItem("omnifit.paywall", "1");
+  if (/[?&]paywall=0\b/.test(location.search)) localStorage.removeItem("omnifit.paywall");
+  return localStorage.getItem("omnifit.paywall") === "1";
+} catch { return false; } })();
+const isPro = () => !PAYWALL || !!store.pro?.at;
+const proPart = pi => CAMPAIGNS.some(c => c.parts.indexOf(pi) >= 1);   // Part 2 (and later) of each campaign
+const partProLocked = pi => proPart(pi) && !isPro();
 const partNo = pi => CAMPAIGNS[campOfPart(pi)].parts.indexOf(pi);   // 0 = part one of its own campaign
 const campSet = () => store.campSet === 1 || store.campSet === 2 ? store.campSet : 0;
 const chEx = ci => CAMPAIGNS[campOfPart(CHAPTERS[ci].part)].ex;
@@ -3592,11 +3677,14 @@ const mPace = m => PACE[chEx(m.ch ?? 0)] || 1;
 const restMax = m => +(4 * mPace(m)).toFixed(1);   // nobreak: longest rest allowed, in seconds
 const missionGoal = m => m.type === "boss" ? m : { ...m, n: Math.max(3, Math.round(m.n * campScale())), ...(m.t ? { t: Math.round(m.t * mPace(m) / 5) * 5 } : {}) };
 const campStars = id => (store.campaign || {})[id] || 0;
-const campUnlocked = k => k === 0 || campOfK(k) !== campOfK(k - 1) || campStars(CAMP_LIST[k - 1].id) > 0;   // each campaign starts open
+const campUnlocked = k => !partProLocked(partOf(CAMP_LIST[k])) && (k === 0 || campOfK(k) !== campOfK(k - 1) || campStars(CAMP_LIST[k - 1].id) > 0);   // each campaign starts open
 const campTotal = (c = campSet()) => campKs(c).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
 const chapterUnlocked = ci => campUnlocked(CAMP_LIST.findIndex(m => m.ch === ci));
 const partUnlocked = pi => chapterUnlocked(PARTS[pi].chs[0]);
-const campNextText = (cur, next) => !next ? chEx(cur.ch) === "situp" ? "🏆 You got Queen Comfy off her throne and finished the whole Sit-Up Campaign. Legend!" : (chEx(cur.ch) === "squat" ? "🏆 You sent Baron Gravity flying and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
+const campNextText = (cur, next) => next && CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part && partProLocked(CHAPTERS[next.ch].part)
+  ? `🏁 Part ${PART_WORDS[partNo(CHAPTERS[cur.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[cur.ch].part)].slice(1).toLowerCase()} complete! ⭐ Part Two comes with OmniFit Pro.`
+  : campNextText0(cur, next);
+const campNextText0 = (cur, next) => !next ? chEx(cur.ch) === "situp" ? "🏆 You got Queen Comfy off her throne and finished the whole Sit-Up Campaign. Legend!" : (chEx(cur.ch) === "squat" ? "🏆 You sent Baron Gravity flying and finished the whole Squat Campaign. Legend!" : "🏆 You beat the Hollow King and finished the whole campaign. Legend!")
   : CHAPTERS[next.ch].part !== CHAPTERS[cur.ch].part ? `🏁 Part ${PART_WORDS[partNo(CHAPTERS[cur.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[cur.ch].part)].slice(1).toLowerCase()} complete! 🔓 Part ${PART_WORDS[partNo(CHAPTERS[next.ch].part)][0] + PART_WORDS[partNo(CHAPTERS[next.ch].part)].slice(1).toLowerCase()}: ${PARTS[CHAPTERS[next.ch].part].name}`
   : next.ch !== cur.ch ? `🏁 Chapter ${chNum(cur.ch)} complete! 🔓 Chapter ${chNum(next.ch)}: ${CHAPTERS[next.ch].name}` : `🔓 Unlocked: ${next.id} ${next.name}`;
 let campChapter = null, campPick = null, M = null;
@@ -5367,13 +5455,18 @@ function renderCampaign() {
   const scroller = $("cmapScroll"), keep = scroller ? scroller.scrollTop : null;
   const { svg } = mapSvg(pi);
   const partStars = q => partKs(q).reduce((t, k) => t + campStars(CAMP_LIST[k].id), 0);
-  const tabs = CAMPAIGNS[cs].parts.length < 2 ? "" : PARTS.map((P, q) => CAMPAIGNS[cs].parts.includes(q) && `<button class="cmap-part ${q === pi ? "on" : ""} ${partUnlocked(q) ? "" : "lk"}" data-part="${q}" style="--c:${PART_COLORS[q]}"><b>PART ${partNo(q) + 1}</b><span>${partUnlocked(q) ? "" : "🔒 "}${P.name}</span><i>★ ${partStars(q)}/${partKs(q).length * 3}</i></button>`).filter(Boolean).join("");
+  const tabs = CAMPAIGNS[cs].parts.length < 2 ? "" : PARTS.map((P, q) => CAMPAIGNS[cs].parts.includes(q) && `<button class="cmap-part ${q === pi ? "on" : ""} ${partUnlocked(q) ? "" : "lk"}" data-part="${q}" data-pro="${partProLocked(q) ? 1 : ""}" style="--c:${PART_COLORS[q]}"><b>PART ${partNo(q) + 1}</b><span>${partUnlocked(q) ? "" : "🔒 "}${P.name}</span><i>★ ${partStars(q)}/${partKs(q).length * 3}</i></button>`).filter(Boolean).join("");
   const lastBoss = BOSSES[partLast(pi - 1 >= 0 ? pi - 1 : 0).boss];
   $("campMap").innerHTML = `
     <div class="cmap-scroll" id="cmapScroll"><div class="cmap part-${pi}">${svg}${regions}${nodes}${you}</div></div>
     <div class="cmap-top"><div class="cmap-camps">${CAMPAIGNS.map((C, q) => `<button class="cmap-camp ${["", "sq", "su"][q]} ${q === cs ? "on" : ""}" data-camp="${q}">${C.name.replace(" Campaign", "")}</button>`).join("")}</div><span>★ ${campTotal()} / ${cks.length * 3}</span></div>
     ${tabs ? `<div class="cmap-parts">${tabs}</div>` : ""}
-    ${!pOpen ? `<div class="cm-brief cm-plock" style="--c:#ff5fa8">
+    ${!pOpen && partProLocked(pi) ? `<div class="cm-brief cm-plock cm-pro" style="--c:var(--accent)">
+      <div class="cm-bt"><span class="pro-tag">PRO</span> Part ${partNo(pi) + 1} · ${PARTS[pi].name}</div>
+      <div class="muted cm-story-line">${PARTS[pi].teaser || ""}</div>
+      <div class="cm-goal">Part 2 of every campaign comes with OmniFit Pro: one payment of ${PRO.price}, no subscription.</div>
+      <div class="cm-btns"><button id="campGo">Unlock with Pro</button><button class="ghost" id="campBack">Back to Part ${partNo(pi)}</button></div>
+    </div>` : !pOpen ? `<div class="cm-brief cm-plock" style="--c:#ff5fa8">
       <div class="cm-bt">🔒 Part ${partNo(pi) + 1} · ${PARTS[pi].name}</div>
       <div class="muted cm-story-line">${PARTS[pi].teaser || ""}</div>
       <div class="cm-goal">⚔ Beat ${lastBoss.name} (mission ${partLast(pi - 1).id}) to unlock it.</div>
@@ -5396,7 +5489,12 @@ function renderCampaign() {
   sc.querySelectorAll(".mnode").forEach(el => el.onclick = () => { campPick = +el.dataset.k; renderCampaign(); });
   $("campMap").querySelectorAll(".cmap-camp").forEach(el => el.onclick = () => { const q = +el.dataset.camp; if (q === cs || inMatch() || M) return; store.campSet = q; save(); campPick = campPart = null; campScrollTo = true; sfx.click?.(); syncExercise(); renderCampaign(); });
   $("campMap").querySelectorAll(".cmap-part").forEach(el => el.onclick = () => { const q = +el.dataset.part; if (q === campPart) return; campPart = q; campScrollTo = true; sfx.click?.(); renderCampaign(); });
-  if (!pOpen) { $("campGo").onclick = () => { campPart = pi - 1; campScrollTo = true; renderCampaign(); }; renderCampPanel(); return; }
+  if (!pOpen) {
+    const back = () => { campPart = pi - 1; campScrollTo = true; renderCampaign(); };
+    $("campGo").onclick = partProLocked(pi) ? () => openPro("campaign") : back;
+    if ($("campBack")) $("campBack").onclick = back;
+    renderCampPanel(); return;
+  }
   $("campGo").onclick = () => startMission(campPick);
   if ($("campStory")) $("campStory").onclick = () => { if (inMatch() || cineOn) return; playCine([...storySteps(pm, "pre"), ...(pst ? storySteps(pm, "post") : [])], { ch: pm.ch, boss: pm.boss, fin: !!pst && pm === partLast(partOf(pm)) }); };
   renderCampPanel();
@@ -5646,6 +5744,9 @@ let foodDay = dayKey(), foodCat = "all", foodQ = "", onlineFoods = [], onlineBus
 
 function renderFood() {
   nstore();
+  const locked = !isPro();
+  $("fdPro").hidden = !locked;
+  if (locked) { ["fdNoProf", "fdToday", "fdAdd", "fdLog", "fdPlan", "fdTargets", "fdMicros"].forEach(id => $(id).hidden = true); return; }
   const T = nutriTargets();
   $("fdNoProf").hidden = !!T;
   ["fdToday", "fdAdd", "fdLog", "fdPlan"].forEach(id => $(id).hidden = !T);
@@ -7483,6 +7584,39 @@ setInterval(() => {
   if (foodDay === was) foodDay = k;
   renderRank(); if (coachInit) renderCoach(); foodRefresh();
 }, 30000);
+
+
+// ---------- OmniFit Pro: paywall sheet ----------
+function proSync() {
+  document.querySelectorAll(".pro-price").forEach(el => el.textContent = PRO.price);
+  document.querySelectorAll(".pro-cur").forEach(el => el.textContent = PRO.currency);
+  $("tabFood").classList.toggle("pro-lock", !isPro());
+  document.querySelector('.botnav [data-go="food"]')?.classList.toggle("pro-lock", !isPro());
+}
+function openPro(from = "") {
+  proSync();
+  $("proModal").querySelectorAll(".pro-list li").forEach(li => li.classList.toggle("hl", li.dataset.k === from));
+  $("proDev").hidden = !PAYWALL;
+  $("proModal").classList.add("show");
+}
+const closePro = () => $("proModal").classList.remove("show");
+function proGranted(via) {
+  store.pro = { at: Date.now(), via }; save(); closePro(); proSync();
+  confetti(120); sfx.fanfare?.(); toast("⭐ OmniFit Pro unlocked. Thank you!");
+  foodRefresh(); if (mode === "campaign") renderCampaign();
+}
+$("proX").onclick = $("proLater").onclick = closePro;
+$("proModal").onclick = e => { if (e.target === $("proModal")) closePro(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("proModal").classList.contains("show")) closePro(); });
+// Checkout isn't connected yet. Plan: a Stripe Payment Link (one-time, CAD) that needs you signed in, and a small
+// webhook (Cloudflare Worker) that marks users/{uid} as Pro in the database; the app reads that on sign-in.
+$("proBuy").onclick = () => { if (PRO.checkoutUrl) location.href = PRO.checkoutUrl; else toast("Checkout isn't connected yet (preview)"); };
+$("proRestore").onclick = () => toast(acct ? "No purchase found on this account yet (preview)" : "Sign in to restore a purchase");
+$("proSim").onclick = () => proGranted("preview");
+$("proUnsim").onclick = () => { delete store.pro; save(); closePro(); proSync(); foodRefresh(); if (mode === "campaign") renderCampaign(); toast("Pro removed (preview)"); };
+$("fdProBtn").onclick = () => openPro("food");
+proSync();
+window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro };   // test hook
 
 // ---- account window ----
 let acctView = "in";   // "in" (sign in) | "up" (create account)
