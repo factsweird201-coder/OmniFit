@@ -1169,6 +1169,22 @@
   }
   .botnav button { position: relative; }
   .botnav button.on::before { content: ""; position: absolute; top: -6px; left: 50%; width: 22px; height: 2px; margin-left: -11px; background: var(--accent); border-radius: 0 0 2px 2px; }
+
+  /* form score */
+  #countChip { position: relative; }
+  .rep-grade { position: absolute; top: -9px; right: -9px; min-width: 24px; height: 24px; padding: 0 6px; box-sizing: border-box; border-radius: 12px; font: 700 14px/24px var(--display); font-style: normal; text-align: center; display: none; box-shadow: 0 2px 8px rgba(0,0,0,.45); }
+  .rep-grade.g3, .rep-grade.g2, .rep-grade.g1 { display: block; }
+  .rep-grade.g3 { background: var(--good); color: #062012; } .rep-grade.g2 { background: var(--accent); color: var(--ink); } .rep-grade.g1 { background: var(--bad); color: #fff; }
+  .rep-grade.pop { animation: gradePop .35s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes gradePop { from { transform: scale(.4); opacity: 0; } }
+  @media (max-width: 700px) { body.cam-live[data-mode="train"] .stage:not(.coaching) .rep-grade { top: 4px; right: -30px; min-width: 34px; height: 34px; border-radius: 17px; font-size: 20px; line-height: 34px; } }
+  .form-sum { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); text-align: left; }
+  .form-sum .fg { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font: 700 20px var(--display); }
+  .fg-A { background: var(--good); color: #062012; } .fg-B { background: var(--accent); color: var(--ink); } .fg-C { background: var(--bad); color: #fff; }
+  .form-sum b { display: block; font: 600 11px var(--body); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+  .form-sum span { font: 600 14px var(--body); letter-spacing: 0; text-transform: none; color: var(--text); }
+  .form-sum b { margin: 0 0 2px; }
+  .form-tip { margin-top: 8px; font-size: 13px; color: var(--muted); max-width: 240px; margin-left: auto; margin-right: auto; }
 </style>
 </head>
 <body>
@@ -1210,7 +1226,7 @@
 
       <div class="fs-ctrl" id="fsCtrl"><button class="ghost" id="fsMute" aria-label="Sound"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18V6L7.500 9.500zM15.500 9.200a4 4 0 0 1 0 5.600M18.200 6.500a8 8 0 0 1 0 11"/></svg></button><button id="fsEnd">■ End set</button></div>
       <div class="hud" id="hud" hidden>
-        <div class="chip count" id="countChip"><b id="setCount">0</b><span>This set</span></div>
+        <div class="chip count" id="countChip"><b id="setCount">0</b><span>This set</span><i class="rep-grade" id="repGrade" aria-label="Last rep form"></i></div>
         <div class="chip"><b id="depthVal">–</b><span>Depth</span><div class="depth-meter"><div id="depthMeter"></div></div></div>
         <div class="chip"><b id="angleVal">–</b><span id="angleLbl">Elbow °</span></div>
       </div>
@@ -2300,7 +2316,7 @@ function onRep(depthPct) {
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
   else {
-    sfx.rep(); coachRep(depthPct); trRep(depthPct);
+    sfx.rep(); coachRep(depthPct); formRep(depthPct); trRep(depthPct);
     const [x, y] = centerOf(chip);
     burst(x, y, { n: 14, colors: ["#ffc21a", "#fff2a8"], speed: 5, size: 3, life: 0.6 });
   }
@@ -2321,7 +2337,7 @@ function onSquat(depthPct) {
   if (beforeToday < sq.goal && beforeToday + 1 >= sq.goal) { toast("✅ Daily squat goal complete!"); confetti(90); if (!inMatch() && !M) say("Daily squat goal complete!"); }
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
-  else { sfx.rep(); coachRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  else { sfx.rep(); coachRep(depthPct); formRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b8e04a", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
 // sit-ups: their own totals, then the same fight / mission handling
@@ -2337,11 +2353,70 @@ function onSitup(depthPct) {
   const chip = $("countChip"); chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump");
   if (F?.active) fightRep(depthPct);
   else if (M?.active) missionRep(depthPct);
-  else { sfx.rep(); coachRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b88aff", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
+  else { sfx.rep(); coachRep(depthPct); formRep(depthPct); trRep(depthPct); const [x, y] = centerOf(chip); burst(x, y, { n: 14, colors: ["#b88aff", "#fff2a8"], speed: 5, size: 3, life: 0.6 }); }
   renderRank();
 }
 window.__rep = (d = 0.4) => onRep(d);
 window.__feed = lm => { detect(lm); };   // test hook: push one pose frame through the detector
+
+
+// ================= FORM SCORE =================
+// Every counted rep in Training gets a grade from what the tracker measured: depth (how far down / up you went)
+// and tempo (how long the rep took). A = clean, B = OK, C = sloppy. The set gets an overall grade and one tip.
+const FORM_RULES = {
+  push:  { a: 0.45, b: 0.33, rush: 550, low: "Get your chest closer to the floor (about 50% depth)." },
+  squat: { a: 0.45, b: 0.33, rush: 600, low: "Sit down until your thighs are parallel to the floor." },
+  situp: { a: 0.48, b: 0.25, rush: 0,   low: "Sit all the way up, chest towards your knees." },
+};
+let FS = null;   // this set's form: { reps: [{g, why}], cRun }
+function gradeRep(ex, info, depthPct) {
+  const R = FORM_RULES[ex] || FORM_RULES.push, d = info?.depth ?? depthPct ?? 0, ms = info?.ms;
+  let g = d >= R.a ? 3 : d >= R.b ? 2 : 1, why = g < 3 ? "shallow" : null;
+  if (R.rush && ms && ms < R.rush) { if (g === 3) why = "rushed"; g = Math.max(1, g - 1); }
+  return { g, why };
+}
+const FORM_LETTER = ["", "C", "B", "A"];
+function formRep(depthPct) {
+  if (mode !== "train" || HR?.active) { lastOkRep = null; return; }
+  const n = CW?.active ? CW.cur.times.length : setCount;
+  if (n <= 1 || !FS) FS = { reps: [], cRun: 0 };
+  const info = lastOkRep; lastOkRep = null;
+  const r = gradeRep(exercise, info, depthPct); FS.reps.push(r);
+  const el = $("repGrade"); el.textContent = FORM_LETTER[r.g]; el.className = "rep-grade g" + r.g; void el.offsetWidth; el.classList.add("pop");
+  // the trainer calls out two sloppy reps in a row
+  FS.cRun = r.g === 1 ? FS.cRun + 1 : 0;
+  if (FS.cRun >= 2 && typeof trainerInit !== "undefined" && trWatching()) {
+    const now = performance.now();
+    if (r.why === "shallow" && trAgo("shallowAt") > 8000) { trLast.shallowAt = now; trainer("shallow", { prio: 2 }); FS.cRun = 0; }
+    else if (r.why === "rushed" && trAgo("fastAt") > 15000) { trLast.fastAt = now; trainer("fast", { prio: 2 }); FS.cRun = 0; }
+  }
+}
+// overall grade and the one thing to work on
+function formSummary() {
+  if (!FS?.reps.length) return null;
+  const reps = FS.reps, avg = reps.reduce((a, x) => a + x.g, 0) / reps.length;
+  const grade = avg >= 2.75 ? "A" : avg >= 2.4 ? "B+" : avg >= 2 ? "B" : avg >= 1.6 ? "C+" : "C";
+  const cnt = k => reps.filter(x => x.g === k).length, shallow = reps.filter(x => x.why === "shallow").length, rushed = reps.filter(x => x.why === "rushed").length;
+  const R = FORM_RULES[exercise] || FORM_RULES.push, w = n => `${n} ${n === 1 ? "rep was" : "reps were"}`;
+  const tip = !shallow && !rushed ? "Every rep was clean. Great form!"
+    : shallow >= rushed ? `${w(shallow)} shallow. ${R.low}`
+    : `${w(rushed)} rushed. Take about a second on the way down.`;
+  return { grade, a: cnt(3), b: cnt(2), c: cnt(1), tip, score: Math.round(avg / 3 * 100) };
+}
+// keep a small daily history so form can be compared over time
+function formSave(sum) {
+  if (!sum) return;
+  const f = (store.form ||= {}), k = dayKey(), ex = exercise === "squat" || exercise === "situp" ? exercise : "push";
+  const d = (f[k] ||= {}), e = (d[ex] ||= { a: 0, b: 0, c: 0 });
+  e.a += sum.a; e.b += sum.b; e.c += sum.c;
+  const keys = Object.keys(f).sort(); while (keys.length > 120) delete f[keys.shift()];
+  save();
+}
+function formHtml(sum) {
+  if (!sum) return "";
+  return `<div class="form-sum"><span class="fg fg-${sum.grade[0]}">${sum.grade}</span><div><b>Form</b><span>${sum.a} A · ${sum.b} B · ${sum.c} C</span></div></div><div class="form-tip">${esc(sum.tip)}</div>`;
+}
+window.__formRep = (d, ms) => { lastOkRep = { ok: true, depth: d, ms }; onRep(d); };   // test hook
 
 function showRankUp(i) {
   const r = RANKS[i];
@@ -2363,7 +2438,7 @@ function endSet(showSummary = true) {
     store.sets++; save(); renderRank();
     if (showSummary && !F && !M && mode === "train") showSetDone(setCount);
   }
-  setCount = 0; $("setCount").textContent = 0; bestToasted = false;
+  setCount = 0; $("setCount").textContent = 0; bestToasted = false; $("repGrade").className = "rep-grade";
   $("endBtn").disabled = true;
   lastRepTime = 0; lowSince = 0;
   if (showSummary && !F && !M) stopCamera(hadReps ? 5000 : 0);   // training set finished: turn the camera off until the next set
@@ -2372,9 +2447,10 @@ function showSetDone(n) {
   const side = exercise === "squat" ? sqStore() : exercise === "situp" ? suStore() : null;
   const isBest = n >= (side ? side.best : store.best) && n > 1, today = side ? side.days[dayKey()] || 0 : store.days[dayKey()] || 0;
   const kcal = Math.round(n * (exercise === "squat" ? kcalPerSquat() : exercise === "situp" ? kcalPerSitup() : kcalPerRep()));
+  const fsum = formSummary(); formSave(fsum); FS = null;
   const el = $("setDone");
   el.innerHTML = `<div class="t">SET COMPLETE</div><div class="n">${n}</div><div class="u">${exWord(n)}</div>
-    <div class="s">${kcal ? `🔥 ${kcal} kcal · ` : ""}${today} / ${side ? side.goal : store.goal} today</div>${isBest ? `<div class="best">🏆 NEW BEST SET</div>` : ""}`;
+    <div class="s">${kcal ? `🔥 ${kcal} kcal · ` : ""}${today} / ${side ? side.goal : store.goal} today</div>${isBest ? `<div class="best">🏆 NEW BEST SET</div>` : ""}${formHtml(fsum)}`;
   el.classList.remove("out"); el.hidden = false; void el.offsetWidth;
   const [x, y] = centerOf(el);
   burst(x, y, { n: 40, colors: ["#ffc21a", "#fff2a8", "#ff8a00"], speed: 9, size: 4 });
@@ -2383,7 +2459,7 @@ function showSetDone(n) {
   say(`Set complete. ${n} ${exWord(n)}.${isBest ? " New best!" : ""}`);
   trSetDone(n);
   clearTimeout(setDoneTimer);
-  setDoneTimer = setTimeout(() => { el.classList.add("out"); setTimeout(() => el.hidden = true, 500); }, 4500);
+  setDoneTimer = setTimeout(() => { el.classList.add("out"); setTimeout(() => el.hidden = true, 500); }, fsum ? 6500 : 4500);
 }
 $("endBtn").onclick = () => endSet(true);
 // Erasing is tucked away in the profile panel (it used to sit next to "End set" and got hit by accident),
@@ -2711,10 +2787,11 @@ const ema = (k, v, a = 0.5) => (sm[k] = sm[k] == null ? v : sm[k] * (1 - a) + v 
 
 // Small rolling log of every rep decision, kept on this device for troubleshooting (window.__repLog()).
 const LOG_KEY = "pushupRanks.log";
-let repLog = [];
+let repLog = [], lastOkRep = null;
 try { repLog = JSON.parse(localStorage.getItem(LOG_KEY) || "[]"); } catch {}
 function logRep(entry) {
   if (typeof trainerInit !== "undefined") trHear(entry);
+  if (entry.ok) lastOkRep = entry;
   repLog.push({ at: new Date().toISOString(), ...entry });
   if (repLog.length > 300) repLog = repLog.slice(-300);
   try { localStorage.setItem(LOG_KEY, JSON.stringify(repLog)); } catch {}
@@ -6056,6 +6133,8 @@ function coachRep(depthPct) {
 function coachSetEnd() {
   if (!CW?.active || CW.phase !== "set") return;
   const c = CW.cur; CW.sets_done = (CW.sets_done || []); CW.sets_done.push(c);
+  const fsum = formSummary(); formSave(fsum); FS = null; c.form = fsum?.grade;
+  if (fsum) toast(`Form ${fsum.grade} · ${fsum.tip}`);
   CW.ending = true; endSet(false); CW.ending = false;   // saves the set (totals already counted rep by rep)
   CW.idx++;
   if (CW.idx >= CW.sets) return coachFinish(false);
