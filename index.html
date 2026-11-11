@@ -1283,6 +1283,10 @@
   .bs-row-main { flex: 1; display: grid; grid-template-columns: 70px 1fr auto; align-items: center; gap: 8px; text-align: left; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: 500 13.5px var(--body); box-shadow: none !important; }
   .bs-row-main b { font: 700 18px var(--display); }
   .bs-del { width: 42px; padding: 0; }
+
+  .bs-cam { display: grid; place-items: center; }
+  .bs-cam video { position: absolute; inset: 0; }
+  .bs-cam canvas { display: block !important; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scaleX(-1); pointer-events: none; image-rendering: auto; }
 </style>
 </head>
 <body>
@@ -7750,23 +7754,34 @@ function bsRender() {
   if (BS.step === "history") return bsHistory();
 }
 
+// Safari / the Mac app can return empty outlines from the GPU even when the joints are found; then we use the CPU (and remember it)
+const bsPrefCpu = () => { try { return localStorage.getItem("omnifit.bsCpu") === "1"; } catch { return false; } };
+async function bsModel(cpu) {
+  const fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+  const opts = delegate => ({ baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task", delegate },
+    runningMode: "VIDEO", numPoses: 1, outputSegmentationMasks: true });
+  try { BS.lm?.close(); } catch {}
+  BS.lm = null; BS.cpu = cpu;
+  if (!cpu) { try { BS.lm = await PoseLandmarker.createFromOptions(fileset, opts("GPU")); return; } catch { BS.cpu = true; } }
+  BS.lm = await PoseLandmarker.createFromOptions(fileset, opts("CPU"));
+}
+async function bsToCpu() {
+  if (BS.cpu || BS.switching) return;
+  BS.switching = true; BS.busy = true; $("bsMsg").textContent = "Switching to compatibility mode…";
+  try { localStorage.setItem("omnifit.bsCpu", "1"); } catch {}
+  try { await bsModel(true); } finally { BS.switching = false; BS.busy = false; BS.empty = 0; BS.still = 0; BS.prev = null; }
+}
 async function bsStart() {
   const B = $("bsBody");
-  B.innerHTML = `<div class="bs-cam"><video id="bsVid" playsinline muted></video><canvas id="bsCan"></canvas>
+  B.innerHTML = `<div class="bs-cam" id="bsCamBox"><video id="bsVid" playsinline muted></video><canvas id="bsCan"></canvas>
     <div class="bs-guide"><div class="bs-steps"><i id="bsS1" class="on">1 Front</i><i id="bsS2">2 Side</i></div><div class="bs-msg" id="bsMsg">Starting camera…</div><div class="bs-hold"><div id="bsHoldBar"></div></div></div>
     <div class="bs-flash" id="bsFlash"></div></div>`;
   try {
     const problem = cameraProblem(); if (problem) throw new Error(problem);
-    if (!BS.lm) {
-      $("bsMsg").textContent = "Loading body model…";
-      const fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
-      const opts = delegate => ({ baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task", delegate },
-        runningMode: "VIDEO", numPoses: 1, outputSegmentationMasks: true });
-      try { BS.lm = await PoseLandmarker.createFromOptions(fileset, opts("GPU")); } catch { BS.lm = await PoseLandmarker.createFromOptions(fileset, opts("CPU")); }
-    }
+    if (!BS.lm) { $("bsMsg").textContent = "Loading body model…"; await bsModel(bsPrefCpu()); }
     BS.stream = await getCamera();
     const v = $("bsVid"); v.srcObject = BS.stream; await v.play();
-    BS.step = "front"; BS.still = 0; BS.prev = null; BS.lastAt = 0;
+    BS.step = "front"; BS.still = 0; BS.prev = null; BS.lastAt = 0; BS.empty = 0;
     say("Step back so your whole body is in view, and put your hands on your head.");
     bsLoop();
   } catch (e) { $("bsMsg").textContent = "Couldn't start: " + cameraErrorText(e); }
@@ -7777,10 +7792,31 @@ function bsLoop() {
   BS.raf = requestAnimationFrame(bsLoop);
   const v = $("bsVid"); if (!v || v.readyState < 2 || BS.busy) return;
   const now = performance.now(); if (now - BS.lastAt < 160) return; BS.lastAt = now;
-  BS.lm.detectForVideo(v, now, res => bsFrame(res, v));
+  if (!BS.lm) return;
+  try { BS.lm.detectForVideo(v, now, res => bsFrame(res, v)); } catch (e) { console.warn("scan frame", e); }
+}
+// the outline as a small grid of 0/1 values, drawn over the camera so you can see what it sees
+function bsMaskOf(res) {
+  const mk = res.segmentationMasks?.[0]; if (!mk) return null;
+  let d; try { d = mk.getAsFloat32Array(); } catch { return null; }
+  return { w: mk.width, h: mk.height, d: d.slice() };
+}
+function bsDraw(m, v) {
+  const c = $("bsCan"), box = $("bsCamBox"); if (!c || !box) return 0;
+  const S = 4, w = Math.floor(m.w / S), h = Math.floor(m.h / S);
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  const g = c.getContext("2d"), img = g.createImageData(w, h); let on = 0;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { if (m.d[(y * S) * m.w + x * S] > 0.5) { on++; const i = (y * w + x) * 4; img.data[i] = 255; img.data[i + 1] = 194; img.data[i + 2] = 26; img.data[i + 3] = 90; } }
+  g.putImageData(img, 0, 0);
+  // fit the overlay to where the video is drawn (object-fit: contain)
+  const bw = box.clientWidth, bh = box.clientHeight, k = Math.min(bw / v.videoWidth, bh / v.videoHeight);
+  c.style.width = v.videoWidth * k + "px"; c.style.height = v.videoHeight * k + "px";
+  return on / (w * h);
 }
 function bsFrame(res, v) {
   const L = res.landmarks?.[0], msg = $("bsMsg"); if (!msg) return;
+  const m = bsMaskOf(res), cover = m ? bsDraw(m, v) : 0;
+  if (L && cover < 0.005) { if (++BS.empty >= 6 && !BS.cpu) { bsToCpu(); return; } } else BS.empty = 0;
   const hold = k => { $("bsHoldBar").style.width = Math.min(100, k * 100) + "%"; };
   if (!L) { msg.textContent = "Step into view"; BS.still = 0; return hold(0); }
   const vis = i => (L[i].visibility ?? 1) > 0.5, inFrame = i => L[i].y > 0.01 && L[i].y < 0.99;
@@ -7797,8 +7833,7 @@ function bsFrame(res, v) {
   if (move > 0.012) { msg.textContent = "Hold still…"; BS.still = 0; return hold(0); }
   BS.still++; msg.textContent = "Hold still…"; hold(BS.still / 7);
   if (BS.still < 7) return;
-  const mask = res.segmentationMasks?.[0]; if (!mask) return;
-  const m = { w: mask.width, h: mask.height, d: mask.getAsFloat32Array().slice() };
+  if (!m || cover < 0.005) { msg.textContent = "Can't see your outline: try more light or a plainer background"; BS.still = 0; return hold(0); }
   bsCapture(L, m, v);
 }
 async function bsCapture(L, m, v) {
@@ -7808,7 +7843,7 @@ async function bsCapture(L, m, v) {
   const g = c.getContext("2d"); g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(v, 0, 0, c.width, c.height);
   BS.shots[which] = { meas, img: c.toDataURL("image/jpeg", 0.72) };
   sfx.click?.(); const f = $("bsFlash"); f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
-  if (!meas) { $("bsMsg").textContent = "Couldn't see your outline clearly. Try again with a plainer background."; await wait(1800); BS.busy = false; return; }
+  if (!meas || meas.fail) { $("bsMsg").textContent = meas?.fail || "Couldn't measure that one. Try again."; console.warn("body scan:", meas?.fail); await wait(2200); BS.prev = null; BS.busy = false; return; }
   if (which === "front") {
     BS.step = "side"; $("bsS1").classList.add("done"); $("bsS2").classList.add("on");
     say("Got it. Now turn to your side, hands still on your head."); $("bsMsg").textContent = "Turn to your side";
@@ -7822,19 +7857,25 @@ function bsMeasure(L, m, view) {
   const px = l => [Math.round(l.x * (m.w - 1)), Math.round(l.y * (m.h - 1))];
   const [, noseY] = px(L[0]), cx = Math.round((L[11].x + L[12].x + L[23].x + L[24].x) / 4 * (m.w - 1));
   const shY = Math.round((L[11].y + L[12].y) / 2 * (m.h - 1)), hipY = Math.round((L[23].y + L[24].y) / 2 * (m.h - 1)), T = hipY - shY;
-  if (T < 20) return null;
+  if (T < 15) return { fail: "Step a bit closer so you're bigger in the picture" };
   // the solid run of body pixels through x0 on row y
   const run = (y, x0) => { if (y < 0 || y >= m.h) return 0; let x = Math.max(0, Math.min(m.w - 1, x0)); if (!at(x, y)) { let k = 1; while (k < 12 && !at(x + k, y) && !at(x - k, y)) k++; if (k >= 12) return 0; x = at(x + k, y) ? x + k : x - k; }
     let a = x, b = x; while (a > 0 && at(a - 1, y)) a--; while (b < m.w - 1 && at(b + 1, y)) b++; return b - a + 1; };
   // height in pixels: lowest body pixel to the top of the head (hands on the head add a little, so trim 1.5 %)
-  let bottom = 0; for (let y = m.h - 1; y > hipY && !bottom; y--) for (let x = 0; x < m.w; x += 2) if (at(x, y)) { bottom = y; break; }
-  const nx = Math.round(L[0].x * (m.w - 1)); let top = noseY; for (let y = noseY; y >= 0; y--) { let any = false; for (let x = nx - 6; x <= nx + 6; x++) if (x >= 0 && x < m.w && at(x, y)) { any = true; break; } if (any) top = y; else break; }
+  // feet: lowest body pixel, but not below the feet the pose model found (ignores the floor or things behind you)
+  const footY = Math.max(...[27, 28, 29, 30, 31, 32].map(i => L[i]?.y ?? 0)) * (m.h - 1), floorCap = Math.min(m.h - 1, Math.round(footY + m.h * 0.02));
+  let bottom = 0; for (let y = floorCap; y > hipY && !bottom; y--) for (let x = 0; x < m.w; x += 2) if (at(x, y)) { bottom = y; break; }
+  if (!bottom) bottom = Math.round(footY + m.h * 0.015);
+  const nx = Math.round(L[0].x * (m.w - 1)), headW = Math.max(6, Math.round(Math.abs(L[7].x - L[8].x) * (m.w - 1) / 2) || 6);
+  let top = -1; for (let y = noseY; y >= 0; y--) { let any = false; for (let x = nx - headW; x <= nx + headW; x++) if (x >= 0 && x < m.w && at(x, y)) { any = true; break; } if (any) top = y; else if (top >= 0) break; }
+  if (top < 0) top = Math.round(noseY - (shY - noseY) * 0.9);   // no outline above the nose: estimate the top of the head
   const hPx = (bottom - top) * 0.985, cm = (store.bodyInfo?.heightCm || 175) / hPx;
-  if (hPx < m.h * 0.35) return null;
+  if (hPx < m.h * 0.3) return { fail: "Step a bit closer so you're bigger in the picture" };
   const rows = (a, b) => { const out = []; for (let y = Math.round(a); y <= Math.round(b); y++) { const w = run(y, cx); if (w) out.push(w); } return out; };
   const neckRows = []; for (let y = noseY + Math.round((shY - noseY) * 0.45); y <= shY - Math.round((shY - noseY) * 0.12); y++) { const w = run(y, Math.round((L[11].x + L[12].x) / 2 * (m.w - 1))); if (w) neckRows.push(w); }
   const navel = run(shY + Math.round(T * 0.8), cx), waistMin = Math.min(...rows(shY + T * 0.55, shY + T * 0.85)), hipMax = Math.max(...rows(hipY - T * 0.05, hipY + T * 0.3));
-  if (!neckRows.length || !navel) return null;
+  if (!navel) return { fail: "Couldn't see your waist: keep your arms up and away from your sides" };
+  if (!neckRows.length) return { fail: "Couldn't see your neck: tie long hair back or lower your chin a little" };
   return { view, neck: Math.min(...neckRows) * cm, navel: navel * cm, waistMin: waistMin * cm, hip: hipMax * cm, hPx };
 }
 // ellipse perimeter (Ramanujan) from a front width and a side depth
