@@ -17,8 +17,8 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="OmniFit — all-in-one fitness 💪">
 <meta property="og:description" content="Count reps with your camera, play story campaigns, fight bosses, run Endurance races, stretch and plan meals.">
-<meta property="og:url" content="https://factsweird201-coder.github.io/push-up-ranks/">
-<meta property="og:image" content="https://factsweird201-coder.github.io/push-up-ranks/og.png">
+<meta property="og:url" content="https://factsweird201-coder.github.io/OmniFit/">
+<meta property="og:image" content="https://factsweird201-coder.github.io/OmniFit/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -4483,7 +4483,7 @@ const cineMusic = {
 // Every story line is pre-recorded (tools/voices.mjs) as voice/<hash>.m4a, hash = speaker + "|" + line.
 // If a file can't load (offline, or a line with no recording) the device's own voice reads it instead.
 const vhash = s => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); };
-const voiceBase = () => /github\.io$|^localhost$|^127\./.test(location.hostname) ? "voice/" : "https://factsweird201-coder.github.io/push-up-ranks/voice/";
+const voiceBase = () => /github\.io$|^localhost$|^127\./.test(location.hostname) ? "voice/" : "https://factsweird201-coder.github.io/OmniFit/voice/";
 const voiceCache = new Map();
 let curVoice = null;
 const voiceUrl = (vk, text) => voiceBase() + vhash(vk + "|" + text) + ".m4a";
@@ -7474,7 +7474,7 @@ $("acctModal").addEventListener("click", e => { if (e.target.id === "acctModal")
 // time you train that day "worked out" (k: "w"), to pings/{id}_{day}_{k}. Nobody can read these except the owner
 // account (see firestore.rules), on stats.html.
 const OWNER_UID = "RS1pt3Cor1gMP6rPrbmkSGo0Dv32";
-const STATS_URL = "https://factsweird201-coder.github.io/push-up-ranks/stats.html";
+const STATS_URL = "https://factsweird201-coder.github.io/OmniFit/stats.html";
 const STATS_KEY = KEY + ".stats";
 const statsOn = () => cloudCfg.on && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || !!localStorage.getItem("omnifit.cloudTest"));   // never counts local testing
 function statsState() {

@@ -4,7 +4,7 @@ All-in-one fitness app: camera rep counting for push-ups, squats and sit-ups, st
 
 (Formerly Push-Up Ranks.)
 
-**Play:** https://factsweird201-coder.github.io/push-up-ranks/
+**Play:** https://factsweird201-coder.github.io/OmniFit/
 
 - Put your phone or laptop on the floor about 2 m away, facing you or side-on.
 - On a phone, use Share → **Add to Home Screen** to get it as an app.
@@ -20,7 +20,7 @@ Signing in is optional. The 👤 button in the header shows up once `CLOUD` in `
 - The security rules are in `firestore.rules`: each user can only read and write their own document.
 
 ## Return stats
-Each install gets a random ID, with no name, email or device info. Once a day the app records an "opened" mark, and the first time you train that day a "worked out" mark, in `pings/{id}_{day}_{o|w}`. Anyone can add a well-formed mark. Nobody can read, change or delete one except the owner account. **https://factsweird201-coder.github.io/push-up-ranks/stats.html** shows installs, daily use, and how many people come back the next day, in their first week, after a week and after a month. When you're signed in as the owner, the account window links to it.
+Each install gets a random ID, with no name, email or device info. Once a day the app records an "opened" mark, and the first time you train that day a "worked out" mark, in `pings/{id}_{day}_{o|w}`. Anyone can add a well-formed mark. Nobody can read, change or delete one except the owner account. **https://factsweird201-coder.github.io/OmniFit/stats.html** shows installs, daily use, and how many people come back the next day, in their first week, after a week and after a month. When you're signed in as the owner, the account window links to it.
 
 ## Voices
 The voice lines in `voice/` are recorded with [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M), an open-source voice model under the Apache-2.0 licence, so it's fine for commercial use. It runs locally through `kokoro-js`. Each character has its own Kokoro voice, plus light ffmpeg effects for the monsters.
