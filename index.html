@@ -1224,6 +1224,65 @@
   .pro-link:hover { color: var(--text); filter: none; }
   .pro-fine { font-size: 12px; text-align: center; margin-top: 10px; }
   .pro-dev { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line2); font-size: 12px; color: var(--muted); text-align: center; }
+
+  /* ---------- body scan ---------- */
+  .bs-open { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 12px 14px; text-align: left; border-radius: 12px; }
+  .bs-open .ic { width: 26px; height: 26px; color: var(--accent); }
+  .bs-open b { display: block; font-size: 14px; } .bs-open i { display: block; font-style: normal; font-weight: 500; font-size: 12.5px; color: var(--muted); }
+  .bscan { position: fixed; inset: 0; z-index: 45; background: var(--bg); display: flex; flex-direction: column; }
+  body.bs-on { overflow: hidden; }
+  .bs-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); font: 700 18px var(--display); }
+  .bs-x { width: 36px; height: 36px; padding: 0; }
+  .bs-body { flex: 1; overflow: auto; display: flex; justify-content: center; }
+  .bs-intro, .bs-res, .bs-hist { width: min(460px, 100%); padding: 22px 18px 40px; box-sizing: border-box; }
+  .bs-intro h2, .bs-hist h2 { font: 700 28px/1.15 var(--display); margin: 14px 0 8px; }
+  .bs-intro p { font-size: 14.5px; line-height: 1.55; margin: 0 0 18px; }
+  .bs-pose { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 14px 10px; }
+  .bs-pose svg { width: 100%; height: 110px; fill: none; stroke: #d5d9e1; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+  .bs-pose svg circle { fill: #d5d9e1; stroke: none; }
+  .bs-pose span { text-align: center; font: 600 11px var(--body); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); grid-row: 2; }
+  .bs-form { display: grid; gap: 10px; margin-bottom: 18px; }
+  .bs-form label { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-weight: 600; font-size: 14px; }
+  .bs-seg { display: flex; background: var(--well); border-radius: 9px; padding: 3px; gap: 2px; }
+  .bs-seg button { background: none; color: var(--muted); padding: 7px 14px; font-size: 13.5px; border-radius: 7px; box-shadow: none !important; }
+  .bs-seg button.on { background: var(--raised); color: var(--text); box-shadow: inset 0 0 0 1px var(--line2) !important; }
+  .bs-hgt { display: flex; align-items: center; gap: 6px; color: var(--muted); font-weight: 500; }
+  .bs-hgt input { width: 64px; background: var(--well); border: 1px solid var(--line2); border-radius: 8px; color: var(--text); padding: 8px; font: 600 15px var(--body); text-align: center; user-select: text; }
+  .bs-hgt input#bsAge { width: 92px; }
+  .bs-go { width: 100%; padding: 14px; font-size: 16px; }
+  .bs-hist-btn { width: 100%; margin-top: 10px; }
+  .bs-fine { font-size: 12.5px; line-height: 1.5; margin-top: 14px; }
+  .bs-cam { position: relative; flex: 1; width: 100%; background: #000; overflow: hidden; }
+  .bs-cam video { width: 100%; height: 100%; object-fit: contain; transform: scaleX(-1); }
+  .bs-cam canvas { display: none; }
+  .bs-guide { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 16px calc(18px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, rgba(0,0,0,.75) 40%); text-align: center; }
+  .bs-steps { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
+  .bs-steps i { font: 600 12px var(--body); font-style: normal; padding: 5px 10px; border-radius: 99px; background: rgba(255,255,255,.1); color: var(--muted); }
+  .bs-steps i.on { background: var(--accent); color: var(--ink); } .bs-steps i.done { background: var(--good); color: #062012; }
+  .bs-msg { font: 700 26px/1.2 var(--display); text-shadow: 0 2px 10px #000; }
+  .bs-hold { width: min(260px, 70%); height: 5px; margin: 12px auto 0; border-radius: 99px; background: rgba(255,255,255,.15); overflow: hidden; }
+  .bs-hold > div { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+  .bs-flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; } .bs-flash.go { animation: bsFlash .5s; }
+  @keyframes bsFlash { 0% { opacity: .85; } 100% { opacity: 0; } }
+  .bs-res { text-align: center; }
+  .bs-eyebrow { font: 600 11px var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+  .bs-big { font: 700 84px/1 var(--display); font-variant-numeric: tabular-nums; margin-top: 6px; } .bs-big span { font-size: 40px; color: var(--muted); margin-left: 2px; }
+  .bs-range { font-weight: 600; margin-top: 4px; }
+  .bs-delta { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 99px; font: 600 13px var(--body); } .bs-delta.dn { background: rgba(47,212,122,.14); color: var(--good); } .bs-delta.up { background: rgba(255,77,94,.14); color: var(--bad); }
+  .bs-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 14px; }
+  .bs-photos figure { margin: 0; } .bs-photos img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; background: var(--panel); display: block; }
+  .bs-photos figcaption { font: 600 11px var(--body); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+  .bs-meas { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--well); border: 1px solid var(--line); border-radius: 12px; }
+  .bs-meas div { padding: 12px 4px; } .bs-meas div + div { border-left: 1px solid var(--line); }
+  .bs-meas b { display: block; font: 700 20px var(--display); } .bs-meas span { font: 600 10.5px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .bs-btns { display: grid; gap: 8px; margin-top: 18px; }
+  .bs-chart { width: 100%; height: 90px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 8px; box-sizing: border-box; }
+  .bs-chart polyline { fill: none; stroke: var(--accent); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+  .bs-list { display: grid; gap: 6px; margin: 14px 0; }
+  .bs-row { display: flex; gap: 6px; }
+  .bs-row-main { flex: 1; display: grid; grid-template-columns: 70px 1fr auto; align-items: center; gap: 8px; text-align: left; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: 500 13.5px var(--body); box-shadow: none !important; }
+  .bs-row-main b { font: 700 18px var(--display); }
+  .bs-del { width: 42px; padding: 0; }
 </style>
 </head>
 <body>
@@ -1495,6 +1554,7 @@
         <div><b id="profLevel">–</b><span class="muted">Level</span></div>
       </div>
       <div class="wt-row"><input id="logWeight" type="number" inputmode="decimal" placeholder="Log today's weight (lb)"><button class="ghost" id="logWeightBtn">Log</button></div>
+      <button class="ghost bs-open" id="bsOpen"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="8.5" r="1.8"/><path d="M12 10.5v4.500M9 12l3-1 3 1M12 15l-2 3.500M12 15l2 3.500"/></svg><span><b>Body scan</b><i id="bsLast">Estimate your body fat from two photos</i></span></button>
       <div class="sv-tip" id="profTip" style="font-size:13px"></div>
       <button class="erase-btn" id="resetBtn">Erase all progress…</button>
     </div>
@@ -1579,6 +1639,10 @@
     <div class="muted pro-fine">Unlocks on every device where you're signed in to OmniFit.</div>
     <div class="pro-dev" id="proDev" hidden>Preview only · <button class="pro-link" id="proSim">Simulate purchase</button> · <button class="pro-link" id="proUnsim">Remove Pro</button></div>
   </div>
+</div>
+<div class="bscan" id="bScan" hidden role="dialog" aria-modal="true" aria-label="Body scan">
+  <div class="bs-top"><b>Body scan</b><button class="ghost bs-x" id="bsX" aria-label="Close">✕</button></div>
+  <div class="bs-body" id="bsBody"></div>
 </div>
 <div class="modal" id="coachModal"><div class="card coach-card"></div></div>
 <div class="modal" id="acctModal"><div class="card coach-card acct-card" id="acctCard"></div></div>
@@ -2859,7 +2923,7 @@ const ema = (k, v, a = 0.5) => (sm[k] = sm[k] == null ? v : sm[k] * (1 - a) + v 
 
 // Small rolling log of every rep decision, kept on this device for troubleshooting (window.__repLog()).
 const LOG_KEY = "pushupRanks.log";
-let repLog = [], lastOkRep = null;
+let repLog = [], lastOkRep = null, onBsSaved = null;
 try { repLog = JSON.parse(localStorage.getItem(LOG_KEY) || "[]"); } catch {}
 function logRep(entry) {
   if (typeof trainerInit !== "undefined") trHear(entry);
@@ -7617,6 +7681,215 @@ $("proUnsim").onclick = () => { delete store.pro; save(); closePro(); proSync();
 $("fdProBtn").onclick = () => openPro("food");
 proSync();
 window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro };   // test hook
+
+
+// ================= BODY SCAN =================
+// Two photos (front, then side-on) with hands on your head. The pose model's body outline gives your height in
+// pixels (your real height sets the scale) and the width of your waist, neck and hips in each view; front width +
+// side depth make an ellipse, so we get circumferences, and the US Navy tape-measure formula turns them into body fat.
+// Blended 70/30 with the BMI-based Deurenberg formula when your age is known. Rough: about ±3–5 %.
+// Photos stay on this device (IndexedDB); only the numbers go in your saved progress.
+const BS = { lm: null, stream: null, step: "setup", raf: 0, still: 0, prev: null, shots: {}, lastAt: 0, busy: false };
+const BS_DB = "omnifit-scans";
+function bsDb() { return new Promise((res, rej) => { const q = indexedDB.open(BS_DB, 1); q.onupgradeneeded = () => q.result.createObjectStore("scans", { keyPath: "at" }); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function bsPut(rec) { try { const db = await bsDb(); await new Promise((res, rej) => { const t = db.transaction("scans", "readwrite"); t.objectStore("scans").put(rec); t.oncomplete = res; t.onerror = () => rej(t.error); }); } catch (e) { console.warn("scan photo not saved", e); } }
+async function bsGet(at) { try { const db = await bsDb(); return await new Promise(res => { const q = db.transaction("scans").objectStore("scans").get(at); q.onsuccess = () => res(q.result); q.onerror = () => res(null); }); } catch { return null; } }
+async function bsDel(at) { try { const db = await bsDb(); db.transaction("scans", "readwrite").objectStore("scans").delete(at); } catch {} }
+const bsScans = () => (store.bodyScans ||= []);
+const bsUnitLen = cm => store.profile?.unit === "kg" ? `${Math.round(cm)} cm` : `${(cm / 2.54).toFixed(1)} in`;
+const bsCat = (bf, sex) => { const t = sex === "f" ? [14, 21, 25, 32] : [6, 14, 18, 25]; return bf < t[0] ? "Very lean" : bf < t[1] ? "Athletic" : bf < t[2] ? "Fit" : bf < t[3] ? "Average" : "Above average"; };
+
+function bsOpen() {
+  if (inMatch() || CW?.active || HR?.active) return toast("Finish what you're doing first");
+  if (camReady) stopCamera(0, "Start camera");
+  BS.step = "setup"; BS.shots = {};
+  $("bScan").hidden = false; document.body.classList.add("bs-on");
+  bsRender();
+}
+function bsClose() {
+  bsStopCam(); $("bScan").hidden = true; document.body.classList.remove("bs-on");
+  renderProfile?.();
+}
+function bsStopCam() { cancelAnimationFrame(BS.raf); BS.raf = 0; BS.stream?.getTracks().forEach(t => t.stop()); BS.stream = null; }
+$("bsX").onclick = bsClose;
+$("bsOpen").onclick = bsOpen;
+
+const bsInfo = () => ({ unit: store.profile?.unit, weightKg: store.profile?.weightKg, ...(store.bodyInfo || {}) });   // height/sex/age live apart from the profile
+function bsRender() {
+  const p = bsInfo(), B = $("bsBody");
+  if (BS.step === "setup") {
+    const lb = p.unit !== "kg", h = p.heightCm || (p.sex === "f" ? 163 : 177), ft = Math.floor(h / 30.48), inch = Math.round(h / 2.54 - ft * 12);
+    const last = bsScans().slice(-1)[0];
+    B.innerHTML = `
+      <div class="bs-intro">
+        <div class="bs-pose" aria-hidden="true"><svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-14 48M60 86l14 48M52 40l-18-16 14-14M68 40l18-16-14-14"/></svg><span>Front</span>
+          <svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-5 48M60 86l5 48M60 40l13-11-7-15"/></svg><span>Side</span></div>
+        <h2>Estimate your body fat</h2>
+        <p class="muted">Stand 2–3 m from the camera so your whole body is in view, in fitted clothes, with your hands on your head. It takes a photo from the front, then you turn sideways for the second one. Your photos never leave this device.</p>
+        <div class="bs-form">
+          <label>Sex <span class="bs-seg" id="bsSex"><button data-v="m" class="${p.sex !== "f" ? "on" : ""}">Male</button><button data-v="f" class="${p.sex === "f" ? "on" : ""}">Female</button></span></label>
+          <label>Height ${lb ? `<span class="bs-hgt"><input id="bsFt" type="number" inputmode="numeric" min="3" max="8" value="${ft}"> ft <input id="bsIn" type="number" inputmode="numeric" min="0" max="11" value="${inch}"> in</span>`
+            : `<span class="bs-hgt"><input id="bsCm" type="number" inputmode="numeric" min="120" max="230" value="${Math.round(h)}"> cm</span>`}</label>
+          <label>Age <span class="bs-hgt"><input id="bsAge" type="number" inputmode="numeric" min="13" max="99" placeholder="optional" value="${p.age || ""}"></span></label>
+        </div>
+        <button id="bsGo" class="bs-go">Start scan</button>
+        ${last ? `<button class="ghost bs-hist-btn" id="bsHist">Past scans (${bsScans().length})</button>` : ""}
+        <div class="muted bs-fine">A rough estimate from photos (about ±3–5 %), not a medical measurement. Same time of day and clothes each time gives the best trend.</div>
+      </div>`;
+    B.querySelectorAll("#bsSex button").forEach(b => b.onclick = () => { B.querySelectorAll("#bsSex button").forEach(x => x.classList.toggle("on", x === b)); });
+    $("bsGo").onclick = () => {
+      const sex = B.querySelector("#bsSex .on").dataset.v;
+      const cm = lb ? ((+$("bsFt").value || 0) * 12 + (+$("bsIn").value || 0)) * 2.54 : +$("bsCm").value;
+      if (!(cm >= 120 && cm <= 230)) return toast("Enter your height first");
+      const age = +$("bsAge").value; store.bodyInfo = { sex, heightCm: Math.round(cm * 10) / 10, ...(age >= 13 && age <= 99 ? { age } : {}) }; save();
+      bsStart();
+    };
+    if ($("bsHist")) $("bsHist").onclick = () => { BS.step = "history"; bsRender(); };
+    return;
+  }
+  if (BS.step === "history") return bsHistory();
+}
+
+async function bsStart() {
+  const B = $("bsBody");
+  B.innerHTML = `<div class="bs-cam"><video id="bsVid" playsinline muted></video><canvas id="bsCan"></canvas>
+    <div class="bs-guide"><div class="bs-steps"><i id="bsS1" class="on">1 Front</i><i id="bsS2">2 Side</i></div><div class="bs-msg" id="bsMsg">Starting camera…</div><div class="bs-hold"><div id="bsHoldBar"></div></div></div>
+    <div class="bs-flash" id="bsFlash"></div></div>`;
+  try {
+    const problem = cameraProblem(); if (problem) throw new Error(problem);
+    if (!BS.lm) {
+      $("bsMsg").textContent = "Loading body model…";
+      const fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+      const opts = delegate => ({ baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task", delegate },
+        runningMode: "VIDEO", numPoses: 1, outputSegmentationMasks: true });
+      try { BS.lm = await PoseLandmarker.createFromOptions(fileset, opts("GPU")); } catch { BS.lm = await PoseLandmarker.createFromOptions(fileset, opts("CPU")); }
+    }
+    BS.stream = await getCamera();
+    const v = $("bsVid"); v.srcObject = BS.stream; await v.play();
+    BS.step = "front"; BS.still = 0; BS.prev = null; BS.lastAt = 0;
+    say("Step back so your whole body is in view, and put your hands on your head.");
+    bsLoop();
+  } catch (e) { $("bsMsg").textContent = "Couldn't start: " + cameraErrorText(e); }
+}
+
+// one pose + outline per ~6 frames a second; auto-capture once you hold the right pose still for ~1.2 s
+function bsLoop() {
+  BS.raf = requestAnimationFrame(bsLoop);
+  const v = $("bsVid"); if (!v || v.readyState < 2 || BS.busy) return;
+  const now = performance.now(); if (now - BS.lastAt < 160) return; BS.lastAt = now;
+  BS.lm.detectForVideo(v, now, res => bsFrame(res, v));
+}
+function bsFrame(res, v) {
+  const L = res.landmarks?.[0], msg = $("bsMsg"); if (!msg) return;
+  const hold = k => { $("bsHoldBar").style.width = Math.min(100, k * 100) + "%"; };
+  if (!L) { msg.textContent = "Step into view"; BS.still = 0; return hold(0); }
+  const vis = i => (L[i].visibility ?? 1) > 0.5, inFrame = i => L[i].y > 0.01 && L[i].y < 0.99;
+  if (!vis(0) || !(vis(27) || vis(28)) || !inFrame(0) || !((vis(27) && inFrame(27)) || (vis(28) && inFrame(28)))) { msg.textContent = "Step back: head to feet in view"; BS.still = 0; return hold(0); }
+  const shY = (L[11].y + L[12].y) / 2, hipY = (L[23].y + L[24].y) / 2, torso = Math.max(0.05, hipY - shY);
+  if (!(L[15].y < shY && L[16].y < shY)) { msg.textContent = "Hands on your head"; BS.still = 0; return hold(0); }
+  const ratio = Math.abs(L[11].x - L[12].x) * (v.videoWidth / v.videoHeight) / torso;   // shoulder width vs torso height
+  if (BS.step === "front" && ratio < 0.5) { msg.textContent = "Face the camera"; BS.still = 0; return hold(0); }
+  if (BS.step === "side" && ratio > 0.32) { msg.textContent = "Turn to your side"; BS.still = 0; return hold(0); }
+  // stillness: key points barely moving between checks
+  const key = [0, 11, 12, 23, 24, 27, 28].map(i => [L[i].x, L[i].y]);
+  const move = BS.prev ? Math.max(...key.map((p, i) => Math.hypot(p[0] - BS.prev[i][0], p[1] - BS.prev[i][1]))) : 1;
+  BS.prev = key;
+  if (move > 0.012) { msg.textContent = "Hold still…"; BS.still = 0; return hold(0); }
+  BS.still++; msg.textContent = "Hold still…"; hold(BS.still / 7);
+  if (BS.still < 7) return;
+  const mask = res.segmentationMasks?.[0]; if (!mask) return;
+  const m = { w: mask.width, h: mask.height, d: mask.getAsFloat32Array().slice() };
+  bsCapture(L, m, v);
+}
+async function bsCapture(L, m, v) {
+  BS.busy = true; BS.still = 0;
+  const which = BS.step, meas = bsMeasure(L, m, which);
+  const c = document.createElement("canvas"), H = 480; c.height = H; c.width = Math.round(H * v.videoWidth / v.videoHeight);
+  const g = c.getContext("2d"); g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(v, 0, 0, c.width, c.height);
+  BS.shots[which] = { meas, img: c.toDataURL("image/jpeg", 0.72) };
+  sfx.click?.(); const f = $("bsFlash"); f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
+  if (!meas) { $("bsMsg").textContent = "Couldn't see your outline clearly. Try again with a plainer background."; await wait(1800); BS.busy = false; return; }
+  if (which === "front") {
+    BS.step = "side"; $("bsS1").classList.add("done"); $("bsS2").classList.add("on");
+    say("Got it. Now turn to your side, hands still on your head."); $("bsMsg").textContent = "Turn to your side";
+    await wait(1500); BS.prev = null; BS.busy = false; return;
+  }
+  bsStopCam(); BS.busy = false; bsResult();
+}
+// widths (in cm) across the body outline at the waist, neck and hips
+function bsMeasure(L, m, view) {
+  const at = (x, y) => m.d[y * m.w + x] > 0.5;
+  const px = l => [Math.round(l.x * (m.w - 1)), Math.round(l.y * (m.h - 1))];
+  const [, noseY] = px(L[0]), cx = Math.round((L[11].x + L[12].x + L[23].x + L[24].x) / 4 * (m.w - 1));
+  const shY = Math.round((L[11].y + L[12].y) / 2 * (m.h - 1)), hipY = Math.round((L[23].y + L[24].y) / 2 * (m.h - 1)), T = hipY - shY;
+  if (T < 20) return null;
+  // the solid run of body pixels through x0 on row y
+  const run = (y, x0) => { if (y < 0 || y >= m.h) return 0; let x = Math.max(0, Math.min(m.w - 1, x0)); if (!at(x, y)) { let k = 1; while (k < 12 && !at(x + k, y) && !at(x - k, y)) k++; if (k >= 12) return 0; x = at(x + k, y) ? x + k : x - k; }
+    let a = x, b = x; while (a > 0 && at(a - 1, y)) a--; while (b < m.w - 1 && at(b + 1, y)) b++; return b - a + 1; };
+  // height in pixels: lowest body pixel to the top of the head (hands on the head add a little, so trim 1.5 %)
+  let bottom = 0; for (let y = m.h - 1; y > hipY && !bottom; y--) for (let x = 0; x < m.w; x += 2) if (at(x, y)) { bottom = y; break; }
+  const nx = Math.round(L[0].x * (m.w - 1)); let top = noseY; for (let y = noseY; y >= 0; y--) { let any = false; for (let x = nx - 6; x <= nx + 6; x++) if (x >= 0 && x < m.w && at(x, y)) { any = true; break; } if (any) top = y; else break; }
+  const hPx = (bottom - top) * 0.985, cm = (store.bodyInfo?.heightCm || 175) / hPx;
+  if (hPx < m.h * 0.35) return null;
+  const rows = (a, b) => { const out = []; for (let y = Math.round(a); y <= Math.round(b); y++) { const w = run(y, cx); if (w) out.push(w); } return out; };
+  const neckRows = []; for (let y = noseY + Math.round((shY - noseY) * 0.45); y <= shY - Math.round((shY - noseY) * 0.12); y++) { const w = run(y, Math.round((L[11].x + L[12].x) / 2 * (m.w - 1))); if (w) neckRows.push(w); }
+  const navel = run(shY + Math.round(T * 0.8), cx), waistMin = Math.min(...rows(shY + T * 0.55, shY + T * 0.85)), hipMax = Math.max(...rows(hipY - T * 0.05, hipY + T * 0.3));
+  if (!neckRows.length || !navel) return null;
+  return { view, neck: Math.min(...neckRows) * cm, navel: navel * cm, waistMin: waistMin * cm, hip: hipMax * cm, hPx };
+}
+// ellipse perimeter (Ramanujan) from a front width and a side depth
+const bsEllipse = (w, d) => { const a = w / 2, b = d / 2; return Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b))); };
+function bsEstimate(F, S, p) {
+  const fem = p.sex === "f", h = p.heightCm;
+  const neck = bsEllipse(F.neck, S.neck) * 0.98, waist = fem ? bsEllipse(F.waistMin, S.waistMin) : bsEllipse(F.navel, S.navel), hip = bsEllipse(F.hip, S.hip);
+  let navy = fem ? 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.221 * Math.log10(h)) - 450
+                 : 495 / (1.0324 - 0.19077 * Math.log10(Math.max(1, waist - neck)) + 0.15456 * Math.log10(h)) - 450;
+  let bf = navy;
+  const kg = p.weightKg; if (p.age && kg) { const bmi = kg / (h / 100) ** 2, deur = 1.2 * bmi + 0.23 * p.age - 10.8 * (fem ? 0 : 1) - 5.4; bf = navy * 0.7 + deur * 0.3; }
+  bf = Math.max(fem ? 10 : 3, Math.min(60, bf));
+  return { bf: Math.round(bf * 10) / 10, neck, waist, hip };
+}
+async function bsResult() {
+  const p = bsInfo(), F = BS.shots.front.meas, S = BS.shots.side.meas, E = bsEstimate(F, S, p);
+  const prev = bsScans().slice(-1)[0], at = Date.now();
+  bsScans().push({ at, d: dayKey(), bf: E.bf, waist: Math.round(E.waist), neck: Math.round(E.neck), hip: Math.round(E.hip), kg: p.weightKg || null });
+  if (bsScans().length > 100) bsScans().shift();
+  save(); await bsPut({ at, front: BS.shots.front.img, side: BS.shots.side.img });
+  say(`Estimated body fat: about ${Math.round(E.bf)} percent.`);
+  bsShow({ at, bf: E.bf, waist: E.waist, neck: E.neck, hip: E.hip }, { front: BS.shots.front.img, side: BS.shots.side.img }, prev);
+}
+function bsShow(sc, imgs, prev) {
+  const p = bsInfo(), delta = prev ? sc.bf - prev.bf : null, B = $("bsBody");
+  BS.step = "result";
+  B.innerHTML = `<div class="bs-res">
+    <div class="bs-eyebrow">Estimated body fat</div>
+    <div class="bs-big">${sc.bf.toFixed(1)}<span>%</span></div>
+    <div class="bs-range">${Math.max(3, sc.bf - 3).toFixed(0)}–${(sc.bf + 3).toFixed(0)} % · ${bsCat(sc.bf, p.sex)}</div>
+    ${delta != null ? `<div class="bs-delta ${delta <= 0 ? "dn" : "up"}">${delta <= 0 ? "▼" : "▲"} ${Math.abs(delta).toFixed(1)} % since ${new Date(prev.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</div>` : ""}
+    <div class="bs-photos">${imgs?.front ? `<figure><img src="${imgs.front}" alt="Front photo"><figcaption>Front</figcaption></figure>` : ""}${imgs?.side ? `<figure><img src="${imgs.side}" alt="Side photo"><figcaption>Side</figcaption></figure>` : ""}</div>
+    <div class="bs-meas"><div><b>${bsUnitLen(sc.waist)}</b><span>Waist</span></div><div><b>${bsUnitLen(sc.neck)}</b><span>Neck</span></div><div><b>${bsUnitLen(sc.hip)}</b><span>Hips</span></div></div>
+    <div class="muted bs-fine">Estimated from your body outline with the US Navy tape-measure method${p.age ? ", blended with a BMI-based estimate" : ""}. Expect about ±3–5 %. Track the trend, not one number.</div>
+    <div class="bs-btns"><button id="bsDone">Done</button><button class="ghost" id="bsAgain">Scan again</button>${bsScans().length > 1 ? `<button class="ghost" id="bsHist2">Past scans</button>` : ""}</div>
+  </div>`;
+  $("bsDone").onclick = bsClose; onBsSaved?.();
+  $("bsAgain").onclick = () => { BS.shots = {}; bsStart(); };
+  if ($("bsHist2")) $("bsHist2").onclick = () => { BS.step = "history"; bsRender(); };
+}
+async function bsHistory() {
+  const list = bsScans().slice().reverse(), B = $("bsBody");
+  const pts = bsScans().map(s => s.bf), lo = Math.min(...pts) - 1, hi = Math.max(...pts) + 1, W = 300, Hh = 80;
+  const line = pts.length > 1 ? pts.map((v, i) => `${(i / (pts.length - 1) * W).toFixed(1)},${(Hh - (v - lo) / (hi - lo) * Hh).toFixed(1)}`).join(" ") : "";
+  B.innerHTML = `<div class="bs-hist"><h2>Past scans</h2>
+    ${line ? `<svg class="bs-chart" viewBox="-4 -4 ${W + 8} ${Hh + 8}" preserveAspectRatio="none"><polyline points="${line}"/></svg>` : ""}
+    <div class="bs-list">${list.map(s => `<div class="bs-row"><button class="bs-row-main" data-at="${s.at}"><b>${s.bf.toFixed(1)} %</b><span>${new Date(s.at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}</span><span class="muted">${bsUnitLen(s.waist)} waist</span></button><button class="ghost bs-del" data-del="${s.at}" aria-label="Delete scan">✕</button></div>`).join("")}</div>
+    <button class="ghost" id="bsBack">Back</button></div>`;
+  $("bsBack").onclick = () => { BS.step = "setup"; bsRender(); };
+  B.querySelectorAll("[data-at]").forEach(b => b.onclick = async () => { const s = bsScans().find(x => x.at === +b.dataset.at), i = bsScans().indexOf(s); bsShow(s, await bsGet(s.at), i > 0 ? bsScans()[i - 1] : null); });
+  B.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { if (!confirm("Delete this scan and its photos?")) return; const at = +b.dataset.del; store.bodyScans = bsScans().filter(x => x.at !== at); save(); bsDel(at); bsScans().length ? bsHistory() : (BS.step = "setup", bsRender()); });
+}
+function bsSyncLast() { const s = bsScans().slice(-1)[0], el = $("bsLast"); if (el) el.textContent = s ? `Last: ${s.bf.toFixed(1)} % on ${new Date(s.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : "Estimate your body fat from two photos"; }
+bsSyncLast(); onBsSaved = bsSyncLast;
+window.__bscan = { measure: bsMeasure, estimate: bsEstimate, ellipse: bsEllipse, open: bsOpen, show: bsShow, result: bsResult, history: () => { BS.step = "history"; bsRender(); }, get S() { return BS; } };   // test hook
 
 // ---- account window ----
 let acctView = "in";   // "in" (sign in) | "up" (create account)
