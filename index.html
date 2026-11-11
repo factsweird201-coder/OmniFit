@@ -1147,7 +1147,8 @@
   .chip span { font-weight: 600; letter-spacing: .08em; }
 
   /* start screen: a setup diagram instead of empty space */
-  .overlay { gap: 14px; }
+  .overlay { gap: 14px; justify-content: safe center; overflow-y: auto; }
+  @media (max-height: 760px), (min-width: 921px) and (max-width: 1180px) { .setup-art { width: min(260px, 70%); margin: 0; } .overlay { gap: 10px; padding: 24px 20px; } .overlay .t { font-size: 32px; } }
   .setup-art { width: min(360px, 86%); margin: 4px 0 -2px; }
   .setup-art svg { display: none; width: 100%; height: auto; overflow: visible; }
   .overlay[data-ex="push"] .sa-push, .overlay[data-ex="squat"] .sa-squat, .overlay[data-ex="situp"] .sa-situp { display: block; }
@@ -1736,7 +1737,7 @@ const KEY = "pushupRanks.v1";
 const BACKUP_KEY = KEY + ".erased";   // copy kept when you erase progress, so it can be undone
 
 let store = { total: 0, best: 0, sets: 0, days: {}, goal: 50, bosses: {}, muted: false, profile: null, weights: [], kcal: 0 };
-try { store = { ...store, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch {}
+try { store = { ...store, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch { try { localStorage.setItem(KEY + ".unreadable", localStorage.getItem(KEY)); } catch {} }   // keep a copy instead of overwriting it
 store.days ||= {}; store.bosses ||= {}; store.weights ||= []; store.kcal ||= 0; store.campaign ||= {};
 
 const KG_PER_LB = 0.45359237;
@@ -1957,7 +1958,8 @@ function buildSurveyOptions() {
     $(id).querySelectorAll(".sv-opt").forEach(x => x.classList.toggle("sel", x === b));
     tone(880, 0.06, "triangle", 0.1);
     renderSurvey();
-    setTimeout(() => { if (sv[field] === b.dataset.key && sv.step < SV_LAST) { sv.step++; renderSurvey(); } }, 380);
+    const at = sv.step;   // only auto-advance if the user hasn't already pressed Next (otherwise the next question gets skipped)
+    setTimeout(() => { if (sv.step === at && sv[field] === b.dataset.key && sv.step < SV_LAST) { sv.step++; renderSurvey(); } }, 380);
   });
   wire("goalOpts", "goal"); wire("physOpts", "physique"); wire("levelOpts", "level");
 }
@@ -1967,6 +1969,7 @@ function stepReady(s) {
   return s === 1 ? weightOk() : s === 2 ? !!sv.goal : s === 3 ? !!sv.physique : s === 4 ? !!sv.level : true;
 }
 function renderSurvey() {
+  if (sv.step === SV_LAST) { const miss = [1, 2, 3, 4].find(i => !stepReady(i)); if (miss) sv.step = miss; }   // never show the plan with a question unanswered
   $("svDots").innerHTML = Array.from({ length: SV_LAST + 1 }, (_, i) => `<i class="${i <= sv.step ? "on" : ""}"></i>`).join("");
   document.querySelectorAll(".sv-step").forEach(el => el.classList.toggle("on", +el.dataset.step === sv.step));
   $("svBack").style.visibility = sv.step === 0 || (sv.editing && sv.step === 1) ? "hidden" : "visible";
@@ -7392,6 +7395,15 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) { if ((store.updatedAt || 0) > (acct.localAt || 0)) { clearTimeout(pushTimer); syncNow({ quiet: true }); } }
   else syncNow({ quiet: true });
 });
+
+// new day while the app stays open (e.g. the Mac app left running overnight): move "today" everywhere
+let shownDay = dayKey();
+setInterval(() => {
+  const k = dayKey(); if (k === shownDay) return;
+  const was = shownDay; shownDay = k;
+  if (foodDay === was) foodDay = k;
+  renderRank(); if (coachInit) renderCoach(); foodRefresh();
+}, 30000);
 
 // ---- account window ----
 let acctView = "in";   // "in" (sign in) | "up" (create account)
