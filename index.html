@@ -7688,7 +7688,7 @@ window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro };   // test
 
 
 // ================= BODY SCAN =================
-// Two photos (front, then side-on) with hands on your head. The pose model's body outline gives your height in
+// Two photos: front with arms a little out from the sides, then side-on with arms relaxed (arms raised hide the neck). The pose model's body outline gives your height in
 // pixels (your real height sets the scale) and the width of your waist, neck and hips in each view; front width +
 // side depth make an ellipse, so we get circumferences, and the US Navy tape-measure formula turns them into body fat.
 // Blended 70/30 with the BMI-based Deurenberg formula when your age is known. Rough: about ±3–5 %.
@@ -7726,10 +7726,10 @@ function bsRender() {
     const last = bsScans().slice(-1)[0];
     B.innerHTML = `
       <div class="bs-intro">
-        <div class="bs-pose" aria-hidden="true"><svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-14 48M60 86l14 48M52 40l-18-16 14-14M68 40l18-16-14-14"/></svg><span>Front</span>
-          <svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-5 48M60 86l5 48M60 40l13-11-7-15"/></svg><span>Side</span></div>
+        <div class="bs-pose" aria-hidden="true"><svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-14 48M60 86l14 48M53 40l-20 22-6 20M67 40l20 22 6 20"/></svg><span>Front</span>
+          <svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-5 48M60 86l5 48M60 40l2 26 2 22"/></svg><span>Side</span></div>
         <h2>Estimate your body fat</h2>
-        <p class="muted">Stand 2–3 m from the camera so your whole body is in view, in fitted clothes, with your hands on your head. It takes a photo from the front, then you turn sideways for the second one. Your photos never leave this device.</p>
+        <p class="muted">Stand 2–3 m from the camera so your whole body is in view, in fitted clothes. Face the camera with your arms held a little out from your sides for the first photo, then turn sideways with your arms relaxed for the second. Your photos never leave this device.</p>
         <div class="bs-form">
           <label>Sex <span class="bs-seg" id="bsSex"><button data-v="m" class="${p.sex !== "f" ? "on" : ""}">Male</button><button data-v="f" class="${p.sex === "f" ? "on" : ""}">Female</button></span></label>
           <label>Height ${lb ? `<span class="bs-hgt"><input id="bsFt" type="number" inputmode="numeric" min="3" max="8" value="${ft}"> ft <input id="bsIn" type="number" inputmode="numeric" min="0" max="11" value="${inch}"> in</span>`
@@ -7782,7 +7782,7 @@ async function bsStart() {
     BS.stream = await getCamera();
     const v = $("bsVid"); v.srcObject = BS.stream; await v.play();
     BS.step = "front"; BS.still = 0; BS.prev = null; BS.lastAt = 0; BS.empty = 0;
-    say("Step back so your whole body is in view, and put your hands on your head.");
+    say("Step back so your whole body is in view, and hold your arms a little out from your sides.");
     bsLoop();
   } catch (e) { $("bsMsg").textContent = "Couldn't start: " + cameraErrorText(e); }
 }
@@ -7822,7 +7822,9 @@ function bsFrame(res, v) {
   const vis = i => (L[i].visibility ?? 1) > 0.5, inFrame = i => L[i].y > 0.01 && L[i].y < 0.99;
   if (!vis(0) || !(vis(27) || vis(28)) || !inFrame(0) || !((vis(27) && inFrame(27)) || (vis(28) && inFrame(28)))) { msg.textContent = "Step back: head to feet in view"; BS.still = 0; return hold(0); }
   const shY = (L[11].y + L[12].y) / 2, hipY = (L[23].y + L[24].y) / 2, torso = Math.max(0.05, hipY - shY);
-  if (!(L[15].y < shY && L[16].y < shY)) { msg.textContent = "Hands on your head"; BS.still = 0; return hold(0); }
+  const ax = v.videoWidth / v.videoHeight;
+  if (L[15].y < shY || L[16].y < shY) { msg.textContent = "Lower your arms"; BS.still = 0; return hold(0); }
+  if (BS.step === "front" && Math.min(Math.abs(L[15].x - L[23].x), Math.abs(L[16].x - L[24].x)) * ax < torso * 0.22) { msg.textContent = "Hold your arms a little out from your sides"; BS.still = 0; return hold(0); }
   const ratio = Math.abs(L[11].x - L[12].x) * (v.videoWidth / v.videoHeight) / torso;   // shoulder width vs torso height
   if (BS.step === "front" && ratio < 0.5) { msg.textContent = "Face the camera"; BS.still = 0; return hold(0); }
   if (BS.step === "side" && ratio > 0.32) { msg.textContent = "Turn to your side"; BS.still = 0; return hold(0); }
@@ -7846,7 +7848,7 @@ async function bsCapture(L, m, v) {
   if (!meas || meas.fail) { $("bsMsg").textContent = meas?.fail || "Couldn't measure that one. Try again."; console.warn("body scan:", meas?.fail); await wait(2200); BS.prev = null; BS.busy = false; return; }
   if (which === "front") {
     BS.step = "side"; $("bsS1").classList.add("done"); $("bsS2").classList.add("on");
-    say("Got it. Now turn to your side, hands still on your head."); $("bsMsg").textContent = "Turn to your side";
+    say("Got it. Now turn to your side and let your arms relax."); $("bsMsg").textContent = "Turn to your side";
     await wait(1500); BS.prev = null; BS.busy = false; return;
   }
   bsStopCam(); BS.busy = false; bsResult();
@@ -7861,7 +7863,7 @@ function bsMeasure(L, m, view) {
   // the solid run of body pixels through x0 on row y
   const run = (y, x0) => { if (y < 0 || y >= m.h) return 0; let x = Math.max(0, Math.min(m.w - 1, x0)); if (!at(x, y)) { let k = 1; while (k < 12 && !at(x + k, y) && !at(x - k, y)) k++; if (k >= 12) return 0; x = at(x + k, y) ? x + k : x - k; }
     let a = x, b = x; while (a > 0 && at(a - 1, y)) a--; while (b < m.w - 1 && at(b + 1, y)) b++; return b - a + 1; };
-  // height in pixels: lowest body pixel to the top of the head (hands on the head add a little, so trim 1.5 %)
+  // height in pixels: lowest body pixel to the top of the head (hair adds a little, so trim 0.5 %)
   // feet: lowest body pixel, but not below the feet the pose model found (ignores the floor or things behind you)
   const footY = Math.max(...[27, 28, 29, 30, 31, 32].map(i => L[i]?.y ?? 0)) * (m.h - 1), floorCap = Math.min(m.h - 1, Math.round(footY + m.h * 0.02));
   let bottom = 0; for (let y = floorCap; y > hipY && !bottom; y--) for (let x = 0; x < m.w; x += 2) if (at(x, y)) { bottom = y; break; }
@@ -7869,12 +7871,12 @@ function bsMeasure(L, m, view) {
   const nx = Math.round(L[0].x * (m.w - 1)), headW = Math.max(6, Math.round(Math.abs(L[7].x - L[8].x) * (m.w - 1) / 2) || 6);
   let top = -1; for (let y = noseY; y >= 0; y--) { let any = false; for (let x = nx - headW; x <= nx + headW; x++) if (x >= 0 && x < m.w && at(x, y)) { any = true; break; } if (any) top = y; else if (top >= 0) break; }
   if (top < 0) top = Math.round(noseY - (shY - noseY) * 0.9);   // no outline above the nose: estimate the top of the head
-  const hPx = (bottom - top) * 0.985, cm = (store.bodyInfo?.heightCm || 175) / hPx;
+  const hPx = (bottom - top) * 0.995, cm = (store.bodyInfo?.heightCm || 175) / hPx;
   if (hPx < m.h * 0.3) return { fail: "Step a bit closer so you're bigger in the picture" };
   const rows = (a, b) => { const out = []; for (let y = Math.round(a); y <= Math.round(b); y++) { const w = run(y, cx); if (w) out.push(w); } return out; };
   const neckRows = []; for (let y = noseY + Math.round((shY - noseY) * 0.45); y <= shY - Math.round((shY - noseY) * 0.12); y++) { const w = run(y, Math.round((L[11].x + L[12].x) / 2 * (m.w - 1))); if (w) neckRows.push(w); }
   const navel = run(shY + Math.round(T * 0.8), cx), waistMin = Math.min(...rows(shY + T * 0.55, shY + T * 0.85)), hipMax = Math.max(...rows(hipY - T * 0.05, hipY + T * 0.3));
-  if (!navel) return { fail: "Couldn't see your waist: keep your arms up and away from your sides" };
+  if (!navel) return { fail: "Couldn't see your waist: hold your arms a little further out" };
   if (!neckRows.length) return { fail: "Couldn't see your neck: tie long hair back or lower your chin a little" };
   return { view, neck: Math.min(...neckRows) * cm, navel: navel * cm, waistMin: waistMin * cm, hip: hipMax * cm, hPx };
 }
@@ -7882,11 +7884,11 @@ function bsMeasure(L, m, view) {
 const bsEllipse = (w, d) => { const a = w / 2, b = d / 2; return Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b))); };
 function bsEstimate(F, S, p) {
   const fem = p.sex === "f", h = p.heightCm;
-  const neck = bsEllipse(F.neck, S.neck) * 0.98, waist = fem ? bsEllipse(F.waistMin, S.waistMin) : bsEllipse(F.navel, S.navel), hip = bsEllipse(F.hip, S.hip);
+  const neckRaw = bsEllipse(F.neck, S.neck) * 0.98, neck = Math.max(h * (fem ? 0.165 : 0.18), Math.min(h * (fem ? 0.205 : 0.225), neckRaw)), waist = fem ? bsEllipse(F.waistMin, S.waistMin) : bsEllipse(F.navel, S.navel), hip = bsEllipse(F.hip, S.hip);
   let navy = fem ? 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.221 * Math.log10(h)) - 450
                  : 495 / (1.0324 - 0.19077 * Math.log10(Math.max(1, waist - neck)) + 0.15456 * Math.log10(h)) - 450;
   let bf = navy;
-  const kg = p.weightKg; if (p.age && kg) { const bmi = kg / (h / 100) ** 2, deur = 1.2 * bmi + 0.23 * p.age - 10.8 * (fem ? 0 : 1) - 5.4; bf = navy * 0.7 + deur * 0.3; }
+  const kg = p.weightKg; if (p.age && kg) { const bmi = kg / (h / 100) ** 2, deur = p.age < 18 ? 1.51 * bmi - 0.70 * p.age - 3.6 * (fem ? 0 : 1) + 1.4 : 1.2 * bmi + 0.23 * p.age - 10.8 * (fem ? 0 : 1) - 5.4; bf = navy * 0.7 + deur * 0.3; }
   bf = Math.max(fem ? 10 : 3, Math.min(60, bf));
   return { bf: Math.round(bf * 10) / 10, neck, waist, hip };
 }
