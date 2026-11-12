@@ -74,12 +74,51 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKUIDelegate, WKNaviga
         let a = NSAlert(); a.messageText = message; a.runModal(); completionHandler()
     }
 
+    // Pages that open a popup with window.open (PayPal checkout) get a real small window that shares this
+    // web view's session, so the popup can talk back to the page when the payment is done.
+    var popups: [PopupWindow] = []
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration,
+                 for action: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        let p = PopupWindow(configuration: configuration, parent: window) { [weak self] done in
+            self?.popups.removeAll { $0 === done }
+        }
+        popups.append(p)
+        return p.webView
+    }
+
     // Open any external links in the real browser instead of inside the app.
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if action.navigationType == .linkActivated, let u = action.request.url {
             NSWorkspace.shared.open(u); decisionHandler(.cancel)
         } else { decisionHandler(.allow) }
+    }
+}
+
+final class PopupWindow: NSObject, WKUIDelegate, WKNavigationDelegate, NSWindowDelegate {
+    let webView: WKWebView
+    let win: NSWindow
+    let onClose: (PopupWindow) -> Void
+    init(configuration: WKWebViewConfiguration, parent: NSWindow?, onClose: @escaping (PopupWindow) -> Void) {
+        webView = AppWebView(frame: .zero, configuration: configuration)
+        win = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 720),
+                       styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+        self.onClose = onClose
+        super.init()
+        webView.uiDelegate = self
+        webView.navigationDelegate = self
+        win.contentView = webView
+        win.isReleasedWhenClosed = false
+        win.delegate = self
+        if let f = parent?.frame { win.setFrameOrigin(NSPoint(x: f.midX - 240, y: f.midY - 360)) } else { win.center() }
+        win.makeKeyAndOrderFront(nil)
+    }
+    func webViewDidClose(_ webView: WKWebView) { win.close() }
+    func windowWillClose(_ notification: Notification) { onClose(self) }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { win.title = webView.title ?? "" }
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String,
+                 initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        let a = NSAlert(); a.messageText = message; a.runModal(); completionHandler()
     }
 }
 

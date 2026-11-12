@@ -1293,13 +1293,8 @@
   .bs-go .pro-tag { margin-right: 6px; background: var(--ink); color: var(--accent); }
   .bs-open.pro-lock::after { margin-left: auto; }
 
-  .pro-key { margin-top: 12px; padding: 12px; border-radius: 12px; background: var(--well); border: 1px solid var(--line); }
-  .pro-key-p { font-size: 13px; margin-bottom: 8px; }
-  .pro-key-row { display: flex; gap: 8px; }
-  .pro-key-row input { flex: 1; min-width: 0; font: 600 14px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .03em; padding: 10px 12px; border-radius: 9px; background: var(--panel); color: var(--text); border: 1px solid var(--line2); }
-  .pro-key-row input:focus { outline: none; border-color: var(--accent); }
-  .pro-key-row button { padding: 0 16px; border-radius: 9px; background: var(--accent); color: var(--ink); font-weight: 700; border: 0; }
-  .pro-key-err { color: var(--bad); font-size: 13px; margin-top: 6px; min-height: 0; }
+  .pro-pp { margin-top: 4px; min-height: 44px; }
+  .pro-key-err { color: var(--bad); font-size: 13px; margin-top: 6px; text-align: center; }
   .pro-key-err:empty { display: none; }
 </style>
 </head>
@@ -1654,13 +1649,10 @@
       <li data-k="future"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Future Pro updates</b><span>New Pro features are included at no extra cost.</span></div></li>
     </ul>
     <button id="proBuy" class="pro-buy">Unlock for <span class="pro-price"></span></button>
-    <div class="pro-key" id="proKeyBox" hidden>
-      <div class="muted pro-key-p" id="proKeyP">Your license key is in your receipt email from Lemon Squeezy.</div>
-      <div class="pro-key-row"><input id="proKey" placeholder="License key" autocomplete="off" autocapitalize="characters" spellcheck="false"><button id="proKeyGo">Unlock</button></div>
-      <div class="pro-key-err" id="proKeyErr"></div>
-    </div>
-    <div class="pro-links"><button class="pro-link" id="proRestore">I have a license key</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
-    <div class="muted pro-fine">Unlocks on every device where you're signed in to OmniFit, or enter your key on each one.</div>
+    <div class="pro-pp" id="proPP" hidden></div>
+    <div class="pro-key-err" id="proPPMsg"></div>
+    <div class="pro-links"><button class="pro-link" id="proRestore">Restore purchase</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
+    <div class="muted pro-fine">Sign in to OmniFit first and Pro follows you to every device.</div>
     <div class="pro-dev" id="proDev" hidden>Preview only · <button class="pro-link" id="proSim">Simulate purchase</button> · <button class="pro-link" id="proUnsim">Remove Pro</button></div>
   </div>
 </div>
@@ -2220,7 +2212,7 @@ function logWeightKg(kg) {
 
 // ================= PROFILE PANEL =================
 function renderProfile() {
-  const p = store.profile;
+  const p = store.profile?.goal && GOALS[store.profile.goal] ? store.profile : null;   // an unfinished profile shows as none
   $("profilePanel").hidden = !p;
   if (!p) return;
   const g = GOALS[p.goal];
@@ -3738,10 +3730,10 @@ const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
 // NOT LIVE YET. The paywall only exists for someone who opens the app with ?paywall=1 (remembered on that device;
 // ?paywall=0 turns it off again). For everyone else isPro() is always true, so nothing changes.
 // Pro = a one-time unlock: the whole Food tab + Part 2 of every campaign.
-// Payments: Lemon Squeezy (they take the card, handle sales tax, pay out). Fill these in from the Lemon Squeezy dashboard:
-// checkoutUrl = the product's checkout link (Share), storeId / productId = the numbers on the store and product pages.
-// The ids make sure only keys for OmniFit Pro unlock it (0 = don't check).
-const PRO = { price: "$9.99", currency: "CAD", checkoutUrl: "", storeId: 0, productId: 0 };
+// Payments: PayPal buttons (PayPal or card), money goes to the PayPal business account the client ID belongs to.
+// paypalClientId = the Client ID from developer.paypal.com > Apps & Credentials (Live). It's public, safe to ship.
+// Use "sb" for PayPal's sandbox (fake money) while testing.
+const PRO = { price: "$9.99", amount: "9.99", currency: "CAD", paypalClientId: "" };
 const PAYWALL = (() => { try {
   if (/[?&]paywall=1\b/.test(location.search)) localStorage.setItem("omnifit.paywall", "1");
   if (/[?&]paywall=0\b/.test(location.search)) localStorage.removeItem("omnifit.paywall");
@@ -7688,6 +7680,7 @@ function openPro(from = "") {
   proSync();
   $("proModal").querySelectorAll(".pro-list li").forEach(li => li.classList.toggle("hl", li.dataset.k === from));
   $("proDev").hidden = !PAYWALL;
+  if (!isPro()) ppDraw();
   $("proModal").classList.add("show");
 }
 const closePro = () => $("proModal").classList.remove("show");
@@ -7701,68 +7694,56 @@ $("proModal").onclick = e => { if (e.target === $("proModal")) closePro(); };
 document.addEventListener("keydown", e => { if (e.key === "Escape" && $("proModal").classList.contains("show")) closePro(); });
 // Checkout isn't connected yet. Plan: a Stripe Payment Link (one-time, CAD) that needs you signed in, and a small
 // webhook (Cloudflare Worker) that marks users/{uid} as Pro in the database; the app reads that on sign-in.
-// Buying opens Lemon Squeezy's checkout in the browser (a real link click, so the Mac app hands it to the browser too).
-// They email a license key; pasting it here checks it with Lemon Squeezy's license API and unlocks Pro on this device.
-function proKeyBox(text) {
-  $("proKeyBox").hidden = false; $("proKeyErr").textContent = "";
-  if (text) $("proKeyP").textContent = text;
-  setTimeout(() => $("proKey").focus(), 50);
+// Buying: PayPal's own buttons (PayPal account or debit/credit card) appear in the sheet. When the payment is captured
+// Pro is saved with the PayPal order id as the receipt. If you're signed in, Pro syncs to your other devices.
+let ppLoad = null, ppDrawn = false;
+function ppSdk() {
+  if (window.paypal) return Promise.resolve(window.paypal);
+  return ppLoad ||= new Promise((ok, bad) => {
+    const sc = document.createElement("script");
+    sc.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PRO.paypalClientId)}&currency=${PRO.currency}&intent=capture&components=buttons&disable-funding=paylater`;
+    sc.onload = () => ok(window.paypal); sc.onerror = () => { ppLoad = null; bad(new Error("PayPal didn't load")); };
+    document.head.appendChild(sc);
+  });
 }
-$("proBuy").onclick = () => {
-  if (!PRO.checkoutUrl) return toast("Checkout isn't connected yet (preview)");
-  const a = document.createElement("a"); a.href = PRO.checkoutUrl; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
-  proKeyBox("After you pay, Lemon Squeezy emails you a license key. Paste it here to unlock.");
-};
-$("proRestore").onclick = () => proKeyBox("Your license key is in your receipt email from Lemon Squeezy.");
-const LS_API = "https://api.lemonsqueezy.com/v1/licenses/";
-async function lsCall(what, params) {
-  const res = await fetch(LS_API + what, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(params) });
-  let d = {}; try { d = await res.json(); } catch {}
-  return d;
-}
-const lsOurs = meta => (!PRO.storeId || meta?.store_id === PRO.storeId) && (!PRO.productId || meta?.product_id === PRO.productId);
-async function proActivate() {
-  const key = $("proKey").value.trim(), err = $("proKeyErr"), btn = $("proKeyGo");
-  if (key.length < 8) { err.textContent = "That doesn't look like a license key."; return; }
-  btn.disabled = true; btn.textContent = "Checking…"; err.textContent = "";
+async function ppDraw() {
+  const box = $("proPP"), msg = $("proPPMsg");
+  if (!PRO.paypalClientId || ppDrawn) return;
+  msg.textContent = "";
   try {
-    const name = "OmniFit " + (navigator.userAgent.includes("Macintosh") ? "Mac" : /iPhone|iPad|Android/.test(navigator.userAgent) ? "phone" : "browser") + " " + new Date().toISOString().slice(0, 10);
-    const d = await lsCall("activate", { license_key: key, instance_name: name });
-    if (!d.activated) {
-      const e = String(d.error || "");
-      err.textContent = /limit/i.test(e) ? "This key is already used on the most devices it allows. Contact support to move it."
-        : /not found|invalid/i.test(e) ? "That key wasn't found. Check it matches your receipt email."
-        : e || "Couldn't check that key. Try again.";
-      return;
-    }
-    if (!lsOurs(d.meta)) { err.textContent = "That key is for a different product."; return; }
-    if (d.license_key?.status && !/active|inactive/.test(d.license_key.status)) { err.textContent = `That key is ${d.license_key.status}.`; return; }
-    store.pro = { at: Date.now(), via: "lemonsqueezy", key, instance: d.instance?.id, checked: Date.now() };
-    $("proKey").value = ""; $("proKeyBox").hidden = true;
-    proGranted("lemonsqueezy");
+    const pp = await ppSdk();
+    box.innerHTML = ""; box.hidden = false; $("proBuy").hidden = true; ppDrawn = true;
+    await pp.Buttons({
+      style: { layout: "vertical", color: "gold", shape: "rect", label: "pay", height: 44 },
+      createOrder: (d, a) => a.order.create({
+        intent: "CAPTURE",
+        purchase_units: [{ description: "OmniFit Pro (one-time unlock)", amount: { value: PRO.amount, currency_code: PRO.currency } }],
+        application_context: { shipping_preference: "NO_SHIPPING", brand_name: "OmniFit" },
+      }),
+      onApprove: async (d, a) => {
+        msg.textContent = "";
+        const o = await a.order.capture();
+        const cap = o?.purchase_units?.[0]?.payments?.captures?.[0];
+        if (o?.status === "COMPLETED" && (!cap || cap.status === "COMPLETED" || cap.status === "PENDING")) {
+          store.pro = { at: Date.now(), via: "paypal", order: o.id, pending: cap?.status === "PENDING" || undefined };
+          proGranted("paypal");
+        } else msg.textContent = "PayPal didn't finish the payment. You haven't been charged.";
+      },
+      onCancel: () => { msg.textContent = ""; },
+      onError: e => { console.warn("paypal", e); msg.textContent = "Something went wrong with PayPal. Try again."; },
+    }).render(box);
   } catch (e) {
-    err.textContent = navigator.onLine === false ? "You're offline. Connect to the internet and try again." : "Couldn't reach Lemon Squeezy. Try again in a minute.";
-  } finally { btn.disabled = false; btn.textContent = "Unlock"; }
+    ppDrawn = false; box.hidden = true; $("proBuy").hidden = false;
+    msg.textContent = navigator.onLine === false ? "You're offline. Connect to the internet to buy." : "Couldn't load PayPal. Try again in a minute.";
+  }
 }
-$("proKeyGo").onclick = proActivate;
-$("proKey").onkeydown = e => { if (e.key === "Enter") proActivate(); };
-// Once a week, re-check the key so refunded or disabled keys stop working. No internet or an error keeps Pro.
-async function proRecheck() {
-  const p = store.pro; if (p?.via !== "lemonsqueezy" || !p.key || Date.now() - (p.checked || 0) < 7 * 864e5) return;
-  try {
-    const d = await lsCall("validate", { license_key: p.key, ...(p.instance ? { instance_id: p.instance } : {}) });
-    const st = d.license_key?.status;
-    if (d.valid === false && (/refunded|disabled|expired/.test(st || "") || /not found/i.test(d.error || ""))) {
-      delete store.pro; save(); proSync(); foodRefresh(); toast("Your OmniFit Pro key is no longer active");
-    } else if (d.valid) { p.checked = Date.now(); save(); }
-  } catch {}
-}
-setTimeout(proRecheck, 8000);
+$("proBuy").onclick = () => PRO.paypalClientId ? ppDraw() : toast("Checkout isn't connected yet (preview)");
+$("proRestore").onclick = () => toast(acct ? "Pro comes back automatically on the account you bought it with. Make sure that's the one you're signed in to." : "Sign in to the OmniFit account you bought Pro on and it comes back automatically.");
 $("proSim").onclick = () => proGranted("preview");
 $("proUnsim").onclick = () => { delete store.pro; save(); closePro(); proSync(); bsSyncLast?.(); if (!$("bScan").hidden && BS.step === "setup") bsRender(); foodRefresh(); if (mode === "campaign") renderCampaign(); toast("Pro removed (preview)"); };
 $("fdProBtn").onclick = () => openPro("food");
 proSync();
-window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro, recheck: proRecheck };   // test hook
+window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro };   // test hook
 
 
 // ================= BODY SCAN =================
