@@ -3749,21 +3749,19 @@ const PART_COLORS = ["#ffc21a", "#ff5fa8", "#b8e04a", "#7ad8ff", "#c08aff", "#ff
 const CAMPAIGNS = [{ name: "Push-Up Campaign", icon: "💪", ex: "push", parts: [0, 1] }, { name: "Squat Campaign", icon: "🦵", ex: "squat", parts: [2, 3] }, { name: "Sit-Up Campaign", icon: "🛏️", ex: "situp", parts: [4, 5] }];
 const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
 // ---------- OmniFit Pro (paywall) ----------
-// NOT LIVE YET. The paywall only exists for someone who opens the app with ?paywall=1 (remembered on that device;
-// ?paywall=0 turns it off again). For everyone else isPro() is always true, so nothing changes.
-// Pro = a one-time unlock: the whole Food tab + Part 2 of every campaign.
+// Pro = a one-time unlock: the whole Food tab + Part 2 of every campaign + body scans after the first free one.
 // Payments: PayPal buttons (PayPal or card), money goes to the PayPal business account the client ID belongs to.
 // paypalClientId = the Client ID from developer.paypal.com > Apps & Credentials (Live). It's public, safe to ship.
 // Use "sb" for PayPal's sandbox (fake money) while testing. Needs a Business account.
 // paypalMe = the PayPal.Me name (paypal.me/<name>) for a personal account: buyers pay there with their purchase code in
 // the note, and you send them an unlock code made with tools/unlock.mjs. Used when paypalClientId is empty.
 const PRO = { price: "$9.99", amount: "9.99", currency: "CAD", paypalClientId: "", paypalMe: "OwenW2026" };
-const PAYWALL = (() => { try {
-  if (/[?&]paywall=1\b/.test(location.search)) localStorage.setItem("omnifit.paywall", "1");
-  if (/[?&]paywall=0\b/.test(location.search)) localStorage.removeItem("omnifit.paywall");
-  return localStorage.getItem("omnifit.paywall") === "1";
-} catch { return false; } })();
-const isPro = () => !PAYWALL || !!store.pro?.at;
+// The paywall is on for everyone (public since 2026-11-11). Only local testing can switch it off with ?paywall=0,
+// and only local testing shows the Simulate purchase buttons (a simulated purchase doesn't count anywhere else).
+const PRO_DEV = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const PAYWALL = !(PRO_DEV && /[?&]paywall=0\b/.test(location.search));
+try { localStorage.removeItem("omnifit.paywall"); } catch {}
+const isPro = () => !PAYWALL || (!!store.pro?.at && (store.pro.via !== "preview" || PRO_DEV));
 const proPart = pi => CAMPAIGNS.some(c => c.parts.indexOf(pi) >= 1);   // Part 2 (and later) of each campaign
 const partProLocked = pi => proPart(pi) && !isPro();
 const partNo = pi => CAMPAIGNS[campOfPart(pi)].parts.indexOf(pi);   // 0 = part one of its own campaign
@@ -7703,7 +7701,7 @@ function proSync() {
 function openPro(from = "") {
   proSync();
   $("proModal").querySelectorAll(".pro-list li").forEach(li => li.classList.toggle("hl", li.dataset.k === from));
-  $("proDev").hidden = !PAYWALL;
+  $("proDev").hidden = !PRO_DEV;
   if (!isPro()) ppDraw();
   $("proModal").classList.add("show");
 }
@@ -7805,7 +7803,7 @@ $("proUnlockGo").onclick = proUnlock;
 $("proUnlock").onkeydown = e => { if (e.key === "Enter") proUnlock(); };
 $("proBuy").onclick = () => PRO.paypalClientId ? ppDraw() : PRO.paypalMe ? proMeShow(false) : toast("Checkout isn't connected yet (preview)");
 $("proRestore").onclick = () => proMeShow(true);
-$("proSim").onclick = () => proGranted("preview");
+$("proSim").onclick = () => PRO_DEV && proGranted("preview");
 $("proUnsim").onclick = () => { delete store.pro; save(); closePro(); proSync(); bsSyncLast?.(); if (!$("bScan").hidden && BS.step === "setup") bsRender(); foodRefresh(); if (mode === "campaign") renderCampaign(); toast("Pro removed (preview)"); };
 $("fdProBtn").onclick = () => openPro("food");
 proSync();
