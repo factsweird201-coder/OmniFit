@@ -1356,6 +1356,14 @@
   .pro-card[data-plan="pro"] .pl-buy, .pro-card[data-plan="pro"] #plSeePro { display: none; }
   .pro-card[data-plan="pro"] .pl-have { display: block; }
   .pro-fine { margin-top: 14px; }
+
+  /* plan chip in the header: your plan, opens the Plans sheet */
+  .plan-chip { display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 11px; border-radius: 10px; background: var(--raised); color: var(--muted); border: 1px solid var(--line2); font: 700 12px var(--body); letter-spacing: .06em; text-transform: uppercase; box-shadow: none !important; white-space: nowrap; }
+  .plan-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .6; }
+  .plan-chip.is-pro { color: var(--accent); border-color: rgba(255,194,26,.4); background: rgba(255,194,26,.08); }
+  .plan-chip.is-pro::before { opacity: 1; box-shadow: 0 0 6px var(--accent); }
+  @media (max-width: 420px) { .plan-chip { height: 30px; padding: 0 8px; font-size: 10.5px; } .plan-chip::before { display: none; } }
+  @media (min-width: 701px) and (max-width: 1080px) { .plan-chip { height: 30px; padding: 0 8px; font-size: 10.5px; } .plan-chip::before { display: none; } header .tabs { gap: 2px; } header .tabs button { padding: 0 8px; } }
 </style>
 </head>
 <body>
@@ -1373,6 +1381,7 @@
   </div>
   <div style="display:flex;gap:8px;align-items:center">
     <span class="hdr-rank" id="hdrRank"></span>
+    <button class="plan-chip" id="planBtn" title="Your plan" aria-label="Your plan"><span id="planBtnTxt">Basic</span></button>
     <button class="ghost acct-btn" id="acctBtn" title="Sign in" aria-label="Account" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.7 3.6-5.5 7-5.5s6.200 1.800 7 5.500"/></svg></button>
     <button class="ghost" id="muteBtn" title="Sound & voice" aria-label="Sound and voice"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.500v5h3.500L12 18V6L7.500 9.500zM15.500 9.200a4 4 0 0 1 0 5.600M18.200 6.500a8 8 0 0 1 0 11"/></svg></button>
     <button class="ghost" id="endBtn" disabled>End set</button>
@@ -7772,6 +7781,7 @@ function proSync() {
   document.querySelectorAll(".pro-price").forEach(el => el.textContent = PRO.price);
   document.querySelectorAll(".pro-cur").forEach(el => el.textContent = PRO.currency);
   proPlanSync();
+  $("planBtn").classList.toggle("is-pro", isPro()); $("planBtnTxt").textContent = isPro() ? "Pro" : "Basic";
   $("tabFood").classList.toggle("pro-lock", !isPro());
   document.querySelector('.botnav [data-go="food"]')?.classList.toggle("pro-lock", !isPro());
 }
@@ -7785,6 +7795,7 @@ function proPlanSync() {
 }
 $("proModal").querySelectorAll(".pl-tabs button").forEach(b => b.onclick = () => proTab(b.dataset.tab));
 $("plSeePro").onclick = () => proTab("pro");
+$("planBtn").onclick = () => openPro("", isPro() ? "pro" : "basic");
 function openPro(from = "", tab) {
   proSync(); proPlanSync(); proTab(tab || "pro");
   $("proModal").querySelectorAll(".pro-list li").forEach(li => li.classList.toggle("hl", li.dataset.k === from));
