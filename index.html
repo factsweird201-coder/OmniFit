@@ -1377,6 +1377,12 @@
   .inst-act { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
   .inst-act #instGo { padding: 9px 18px; border-radius: 10px; background: var(--accent); color: var(--ink); font-weight: 700; border: 0; }
   @media (min-width: 701px) { .inst { bottom: 20px; } }
+
+  /* iPhone status bar: the top bar reaches up behind the clock/battery as one solid strip, with its buttons below it,
+     instead of the page scrolling (blurred) under the status bar */
+  body { padding-top: 0; }
+  header { padding-top: calc(10px + env(safe-area-inset-top)); background: var(--bg); }
+  @media (min-width: 701px) { header { padding-top: env(safe-area-inset-top); } }
 </style>
 </head>
 <body>
