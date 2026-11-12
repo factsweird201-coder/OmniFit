@@ -6,7 +6,7 @@
 <title>OmniFit</title>
 <!--web-only-->
 <meta name="description" content="All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Endurance races, stretching and meal plans.">
-<meta name="theme-color" content="#07090e">
+<meta name="theme-color" content="#0c0d10">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -1364,6 +1364,19 @@
   .plan-chip.is-pro::before { opacity: 1; box-shadow: 0 0 6px var(--accent); }
   @media (max-width: 420px) { .plan-chip { height: 30px; padding: 0 8px; font-size: 10.5px; } .plan-chip::before { display: none; } }
   @media (min-width: 701px) and (max-width: 1080px) { .plan-chip { height: 30px; padding: 0 8px; font-size: 10.5px; } .plan-chip::before { display: none; } header .tabs { gap: 2px; } header .tabs button { padding: 0 8px; } }
+
+  /* install-as-app card */
+  .inst { position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 40; width: min(440px, calc(100vw - 24px)); box-sizing: border-box; display: grid; grid-template-columns: 48px 1fr; gap: 10px 12px; align-items: start; padding: 14px; border-radius: 16px; background: var(--raised); border: 1px solid var(--line2); box-shadow: 0 18px 50px rgba(0,0,0,.6); transform: translate(-50%, 20px); opacity: 0; transition: transform .25s cubic-bezier(.2,1.2,.4,1), opacity .2s; }
+  .inst.on { transform: translate(-50%, 0); opacity: 1; }
+  .inst-ic { width: 48px; height: 48px; border-radius: 12px; }
+  .inst-b > b { display: block; font: 700 16px var(--display); }
+  .inst-ios b { font-weight: 700; color: var(--text); }
+  .inst-b > span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .inst-ios { margin: 8px 0 0; padding-left: 18px; font-size: 13.5px; display: grid; gap: 4px; }
+  .inst-ios .ic { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; color: #4ea1ff; }
+  .inst-act { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+  .inst-act #instGo { padding: 9px 18px; border-radius: 10px; background: var(--accent); color: var(--ink); font-weight: 700; border: 0; }
+  @media (min-width: 701px) { .inst { bottom: 20px; } }
 </style>
 </head>
 <body>
@@ -1704,6 +1717,17 @@
 
 <div class="modal" id="hxModal"><div class="card coach-card hx-card"></div></div>
 <div class="modal" id="recModal"><div class="card coach-card rec-card"></div></div>
+<div class="inst" id="inst" hidden role="dialog" aria-labelledby="instT">
+  <img src="icons/icon-192.png" alt="" class="inst-ic">
+  <div class="inst-b"><b id="instT">Get the OmniFit app</b><span id="instS">Full screen, on your home screen, works offline. Free.</span>
+    <ol class="inst-ios" id="instIos" hidden>
+      <li>Tap <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg> <b>Share</b> in Safari's toolbar</li>
+      <li>Choose <b>Add to Home Screen</b></li>
+      <li>Tap <b>Add</b></li>
+    </ol>
+  </div>
+  <div class="inst-act"><button id="instGo">Install</button><button class="pro-link" id="instNo">Not now</button></div>
+</div>
 <div class="modal" id="proModal" role="dialog" aria-modal="true" aria-labelledby="proTitle">
   <div class="card pro-card" data-tab="pro" data-plan="basic">
     <div class="pl-top">
@@ -8158,6 +8182,36 @@ async function bsHistory() {
 function bsSyncLast() { $("bsOpen")?.classList.toggle("pro-lock", bsLocked()); const s = bsScans().slice(-1)[0], el = $("bsLast"); if (el) el.textContent = s ? `Last: ${s.bf.toFixed(1)} % on ${new Date(s.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : "Estimate your body fat from two photos"; }
 bsSyncLast(); onBsSaved = bsSyncLast;
 window.__bscan = { measure: bsMeasure, estimate: bsEstimate, ellipse: bsEllipse, open: bsOpen, show: bsShow, result: bsResult, history: () => { BS.step = "history"; bsRender(); }, get S() { return BS; } };   // test hook
+
+
+// ================= INSTALL AS AN APP =================
+// The website installs like an app (home screen icon, full screen, offline) on Android, iPhone and desktop.
+// Android/Chrome/Edge give us an install prompt; iPhone/iPad need Safari's Share > Add to Home Screen, so we show the steps.
+if ("serviceWorker" in navigator && location.protocol === "https:" && location.hostname !== "pushup-ranks.app") navigator.serviceWorker.register("sw.js").catch(() => {});
+let instEvt = null;
+const instIsIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const instDone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone || location.hostname === "pushup-ranks.app";
+const instSnoozed = () => { try { return Date.now() < +(localStorage.getItem("omnifit.instSnooze") || 0); } catch { return false; } };
+function instShow(force) {
+  if (instDone() || (!force && instSnoozed())) return;
+  if (!instEvt && !instIsIOS && !force) return;   // nothing we can offer on this browser
+  $("instIos").hidden = true; $("instGo").hidden = false; $("instGo").textContent = "Install";
+  $("inst").hidden = false; requestAnimationFrame(() => $("inst").classList.add("on"));
+}
+function instHide(snoozeDays) {
+  $("inst").classList.remove("on"); setTimeout(() => $("inst").hidden = true, 250);
+  if (snoozeDays) try { localStorage.setItem("omnifit.instSnooze", String(Date.now() + snoozeDays * 864e5)); } catch {}
+}
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); instEvt = e; setTimeout(() => instShow(false), 4000); });
+addEventListener("appinstalled", () => { instEvt = null; instHide(3650); toast("OmniFit is on your home screen"); });
+$("instGo").onclick = async () => {
+  if (instEvt) { instEvt.prompt(); const r = await instEvt.userChoice.catch(() => null); instEvt = null; instHide(r?.outcome === "accepted" ? 3650 : 14); return; }
+  if (instIsIOS) { $("instIos").hidden = false; $("instGo").hidden = true; $("instS").textContent = /CriOS|FxiOS|EdgiOS/.test(navigator.userAgent) ? "On iPhone this works best from Safari. In Safari:" : "Three taps:"; return; }
+  $("instS").textContent = "Open your browser's menu and choose Install app or Add to Home screen."; $("instGo").hidden = true;
+};
+$("instNo").onclick = () => instHide(14);
+if (instIsIOS && matchMedia("(max-width: 900px)").matches) setTimeout(() => instShow(false), 6000);
+window.__inst = { show: instShow, hide: instHide };   // test hook
 
 // ---- account window ----
 let acctView = "in";   // "in" (sign in) | "up" (create account)
