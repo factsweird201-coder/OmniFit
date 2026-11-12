@@ -1314,6 +1314,48 @@
 
   /* text boxes (and codes) must stay selectable, or Safari/iPhone never offers Paste */
   input, textarea, [contenteditable], .pro-code code { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
+
+  /* ---- Plans sheet (Basic / Pro tabs) ---- */
+  .pro-card { padding: 20px 20px 18px !important; }
+  .pl-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .pl-top .pro-x { position: static; flex: none; }
+  .pl-h { font: 700 26px/1.1 var(--display); margin-top: 2px; }
+  .pl-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 16px 0 18px; padding: 4px; background: var(--well); border: 1px solid var(--line); border-radius: 14px; }
+  .pl-tabs button { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 10px 12px; border-radius: 10px; background: none; color: var(--muted); box-shadow: none !important; text-align: left; }
+  .pl-tabs button b { font: 700 17px/1.1 var(--display); color: var(--text); letter-spacing: .01em; }
+  .pl-tabs button > span { font: 600 12px var(--body); }
+  .pl-tabs button[aria-selected="true"] { background: var(--raised); box-shadow: inset 0 0 0 1px var(--line2), 0 1px 2px rgba(0,0,0,.4) !important; }
+  .pl-tabs button[data-tab="pro"][aria-selected="true"] { box-shadow: inset 0 0 0 1px rgba(255,194,26,.45), 0 1px 2px rgba(0,0,0,.4) !important; }
+  .pl-tabs button[data-tab="pro"] b { color: var(--accent); }
+  .pl-cur { display: none; position: absolute; top: 9px; right: 10px; font: 700 9.5px/1 var(--body); font-style: normal; letter-spacing: .08em; text-transform: uppercase; padding: 4px 6px; border-radius: 5px; background: rgba(255,255,255,.08); color: var(--text); }
+  .pro-card[data-plan="basic"] .pl-tabs [data-tab="basic"] .pl-cur, .pro-card[data-plan="pro"] .pl-tabs [data-tab="pro"] .pl-cur { display: block; }
+  .pro-card[data-plan="pro"] .pl-tabs [data-tab="pro"] .pl-cur { background: var(--accent); color: var(--ink); }
+
+  .pl-pane { display: none; }
+  .pro-card[data-tab="basic"] [data-pane="basic"], .pro-card[data-tab="pro"] [data-pane="pro"] { display: block; }
+  .pl-name { display: flex; align-items: center; gap: 10px; }
+  .pl-name b { font: 700 22px/1 var(--display); }
+  .pl-badge { display: none; font: 700 10px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-radius: 6px; background: rgba(255,255,255,.08); color: var(--muted); }
+  .pro-card[data-plan="basic"] [data-pane="basic"] .pl-badge, .pro-card[data-plan="pro"] [data-pane="pro"] .pl-badge { display: inline-block; }
+  .pro-card[data-plan="pro"] [data-pane="pro"] .pl-badge { background: rgba(255,194,26,.14); color: var(--accent); }
+  .pl-sub { margin: 8px 0 10px; font-size: 13.5px; color: var(--muted); }
+  [data-pane="pro"] .pro-price-row { margin-top: 12px; flex-wrap: wrap; }
+  [data-pane="pro"] .pro-price-row b { font-size: 40px; }
+  .pl-once { flex-basis: 100%; font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .pl-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 9px; }
+  .pl-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .pl-list .ic { width: 18px; height: 18px; flex: none; color: var(--good); stroke-width: 2.4; }
+  .pl-list li.no { color: var(--muted); }
+  .pl-list li.no .ic { color: rgba(255,255,255,.28); }
+  .pl-ghost { width: 100%; padding: 12px; border-radius: 12px; background: var(--raised); color: var(--text); border: 1px solid var(--line2); font-weight: 700; box-shadow: none !important; }
+  [data-pane="pro"] .pro-list { margin: 0 0 14px; gap: 2px; }
+  [data-pane="pro"] .pro-list li { padding: 9px 10px; }
+  .pl-have { display: none; padding: 14px; border-radius: 12px; background: rgba(255,194,26,.07); border: 1px solid rgba(255,194,26,.25); font-size: 14px; color: var(--muted); }
+  .pl-have b { color: var(--text); }
+  .pl-have span:not(:empty) { display: block; margin-top: 6px; font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); -webkit-user-select: text; user-select: text; }
+  .pro-card[data-plan="pro"] .pl-buy, .pro-card[data-plan="pro"] #plSeePro { display: none; }
+  .pro-card[data-plan="pro"] .pl-have { display: block; }
+  .pro-fine { margin-top: 14px; }
 </style>
 </head>
 <body>
@@ -1654,31 +1696,61 @@
 <div class="modal" id="hxModal"><div class="card coach-card hx-card"></div></div>
 <div class="modal" id="recModal"><div class="card coach-card rec-card"></div></div>
 <div class="modal" id="proModal" role="dialog" aria-modal="true" aria-labelledby="proTitle">
-  <div class="card pro-card">
-    <button class="ghost pro-x" id="proX" aria-label="Close">✕</button>
-    <div class="pro-head"><div class="logo"><div class="mark"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg></div></div>
-      <div><div class="pro-eyebrow">OmniFit</div><div class="pro-title" id="proTitle">Pro</div></div></div>
-    <div class="pro-price-row"><b class="pro-price"></b><span class="pro-cur"></span></div>
-    <div class="muted pro-once">One-time purchase · no subscription</div>
-    <ul class="pro-list">
-      <li data-k="food"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Meal plan &amp; food tracking</b><span>Calorie and macro targets, food log, vitamins and minerals, and a new meal plan every day.</span></div></li>
-      <li data-k="campaign"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Part 2 of every campaign</b><span>3 new stories, 72 missions and 24 bosses across push-ups, squats and sit-ups.</span></div></li>
-      <li data-k="scan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Body scan</b><span>Estimate your body fat from two photos as often as you like and watch the trend.</span></div></li>
-      <li data-k="future"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Future Pro updates</b><span>New Pro features are included at no extra cost.</span></div></li>
-    </ul>
-    <button id="proBuy" class="pro-buy">Unlock for <span class="pro-price"></span></button>
-    <div class="pro-pp" id="proPP" hidden></div>
-    <div class="pro-me" id="proMe" hidden>
-      <ol class="pro-steps" id="proSteps">
-        <li><b>Your purchase code</b><span class="pro-code"><code id="proReq">OF-····</code><button class="pro-link" id="proCopy">Copy</button></span></li>
-        <li><b>Pay <span class="pro-price"></span> <span class="pro-cur"></span> with PayPal</b><span>Pick <i>Paying for an item or service</i> and put your purchase code in the note. PayPal asks you to log in or make a free account, and you can pay with a card through it.</span><button id="proPay" class="pro-pay">Open PayPal</button></li>
-        <li><b>Enter your unlock code</b><span>We'll email it to your PayPal email, usually within a day.</span></li>
-      </ol>
-      <div class="pro-key-row"><input id="proUnlock" placeholder="XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false"><button id="proUnlockGo">Unlock</button></div>
+  <div class="card pro-card" data-tab="pro" data-plan="basic">
+    <div class="pl-top">
+      <div><div class="pro-eyebrow">OmniFit</div><div class="pl-h" id="proTitle">Plans</div></div>
+      <button class="ghost pro-x" id="proX" aria-label="Close">✕</button>
     </div>
-    <div class="pro-key-err" id="proPPMsg"></div>
-    <div class="pro-links"><button class="pro-link" id="proRestore">I have an unlock code</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
-    <div class="muted pro-fine">Sign in to OmniFit first and Pro follows you to every device.</div>
+    <div class="pl-tabs" role="tablist">
+      <button role="tab" data-tab="basic"><b>Basic</b><span>Free</span><i class="pl-cur">Current</i></button>
+      <button role="tab" data-tab="pro"><b>Pro</b><span><span class="pro-price"></span> once</span><i class="pl-cur">Current</i></button>
+    </div>
+
+    <section class="pl-pane" data-pane="basic">
+      <div class="pl-name"><b>Basic</b><span class="pl-badge">Your plan</span></div>
+      <p class="pl-sub">Everything you need to train, free forever.</p>
+      <ul class="pl-list">
+        <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Rep counting with form grades</li>
+        <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Ranks, streaks and daily goals</li>
+        <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Boss battles, endurance and stretching</li>
+        <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Your coach and training plan</li>
+        <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Part 1 of every campaign</li>
+        <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>One body scan</li>
+        <li class="no"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Meal plan and food tracking</li>
+        <li class="no"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Part 2 of every campaign</li>
+        <li class="no"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Unlimited body scans and trend</li>
+      </ul>
+      <button class="pl-ghost" id="plSeePro">See what Pro adds</button>
+    </section>
+
+    <section class="pl-pane" data-pane="pro">
+      <div class="pl-name"><b>Pro</b><span class="pl-badge">Your plan</span></div>
+      <div class="pro-price-row"><b class="pro-price"></b><span class="pro-cur"></span><span class="pl-once">one-time · no subscription</span></div>
+      <p class="pl-sub">Everything in Basic, plus:</p>
+      <ul class="pro-list">
+        <li data-k="food"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Meal plan &amp; food tracking</b><span>Calorie and macro targets, food log, vitamins and minerals, and a new meal plan every day.</span></div></li>
+        <li data-k="campaign"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Part 2 of every campaign</b><span>3 new stories, 72 missions and 24 bosses across push-ups, squats and sit-ups.</span></div></li>
+        <li data-k="scan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Unlimited body scans</b><span>Estimate your body fat from two photos as often as you like and watch the trend.</span></div></li>
+        <li data-k="future"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Future Pro updates</b><span>New Pro features are included at no extra cost.</span></div></li>
+      </ul>
+      <div class="pl-buy">
+        <button id="proBuy" class="pro-buy">Get Pro for <span class="pro-price"></span></button>
+        <div class="pro-pp" id="proPP" hidden></div>
+        <div class="pro-me" id="proMe" hidden>
+          <ol class="pro-steps" id="proSteps">
+            <li><b>Your purchase code</b><span class="pro-code"><code id="proReq">OF-····</code><button class="pro-link" id="proCopy">Copy</button></span></li>
+            <li><b>Pay <span class="pro-price"></span> <span class="pro-cur"></span> with PayPal</b><span>Pick <i>Paying for an item or service</i> and put your purchase code in the note. PayPal asks you to log in or make a free account, and you can pay with a card through it.</span><button id="proPay" class="pro-pay">Open PayPal</button></li>
+            <li><b>Enter your unlock code</b><span>We'll email it to your PayPal email, usually within a day.</span></li>
+          </ol>
+          <div class="pro-key-row"><input id="proUnlock" placeholder="XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false"><button id="proUnlockGo">Unlock</button></div>
+        </div>
+        <div class="pro-key-err" id="proPPMsg"></div>
+        <div class="pro-links"><button class="pro-link" id="proRestore">I have an unlock code</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
+      </div>
+      <div class="pl-have" id="plHave"><b>You're on Pro.</b> Thanks for supporting OmniFit. <span id="plHaveCode"></span></div>
+    </section>
+
+    <div class="muted pro-fine">Sign in to OmniFit and your plan follows you to every device.</div>
     <div class="pro-dev" id="proDev" hidden>Preview only · <button class="pro-link" id="proSim">Simulate purchase</button> · <button class="pro-link" id="proUnsim">Remove Pro</button></div>
   </div>
 </div>
@@ -7699,15 +7771,26 @@ setInterval(() => {
 function proSync() {
   document.querySelectorAll(".pro-price").forEach(el => el.textContent = PRO.price);
   document.querySelectorAll(".pro-cur").forEach(el => el.textContent = PRO.currency);
+  proPlanSync();
   $("tabFood").classList.toggle("pro-lock", !isPro());
   document.querySelector('.botnav [data-go="food"]')?.classList.toggle("pro-lock", !isPro());
 }
-function openPro(from = "") {
-  proSync();
+function proTab(t) {
+  const c = $("proModal").querySelector(".pro-card"); c.dataset.tab = t;
+  c.querySelectorAll(".pl-tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === t));
+}
+function proPlanSync() {
+  const c = $("proModal").querySelector(".pro-card"), pro = isPro(); c.dataset.plan = pro ? "pro" : "basic";
+  const code = store.pro?.code; $("plHaveCode").textContent = pro && code ? `Unlock code: ${code}` : "";
+}
+$("proModal").querySelectorAll(".pl-tabs button").forEach(b => b.onclick = () => proTab(b.dataset.tab));
+$("plSeePro").onclick = () => proTab("pro");
+function openPro(from = "", tab) {
+  proSync(); proPlanSync(); proTab(tab || "pro");
   $("proModal").querySelectorAll(".pro-list li").forEach(li => li.classList.toggle("hl", li.dataset.k === from));
   $("proDev").hidden = !PRO_DEV;
   if (!isPro()) ppDraw();
-  $("proModal").classList.add("show");
+  $("proModal").classList.add("show"); $("proModal").scrollTop = 0;
 }
 const closePro = () => $("proModal").classList.remove("show");
 function proGranted(via) {
