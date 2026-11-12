@@ -1296,6 +1296,20 @@
   .pro-pp { margin-top: 4px; min-height: 44px; }
   .pro-key-err { color: var(--bad); font-size: 13px; margin-top: 6px; text-align: center; }
   .pro-key-err:empty { display: none; }
+
+  .pro-me { margin-top: 4px; padding: 14px; border-radius: 12px; background: var(--well); border: 1px solid var(--line); text-align: left; }
+  .pro-steps { margin: 0 0 12px; padding: 0; list-style: none; counter-reset: st; display: grid; gap: 12px; }
+  .pro-steps li { counter-increment: st; position: relative; padding-left: 32px; font-size: 13px; color: var(--muted); }
+  .pro-steps li::before { content: counter(st); position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--raised); color: var(--text); font: 700 12px/22px var(--display); text-align: center; }
+  .pro-steps b { display: block; color: var(--text); font-size: 14px; margin-bottom: 2px; }
+  .pro-steps i { font-style: normal; color: var(--text); }
+  .pro-code { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+  .pro-code code { font: 700 20px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; color: var(--accent); }
+  .pro-pay { margin-top: 8px; width: 100%; padding: 11px; border-radius: 10px; border: 0; background: #ffc439; color: #111; font-weight: 700; }
+  .pro-key-row { display: flex; gap: 8px; }
+  .pro-key-row input { flex: 1; min-width: 0; font: 600 14px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .04em; padding: 10px 12px; border-radius: 9px; background: var(--panel); color: var(--text); border: 1px solid var(--line2); }
+  .pro-key-row input:focus { outline: none; border-color: var(--accent); }
+  .pro-key-row button { padding: 0 16px; border-radius: 9px; background: var(--accent); color: var(--ink); font-weight: 700; border: 0; }
 </style>
 </head>
 <body>
@@ -1650,8 +1664,16 @@
     </ul>
     <button id="proBuy" class="pro-buy">Unlock for <span class="pro-price"></span></button>
     <div class="pro-pp" id="proPP" hidden></div>
+    <div class="pro-me" id="proMe" hidden>
+      <ol class="pro-steps" id="proSteps">
+        <li><b>Your purchase code</b><span class="pro-code"><code id="proReq">OF-····</code><button class="pro-link" id="proCopy">Copy</button></span></li>
+        <li><b>Pay <span class="pro-price"></span> <span class="pro-cur"></span> with PayPal</b><span>Pick <i>Paying for an item or service</i> and put your purchase code in the note. Card works too.</span><button id="proPay" class="pro-pay">Open PayPal</button></li>
+        <li><b>Enter your unlock code</b><span>We'll email it to your PayPal email, usually within a day.</span></li>
+      </ol>
+      <div class="pro-key-row"><input id="proUnlock" placeholder="Unlock code (XXXX-XXXX)" autocomplete="off" autocapitalize="characters" spellcheck="false"><button id="proUnlockGo">Unlock</button></div>
+    </div>
     <div class="pro-key-err" id="proPPMsg"></div>
-    <div class="pro-links"><button class="pro-link" id="proRestore">Restore purchase</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
+    <div class="pro-links"><button class="pro-link" id="proRestore">I have an unlock code</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
     <div class="muted pro-fine">Sign in to OmniFit first and Pro follows you to every device.</div>
     <div class="pro-dev" id="proDev" hidden>Preview only · <button class="pro-link" id="proSim">Simulate purchase</button> · <button class="pro-link" id="proUnsim">Remove Pro</button></div>
   </div>
@@ -3732,8 +3754,10 @@ const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
 // Pro = a one-time unlock: the whole Food tab + Part 2 of every campaign.
 // Payments: PayPal buttons (PayPal or card), money goes to the PayPal business account the client ID belongs to.
 // paypalClientId = the Client ID from developer.paypal.com > Apps & Credentials (Live). It's public, safe to ship.
-// Use "sb" for PayPal's sandbox (fake money) while testing.
-const PRO = { price: "$9.99", amount: "9.99", currency: "CAD", paypalClientId: "" };
+// Use "sb" for PayPal's sandbox (fake money) while testing. Needs a Business account.
+// paypalMe = the PayPal.Me name (paypal.me/<name>) for a personal account: buyers pay there with their purchase code in
+// the note, and you send them an unlock code made with tools/unlock.mjs. Used when paypalClientId is empty.
+const PRO = { price: "$9.99", amount: "9.99", currency: "CAD", paypalClientId: "", paypalMe: "" };
 const PAYWALL = (() => { try {
   if (/[?&]paywall=1\b/.test(location.search)) localStorage.setItem("omnifit.paywall", "1");
   if (/[?&]paywall=0\b/.test(location.search)) localStorage.removeItem("omnifit.paywall");
@@ -7737,13 +7761,55 @@ async function ppDraw() {
     msg.textContent = navigator.onLine === false ? "You're offline. Connect to the internet to buy." : "Couldn't load PayPal. Try again in a minute.";
   }
 }
-$("proBuy").onclick = () => PRO.paypalClientId ? ppDraw() : toast("Checkout isn't connected yet (preview)");
-$("proRestore").onclick = () => toast(acct ? "Pro comes back automatically on the account you bought it with. Make sure that's the one you're signed in to." : "Sign in to the OmniFit account you bought Pro on and it comes back automatically.");
+// ---- PayPal.Me (personal account) ----
+// The app gives each buyer a purchase code (OF-7K3Q). They pay on PayPal.Me with that code in the note; you see it in
+// PayPal, run `node tools/unlock.mjs OF-7K3Q` and send them the unlock code (7K3Q-F5L9). The last 4 characters are a
+// check made from the first 4, so the code works on any of the buyer's devices and nothing needs a server.
+// (Anyone who reads this source could make codes. Fine for a $9.99 unlock.)
+const UC_ABC = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";   // no 0/O, 1/I: easy to read out
+const UC_SALT = "omnifit-pro-v1:Kx9!tq";
+function ucCheck(id) {   // cyrb53 hash of the id, as 4 characters
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57; const str = id + "|" + UC_SALT;
+  for (let i = 0; i < str.length; i++) { const c = str.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  let n = 4294967296 * (2097151 & h2) + (h1 >>> 0), out = "";
+  for (let i = 0; i < 4; i++) { out += UC_ABC[n % 32]; n = Math.floor(n / 32); }
+  return out;
+}
+const ucClean = v => String(v || "").toUpperCase().replace(/^OF-?/, "").replace(/[^0-9A-Z]/g, "");
+function ucValid(v) { const c = ucClean(v); return c.length === 8 && [...c].every(ch => UC_ABC.includes(ch)) && ucCheck(c.slice(0, 4)) === c.slice(4); }
+function proReqId() {
+  if (!store.proReq || !/^[2-9A-HJ-NP-Z]{4}$/.test(store.proReq)) { store.proReq = Array.from(crypto.getRandomValues(new Uint8Array(4)), b => UC_ABC[b % 32]).join(""); save(); }
+  return store.proReq;
+}
+function proMeShow(focusCode) {
+  $("proMe").hidden = false; $("proBuy").hidden = true; $("proPPMsg").textContent = "";
+  $("proReq").textContent = "OF-" + proReqId(); proSync();
+  if (focusCode) setTimeout(() => $("proUnlock").focus(), 50);
+}
+$("proCopy").onclick = async () => { try { await navigator.clipboard.writeText($("proReq").textContent); toast("Purchase code copied"); } catch { toast($("proReq").textContent); } };
+$("proPay").onclick = () => {
+  const a = document.createElement("a"); a.href = `https://www.paypal.com/paypalme/${encodeURIComponent(PRO.paypalMe)}/${PRO.amount}${PRO.currency}`;
+  a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
+};
+function proUnlock() {
+  const v = $("proUnlock").value, msg = $("proPPMsg");
+  if (!ucValid(v)) { msg.textContent = ucClean(v).length < 8 ? "Unlock codes have 8 letters and numbers, like XXXX-XXXX." : "That unlock code doesn't work. Check it against the email."; return; }
+  const c = ucClean(v);
+  store.pro = { at: Date.now(), via: "paypal.me", code: c.slice(0, 4) + "-" + c.slice(4) };
+  $("proUnlock").value = ""; msg.textContent = "";
+  proGranted("paypal.me");
+}
+$("proUnlockGo").onclick = proUnlock;
+$("proUnlock").onkeydown = e => { if (e.key === "Enter") proUnlock(); };
+$("proBuy").onclick = () => PRO.paypalClientId ? ppDraw() : PRO.paypalMe ? proMeShow(false) : toast("Checkout isn't connected yet (preview)");
+$("proRestore").onclick = () => proMeShow(true);
 $("proSim").onclick = () => proGranted("preview");
 $("proUnsim").onclick = () => { delete store.pro; save(); closePro(); proSync(); bsSyncLast?.(); if (!$("bScan").hidden && BS.step === "setup") bsRender(); foodRefresh(); if (mode === "campaign") renderCampaign(); toast("Pro removed (preview)"); };
 $("fdProBtn").onclick = () => openPro("food");
 proSync();
-window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro };   // test hook
+window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro, ucCheck, ucValid };   // test hook
 
 
 // ================= BODY SCAN =================
