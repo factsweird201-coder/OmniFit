@@ -7688,7 +7688,7 @@ window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro };   // test
 
 
 // ================= BODY SCAN =================
-// Two photos: front with arms a little out from the sides, then side-on with arms relaxed (arms raised hide the neck). The pose model's body outline gives your height in
+// Two photos: front with arms a little out from the sides, then side-on with arms folded across the chest (raised arms hide the neck, hanging arms widen the waist). The pose model's body outline gives your height in
 // pixels (your real height sets the scale) and the width of your waist, neck and hips in each view; front width +
 // side depth make an ellipse, so we get circumferences, and the US Navy tape-measure formula turns them into body fat.
 // Blended 70/30 with the BMI-based Deurenberg formula when your age is known. Rough: about ±3–5 %.
@@ -7727,9 +7727,9 @@ function bsRender() {
     B.innerHTML = `
       <div class="bs-intro">
         <div class="bs-pose" aria-hidden="true"><svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-14 48M60 86l14 48M53 40l-20 22-6 20M67 40l20 22 6 20"/></svg><span>Front</span>
-          <svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-5 48M60 86l5 48M60 40l2 26 2 22"/></svg><span>Side</span></div>
+          <svg viewBox="0 0 120 150"><circle cx="60" cy="22" r="11"/><path d="M60 34v52M60 86l-5 48M60 86l5 48M60 40l-3 16 15-4"/></svg><span>Side</span></div>
         <h2>Estimate your body fat</h2>
-        <p class="muted">Stand 2–3 m from the camera so your whole body is in view, in fitted clothes. Face the camera with your arms held a little out from your sides for the first photo, then turn sideways with your arms relaxed for the second. Your photos never leave this device.</p>
+        <p class="muted">Stand 2–3 m from the camera so your whole body is in view, in fitted clothes. Face the camera with your arms held a little out from your sides for the first photo, then turn sideways with your arms folded across your chest for the second. Your photos never leave this device.</p>
         <div class="bs-form">
           <label>Sex <span class="bs-seg" id="bsSex"><button data-v="m" class="${p.sex !== "f" ? "on" : ""}">Male</button><button data-v="f" class="${p.sex === "f" ? "on" : ""}">Female</button></span></label>
           <label>Height ${lb ? `<span class="bs-hgt"><input id="bsFt" type="number" inputmode="numeric" min="3" max="8" value="${ft}"> ft <input id="bsIn" type="number" inputmode="numeric" min="0" max="11" value="${inch}"> in</span>`
@@ -7823,7 +7823,8 @@ function bsFrame(res, v) {
   if (!vis(0) || !(vis(27) || vis(28)) || !inFrame(0) || !((vis(27) && inFrame(27)) || (vis(28) && inFrame(28)))) { msg.textContent = "Step back: head to feet in view"; BS.still = 0; return hold(0); }
   const shY = (L[11].y + L[12].y) / 2, hipY = (L[23].y + L[24].y) / 2, torso = Math.max(0.05, hipY - shY);
   const ax = v.videoWidth / v.videoHeight;
-  if (L[15].y < shY || L[16].y < shY) { msg.textContent = "Lower your arms"; BS.still = 0; return hold(0); }
+  if (L[15].y < shY - torso * 0.1 || L[16].y < shY - torso * 0.1) { msg.textContent = "Lower your arms"; BS.still = 0; return hold(0); }
+  if (BS.step === "side" && Math.max(L[15].y, L[16].y) > shY + torso * 0.6) { msg.textContent = "Fold your arms across your chest"; BS.still = 0; return hold(0); }
   if (BS.step === "front" && Math.min(Math.abs(L[15].x - L[23].x), Math.abs(L[16].x - L[24].x)) * ax < torso * 0.22) { msg.textContent = "Hold your arms a little out from your sides"; BS.still = 0; return hold(0); }
   const ratio = Math.abs(L[11].x - L[12].x) * (v.videoWidth / v.videoHeight) / torso;   // shoulder width vs torso height
   if (BS.step === "front" && ratio < 0.5) { msg.textContent = "Face the camera"; BS.still = 0; return hold(0); }
@@ -7848,7 +7849,7 @@ async function bsCapture(L, m, v) {
   if (!meas || meas.fail) { $("bsMsg").textContent = meas?.fail || "Couldn't measure that one. Try again."; console.warn("body scan:", meas?.fail); await wait(2200); BS.prev = null; BS.busy = false; return; }
   if (which === "front") {
     BS.step = "side"; $("bsS1").classList.add("done"); $("bsS2").classList.add("on");
-    say("Got it. Now turn to your side and let your arms relax."); $("bsMsg").textContent = "Turn to your side";
+    say("Got it. Now turn to your side and fold your arms across your chest."); $("bsMsg").textContent = "Turn to your side";
     await wait(1500); BS.prev = null; BS.busy = false; return;
   }
   bsStopCam(); BS.busy = false; bsResult();
@@ -7907,11 +7908,11 @@ function bsShow(sc, imgs, prev) {
   B.innerHTML = `<div class="bs-res">
     <div class="bs-eyebrow">Estimated body fat</div>
     <div class="bs-big">${sc.bf.toFixed(1)}<span>%</span></div>
-    <div class="bs-range">${Math.max(3, sc.bf - 3).toFixed(0)}–${(sc.bf + 3).toFixed(0)} % · ${bsCat(sc.bf, p.sex)}</div>
+    <div class="bs-range">${Math.max(3, sc.bf - 3).toFixed(0)}–${(sc.bf + 3).toFixed(0)} %${p.age && p.age < 18 ? "" : ` · ${bsCat(sc.bf, p.sex)}`}</div>
     ${delta != null ? `<div class="bs-delta ${delta <= 0 ? "dn" : "up"}">${delta <= 0 ? "▼" : "▲"} ${Math.abs(delta).toFixed(1)} % since ${new Date(prev.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</div>` : ""}
     <div class="bs-photos">${imgs?.front ? `<figure><img src="${imgs.front}" alt="Front photo"><figcaption>Front</figcaption></figure>` : ""}${imgs?.side ? `<figure><img src="${imgs.side}" alt="Side photo"><figcaption>Side</figcaption></figure>` : ""}</div>
     <div class="bs-meas"><div><b>${bsUnitLen(sc.waist)}</b><span>Waist</span></div><div><b>${bsUnitLen(sc.neck)}</b><span>Neck</span></div><div><b>${bsUnitLen(sc.hip)}</b><span>Hips</span></div></div>
-    <div class="muted bs-fine">Estimated from your body outline with the US Navy tape-measure method${p.age ? ", blended with a BMI-based estimate" : ""}. Expect about ±3–5 %. Track the trend, not one number.</div>
+    <div class="muted bs-fine">Estimated from your body outline with the US Navy tape-measure method${p.age ? ", blended with a BMI-based estimate" : ""}. Expect about ±3–5 %. Track the trend, not one number.${p.age && p.age < 18 ? " Healthy ranges change a lot while you're still growing, so adult categories aren't shown." : ""}</div>
     <div class="bs-btns"><button id="bsDone">Done</button><button class="ghost" id="bsAgain">Scan again</button>${bsScans().length > 1 ? `<button class="ghost" id="bsHist2">Past scans</button>` : ""}</div>
   </div>`;
   $("bsDone").onclick = bsClose; onBsSaved?.();
