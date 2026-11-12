@@ -3757,7 +3757,7 @@ const campOfPart = pi => CAMPAIGNS.findIndex(c => c.parts.includes(pi));
 // Use "sb" for PayPal's sandbox (fake money) while testing. Needs a Business account.
 // paypalMe = the PayPal.Me name (paypal.me/<name>) for a personal account: buyers pay there with their purchase code in
 // the note, and you send them an unlock code made with tools/unlock.mjs. Used when paypalClientId is empty.
-const PRO = { price: "$9.99", amount: "9.99", currency: "CAD", paypalClientId: "", paypalMe: "" };
+const PRO = { price: "$9.99", amount: "9.99", currency: "CAD", paypalClientId: "", paypalMe: "OwenW2026" };
 const PAYWALL = (() => { try {
   if (/[?&]paywall=1\b/.test(location.search)) localStorage.setItem("omnifit.paywall", "1");
   if (/[?&]paywall=0\b/.test(location.search)) localStorage.removeItem("omnifit.paywall");
