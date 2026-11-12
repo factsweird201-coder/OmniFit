@@ -7,6 +7,7 @@
 <!--web-only-->
 <meta name="description" content="All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Endurance races, stretching and meal plans.">
 <meta name="theme-color" content="#0c0d10">
+<meta name="omnifit-build" content="20261112030957">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -8230,6 +8231,34 @@ window.__bscan = { measure: bsMeasure, estimate: bsEstimate, ellipse: bsEllipse,
 // The website installs like an app (home screen icon, full screen, offline) on Android, iPhone and desktop.
 // Android/Chrome/Edge give us an install prompt; iPhone/iPad need Safari's Share > Add to Home Screen, so we show the steps.
 if ("serviceWorker" in navigator && location.protocol === "https:" && location.hostname !== "pushup-ranks.app") navigator.serviceWorker.register("sw.js").catch(() => {});
+// Updates: a home-screen app on iPhone resumes instead of reloading, so it could stay on an old version for days.
+// Each release is stamped (meta omnifit-build, set by the git pre-commit hook). Whenever the app comes back to the
+// screen (and every 20 min while open) it asks the site for the current stamp; if it's newer it reloads, unless
+// you're mid-workout, in which case it waits until the camera is off.
+const BUILD = document.querySelector('meta[name="omnifit-build"]')?.content || "dev";
+let updPending = false, updLast = 0;
+async function updCheck() {
+  if (BUILD === "dev" || location.hostname === "pushup-ranks.app" || !navigator.onLine || Date.now() - updLast < 60e3) return;
+  updLast = Date.now();
+  try {
+    navigator.serviceWorker?.getRegistration().then(reg => reg?.update()).catch(() => {});
+    const html = await (await fetch("./?build=" + Date.now(), { cache: "no-store" })).text();
+    const live = html.match(/<meta name="omnifit-build" content="([^"]+)"/)?.[1];
+    if (live && live !== BUILD) { updPending = true; updApply(); }
+  } catch {}
+}
+function updApply() {
+  if (!updPending) return;
+  const busy = document.body.classList.contains("cam-live") || $("proModal").classList.contains("show") || !$("bScan")?.hidden;
+  if (busy) return;   // try again when the workout / sheet is closed
+  updPending = false; location.reload();
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") updCheck(); });
+addEventListener("pageshow", e => { if (e.persisted) updCheck(); });
+addEventListener("focus", updCheck);
+setInterval(updCheck, 20 * 60e3); setInterval(updApply, 5000);
+setTimeout(updCheck, 3000);
+window.__upd = { check: updCheck, get build() { return BUILD; } };
 let instEvt = null;
 const instIsIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const instDone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone || location.hostname === "pushup-ranks.app";
