@@ -1287,6 +1287,11 @@
   .bs-cam { display: grid; place-items: center; }
   .bs-cam video { position: absolute; inset: 0; }
   .bs-cam canvas { display: block !important; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scaleX(-1); pointer-events: none; image-rendering: auto; }
+
+  #proModal { z-index: 50; }
+  .bs-pro-note { font-size: 13px; text-align: center; margin-top: 10px; }
+  .bs-go .pro-tag { margin-right: 6px; background: var(--ink); color: var(--accent); }
+  .bs-open.pro-lock::after { margin-left: auto; }
 </style>
 </head>
 <body>
@@ -1636,6 +1641,7 @@
     <ul class="pro-list">
       <li data-k="food"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Meal plan &amp; food tracking</b><span>Calorie and macro targets, food log, vitamins and minerals, and a new meal plan every day.</span></div></li>
       <li data-k="campaign"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Part 2 of every campaign</b><span>3 new stories, 72 missions and 24 bosses across push-ups, squats and sit-ups.</span></div></li>
+      <li data-k="scan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Body scan</b><span>Estimate your body fat from two photos as often as you like and watch the trend.</span></div></li>
       <li data-k="future"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Future Pro updates</b><span>New Pro features are included at no extra cost.</span></div></li>
     </ul>
     <button id="proBuy" class="pro-buy">Unlock for <span class="pro-price"></span></button>
@@ -7669,7 +7675,7 @@ function openPro(from = "") {
 }
 const closePro = () => $("proModal").classList.remove("show");
 function proGranted(via) {
-  store.pro = { at: Date.now(), via }; save(); closePro(); proSync();
+  store.pro = { at: Date.now(), via }; save(); closePro(); proSync(); bsSyncLast?.(); if (!$("bScan").hidden && BS.step === "setup") bsRender();
   confetti(120); sfx.fanfare?.(); toast("⭐ OmniFit Pro unlocked. Thank you!");
   foodRefresh(); if (mode === "campaign") renderCampaign();
 }
@@ -7681,7 +7687,7 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && $("proModa
 $("proBuy").onclick = () => { if (PRO.checkoutUrl) location.href = PRO.checkoutUrl; else toast("Checkout isn't connected yet (preview)"); };
 $("proRestore").onclick = () => toast(acct ? "No purchase found on this account yet (preview)" : "Sign in to restore a purchase");
 $("proSim").onclick = () => proGranted("preview");
-$("proUnsim").onclick = () => { delete store.pro; save(); closePro(); proSync(); foodRefresh(); if (mode === "campaign") renderCampaign(); toast("Pro removed (preview)"); };
+$("proUnsim").onclick = () => { delete store.pro; save(); closePro(); proSync(); bsSyncLast?.(); if (!$("bScan").hidden && BS.step === "setup") bsRender(); foodRefresh(); if (mode === "campaign") renderCampaign(); toast("Pro removed (preview)"); };
 $("fdProBtn").onclick = () => openPro("food");
 proSync();
 window.__pro = { open: openPro, get on() { return PAYWALL; }, isPro };   // test hook
@@ -7700,6 +7706,7 @@ async function bsPut(rec) { try { const db = await bsDb(); await new Promise((re
 async function bsGet(at) { try { const db = await bsDb(); return await new Promise(res => { const q = db.transaction("scans").objectStore("scans").get(at); q.onsuccess = () => res(q.result); q.onerror = () => res(null); }); } catch { return null; } }
 async function bsDel(at) { try { const db = await bsDb(); db.transaction("scans", "readwrite").objectStore("scans").delete(at); } catch {} }
 const bsScans = () => (store.bodyScans ||= []);
+const bsLocked = () => !isPro() && bsScans().length >= 1;   // Pro feature: your first scan is free
 const bsUnitLen = cm => store.profile?.unit === "kg" ? `${Math.round(cm)} cm` : `${(cm / 2.54).toFixed(1)} in`;
 const bsCat = (bf, sex) => { const t = sex === "f" ? [14, 21, 25, 32] : [6, 14, 18, 25]; return bf < t[0] ? "Very lean" : bf < t[1] ? "Athletic" : bf < t[2] ? "Fit" : bf < t[3] ? "Average" : "Above average"; };
 
@@ -7736,7 +7743,8 @@ function bsRender() {
             : `<span class="bs-hgt"><input id="bsCm" type="number" inputmode="numeric" min="120" max="230" value="${Math.round(h)}"> cm</span>`}</label>
           <label>Age <span class="bs-hgt"><input id="bsAge" type="number" inputmode="numeric" min="13" max="99" placeholder="optional" value="${p.age || ""}"></span></label>
         </div>
-        <button id="bsGo" class="bs-go">Start scan</button>
+        <button id="bsGo" class="bs-go">${bsLocked() ? `<span class="pro-tag">PRO</span> Start scan` : "Start scan"}</button>
+        ${!isPro() ? `<div class="muted bs-pro-note">${bsLocked() ? `You've used your free scan. More scans, and tracking your trend over time, come with OmniFit Pro.` : "Your first scan is free. More scans come with OmniFit Pro."}</div>` : ""}
         ${last ? `<button class="ghost bs-hist-btn" id="bsHist">Past scans (${bsScans().length})</button>` : ""}
         <div class="muted bs-fine">A rough estimate from photos (about ±3–5 %), not a medical measurement. Same time of day and clothes each time gives the best trend.</div>
       </div>`;
@@ -7745,6 +7753,7 @@ function bsRender() {
       const sex = B.querySelector("#bsSex .on").dataset.v;
       const cm = lb ? ((+$("bsFt").value || 0) * 12 + (+$("bsIn").value || 0)) * 2.54 : +$("bsCm").value;
       if (!(cm >= 120 && cm <= 230)) return toast("Enter your height first");
+      if (bsLocked()) return openPro("scan");
       const age = +$("bsAge").value; store.bodyInfo = { sex, heightCm: Math.round(cm * 10) / 10, ...(age >= 13 && age <= 99 ? { age } : {}) }; save();
       bsStart();
     };
@@ -7916,7 +7925,7 @@ function bsShow(sc, imgs, prev) {
     <div class="bs-btns"><button id="bsDone">Done</button><button class="ghost" id="bsAgain">Scan again</button>${bsScans().length > 1 ? `<button class="ghost" id="bsHist2">Past scans</button>` : ""}</div>
   </div>`;
   $("bsDone").onclick = bsClose; onBsSaved?.();
-  $("bsAgain").onclick = () => { BS.shots = {}; bsStart(); };
+  $("bsAgain").onclick = () => { if (bsLocked()) return openPro("scan"); BS.shots = {}; bsStart(); };
   if ($("bsHist2")) $("bsHist2").onclick = () => { BS.step = "history"; bsRender(); };
 }
 async function bsHistory() {
@@ -7931,7 +7940,7 @@ async function bsHistory() {
   B.querySelectorAll("[data-at]").forEach(b => b.onclick = async () => { const s = bsScans().find(x => x.at === +b.dataset.at), i = bsScans().indexOf(s); bsShow(s, await bsGet(s.at), i > 0 ? bsScans()[i - 1] : null); });
   B.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { if (!confirm("Delete this scan and its photos?")) return; const at = +b.dataset.del; store.bodyScans = bsScans().filter(x => x.at !== at); save(); bsDel(at); bsScans().length ? bsHistory() : (BS.step = "setup", bsRender()); });
 }
-function bsSyncLast() { const s = bsScans().slice(-1)[0], el = $("bsLast"); if (el) el.textContent = s ? `Last: ${s.bf.toFixed(1)} % on ${new Date(s.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : "Estimate your body fat from two photos"; }
+function bsSyncLast() { $("bsOpen")?.classList.toggle("pro-lock", bsLocked()); const s = bsScans().slice(-1)[0], el = $("bsLast"); if (el) el.textContent = s ? `Last: ${s.bf.toFixed(1)} % on ${new Date(s.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : "Estimate your body fat from two photos"; }
 bsSyncLast(); onBsSaved = bsSyncLast;
 window.__bscan = { measure: bsMeasure, estimate: bsEstimate, ellipse: bsEllipse, open: bsOpen, show: bsShow, result: bsResult, history: () => { BS.step = "history"; bsRender(); }, get S() { return BS; } };   // test hook
 
