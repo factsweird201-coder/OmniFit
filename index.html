@@ -1311,6 +1311,9 @@
   .pro-key-row input { flex: 1; min-width: 0; font: 600 14px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .04em; padding: 10px 12px; border-radius: 9px; background: var(--panel); color: var(--text); border: 1px solid var(--line2); }
   .pro-key-row input:focus { outline: none; border-color: var(--accent); }
   .pro-key-row button { padding: 0 16px; border-radius: 9px; background: var(--accent); color: var(--ink); font-weight: 700; border: 0; }
+
+  /* text boxes (and codes) must stay selectable, or Safari/iPhone never offers Paste */
+  input, textarea, [contenteditable], .pro-code code { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
 </style>
 </head>
 <body>
