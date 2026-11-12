@@ -1288,7 +1288,8 @@
   .bs-cam video { position: absolute; inset: 0; }
   .bs-cam canvas { display: block !important; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scaleX(-1); pointer-events: none; image-rendering: auto; }
 
-  #proModal { z-index: 50; }
+  #proModal { z-index: 50; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; place-items: start center; padding: max(16px, env(safe-area-inset-top)) 0 max(16px, env(safe-area-inset-bottom)); box-sizing: border-box; }
+  #proModal .pro-card { margin: auto 0; }
   .bs-pro-note { font-size: 13px; text-align: center; margin-top: 10px; }
   .bs-go .pro-tag { margin-right: 6px; background: var(--ink); color: var(--accent); }
   .bs-open.pro-lock::after { margin-left: auto; }
@@ -1670,7 +1671,7 @@
         <li><b>Pay <span class="pro-price"></span> <span class="pro-cur"></span> with PayPal</b><span>Pick <i>Paying for an item or service</i> and put your purchase code in the note. PayPal asks you to log in or make a free account, and you can pay with a card through it.</span><button id="proPay" class="pro-pay">Open PayPal</button></li>
         <li><b>Enter your unlock code</b><span>We'll email it to your PayPal email, usually within a day.</span></li>
       </ol>
-      <div class="pro-key-row"><input id="proUnlock" placeholder="Unlock code (XXXX-XXXX)" autocomplete="off" autocapitalize="characters" spellcheck="false"><button id="proUnlockGo">Unlock</button></div>
+      <div class="pro-key-row"><input id="proUnlock" placeholder="XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false"><button id="proUnlockGo">Unlock</button></div>
     </div>
     <div class="pro-key-err" id="proPPMsg"></div>
     <div class="pro-links"><button class="pro-link" id="proRestore">I have an unlock code</button><span>·</span><button class="pro-link" id="proLater">Not now</button></div>
