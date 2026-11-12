@@ -7,7 +7,7 @@
 <!--web-only-->
 <meta name="description" content="All-in-one fitness: camera rep counting for push-ups, squats and sit-ups, story campaigns, boss fights, Endurance races, stretching and meal plans.">
 <meta name="theme-color" content="#0c0d10">
-<meta name="omnifit-build" content="20261112030957">
+<meta name="omnifit-build" content="20261112235634">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -1418,6 +1418,35 @@
     .stats div { padding: 14px 6px 12px; }
     #bsPanel { order: -2; }
   }
+
+  /* ---------- phones, pass 2: the coach card and other dense grids ---------- */
+  @media (max-width: 700px) {
+    main > *, main > section > *, #trainerBox, #trainerBox > * { min-width: 0; }
+    /* 7-day plan: a swipeable row of roomy day cards instead of 7 tiny ones */
+    .tr-week2 { display: flex !important; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 18px; margin: 0 -18px; padding: 2px 18px 6px; scrollbar-width: none; }
+    .tr-week2::-webkit-scrollbar { display: none; }
+    .tr-week2 .tr-day { flex: 0 0 76px; scroll-snap-align: start; padding: 10px 6px; }
+    .tr-week2 .tr-day i { font-size: 24px; }
+    .tr-week2 .tr-day b { font-size: 12.5px; }
+    /* recovery: more room in each box */
+    .tr-ready { gap: 10px !important; }
+    .tr-rd { padding: 12px 12px 10px !important; }
+    .tr-rd span { font-size: 13px; }
+    /* targets: one clear row each instead of three squashed boxes */
+    .co-trend { grid-template-columns: 1fr !important; gap: 8px !important; }
+    .co-trend > div { display: grid !important; grid-template-columns: 1fr auto; grid-template-areas: "l n" "d n"; align-items: center; column-gap: 12px; row-gap: 2px; padding: 12px 14px !important; text-align: left !important; }
+    .co-trend > div > span:first-child { grid-area: l; font-weight: 600; }
+    .co-trend > div > b { grid-area: n; font-size: 26px !important; }
+    .co-trend > div > .co-dots { grid-area: d; justify-content: flex-start; }
+    /* the coach card holds two things: give the second its own breathing room */
+    #coachPanel .co-head { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+    #trainerBox .tr-sec, #coachPanel .tr-sec { margin-top: 18px; }
+    .co-btns { gap: 10px; flex-wrap: wrap; }
+    .co-btns button { flex: 1 1 auto; padding: 13px 14px; }
+    /* stretch: stat boxes fill the row */
+    .st-stats { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; flex: 1 1 100%; }
+    .st-stats > div { min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -2386,7 +2415,7 @@ function logWeightKg(kg) {
 
 // ================= PROFILE PANEL =================
 function renderProfile() {
-  const p = store.profile?.goal && GOALS[store.profile.goal] ? store.profile : null;   // an unfinished profile shows as none
+  const p = store.profile?.goal && GOALS[store.profile.goal] && PHYSIQUES[store.profile.physique] && LEVELS[store.profile.level] ? store.profile : null;   // an unfinished profile shows as none
   $("profilePanel").hidden = !p;
   if (!p) return;
   const g = GOALS[p.goal];
